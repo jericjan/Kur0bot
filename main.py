@@ -268,9 +268,13 @@ async def getemotes(ctx):
   for guild in client.guilds:
     if guild.id != 856415893305950228 and guild.id !=856412098459860993:
       print(guild.id)
-      await ctx.send(guild.name)
+      #await ctx.send(guild.name)
       emojis = [str(x) for x in guild.emojis]
-      for message in paginate(emojis):
+      for index,message in enumerate(paginate(emojis)):
+        if index==0:
+          embed.title=guild.name
+        else:
+          embed.title=''  
         embed.description = ''.join(message)
         await ctx.send(embed=embed)
     else:
