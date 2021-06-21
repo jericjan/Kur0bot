@@ -222,17 +222,17 @@ async def fortnite(ctx):
   await ctx.message.delete()
 
 @client.command(aliases=['e'])
-async def emote(ctx, *, message=None):
+async def emote(ctx, *message):
 
-        if message == None:
-                oof = await ctx.send(f'Please specify an emote to use.')
-                await asyncio.sleep(3)
-                await oof.delete()
-                await ctx.message.delete()
-                return
 
+                
+        emoji_list = []
         webhook = await ctx.channel.create_webhook(name=ctx.message.author.name)
-        emoji = discord.utils.get(client.emojis, name=message)
+        print(message)
+        for i in range(len(message)):
+          emoji = discord.utils.get(client.emojis, name=message[i])
+          emojistr = str(emoji)
+          emoji_list.append(emojistr)
         if emoji == None:
                 oof = await ctx.send(f'Invalid emoji name.')
                 await asyncio.sleep(3)
@@ -240,12 +240,41 @@ async def emote(ctx, *, message=None):
                 await ctx.message.delete()
                 return
         await webhook.send(
-            str(emoji), username=ctx.message.author.name, avatar_url=ctx.message.author.avatar_url)
+            "".join(emoji_list), username=ctx.message.author.name, avatar_url=ctx.message.author.avatar_url)
 
         webhooks = await ctx.channel.webhooks()
         for webhook in webhooks:
                 await webhook.delete()
         await ctx.message.delete()
+
+def paginate(lines, chars=2000):
+    size = 0
+    message = []
+    for line in lines:
+        if len(line) + size > chars:
+            yield message
+            message = []
+            size = 0
+        message.append(line)
+        size += len(line)
+    yield message
+
+@client.command(aliases=['ge'])
+async def getemotes(ctx):
+  server = ctx.message.guild
+  emojis = [str(x) for x in server.emojis]
+  message = ""
+  embed = discord.Embed()
+  for guild in client.guilds:
+    if guild.id != 856415893305950228 and guild.id !=856412098459860993:
+      print(guild.id)
+      await ctx.send(guild.name)
+      emojis = [str(x) for x in guild.emojis]
+      for message in paginate(emojis):
+        embed.description = ''.join(message)
+        await ctx.send(embed=embed)
+    else:
+      print('bad apple server')  
 
 @client.command()
 async def id(ctx, title, *, message=None):
@@ -714,7 +743,7 @@ async def help(ctx):
   em.add_field(name="copypasta", value="glasses,nene,nenelong,stopamongus,confession,wristworld")
   em.add_field(name="sus", value="on,off,megasus,bulk")
   em.add_field(name="why", value="fortnite")
-  em.add_field(name="others", value="emote,badapple,clip,download")
+  em.add_field(name="others", value="emote,getemotes,badapple,clip,download")
   em.add_field(name="reactions",value="fmega,kotowaru,ascend,jizz")
   em.add_field(name="vc",value="letsgo,vtubus,leave,ding,yodayo,yodazo,jonathan,joseph,jotaro,josuke,giorno,kira,pillarmen,tts")
   await ctx.send(embed = em)
@@ -769,6 +798,11 @@ async def emote(ctx):
   em.add_field(name="**Syntax**", value="k.emote <emotename>")
   em.add_field(name="**Aliases**", value="e")
   await ctx.send(embed = em)
+@help.command()
+async def getemotes(ctx):
+  em = discord.Embed(title = "Get Emotes!",   description = 'Sends all emotes that this bot has. It has emotes for all servers it\'s in.')
+  em.add_field(name="**Aliases**", value="ge")
+  await ctx.send(embed = em)  
 @help.command()
 async def wristworld(ctx):
   em = discord.Embed(title = "Wristworld",   description = 'Sends the wristworld miku copypasta.')
