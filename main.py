@@ -8,8 +8,8 @@ import asyncio
 import aiohttp
 import subprocess
 from gtts import gTTS
-
-
+from datetime import datetime, timedelta
+from shlex import quote, join
 
 #client = discord.Client()
 client = commands.Bot(command_prefix='k.')
@@ -652,7 +652,60 @@ async def badapple(ctx, *, message=None):
                 await webhook.delete()
         await ctx.message.delete()
 
+@client.command()
+async def clip(ctx,link,start,end,filename):
+  message = await ctx.send('Fetching url...')
+  coms = ['youtube-dl', '-g', '-f','best','--youtube-skip-dash-manifest', link]
+  print(join(coms))
+  startsplit = start.split(":")
+  shour = startsplit[0]
+  sminute=startsplit[1]
+  ssecond=startsplit[2]
+  result1 = timedelta(hours=int(shour),minutes=int(sminute),seconds=int(ssecond)) - timedelta(seconds=30)
+  endsplit = end.split(":")
+  ehour = endsplit[0]
+  eminute=endsplit[1]
+  esecond=endsplit[2]
+  result2 = timedelta(hours=int(ehour),minutes=int(eminute),seconds=int(esecond)) - timedelta(hours=int(shour),minutes=int(sminute),seconds=int(ssecond))
+  out = subprocess.Popen(coms, 
+           stdout=subprocess.PIPE, stderr=subprocess.PIPE,stdin=subprocess.PIPE)
+  stdout,stderr = out.communicate()
+  print(stdout)
+  print(stderr)
+  dirlinks = stdout.decode('utf-8').split("\n")
+  vid = dirlinks[0]
+  aud = dirlinks[1] 
+  coms = ['ffmpeg', '-ss', str(result1), '-i',  vid, '-ss', '30', '-t', str(result2), '-c:v', 'libx264', '-c:a', 'copy', filename+".mkv"]
+  print(join(coms))
+  await message.edit(content='Downloading... This will take a while...')
+  process = subprocess.Popen(coms, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,universal_newlines=True)
+  for line in process.stdout:
+    print(line)
+  os.rename(filename+".mkv",filename+".mp4")  
+  await ctx.send(file=discord.File(filename+".mp4"))
+  os.remove(filename+".mp4")
+  await message.delete()
 
+@client.command()
+async def download(ctx,link):
+  message = await ctx.send('Downloading...')
+  coms = ['youtube-dl', '-f','best',link]
+  coms2 = ['youtube-dl', '-f','best', '--get-filename',link]
+  print(join(coms))
+  print(join(coms2))
+  out = subprocess.Popen(coms, 
+           stdout=subprocess.PIPE, stderr=subprocess.PIPE,stdin=subprocess.PIPE)
+  stdout,stderr = out.communicate()
+  print(stdout)
+  print(stderr) 
+  out = subprocess.Popen(coms2, 
+           stdout=subprocess.PIPE, stderr=subprocess.PIPE,stdin=subprocess.PIPE)
+  stdout,stderr = out.communicate()
+  filename=stdout.decode('utf-8').split("\n")[0]
+  print(filename)
+  await ctx.send(file=discord.File(filename))
+  os.remove(filename)
+  await message.delete()  
 # ----------------------------------------------------
 # HELP
 @client.group(invoke_without_command=True)
@@ -661,7 +714,7 @@ async def help(ctx):
   em.add_field(name="copypasta", value="glasses,nene,nenelong,stopamongus,confession,wristworld")
   em.add_field(name="sus", value="on,off,megasus,bulk")
   em.add_field(name="why", value="fortnite")
-  em.add_field(name="others", value="emote,badapple")
+  em.add_field(name="others", value="emote,badapple,clip,download")
   em.add_field(name="reactions",value="fmega,kotowaru,ascend,jizz")
   em.add_field(name="vc",value="letsgo,vtubus,leave,ding,yodayo,yodazo,jonathan,joseph,jotaro,josuke,giorno,kira,pillarmen,tts")
   await ctx.send(embed = em)
@@ -813,6 +866,19 @@ async def badapple(ctx):
   em = discord.Embed(title = "Bad Apple but in custom emotes",   description = 'Sends 80 animated emotes that all make up the Bad Apple PV (Only works on PC)')
   em.add_field(name="**Emotes by:**", value="https://github.com/gohjoseph")
   await ctx.send(embed = em) 
+
+@help.command()
+async def clip(ctx):
+  em = discord.Embed(title = "Clip a YT Video",   description = 'clips a YouTube video given the start and end times (HH:MM:SS)')
+  em.add_field(name="**Syntax**", value="k.clip <url> <start time> <end time> <filename>")
+  em.add_field(name="**Example**", value="k.clip https://www.youtube.com/watch?v=dQw4w9WgXcQ 00:00:52 00:01:05 filename")
+  await ctx.send(embed = em)
+
+@help.command()
+async def download(ctx):
+  em = discord.Embed(title = "Download a YT Video",   description = 'Download a YouTube of your choice')
+  em.add_field(name="**Syntax**", value="k.download <url>")
+  await ctx.send(embed = em)
 
 keep_alive()
 client.run(os.getenv('TOKEN'))
