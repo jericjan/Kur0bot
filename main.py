@@ -687,6 +687,10 @@ async def badapple(ctx, *, message=None):
 
 @client.command()
 async def clip(ctx,link,start,end,filename):
+  if os.path.isfile(filename+".mkv"):
+    os.remove(filename+".mkv")
+  if os.path.isfile(filename+".mp4"):
+    os.remove(filename+".mp4")  
   message = await ctx.send('Fetching url...')
   coms = ['youtube-dl', '-g', '-f','best','--youtube-skip-dash-manifest', link]
   print(join(coms))
@@ -711,10 +715,64 @@ async def clip(ctx,link,start,end,filename):
   coms = ['ffmpeg', '-ss', str(result1), '-i',  vid, '-ss', '30', '-t', str(result2), '-c:v', 'libx264', '-c:a', 'copy', filename+".mkv"]
   print(join(coms))
   await message.edit(content='Downloading... This will take a while...')
+  try:
+    process = subprocess.Popen(coms, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,universal_newlines=True)
+    #for line in process.stdout:
+      #print(line)
+    #process.communicate()
+    while process is not None:
+              retcode = process.poll()
+              if retcode is not None:
+                  os.rename(filename+".mkv",filename+".mp4")  
+                  await ctx.send(file=discord.File(filename+".mp4"))
+                  os.remove(filename+".mp4")
+                  await message.delete()
+              else:
+                  # still running
+                  #await asyncio.sleep(1)
+                  for line in process.stdout:
+                    if "frame=" in line:
+                      if not "00:00:00.00" in line.split('=')[5].split(' ')[0]:
+                        strpcurr = datetime.strptime(line.split('=')[5].split(' ')[0], '%H:%M:%S.%f')
+                        currtime = timedelta(hours=strpcurr.hour,minutes=strpcurr.minute,seconds=strpcurr.second,microseconds=strpcurr.microsecond)
+                        print(line)
+                        percentage = (currtime.total_seconds() / result2.total_seconds())*100
+                        print(str(percentage) + "% complete...")
+                        await message.edit(content=str(round(percentage,2)) + "% complete...")
+                    break       
+  except ValueError:
+    await message.edit(content='An error occured... Uh, try it again.')
+
+@client.command()
+async def fastclip(ctx,link,start,end,filename):
+  message = await ctx.send('Fetching url...')
+  coms = ['youtube-dl', '-g', '-f','best','--youtube-skip-dash-manifest', link]
+  print(join(coms))
+  startsplit = start.split(":")
+  shour = startsplit[0]
+  sminute=startsplit[1]
+  ssecond=startsplit[2]
+  result1 = timedelta(hours=int(shour),minutes=int(sminute),seconds=int(ssecond)) - timedelta(seconds=30)
+  endsplit = end.split(":")
+  ehour = endsplit[0]
+  eminute=endsplit[1]
+  esecond=endsplit[2]
+  result2 = timedelta(hours=int(ehour),minutes=int(eminute),seconds=int(esecond)) - timedelta(hours=int(shour),minutes=int(sminute),seconds=int(ssecond))
+  out = subprocess.Popen(coms, 
+           stdout=subprocess.PIPE, stderr=subprocess.PIPE,stdin=subprocess.PIPE)
+  stdout,stderr = out.communicate()
+  print(stdout)
+  print(stderr)
+  dirlinks = stdout.decode('utf-8').split("\n")
+  vid = dirlinks[0]
+  aud = dirlinks[1] 
+  coms = ['ffmpeg', '-ss', str(result1), '-i',  vid, '-ss', '30', '-t', str(result2), '-c:v', 'copy', '-c:a', 'copy', filename+".mp4"]
+  print(join(coms))
+  await message.edit(content='Downloading... This will take a while...')
   process = subprocess.Popen(coms, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,universal_newlines=True)
   for line in process.stdout:
     print(line)
-  os.rename(filename+".mkv",filename+".mp4")  
+  #os.rename(filename+".mkv",filename+".mp4")  
   await ctx.send(file=discord.File(filename+".mp4"))
   os.remove(filename+".mp4")
   await message.delete()
