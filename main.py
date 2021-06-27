@@ -729,7 +729,7 @@ async def clip(ctx,link,start,end,filename):
                   await message.delete()
               else:
                   # still running
-                  #await asyncio.sleep(1)
+                  await asyncio.sleep(1)
                   for line in process.stdout:
                     if "frame=" in line:
                       if not "00:00:00.00" in line.split('=')[5].split(' ')[0]:
@@ -785,18 +785,46 @@ async def download(ctx,link):
   print(join(coms))
   print(join(coms2))
   out = subprocess.Popen(coms, 
-           stdout=subprocess.PIPE, stderr=subprocess.PIPE,stdin=subprocess.PIPE)
-  stdout,stderr = out.communicate()
-  print(stdout)
-  print(stderr) 
-  out = subprocess.Popen(coms2, 
-           stdout=subprocess.PIPE, stderr=subprocess.PIPE,stdin=subprocess.PIPE)
-  stdout,stderr = out.communicate()
-  filename=stdout.decode('utf-8').split("\n")[0]
-  print(filename)
-  await ctx.send(file=discord.File(filename))
-  os.remove(filename)
-  await message.delete()  
+           stdout=subprocess.PIPE, stderr=subprocess.STDOUT,universal_newlines=True)
+  while out is not None:
+            retcode = out.poll()
+            if retcode is not None:
+                        await message.edit(content="Almost there...")
+                        break
+                         
+                
+            else:
+                # still running
+                await asyncio.sleep(1)
+                for line in out.stdout:
+                  #if "frame=" in line:
+                    #if not "00:00:00.00" in line.split('=')[5].split(' ')[0]:
+                      print(line)
+                      if line:
+                        try:
+                          await message.edit(content=line)
+                        except:
+                          print('empty')  
+                      break  
+  out2 = subprocess.Popen(coms2, 
+                      stdout=subprocess.PIPE, stderr=subprocess.PIPE,stdin=subprocess.PIPE)
+  while out2 is not None:
+    retcode2 = out2.poll()
+    if retcode2 is not None:
+          for line in out2.stdout:
+            print('line')
+            filename=line.decode('utf-8').split("\n")[0]
+            print(filename)
+            await ctx.send(file=discord.File(filename))
+            os.remove(filename)
+            await message.delete() 
+            break
+          break
+    else:
+        # still running
+        await asyncio.sleep(1)
+        await message.edit(content="A little more...")
+                             
 # ----------------------------------------------------
 # HELP
 @client.group(invoke_without_command=True)
