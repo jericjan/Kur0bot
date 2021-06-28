@@ -986,7 +986,7 @@ async def clip(ctx):
 async def fastclip(ctx):
   em = discord.Embed(title = "Quickly clip a YT Video",   description = 'clips a YouTube video given the start and end times (HH:MM:SS)\n**FASTER** than `clip` but inaccurate')
   em.add_field(name="**Syntax**", value="k.clip <url> <start time> <end time> <filename>")
-  em.add_field(name="**Example**", value="k.clip https://www.youtube.com/watch?v=dQw4w9WgXcQ 00:00:52 00:01:05 filename")
+  em.add_field(name="**Example**", value="k.fastclip https://www.youtube.com/watch?v=dQw4w9WgXcQ 00:00:52 00:01:05 filename")
   await ctx.send(embed = em)
 
 @help.command()
