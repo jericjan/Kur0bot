@@ -730,6 +730,7 @@ async def clip(ctx,link,start,end,filename):
               else:
                   # still running
                   await asyncio.sleep(1)
+                  print(process.stdout)
                   for line in process.stdout:
                     if "frame=" in line:
                       if not "00:00:00.00" in line.split('=')[5].split(' ')[0]:
@@ -740,6 +741,64 @@ async def clip(ctx,link,start,end,filename):
                         print(str(percentage) + "% complete...")
                         await message.edit(content=str(round(percentage,2)) + "% complete...")
                     break       
+  except ValueError:
+    await message.edit(content='An error occured... Uh, try it again.')
+
+@client.command()
+async def clip2(ctx,link,start,end,filename):
+  if os.path.isfile(filename+".mkv"):
+    os.remove(filename+".mkv")
+  if os.path.isfile(filename+".mp4"):
+    os.remove(filename+".mp4")  
+  message = await ctx.send('Fetching url...')
+  coms = ['youtube-dl', '-g', '-f','best','--youtube-skip-dash-manifest', link]
+  print(join(coms))
+  startsplit = start.split(":")
+  shour = startsplit[0]
+  sminute=startsplit[1]
+  ssecond=startsplit[2]
+  result1 = timedelta(hours=int(shour),minutes=int(sminute),seconds=int(ssecond)) - timedelta(seconds=30)
+  endsplit = end.split(":")
+  ehour = endsplit[0]
+  eminute=endsplit[1]
+  esecond=endsplit[2]
+  result2 = timedelta(hours=int(ehour),minutes=int(eminute),seconds=int(esecond)) - timedelta(hours=int(shour),minutes=int(sminute),seconds=int(ssecond))
+  out = await asyncio.create_subprocess_exec(*coms, 
+           stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+  stdout, stderr = await out.communicate()
+  dirlinks = stdout.decode('utf-8').split("\n")
+  vid = dirlinks[0]
+  aud = dirlinks[1] 
+  coms = ['ffmpeg', '-ss', str(result1), '-i',  vid, '-ss', '30', '-t', str(result2), '-c:v', 'libx264', '-c:a', 'copy', filename+".mkv"]
+  print(join(coms))
+  await message.edit(content='Downloading... This will take a while...')
+  try:
+    process = await asyncio.create_subprocess_exec(*coms, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+    #for line in process.stdout:
+      #print(line)
+    #process.communicate()
+    while process.returncode is None:
+        #await asyncio.sleep(1)
+        
+        line =await process.stdout.read(100)
+        if not line:
+            break
+        #print(line.decode('utf-8'))
+        linedec = line.decode('utf-8')
+        
+        if "frame=" in linedec:
+          if not "00:00:00.00" in linedec.split('=')[5].split(' ')[0]:
+            strpcurr = datetime.strptime(linedec.split('=')[5].split(' ')[0], '%H:%M:%S.%f')
+            currtime = timedelta(hours=strpcurr.hour,minutes=strpcurr.minute,seconds=strpcurr.second,microseconds=strpcurr.microsecond)
+            print(linedec)
+            percentage = (currtime.total_seconds() / result2.total_seconds())*100
+            print(str(percentage) + "% complete...")
+            await message.edit(content=str(round(percentage,2)) + "% complete...")    
+    os.rename(filename+".mkv",filename+".mp4")  
+    await ctx.send(file=discord.File(filename+".mp4"))
+    #await ctx.send(ctx.message.author.mention)
+    os.remove(filename+".mp4")
+    await message.delete()      
   except ValueError:
     await message.edit(content='An error occured... Uh, try it again.')
 
@@ -758,9 +817,8 @@ async def fastclip(ctx,link,start,end,filename):
   eminute=endsplit[1]
   esecond=endsplit[2]
   result2 = timedelta(hours=int(ehour),minutes=int(eminute),seconds=int(esecond)) - timedelta(hours=int(shour),minutes=int(sminute),seconds=int(ssecond))
-  out = subprocess.Popen(coms, 
-           stdout=subprocess.PIPE, stderr=subprocess.PIPE,stdin=subprocess.PIPE)
-  stdout,stderr = out.communicate()
+  out = await asyncio.create_subprocess_exec(*coms, stdout=asyncio.subprocess.PIPE,                      stderr=asyncio.subprocess.PIPE)
+  stdout, stderr = await out.communicate()
   print(stdout)
   print(stderr)
   dirlinks = stdout.decode('utf-8').split("\n")
@@ -769,61 +827,46 @@ async def fastclip(ctx,link,start,end,filename):
   coms = ['ffmpeg', '-ss', str(result1), '-i',  vid, '-ss', '30', '-t', str(result2), '-c:v', 'copy', '-c:a', 'copy', filename+".mp4"]
   print(join(coms))
   await message.edit(content='Downloading... This will take a while...')
-  process = subprocess.Popen(coms, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,universal_newlines=True)
-  for line in process.stdout:
-    print(line)
+  process = await asyncio.create_subprocess_exec(*coms, stdout=asyncio.subprocess.PIPE,                      stderr=asyncio.subprocess.PIPE)
+  stdout, stderr = await process.communicate()
   #os.rename(filename+".mkv",filename+".mp4")  
   await ctx.send(file=discord.File(filename+".mp4"))
+  await ctx.send(ctx.message.author.mention)
   os.remove(filename+".mp4")
   await message.delete()
 
 @client.command()
 async def download(ctx,link):
+  import codecs
   message = await ctx.send('Downloading...')
   coms = ['youtube-dl', '-f','best',link]
   coms2 = ['youtube-dl', '-f','best', '--get-filename',link]
   print(join(coms))
   print(join(coms2))
-  out = subprocess.Popen(coms, 
-           stdout=subprocess.PIPE, stderr=subprocess.STDOUT,universal_newlines=True)
-  while out is not None:
-            retcode = out.poll()
-            if retcode is not None:
-                        await message.edit(content="Almost there...")
-                        break
-                         
-                
-            else:
-                # still running
-                await asyncio.sleep(1)
-                for line in out.stdout:
-                  #if "frame=" in line:
-                    #if not "00:00:00.00" in line.split('=')[5].split(' ')[0]:
-                      print(line)
-                      if line:
-                        try:
-                          await message.edit(content=line)
-                        except:
-                          print('empty')  
-                      break  
-  out2 = subprocess.Popen(coms2, 
-                      stdout=subprocess.PIPE, stderr=subprocess.PIPE,stdin=subprocess.PIPE)
-  while out2 is not None:
-    retcode2 = out2.poll()
-    if retcode2 is not None:
-          for line in out2.stdout:
-            print('line')
-            filename=line.decode('utf-8').split("\n")[0]
-            print(filename)
-            await ctx.send(file=discord.File(filename))
-            os.remove(filename)
-            await message.delete() 
+  proc = await asyncio.create_subprocess_exec(*coms, 
+           stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+  #stdout, stderr = await proc.communicate()
+  while proc.returncode is None:
+    line = await proc.stdout.read(100)
+    if not line:
             break
-          break
-    else:
-        # still running
-        await asyncio.sleep(1)
-        await message.edit(content="A little more...")
+    await message.edit(content=line.decode('utf-8'))
+    await asyncio.sleep(1)
+  await message.edit(content="Almost there...")  
+  out2 = await asyncio.create_subprocess_exec(*coms2, 
+                      stdout=subprocess.PIPE, stderr=subprocess.STDOUT)  
+  while out2.returncode is None:
+    await message.edit(content="A little more...")  
+  else:  
+    try:
+      thing = await out2.stdout.read()
+      filename = thing.decode('utf-8').split("\n")[0]
+      await message.edit(content="Sending video...")  
+      await ctx.send(file=discord.File(filename))
+    except discord.HTTPException:  
+      await ctx.send('File too large, broski <:towashrug:853606191711649812>')
+  os.remove(filename)
+  await message.delete()                  
                              
 # ----------------------------------------------------
 # HELP
