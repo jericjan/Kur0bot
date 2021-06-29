@@ -652,6 +652,11 @@ async def speak(ctx,*, message):
       else:
         voice.play(discord.FFmpegPCMAudio(source="tts.mp3")) 
 
+@client.command()
+async def join(ctx):        
+  voice_channel = ctx.author.voice.channel
+  await voice_channel.connect()
+
 @client.event
 async def on_command_error(ctx, error):
     if isinstance(error, commands.CommandOnCooldown):
@@ -807,8 +812,37 @@ async def download(ctx,link):
     except discord.HTTPException:  
       await ctx.send('File too large, broski <:towashrug:853606191711649812>')
   os.remove(filename)
-  await message.delete()                  
-                             
+  await message.delete()                    
+
+@client.command()
+async def botansneeze(ctx, loop=None):  
+   # Gets voice channel of message author
+  voice_channel = ctx.author.voice.channel
+  channel = None
+  voice = discord.utils.get(client.voice_clients, guild=ctx.guild)   
+  if voice_channel != None:
+      channel = voice_channel.name
+      if voice == None:
+        vc = await voice_channel.connect()
+        
+        if loop=="loop":
+          def loop():  
+            vc.play(discord.FFmpegPCMAudio(source="botansneeze.mp3"), after=lambda e: loop())
+          loop()
+        else:
+            vc.play(discord.FFmpegPCMAudio(source="botansneeze.mp3"))
+      else:
+        if loop=="loop":
+          def loop2():  
+            voice.play(discord.FFmpegPCMAudio(source="botansneeze.mp3"), after=lambda e: loop2())
+          loop2()
+        else:
+            voice.play(discord.FFmpegPCMAudio(source="botansneeze.mp3"))
+  else:
+      await ctx.send(str(ctx.author.name) + "is not in a channel.")
+  # Delete command after the audio is done playing.
+  await ctx.message.delete()   
+
 # ----------------------------------------------------
 # HELP
 @client.group(invoke_without_command=True)
@@ -819,7 +853,7 @@ async def help(ctx):
   em.add_field(name="why", value="fortnite")
   em.add_field(name="others", value="emote,getemotes,badapple,clip,fastclip,download")
   em.add_field(name="reactions",value="fmega,kotowaru,ascend,jizz")
-  em.add_field(name="vc",value="letsgo,vtubus,leave,ding,yodayo,yodazo,jonathan,joseph,jotaro,josuke,giorno,kira,pillarmen,tts")
+  em.add_field(name="vc",value="letsgo,vtubus,leave,ding,yodayo,yodazo,jonathan,joseph,jotaro,josuke,giorno,kira,pillarmen,tts,botansneeze")
   await ctx.send(embed = em)
 
 
@@ -994,6 +1028,12 @@ async def download(ctx):
   em = discord.Embed(title = "Download a YT Video",   description = 'Download a YouTube of your choice')
   em.add_field(name="**Syntax**", value="k.download <url>")
   await ctx.send(embed = em)
+
+@help.command()
+async def botansneeze(ctx):
+  em = discord.Embed(title = "Botan Sneeze",   description = 'because fuck you, have a botan sneeze')
+  em.add_field(name="**Syntax**", value="k.botansneeze [loop]")
+  await ctx.send(embed = em)  
 
 keep_alive()
 client.run(os.getenv('TOKEN'))
