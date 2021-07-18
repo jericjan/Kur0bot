@@ -218,76 +218,7 @@ async def sus3(message):
               vc.play(discord.FFmpegPCMAudio(source="sounds/tts.mp3")) 
             else:
               voice.play(discord.FFmpegPCMAudio(source="sounds/tts.mp3"))  
-    if msg.startswith('\\ie '):
-        voice_channel = message.author.voice.channel
-        channel = None
-        tts = gTTS(msg[3:], lang='en', tld='ie')
-        with open('sounds/tts.mp3', 'wb') as f:
-              tts.write_to_fp(f)  
-        voice = discord.utils.get(client.voice_clients, guild=message.guild)          
-        if voice_channel != None:
-            channel = voice_channel.name
-            if voice == None:
-              vc = await voice_channel.connect()
-              vc.play(discord.FFmpegPCMAudio(source="sounds/tts.mp3")) 
-            else:
-              voice.play(discord.FFmpegPCMAudio(source="sounds/tts.mp3"))  
-    if msg.startswith('\\za '):
-        voice_channel = message.author.voice.channel
-        channel = None
-        tts = gTTS(msg[3:], lang='en', tld='co.za')
-        with open('sounds/tts.mp3', 'wb') as f:
-              tts.write_to_fp(f)  
-        voice = discord.utils.get(client.voice_clients, guild=message.guild)          
-        if voice_channel != None:
-            channel = voice_channel.name
-            if voice == None:
-              vc = await voice_channel.connect()
-              vc.play(discord.FFmpegPCMAudio(source="sounds/tts.mp3")) 
-            else:
-              voice.play(discord.FFmpegPCMAudio(source="sounds/tts.mp3"))
-    if msg.startswith('\\ca '):
-        voice_channel = message.author.voice.channel
-        channel = None
-        tts = gTTS(msg[3:], lang='en', tld='ca')
-        with open('sounds/tts.mp3', 'wb') as f:
-              tts.write_to_fp(f)  
-        voice = discord.utils.get(client.voice_clients, guild=message.guild)          
-        if voice_channel != None:
-            channel = voice_channel.name
-            if voice == None:
-              vc = await voice_channel.connect()
-              vc.play(discord.FFmpegPCMAudio(source="sounds/tts.mp3")) 
-            else:
-              voice.play(discord.FFmpegPCMAudio(source="sounds/tts.mp3"))
-    if msg.startswith('\\fr '):
-        voice_channel = message.author.voice.channel
-        channel = None
-        tts = gTTS(msg[3:], lang='en', tld='fr')
-        with open('sounds/tts.mp3', 'wb') as f:
-              tts.write_to_fp(f)  
-        voice = discord.utils.get(client.voice_clients, guild=message.guild)          
-        if voice_channel != None:
-            channel = voice_channel.name
-            if voice == None:
-              vc = await voice_channel.connect()
-              vc.play(discord.FFmpegPCMAudio(source="sounds/tts.mp3")) 
-            else:
-              voice.play(discord.FFmpegPCMAudio(source="sounds/tts.mp3"))                 
-    if msg.startswith('\\my '):
-        voice_channel = message.author.voice.channel
-        channel = None
-        tts = gTTS(msg[3:], lang='en', tld='com.my')
-        with open('sounds/tts.mp3', 'wb') as f:
-              tts.write_to_fp(f)  
-        voice = discord.utils.get(client.voice_clients, guild=message.guild)          
-        if voice_channel != None:
-            channel = voice_channel.name
-            if voice == None:
-              vc = await voice_channel.connect()
-              vc.play(discord.FFmpegPCMAudio(source="sounds/tts.mp3")) 
-            else:
-              voice.play(discord.FFmpegPCMAudio(source="sounds/tts.mp3"))                                 
+                               
 @client.command()
 async def bulk(ctx, number):
   print(ctx.channel.id)
@@ -1195,7 +1126,7 @@ async def pillarmen(ctx):
 async def tts(ctx):
   em = discord.Embed(title = "Text to speech",   description = 'Send a TTS message in VC')
   em.add_field(name="**Syntax**", value="\\ <message>")
-  em.add_field(name="**Accents**", value="\\ (US default)\n\\au (Australia)\n\\uk (United Kingdom)\n\\ca (Canada)\n\\in (India)\n\\ie (Ireland)\n\\za (South Africa)\n\\ca (Canada)\n\\fr (France)\n\\my (Malaysia)")
+  em.add_field(name="**Accents**", value="\\ (US default)\n\\au (Australia)\n\\uk (United Kingdom)\n\\ca (Canada)\n\\in (India)")
   await ctx.send(embed = em)               
 
 @help.command()
