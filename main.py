@@ -152,142 +152,142 @@ async def sus3(message):
         voice_channel = message.author.voice.channel
         channel = None
         tts = gTTS(msg)
-        with open('tts.mp3', 'wb') as f:
+        with open('sounds/tts.mp3', 'wb') as f:
               tts.write_to_fp(f)  
         voice = discord.utils.get(client.voice_clients, guild=message.guild)          
         if voice_channel != None:
             channel = voice_channel.name
             if voice == None:
               vc = await voice_channel.connect()
-              vc.play(discord.FFmpegPCMAudio(source="tts.mp3")) 
+              vc.play(discord.FFmpegPCMAudio(source="sounds/tts.mp3")) 
             else:
-              voice.play(discord.FFmpegPCMAudio(source="tts.mp3"))
+              voice.play(discord.FFmpegPCMAudio(source="sounds/tts.mp3"))
     if msg.startswith('\\au '):
         voice_channel = message.author.voice.channel
         channel = None
         tts = gTTS(msg[3:], lang='en', tld='com.au')
-        with open('tts.mp3', 'wb') as f:
+        with open('sounds/tts.mp3', 'wb') as f:
               tts.write_to_fp(f)  
         voice = discord.utils.get(client.voice_clients, guild=message.guild)          
         if voice_channel != None:
             channel = voice_channel.name
             if voice == None:
               vc = await voice_channel.connect()
-              vc.play(discord.FFmpegPCMAudio(source="tts.mp3")) 
+              vc.play(discord.FFmpegPCMAudio(source="sounds/tts.mp3")) 
             else:
-              voice.play(discord.FFmpegPCMAudio(source="tts.mp3"))            
+              voice.play(discord.FFmpegPCMAudio(source="sounds/tts.mp3"))            
     if msg.startswith('\\uk '):
         voice_channel = message.author.voice.channel
         channel = None
         tts = gTTS(msg[3:], lang='en', tld='co.uk')
-        with open('tts.mp3', 'wb') as f:
+        with open('sounds/tts.mp3', 'wb') as f:
               tts.write_to_fp(f)  
         voice = discord.utils.get(client.voice_clients, guild=message.guild)          
         if voice_channel != None:
             channel = voice_channel.name
             if voice == None:
               vc = await voice_channel.connect()
-              vc.play(discord.FFmpegPCMAudio(source="tts.mp3")) 
+              vc.play(discord.FFmpegPCMAudio(source="sounds/tts.mp3")) 
             else:
-              voice.play(discord.FFmpegPCMAudio(source="tts.mp3"))
+              voice.play(discord.FFmpegPCMAudio(source="sounds/tts.mp3"))
     if msg.startswith('\\ca '):
         voice_channel = message.author.voice.channel
         channel = None
         tts = gTTS(msg[3:], lang='en', tld='ca')
-        with open('tts.mp3', 'wb') as f:
+        with open('sounds/tts.mp3', 'wb') as f:
               tts.write_to_fp(f)  
         voice = discord.utils.get(client.voice_clients, guild=message.guild)          
         if voice_channel != None:
             channel = voice_channel.name
             if voice == None:
               vc = await voice_channel.connect()
-              vc.play(discord.FFmpegPCMAudio(source="tts.mp3")) 
+              vc.play(discord.FFmpegPCMAudio(source="sounds/tts.mp3")) 
             else:
-              voice.play(discord.FFmpegPCMAudio(source="tts.mp3"))
+              voice.play(discord.FFmpegPCMAudio(source="sounds/tts.mp3"))
     if msg.startswith('\\in '):
         voice_channel = message.author.voice.channel
         channel = None
         tts = gTTS(msg[3:], lang='en', tld='co.in')
-        with open('tts.mp3', 'wb') as f:
+        with open('sounds/tts.mp3', 'wb') as f:
               tts.write_to_fp(f)  
         voice = discord.utils.get(client.voice_clients, guild=message.guild)          
         if voice_channel != None:
             channel = voice_channel.name
             if voice == None:
               vc = await voice_channel.connect()
-              vc.play(discord.FFmpegPCMAudio(source="tts.mp3")) 
+              vc.play(discord.FFmpegPCMAudio(source="sounds/tts.mp3")) 
             else:
-              voice.play(discord.FFmpegPCMAudio(source="tts.mp3"))  
+              voice.play(discord.FFmpegPCMAudio(source="sounds/tts.mp3"))  
     if msg.startswith('\\ie '):
         voice_channel = message.author.voice.channel
         channel = None
         tts = gTTS(msg[3:], lang='en', tld='ie')
-        with open('tts.mp3', 'wb') as f:
+        with open('sounds/tts.mp3', 'wb') as f:
               tts.write_to_fp(f)  
         voice = discord.utils.get(client.voice_clients, guild=message.guild)          
         if voice_channel != None:
             channel = voice_channel.name
             if voice == None:
               vc = await voice_channel.connect()
-              vc.play(discord.FFmpegPCMAudio(source="tts.mp3")) 
+              vc.play(discord.FFmpegPCMAudio(source="sounds/tts.mp3")) 
             else:
-              voice.play(discord.FFmpegPCMAudio(source="tts.mp3"))  
+              voice.play(discord.FFmpegPCMAudio(source="sounds/tts.mp3"))  
     if msg.startswith('\\za '):
         voice_channel = message.author.voice.channel
         channel = None
         tts = gTTS(msg[3:], lang='en', tld='co.za')
-        with open('tts.mp3', 'wb') as f:
+        with open('sounds/tts.mp3', 'wb') as f:
               tts.write_to_fp(f)  
         voice = discord.utils.get(client.voice_clients, guild=message.guild)          
         if voice_channel != None:
             channel = voice_channel.name
             if voice == None:
               vc = await voice_channel.connect()
-              vc.play(discord.FFmpegPCMAudio(source="tts.mp3")) 
+              vc.play(discord.FFmpegPCMAudio(source="sounds/tts.mp3")) 
             else:
-              voice.play(discord.FFmpegPCMAudio(source="tts.mp3"))
+              voice.play(discord.FFmpegPCMAudio(source="sounds/tts.mp3"))
     if msg.startswith('\\ca '):
         voice_channel = message.author.voice.channel
         channel = None
         tts = gTTS(msg[3:], lang='en', tld='ca')
-        with open('tts.mp3', 'wb') as f:
+        with open('sounds/tts.mp3', 'wb') as f:
               tts.write_to_fp(f)  
         voice = discord.utils.get(client.voice_clients, guild=message.guild)          
         if voice_channel != None:
             channel = voice_channel.name
             if voice == None:
               vc = await voice_channel.connect()
-              vc.play(discord.FFmpegPCMAudio(source="tts.mp3")) 
+              vc.play(discord.FFmpegPCMAudio(source="sounds/tts.mp3")) 
             else:
-              voice.play(discord.FFmpegPCMAudio(source="tts.mp3"))
+              voice.play(discord.FFmpegPCMAudio(source="sounds/tts.mp3"))
     if msg.startswith('\\fr '):
         voice_channel = message.author.voice.channel
         channel = None
         tts = gTTS(msg[3:], lang='en', tld='fr')
-        with open('tts.mp3', 'wb') as f:
+        with open('sounds/tts.mp3', 'wb') as f:
               tts.write_to_fp(f)  
         voice = discord.utils.get(client.voice_clients, guild=message.guild)          
         if voice_channel != None:
             channel = voice_channel.name
             if voice == None:
               vc = await voice_channel.connect()
-              vc.play(discord.FFmpegPCMAudio(source="tts.mp3")) 
+              vc.play(discord.FFmpegPCMAudio(source="sounds/tts.mp3")) 
             else:
-              voice.play(discord.FFmpegPCMAudio(source="tts.mp3"))                 
+              voice.play(discord.FFmpegPCMAudio(source="sounds/tts.mp3"))                 
     if msg.startswith('\\my '):
         voice_channel = message.author.voice.channel
         channel = None
         tts = gTTS(msg[3:], lang='en', tld='com.my')
-        with open('tts.mp3', 'wb') as f:
+        with open('sounds/tts.mp3', 'wb') as f:
               tts.write_to_fp(f)  
         voice = discord.utils.get(client.voice_clients, guild=message.guild)          
         if voice_channel != None:
             channel = voice_channel.name
             if voice == None:
               vc = await voice_channel.connect()
-              vc.play(discord.FFmpegPCMAudio(source="tts.mp3")) 
+              vc.play(discord.FFmpegPCMAudio(source="sounds/tts.mp3")) 
             else:
-              voice.play(discord.FFmpegPCMAudio(source="tts.mp3"))                                 
+              voice.play(discord.FFmpegPCMAudio(source="sounds/tts.mp3"))                                 
 @client.command()
 async def bulk(ctx, number):
   print(ctx.channel.id)
@@ -508,13 +508,13 @@ async def letsgo(ctx):
       channel = voice_channel.name
       if voice == None:
         vc = await voice_channel.connect()
-        vc.play(discord.FFmpegPCMAudio(source="vibez-lets-go.mp3"))
+        vc.play(discord.FFmpegPCMAudio(source="sounds/vibez-lets-go.mp3"))
         # Sleep while audio is playing.
         while vc.is_playing():
             await asyncio.sleep(.1)
         await vc.disconnect()
       else:
-        voice.play(discord.FFmpegPCMAudio(source="vibez-lets-go.mp3"))   
+        voice.play(discord.FFmpegPCMAudio(source="sounds/vibez-lets-go.mp3"))   
   else:
       await ctx.send(str(ctx.author.name) + "is not in a channel.")
   # Delete command after the audio is done playing.
@@ -530,13 +530,13 @@ async def vtubus(ctx):
       channel = voice_channel.name
       if voice == None:
         vc = await voice_channel.connect()
-        vc.play(discord.FFmpegPCMAudio(source="vtubus.mp3"))
+        vc.play(discord.FFmpegPCMAudio(source="sounds/vtubus.mp3"))
         # Sleep while audio is playing.
         while vc.is_playing():
             await asyncio.sleep(.1)
         await vc.disconnect()
       else:
-        voice.play(discord.FFmpegPCMAudio(source="vtubus.mp3"))   
+        voice.play(discord.FFmpegPCMAudio(source="sounds/vtubus.mp3"))   
   else:
       await ctx.send(str(ctx.author.name) + "is not in a channel.")
   # Delete command after the audio is done playing.
@@ -552,13 +552,13 @@ async def giorno(ctx):
       channel = voice_channel.name
       if voice == None:
         vc = await voice_channel.connect()
-        vc.play(discord.FFmpegPCMAudio(source="giorno theme.mp3"))
+        vc.play(discord.FFmpegPCMAudio(source="sounds/giorno theme.mp3"))
         # Sleep while audio is playing.
         while vc.is_playing():
             await asyncio.sleep(.1)
         await vc.disconnect()
       else:
-        voice.play(discord.FFmpegPCMAudio(source="giorno theme.mp3"))   
+        voice.play(discord.FFmpegPCMAudio(source="sounds/giorno theme.mp3"))   
   else:
       await ctx.send(str(ctx.author.name) + "is not in a channel.")
   # Delete command after the audio is done playing.
@@ -574,13 +574,13 @@ async def ding(ctx):
       channel = voice_channel.name
       if voice == None:
         vc = await voice_channel.connect()
-        vc.play(discord.FFmpegPCMAudio(source="DING DING DING DING DING DING DING DI DI DING.mp3"))
+        vc.play(discord.FFmpegPCMAudio(source="sounds/DING DING DING DING DING DING DING DI DI DING.mp3"))
         # Sleep while audio is playing.
         while vc.is_playing():
             await asyncio.sleep(.1)
         await vc.disconnect()
       else:
-        voice.play(discord.FFmpegPCMAudio(source="DING DING DING DING DING DING DING DI DI DING.mp3"))   
+        voice.play(discord.FFmpegPCMAudio(source="sounds/DING DING DING DING DING DING DING DI DI DING.mp3"))   
   else:
       await ctx.send(str(ctx.author.name) + "is not in a channel.")
   # Delete command after the audio is done playing.
@@ -596,13 +596,13 @@ async def yodayo(ctx):
       channel = voice_channel.name
       if voice == None:
         vc = await voice_channel.connect()
-        vc.play(discord.FFmpegPCMAudio(source="Nakiri Ayame's yo dayo_.mp3"))
+        vc.play(discord.FFmpegPCMAudio(source="sounds/Nakiri Ayame's yo dayo_.mp3"))
         # Sleep while audio is playing.
         while vc.is_playing():
             await asyncio.sleep(.1)
         await vc.disconnect()
       else:
-        voice.play(discord.FFmpegPCMAudio(source="Nakiri Ayame's yo dayo_.mp3"))   
+        voice.play(discord.FFmpegPCMAudio(source="sounds/Nakiri Ayame's yo dayo_.mp3"))   
   else:
       await ctx.send(str(ctx.author.name) + "is not in a channel.")
   # Delete command after the audio is done playing.
@@ -618,13 +618,13 @@ async def yodazo(ctx):
       channel = voice_channel.name
       if voice == None:
         vc = await voice_channel.connect()
-        vc.play(discord.FFmpegPCMAudio(source="Yo Dazo!.mp3"))
+        vc.play(discord.FFmpegPCMAudio(source="sounds/Yo Dazo!.mp3"))
         # Sleep while audio is playing.
         while vc.is_playing():
             await asyncio.sleep(.1)
         await vc.disconnect()
       else:
-        voice.play(discord.FFmpegPCMAudio(source="Yo Dazo!.mp3"))   
+        voice.play(discord.FFmpegPCMAudio(source="sounds/Yo Dazo!.mp3"))   
   else:
       await ctx.send(str(ctx.author.name) + "is not in a channel.")
   # Delete command after the audio is done playing.
@@ -640,13 +640,13 @@ async def jonathan(ctx):
       channel = voice_channel.name
       if voice == None:
         vc = await voice_channel.connect()
-        vc.play(discord.FFmpegPCMAudio(source="Jonathan's theme but its only the BEST part.mp3"))
+        vc.play(discord.FFmpegPCMAudio(source="sounds/Jonathan's theme but its only the BEST part.mp3"))
         # Sleep while audio is playing.
         while vc.is_playing():
             await asyncio.sleep(.1)
         await vc.disconnect()
       else:
-        voice.play(discord.FFmpegPCMAudio(source="Jonathan's theme but its only the BEST part.mp3"))   
+        voice.play(discord.FFmpegPCMAudio(source="sounds/Jonathan's theme but its only the BEST part.mp3"))   
   else:
       await ctx.send(str(ctx.author.name) + "is not in a channel.")
   # Delete command after the audio is done playing.
@@ -662,13 +662,13 @@ async def joseph(ctx):
       channel = voice_channel.name
       if voice == None:
         vc = await voice_channel.connect()
-        vc.play(discord.FFmpegPCMAudio(source="Joseph's theme but only the good part (1).mp3"))
+        vc.play(discord.FFmpegPCMAudio(source="sounds/Joseph's theme but only the good part (1).mp3"))
         # Sleep while audio is playing.
         while vc.is_playing():
             await asyncio.sleep(.1)
         await vc.disconnect()
       else:
-        voice.play(discord.FFmpegPCMAudio(source="Joseph's theme but only the good part (1).mp3"))   
+        voice.play(discord.FFmpegPCMAudio(source="sounds/Joseph's theme but only the good part (1).mp3"))   
   else:
       await ctx.send(str(ctx.author.name) + "is not in a channel.")
   # Delete command after the audio is done playing.
@@ -684,13 +684,13 @@ async def jotaro(ctx):
       channel = voice_channel.name
       if voice == None:
         vc = await voice_channel.connect()
-        vc.play(discord.FFmpegPCMAudio(source="Jotaro’s theme but it’s only the good part.mp3"))
+        vc.play(discord.FFmpegPCMAudio(source="sounds/Jotaro’s theme but it’s only the good part.mp3"))
         # Sleep while audio is playing.
         while vc.is_playing():
             await asyncio.sleep(.1)
         await vc.disconnect()
       else:
-        voice.play(discord.FFmpegPCMAudio(source="Jotaro’s theme but it’s only the good part.mp3")) 
+        voice.play(discord.FFmpegPCMAudio(source="sounds/Jotaro’s theme but it’s only the good part.mp3")) 
 
   else:
       await ctx.send(str(ctx.author.name) + "is not in a channel.")
@@ -707,13 +707,13 @@ async def josuke(ctx):
       channel = voice_channel.name
       if voice == None:
         vc = await voice_channel.connect()
-        vc.play(discord.FFmpegPCMAudio(source="Josuke theme but it's only the good part.mp3"))
+        vc.play(discord.FFmpegPCMAudio(source="sounds/Josuke theme but it's only the good part.mp3"))
         # Sleep while audio is playing.
         while vc.is_playing():
             await asyncio.sleep(.1)
         await vc.disconnect()
       else:
-        voice.play(discord.FFmpegPCMAudio(source="Josuke theme but it's only the good part.mp3"))   
+        voice.play(discord.FFmpegPCMAudio(source="sounds/Josuke theme but it's only the good part.mp3"))   
   else:
       await ctx.send(str(ctx.author.name) + "is not in a channel.")
   # Delete command after the audio is done playing.
@@ -729,13 +729,13 @@ async def kira(ctx):
       channel = voice_channel.name
       if voice == None:
         vc = await voice_channel.connect()
-        vc.play(discord.FFmpegPCMAudio(source="Killer (Yoshikage Kira's Theme) - Jojo's Bizarre Adventure Part 4_ Diamond Is Unbreakable.mp3"))
+        vc.play(discord.FFmpegPCMAudio(source="sounds/Killer (Yoshikage Kira's Theme) - Jojo's Bizarre Adventure Part 4_ Diamond Is Unbreakable.mp3"))
         # Sleep while audio is playing.
         while vc.is_playing():
             await asyncio.sleep(.1)
         await vc.disconnect()
       else:
-        voice.play(discord.FFmpegPCMAudio(source="Killer (Yoshikage Kira's Theme) - Jojo's Bizarre Adventure Part 4_ Diamond Is Unbreakable.mp3"))   
+        voice.play(discord.FFmpegPCMAudio(source="sounds/Killer (Yoshikage Kira's Theme) - Jojo's Bizarre Adventure Part 4_ Diamond Is Unbreakable.mp3"))   
   else:
       await ctx.send(str(ctx.author.name) + "is not in a channel.")
   # Delete command after the audio is done playing.
@@ -751,13 +751,13 @@ async def pillarmen(ctx):
       channel = voice_channel.name
       if voice == None:
         vc = await voice_channel.connect()
-        vc.play(discord.FFmpegPCMAudio(source="Jojo's Bizarre Adventure- Awaken(Pillar Men Theme).mp3"))
+        vc.play(discord.FFmpegPCMAudio(source="sounds/Jojo's Bizarre Adventure- Awaken(Pillar Men Theme).mp3"))
         # Sleep while audio is playing.
         while vc.is_playing():
             await asyncio.sleep(.1)
         await vc.disconnect()
       else:
-        voice.play(discord.FFmpegPCMAudio(source="Jojo's Bizarre Adventure- Awaken(Pillar Men Theme).mp3"))   
+        voice.play(discord.FFmpegPCMAudio(source="sounds/Jojo's Bizarre Adventure- Awaken(Pillar Men Theme).mp3"))   
   else:
       await ctx.send(str(ctx.author.name) + "is not in a channel.")
   # Delete command after the audio is done playing.
@@ -786,32 +786,32 @@ async def speak(ctx,*, message):
   voice_channel = ctx.author.voice.channel
   channel = None
   tts = gTTS(message)
-  with open('tts.mp3', 'wb') as f:
+  with open('sounds/tts.mp3', 'wb') as f:
         tts.write_to_fp(f)  
   voice = discord.utils.get(client.voice_clients, guild=ctx.guild)          
   if voice_channel != None:
       channel = voice_channel.name
       if voice == None:
        vc = await voice_channel.connect()
-       vc.play(discord.FFmpegPCMAudio(source="tts.mp3")) 
+       vc.play(discord.FFmpegPCMAudio(source="sounds/tts.mp3")) 
       else:
-        voice.play(discord.FFmpegPCMAudio(source="tts.mp3")) 
+        voice.play(discord.FFmpegPCMAudio(source="sounds/tts.mp3")) 
 
 @client.command()
 async def speak2(ctx,*, message):       
   voice_channel = ctx.author.voice.channel
   channel = None
   tts = gTTS(message, lang='en', tld='com.au')
-  with open('tts.mp3', 'wb') as f:
+  with open('sounds/tts.mp3', 'wb') as f:
         tts.write_to_fp(f)  
   voice = discord.utils.get(client.voice_clients, guild=ctx.guild)          
   if voice_channel != None:
       channel = voice_channel.name
       if voice == None:
        vc = await voice_channel.connect()
-       vc.play(discord.FFmpegPCMAudio(source="tts.mp3")) 
+       vc.play(discord.FFmpegPCMAudio(source="sounds/tts.mp3")) 
       else:
-        voice.play(discord.FFmpegPCMAudio(source="tts.mp3"))        
+        voice.play(discord.FFmpegPCMAudio(source="sounds/tts.mp3"))        
 
 @client.command()
 async def join(ctx):        
@@ -1019,17 +1019,17 @@ async def botansneeze(ctx, loop=None):
         
         if loop=="loop":
           def loop():  
-            vc.play(discord.FFmpegPCMAudio(source="botansneeze.mp3"), after=lambda e: loop())
+            vc.play(discord.FFmpegPCMAudio(source="sounds/botansneeze.mp3"), after=lambda e: loop())
           loop()
         else:
-            vc.play(discord.FFmpegPCMAudio(source="botansneeze.mp3"))
+            vc.play(discord.FFmpegPCMAudio(source="sounds/botansneeze.mp3"))
       else:
         if loop=="loop":
           def loop2():  
-            voice.play(discord.FFmpegPCMAudio(source="botansneeze.mp3"), after=lambda e: loop2())
+            voice.play(discord.FFmpegPCMAudio(source="sounds/botansneeze.mp3"), after=lambda e: loop2())
           loop2()
         else:
-            voice.play(discord.FFmpegPCMAudio(source="botansneeze.mp3"))
+            voice.play(discord.FFmpegPCMAudio(source="sounds/botansneeze.mp3"))
   else:
       await ctx.send(str(ctx.author.name) + "is not in a channel.")
   # Delete command after the audio is done playing.
@@ -1195,7 +1195,7 @@ async def pillarmen(ctx):
 async def tts(ctx):
   em = discord.Embed(title = "Text to speech",   description = 'Send a TTS message in VC')
   em.add_field(name="**Syntax**", value="\\ <message>")
-  em.add_field(name="**Accents**", value="\\ (US default)\n\\au (Australia)\n\\uk (United Kingdom)\n\\ca (Canada)\n\\in (India)\n\\ie (Ireland)\n\\za (South Africa)\n\\ca (Canada)\n\\fr (France)")
+  em.add_field(name="**Accents**", value="\\ (US default)\n\\au (Australia)\n\\uk (United Kingdom)\n\\ca (Canada)\n\\in (India)\n\\ie (Ireland)\n\\za (South Africa)\n\\ca (Canada)\n\\fr (France)\n\\my (Malaysia)")
   await ctx.send(embed = em)               
 
 @help.command()
