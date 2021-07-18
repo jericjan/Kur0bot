@@ -143,11 +143,151 @@ async def sus2(message):
           #title = json_list['ext']
           #print(title)
           
-      
-    
-
-      
-   
+@client.listen('on_message')
+async def sus3(message):
+    if message.author == client.user:
+        return
+    msg = message.content.lower()        
+    if msg.startswith('\\ '):
+        voice_channel = message.author.voice.channel
+        channel = None
+        tts = gTTS(msg)
+        with open('tts.mp3', 'wb') as f:
+              tts.write_to_fp(f)  
+        voice = discord.utils.get(client.voice_clients, guild=message.guild)          
+        if voice_channel != None:
+            channel = voice_channel.name
+            if voice == None:
+              vc = await voice_channel.connect()
+              vc.play(discord.FFmpegPCMAudio(source="tts.mp3")) 
+            else:
+              voice.play(discord.FFmpegPCMAudio(source="tts.mp3"))
+    if msg.startswith('\\au '):
+        voice_channel = message.author.voice.channel
+        channel = None
+        tts = gTTS(msg[3:], lang='en', tld='com.au')
+        with open('tts.mp3', 'wb') as f:
+              tts.write_to_fp(f)  
+        voice = discord.utils.get(client.voice_clients, guild=message.guild)          
+        if voice_channel != None:
+            channel = voice_channel.name
+            if voice == None:
+              vc = await voice_channel.connect()
+              vc.play(discord.FFmpegPCMAudio(source="tts.mp3")) 
+            else:
+              voice.play(discord.FFmpegPCMAudio(source="tts.mp3"))            
+    if msg.startswith('\\uk '):
+        voice_channel = message.author.voice.channel
+        channel = None
+        tts = gTTS(msg[3:], lang='en', tld='co.uk')
+        with open('tts.mp3', 'wb') as f:
+              tts.write_to_fp(f)  
+        voice = discord.utils.get(client.voice_clients, guild=message.guild)          
+        if voice_channel != None:
+            channel = voice_channel.name
+            if voice == None:
+              vc = await voice_channel.connect()
+              vc.play(discord.FFmpegPCMAudio(source="tts.mp3")) 
+            else:
+              voice.play(discord.FFmpegPCMAudio(source="tts.mp3"))
+    if msg.startswith('\\ca '):
+        voice_channel = message.author.voice.channel
+        channel = None
+        tts = gTTS(msg[3:], lang='en', tld='ca')
+        with open('tts.mp3', 'wb') as f:
+              tts.write_to_fp(f)  
+        voice = discord.utils.get(client.voice_clients, guild=message.guild)          
+        if voice_channel != None:
+            channel = voice_channel.name
+            if voice == None:
+              vc = await voice_channel.connect()
+              vc.play(discord.FFmpegPCMAudio(source="tts.mp3")) 
+            else:
+              voice.play(discord.FFmpegPCMAudio(source="tts.mp3"))
+    if msg.startswith('\\in '):
+        voice_channel = message.author.voice.channel
+        channel = None
+        tts = gTTS(msg[3:], lang='en', tld='co.in')
+        with open('tts.mp3', 'wb') as f:
+              tts.write_to_fp(f)  
+        voice = discord.utils.get(client.voice_clients, guild=message.guild)          
+        if voice_channel != None:
+            channel = voice_channel.name
+            if voice == None:
+              vc = await voice_channel.connect()
+              vc.play(discord.FFmpegPCMAudio(source="tts.mp3")) 
+            else:
+              voice.play(discord.FFmpegPCMAudio(source="tts.mp3"))  
+    if msg.startswith('\\ie '):
+        voice_channel = message.author.voice.channel
+        channel = None
+        tts = gTTS(msg[3:], lang='en', tld='ie')
+        with open('tts.mp3', 'wb') as f:
+              tts.write_to_fp(f)  
+        voice = discord.utils.get(client.voice_clients, guild=message.guild)          
+        if voice_channel != None:
+            channel = voice_channel.name
+            if voice == None:
+              vc = await voice_channel.connect()
+              vc.play(discord.FFmpegPCMAudio(source="tts.mp3")) 
+            else:
+              voice.play(discord.FFmpegPCMAudio(source="tts.mp3"))  
+    if msg.startswith('\\za '):
+        voice_channel = message.author.voice.channel
+        channel = None
+        tts = gTTS(msg[3:], lang='en', tld='co.za')
+        with open('tts.mp3', 'wb') as f:
+              tts.write_to_fp(f)  
+        voice = discord.utils.get(client.voice_clients, guild=message.guild)          
+        if voice_channel != None:
+            channel = voice_channel.name
+            if voice == None:
+              vc = await voice_channel.connect()
+              vc.play(discord.FFmpegPCMAudio(source="tts.mp3")) 
+            else:
+              voice.play(discord.FFmpegPCMAudio(source="tts.mp3"))
+    if msg.startswith('\\ca '):
+        voice_channel = message.author.voice.channel
+        channel = None
+        tts = gTTS(msg[3:], lang='en', tld='ca')
+        with open('tts.mp3', 'wb') as f:
+              tts.write_to_fp(f)  
+        voice = discord.utils.get(client.voice_clients, guild=message.guild)          
+        if voice_channel != None:
+            channel = voice_channel.name
+            if voice == None:
+              vc = await voice_channel.connect()
+              vc.play(discord.FFmpegPCMAudio(source="tts.mp3")) 
+            else:
+              voice.play(discord.FFmpegPCMAudio(source="tts.mp3"))
+    if msg.startswith('\\fr '):
+        voice_channel = message.author.voice.channel
+        channel = None
+        tts = gTTS(msg[3:], lang='en', tld='fr')
+        with open('tts.mp3', 'wb') as f:
+              tts.write_to_fp(f)  
+        voice = discord.utils.get(client.voice_clients, guild=message.guild)          
+        if voice_channel != None:
+            channel = voice_channel.name
+            if voice == None:
+              vc = await voice_channel.connect()
+              vc.play(discord.FFmpegPCMAudio(source="tts.mp3")) 
+            else:
+              voice.play(discord.FFmpegPCMAudio(source="tts.mp3"))                 
+    if msg.startswith('\\my '):
+        voice_channel = message.author.voice.channel
+        channel = None
+        tts = gTTS(msg[3:], lang='en', tld='com.my')
+        with open('tts.mp3', 'wb') as f:
+              tts.write_to_fp(f)  
+        voice = discord.utils.get(client.voice_clients, guild=message.guild)          
+        if voice_channel != None:
+            channel = voice_channel.name
+            if voice == None:
+              vc = await voice_channel.connect()
+              vc.play(discord.FFmpegPCMAudio(source="tts.mp3")) 
+            else:
+              voice.play(discord.FFmpegPCMAudio(source="tts.mp3"))                                 
 @client.command()
 async def bulk(ctx, number):
   print(ctx.channel.id)
@@ -246,6 +386,11 @@ async def emote(ctx, *message):
         for webhook in webhooks:
                 await webhook.delete()
         await ctx.message.delete()
+
+@client.command(aliases=['s'])
+async def sticker(ctx, msgID: int):
+  msg = await ctx.fetch_message(msgID)
+  await ctx.send(msg.stickers)
 
 def paginate(lines, chars=2000):
     size = 0
@@ -653,6 +798,22 @@ async def speak(ctx,*, message):
         voice.play(discord.FFmpegPCMAudio(source="tts.mp3")) 
 
 @client.command()
+async def speak2(ctx,*, message):       
+  voice_channel = ctx.author.voice.channel
+  channel = None
+  tts = gTTS(message, lang='en', tld='com.au')
+  with open('tts.mp3', 'wb') as f:
+        tts.write_to_fp(f)  
+  voice = discord.utils.get(client.voice_clients, guild=ctx.guild)          
+  if voice_channel != None:
+      channel = voice_channel.name
+      if voice == None:
+       vc = await voice_channel.connect()
+       vc.play(discord.FFmpegPCMAudio(source="tts.mp3")) 
+      else:
+        voice.play(discord.FFmpegPCMAudio(source="tts.mp3"))        
+
+@client.command()
 async def join(ctx):        
   voice_channel = ctx.author.voice.channel
   await voice_channel.connect()
@@ -784,35 +945,66 @@ async def fastclip(ctx,link,start,end,filename):
 @client.command()
 async def download(ctx,link):
   import codecs
-  message = await ctx.send('Downloading...')
-  coms = ['youtube-dl', '-f','best',link]
-  coms2 = ['youtube-dl', '-f','best', '--get-filename',link]
-  print(join(coms))
-  print(join(coms2))
-  proc = await asyncio.create_subprocess_exec(*coms, 
-           stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-  #stdout, stderr = await proc.communicate()
-  while proc.returncode is None:
-    line = await proc.stdout.read(100)
-    if not line:
-            break
-    await message.edit(content=line.decode('utf-8'))
-    await asyncio.sleep(1)
-  await message.edit(content="Almost there...")  
-  out2 = await asyncio.create_subprocess_exec(*coms2, 
-                      stdout=subprocess.PIPE, stderr=subprocess.STDOUT)  
-  while out2.returncode is None:
-    await message.edit(content="A little more...")  
-  else:  
-    try:
-      thing = await out2.stdout.read()
-      filename = thing.decode('utf-8').split("\n")[0]
-      await message.edit(content="Sending video...")  
-      await ctx.send(file=discord.File(filename))
-    except discord.HTTPException:  
-      await ctx.send('File too large, broski <:towashrug:853606191711649812>')
-  os.remove(filename)
-  await message.delete()                    
+  if "reddit.com" in link:
+    message = await ctx.send('Downloading...')
+    coms = ['youtube-dl', '-f','bestvideo+bestaudio',link]
+    coms2 = ['youtube-dl', '--get-filename',link]
+    print(join(coms))
+    print(join(coms2))
+    proc = await asyncio.create_subprocess_exec(*coms, 
+            stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+    #stdout, stderr = await proc.communicate()
+    while proc.returncode is None:
+      line = await proc.stdout.read(100)
+      if not line:
+              break
+      await message.edit(content=line.decode('utf-8'))
+      await asyncio.sleep(1)
+    await message.edit(content="Almost there...")  
+    out2 = await asyncio.create_subprocess_exec(*coms2, 
+                        stdout=subprocess.PIPE, stderr=subprocess.STDOUT)  
+    while out2.returncode is None:
+      await message.edit(content="A little more...")  
+    else:  
+      try:
+        thing = await out2.stdout.read()
+        filename = thing.decode('utf-8').split("\n")[0]
+        await message.edit(content="Sending video...")  
+        await ctx.send(file=discord.File(filename))
+      except discord.HTTPException:  
+        await ctx.send('File too large, broski <:towashrug:853606191711649812>')
+    os.remove(filename)
+    await message.delete()  
+  else:
+    message = await ctx.send('Downloading...')
+    coms = ['youtube-dl', '-f','best',link]
+    coms2 = ['youtube-dl', '-f','best', '--get-filename',link]
+    print(join(coms))
+    print(join(coms2))
+    proc = await asyncio.create_subprocess_exec(*coms, 
+            stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+    #stdout, stderr = await proc.communicate()
+    while proc.returncode is None:
+      line = await proc.stdout.read(100)
+      if not line:
+              break
+      await message.edit(content=line.decode('utf-8'))
+      await asyncio.sleep(1)
+    await message.edit(content="Almost there...")  
+    out2 = await asyncio.create_subprocess_exec(*coms2, 
+                        stdout=subprocess.PIPE, stderr=subprocess.STDOUT)  
+    while out2.returncode is None:
+      await message.edit(content="A little more...")  
+    else:  
+      try:
+        thing = await out2.stdout.read()
+        filename = thing.decode('utf-8').split("\n")[0]
+        await message.edit(content="Sending video...")  
+        await ctx.send(file=discord.File(filename))
+      except discord.HTTPException:  
+        await ctx.send('File too large, broski <:towashrug:853606191711649812>')
+    os.remove(filename)
+    await message.delete()                    
 
 @client.command()
 async def botansneeze(ctx, loop=None):  
@@ -853,7 +1045,8 @@ async def help(ctx):
   em.add_field(name="why", value="fortnite")
   em.add_field(name="others", value="emote,getemotes,badapple,clip,fastclip,download")
   em.add_field(name="reactions",value="fmega,kotowaru,ascend,jizz")
-  em.add_field(name="vc",value="letsgo,vtubus,leave,ding,yodayo,yodazo,jonathan,joseph,jotaro,josuke,giorno,kira,pillarmen,tts,botansneeze")
+  em.add_field(name="vc",value="letsgo,vtubus,leave,ding,yodayo,yodazo,jonathan,joseph,jotaro,josuke,giorno,kira,pillarmen,botansneeze")
+  em.add_field(name="TTS",value=" just do \\ while in VC (\"k.help tts\" for more info)")
   await ctx.send(embed = em)
 
 
@@ -1001,6 +1194,8 @@ async def pillarmen(ctx):
 @help.command()
 async def tts(ctx):
   em = discord.Embed(title = "Text to speech",   description = 'Send a TTS message in VC')
+  em.add_field(name="**Syntax**", value="\\ <message>")
+  em.add_field(name="**Accents**", value="\\ (US default)\n\\au (Australia)\n\\uk (United Kingdom)\n\\ca (Canada)\n\\in (India)\n\\ie (Ireland)\n\\za (South Africa)\n\\ca (Canada)\n\\fr (France)")
   await ctx.send(embed = em)               
 
 @help.command()
