@@ -681,6 +681,72 @@ async def pillarmen(ctx):
   await ctx.message.delete()  
 
 @client.command()
+async def boom(ctx):  
+   # Gets voice channel of message author
+  voice_channel = ctx.author.voice.channel
+  channel = None
+  voice = discord.utils.get(client.voice_clients, guild=ctx.guild)         
+  if voice_channel != None:
+      channel = voice_channel.name
+      if voice == None:
+        vc = await voice_channel.connect()
+        vc.play(discord.FFmpegPCMAudio(source="sounds/boom.m4a"))
+        # Sleep while audio is playing.
+        while vc.is_playing():
+            await asyncio.sleep(.1)
+        await vc.disconnect()
+      else:
+        voice.play(discord.FFmpegPCMAudio(source="sounds/boom.m4a"))   
+  else:
+      await ctx.send(str(ctx.author.name) + "is not in a channel.")
+  # Delete command after the audio is done playing.
+  await ctx.message.delete()  
+
+@client.command(aliases=['ogei'])
+async def ogey(ctx):  
+   # Gets voice channel of message author
+  voice_channel = ctx.author.voice.channel
+  channel = None
+  voice = discord.utils.get(client.voice_clients, guild=ctx.guild)         
+  if voice_channel != None:
+      channel = voice_channel.name
+      if voice == None:
+        vc = await voice_channel.connect()
+        vc.play(discord.FFmpegPCMAudio(source="sounds/ogey.mp3"))
+        # Sleep while audio is playing.
+        while vc.is_playing():
+            await asyncio.sleep(.1)
+        await vc.disconnect()
+      else:
+        voice.play(discord.FFmpegPCMAudio(source="sounds/ogey.mp3"))   
+  else:
+      await ctx.send(str(ctx.author.name) + "is not in a channel.")
+  # Delete command after the audio is done playing.
+  await ctx.message.delete()    
+
+@client.command()
+async def rrat(ctx):  
+   # Gets voice channel of message author
+  voice_channel = ctx.author.voice.channel
+  channel = None
+  voice = discord.utils.get(client.voice_clients, guild=ctx.guild)         
+  if voice_channel != None:
+      channel = voice_channel.name
+      if voice == None:
+        vc = await voice_channel.connect()
+        vc.play(discord.FFmpegPCMAudio(source="sounds/rrat.mp3"))
+        # Sleep while audio is playing.
+        while vc.is_playing():
+            await asyncio.sleep(.1)
+        await vc.disconnect()
+      else:
+        voice.play(discord.FFmpegPCMAudio(source="sounds/rrat.mp3"))   
+  else:
+      await ctx.send(str(ctx.author.name) + "is not in a channel.")
+  # Delete command after the audio is done playing.
+  await ctx.message.delete()     
+
+@client.command()
 async def leave(ctx):
     if (ctx.voice_client): # If the bot is in a voice channel 
         await ctx.guild.voice_client.disconnect() # Leave the channel
@@ -962,7 +1028,7 @@ async def help(ctx):
   em.add_field(name="why", value="fortnite")
   em.add_field(name="others", value="emote,getemotes,badapple,clip,fastclip,download")
   em.add_field(name="reactions",value="fmega,kotowaru,ascend,jizz")
-  em.add_field(name="vc",value="letsgo,vtubus,leave,ding,yodayo,yodazo,jonathan,joseph,jotaro,josuke,giorno,kira,pillarmen,botansneeze")
+  em.add_field(name="vc",value="letsgo,vtubus,leave,ding,yodayo,yodazo,jonathan,joseph,jotaro,josuke,giorno,kira,pillarmen,botansneeze,boom,ogey,rrat")
   em.add_field(name="TTS",value=" just do \\ while in VC (\"k.help tts\" for more info)")
   await ctx.send(embed = em)
 
@@ -1146,6 +1212,22 @@ async def botansneeze(ctx):
   em = discord.Embed(title = "Botan Sneeze",   description = 'because fuck you, have a botan sneeze')
   em.add_field(name="**Syntax**", value="k.botansneeze [loop]")
   await ctx.send(embed = em)  
+
+@help.command()
+async def boom(ctx):
+  em = discord.Embed(title = "Vine Boom SFX",   description = 'plays the funni boom sfx in vc')
+  await ctx.send(embed = em)  
+
+@help.command()
+async def ogey(ctx):
+  em = discord.Embed(title = "Ogey...",   description = 'Plays Pekora\'s ogey in VC.')
+  em.add_field(name="**Aliases**", value="ogei")
+  await ctx.send(embed = em)
+
+@help.command()
+async def rrat(ctx):
+  em = discord.Embed(title = "Rrat!",   description = 'Plays Pekora\'s rrat in VC.')
+  await ctx.send(embed = em)    
 
 keep_alive()
 client.run(os.getenv('TOKEN'))
