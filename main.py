@@ -690,13 +690,13 @@ async def boom(ctx):
       channel = voice_channel.name
       if voice == None:
         vc = await voice_channel.connect()
-        vc.play(discord.FFmpegPCMAudio(source="sounds/boom.m4a"))
+        vc.play(discord.FFmpegPCMAudio(source="sounds/boom.mp3"))
         # Sleep while audio is playing.
         while vc.is_playing():
             await asyncio.sleep(.1)
         await vc.disconnect()
       else:
-        voice.play(discord.FFmpegPCMAudio(source="sounds/boom.m4a"))   
+        voice.play(discord.FFmpegPCMAudio(source="sounds/boom.mp3"))   
   else:
       await ctx.send(str(ctx.author.name) + "is not in a channel.")
   # Delete command after the audio is done playing.
