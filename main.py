@@ -420,532 +420,138 @@ async def jizz(ctx):
       await webhook.delete()
   await ctx.message.delete()  
 
-@client.command()
-async def letsgo(ctx):  
-   # Gets voice channel of message author
+async def vcplay(ctx, a): 
   voice_channel = ctx.author.voice.channel
   channel = None
-  voice = discord.utils.get(client.voice_clients, guild=ctx.guild)   
+  voice = discord.utils.get(client.voice_clients, guild=ctx.guild)         
   if voice_channel != None:
       channel = voice_channel.name
       if voice == None:
         vc = await voice_channel.connect()
-        vc.play(discord.FFmpegPCMAudio(source="sounds/vibez-lets-go.mp3"))
+        vc.play(discord.FFmpegPCMAudio(source=a))
         # Sleep while audio is playing.
         while vc.is_playing():
             await asyncio.sleep(.1)
         await vc.disconnect()
       else:
-        voice.play(discord.FFmpegPCMAudio(source="sounds/vibez-lets-go.mp3"))   
+        voice.play(discord.FFmpegPCMAudio(source=a))   
   else:
       await ctx.send(str(ctx.author.name) + "is not in a channel.")
   # Delete command after the audio is done playing.
-  await ctx.message.delete()
+  await ctx.message.delete() 
+
+@client.command()
+async def letsgo(ctx):  
+  await vcplay(ctx,"sounds/vibez-lets-go.mp3")
 
 @client.command()
 async def vtubus(ctx):  
-   # Gets voice channel of message author
-  voice_channel = ctx.author.voice.channel
-  channel = None
-  voice = discord.utils.get(client.voice_clients, guild=ctx.guild)   
-  if voice_channel != None:
-      channel = voice_channel.name
-      if voice == None:
-        vc = await voice_channel.connect()
-        vc.play(discord.FFmpegPCMAudio(source="sounds/vtubus.mp3"))
-        # Sleep while audio is playing.
-        while vc.is_playing():
-            await asyncio.sleep(.1)
-        await vc.disconnect()
-      else:
-        voice.play(discord.FFmpegPCMAudio(source="sounds/vtubus.mp3"))   
-  else:
-      await ctx.send(str(ctx.author.name) + "is not in a channel.")
-  # Delete command after the audio is done playing.
-  await ctx.message.delete()  
+  await vcplay(ctx,"sounds/vtubus.mp3")
 
 @client.command()
 async def giorno(ctx):  
-   # Gets voice channel of message author
-  voice_channel = ctx.author.voice.channel
-  channel = None
-  voice = discord.utils.get(client.voice_clients, guild=ctx.guild)   
-  if voice_channel != None:
-      channel = voice_channel.name
-      if voice == None:
-        vc = await voice_channel.connect()
-        vc.play(discord.FFmpegPCMAudio(source="sounds/giorno theme.mp3"))
-        # Sleep while audio is playing.
-        while vc.is_playing():
-            await asyncio.sleep(.1)
-        await vc.disconnect()
-      else:
-        voice.play(discord.FFmpegPCMAudio(source="sounds/giorno theme.mp3"))   
-  else:
-      await ctx.send(str(ctx.author.name) + "is not in a channel.")
-  # Delete command after the audio is done playing.
-  await ctx.message.delete()   
+  await vcplay(ctx,"sounds/giorno theme.mp3")
 
 @client.command()
-async def ding(ctx):  
-   # Gets voice channel of message author
-  voice_channel = ctx.author.voice.channel
-  channel = None
-  voice = discord.utils.get(client.voice_clients, guild=ctx.guild)   
-  if voice_channel != None:
-      channel = voice_channel.name
-      if voice == None:
-        vc = await voice_channel.connect()
-        vc.play(discord.FFmpegPCMAudio(source="sounds/DING DING DING DING DING DING DING DI DI DING.mp3"))
-        # Sleep while audio is playing.
-        while vc.is_playing():
-            await asyncio.sleep(.1)
-        await vc.disconnect()
-      else:
-        voice.play(discord.FFmpegPCMAudio(source="sounds/DING DING DING DING DING DING DING DI DI DING.mp3"))   
-  else:
-      await ctx.send(str(ctx.author.name) + "is not in a channel.")
-  # Delete command after the audio is done playing.
-  await ctx.message.delete()   
+async def ding(ctx): 
+  await vcplay(ctx,"sounds/DING DING DING DING DING DING DING DI DI DING.mp3") 
 
 @client.command()
 async def yodayo(ctx):  
-   # Gets voice channel of message author
-  voice_channel = ctx.author.voice.channel
-  channel = None
-  voice = discord.utils.get(client.voice_clients, guild=ctx.guild)   
-  if voice_channel != None:
-      channel = voice_channel.name
-      if voice == None:
-        vc = await voice_channel.connect()
-        vc.play(discord.FFmpegPCMAudio(source="sounds/Nakiri Ayame's yo dayo_.mp3"))
-        # Sleep while audio is playing.
-        while vc.is_playing():
-            await asyncio.sleep(.1)
-        await vc.disconnect()
-      else:
-        voice.play(discord.FFmpegPCMAudio(source="sounds/Nakiri Ayame's yo dayo_.mp3"))   
-  else:
-      await ctx.send(str(ctx.author.name) + "is not in a channel.")
-  # Delete command after the audio is done playing.
-  await ctx.message.delete()  
+  await vcplay(ctx,"sounds/Nakiri Ayame's yo dayo_.mp3")
 
 @client.command()
 async def yodazo(ctx):  
-   # Gets voice channel of message author
-  voice_channel = ctx.author.voice.channel
-  channel = None
-  voice = discord.utils.get(client.voice_clients, guild=ctx.guild)   
-  if voice_channel != None:
-      channel = voice_channel.name
-      if voice == None:
-        vc = await voice_channel.connect()
-        vc.play(discord.FFmpegPCMAudio(source="sounds/Yo Dazo!.mp3"))
-        # Sleep while audio is playing.
-        while vc.is_playing():
-            await asyncio.sleep(.1)
-        await vc.disconnect()
-      else:
-        voice.play(discord.FFmpegPCMAudio(source="sounds/Yo Dazo!.mp3"))   
-  else:
-      await ctx.send(str(ctx.author.name) + "is not in a channel.")
-  # Delete command after the audio is done playing.
-  await ctx.message.delete()      
+  await vcplay(ctx,"sounds/Yo Dazo!.mp3")    
 
 @client.command()
 async def jonathan(ctx):  
-   # Gets voice channel of message author
-  voice_channel = ctx.author.voice.channel
-  channel = None
-  voice = discord.utils.get(client.voice_clients, guild=ctx.guild)   
-  if voice_channel != None:
-      channel = voice_channel.name
-      if voice == None:
-        vc = await voice_channel.connect()
-        vc.play(discord.FFmpegPCMAudio(source="sounds/Jonathan's theme but its only the BEST part.mp3"))
-        # Sleep while audio is playing.
-        while vc.is_playing():
-            await asyncio.sleep(.1)
-        await vc.disconnect()
-      else:
-        voice.play(discord.FFmpegPCMAudio(source="sounds/Jonathan's theme but its only the BEST part.mp3"))   
-  else:
-      await ctx.send(str(ctx.author.name) + "is not in a channel.")
-  # Delete command after the audio is done playing.
-  await ctx.message.delete()      
+  await vcplay(ctx,"sounds/Jonathan's theme but its only the BEST part.mp3")      
 
 @client.command()
 async def joseph(ctx):  
-   # Gets voice channel of message author
-  voice_channel = ctx.author.voice.channel
-  channel = None
-  voice = discord.utils.get(client.voice_clients, guild=ctx.guild)   
-  if voice_channel != None:
-      channel = voice_channel.name
-      if voice == None:
-        vc = await voice_channel.connect()
-        vc.play(discord.FFmpegPCMAudio(source="sounds/Joseph's theme but only the good part (1).mp3"))
-        # Sleep while audio is playing.
-        while vc.is_playing():
-            await asyncio.sleep(.1)
-        await vc.disconnect()
-      else:
-        voice.play(discord.FFmpegPCMAudio(source="sounds/Joseph's theme but only the good part (1).mp3"))   
-  else:
-      await ctx.send(str(ctx.author.name) + "is not in a channel.")
-  # Delete command after the audio is done playing.
-  await ctx.message.delete()       
+  await vcplay(ctx,"sounds/Joseph's theme but only the good part (1).mp3")        
 
 @client.command()
 async def jotaro(ctx):  
-   # Gets voice channel of message author
-  voice_channel = ctx.author.voice.channel
-  channel = None
-  voice = discord.utils.get(client.voice_clients, guild=ctx.guild)   
-  if voice_channel != None:
-      channel = voice_channel.name
-      if voice == None:
-        vc = await voice_channel.connect()
-        vc.play(discord.FFmpegPCMAudio(source="sounds/Jotaro’s theme but it’s only the good part.mp3"))
-        # Sleep while audio is playing.
-        while vc.is_playing():
-            await asyncio.sleep(.1)
-        await vc.disconnect()
-      else:
-        voice.play(discord.FFmpegPCMAudio(source="sounds/Jotaro’s theme but it’s only the good part.mp3")) 
-
-  else:
-      await ctx.send(str(ctx.author.name) + "is not in a channel.")
-  # Delete command after the audio is done playing.
-  await ctx.message.delete()  
+  await vcplay(ctx,"sounds/Jotaro’s theme but it’s only the good part.mp3") 
 
 @client.command()
 async def josuke(ctx):  
-   # Gets voice channel of message author
-  voice_channel = ctx.author.voice.channel
-  channel = None
-  voice = discord.utils.get(client.voice_clients, guild=ctx.guild)   
-  if voice_channel != None:
-      channel = voice_channel.name
-      if voice == None:
-        vc = await voice_channel.connect()
-        vc.play(discord.FFmpegPCMAudio(source="sounds/Josuke theme but it's only the good part.mp3"))
-        # Sleep while audio is playing.
-        while vc.is_playing():
-            await asyncio.sleep(.1)
-        await vc.disconnect()
-      else:
-        voice.play(discord.FFmpegPCMAudio(source="sounds/Josuke theme but it's only the good part.mp3"))   
-  else:
-      await ctx.send(str(ctx.author.name) + "is not in a channel.")
-  # Delete command after the audio is done playing.
-  await ctx.message.delete()   
+  await vcplay(ctx,"sounds/Josuke theme but it's only the good part.mp3")   
 
 @client.command()
 async def kira(ctx):  
-   # Gets voice channel of message author
-  voice_channel = ctx.author.voice.channel
-  channel = None
-  voice = discord.utils.get(client.voice_clients, guild=ctx.guild)   
-  if voice_channel != None:
-      channel = voice_channel.name
-      if voice == None:
-        vc = await voice_channel.connect()
-        vc.play(discord.FFmpegPCMAudio(source="sounds/Killer (Yoshikage Kira's Theme) - Jojo's Bizarre Adventure Part 4_ Diamond Is Unbreakable.mp3"))
-        # Sleep while audio is playing.
-        while vc.is_playing():
-            await asyncio.sleep(.1)
-        await vc.disconnect()
-      else:
-        voice.play(discord.FFmpegPCMAudio(source="sounds/Killer (Yoshikage Kira's Theme) - Jojo's Bizarre Adventure Part 4_ Diamond Is Unbreakable.mp3"))   
-  else:
-      await ctx.send(str(ctx.author.name) + "is not in a channel.")
-  # Delete command after the audio is done playing.
-  await ctx.message.delete()       
+  await vcplay(ctx,"sounds/Killer (Yoshikage Kira's Theme) - Jojo's Bizarre Adventure Part 4_ Diamond Is Unbreakable.mp3")        
 
 @client.command()
-async def pillarmen(ctx):  
-   # Gets voice channel of message author
-  voice_channel = ctx.author.voice.channel
-  channel = None
-  voice = discord.utils.get(client.voice_clients, guild=ctx.guild)         
-  if voice_channel != None:
-      channel = voice_channel.name
-      if voice == None:
-        vc = await voice_channel.connect()
-        vc.play(discord.FFmpegPCMAudio(source="sounds/Jojo's Bizarre Adventure- Awaken(Pillar Men Theme).mp3"))
-        # Sleep while audio is playing.
-        while vc.is_playing():
-            await asyncio.sleep(.1)
-        await vc.disconnect()
-      else:
-        voice.play(discord.FFmpegPCMAudio(source="sounds/Jojo's Bizarre Adventure- Awaken(Pillar Men Theme).mp3"))   
-  else:
-      await ctx.send(str(ctx.author.name) + "is not in a channel.")
-  # Delete command after the audio is done playing.
-  await ctx.message.delete()  
+async def pillarmen(ctx): 
+  await vcplay(ctx,"sounds/Jojo's Bizarre Adventure- Awaken(Pillar Men Theme).mp3")     
 
 @client.command()
 async def boom(ctx):  
-   # Gets voice channel of message author
-  voice_channel = ctx.author.voice.channel
-  channel = None
-  voice = discord.utils.get(client.voice_clients, guild=ctx.guild)         
-  if voice_channel != None:
-      channel = voice_channel.name
-      if voice == None:
-        vc = await voice_channel.connect()
-        vc.play(discord.FFmpegPCMAudio(source="sounds/boom.mp3"))
-        # Sleep while audio is playing.
-        while vc.is_playing():
-            await asyncio.sleep(.1)
-        await vc.disconnect()
-      else:
-        voice.play(discord.FFmpegPCMAudio(source="sounds/boom.mp3"))   
-  else:
-      await ctx.send(str(ctx.author.name) + "is not in a channel.")
-  # Delete command after the audio is done playing.
-  await ctx.message.delete()  
+  await vcplay(ctx,"sounds/boom.mp3")  
 
 @client.command(aliases=['ogei'])
 async def ogey(ctx):  
-   # Gets voice channel of message author
-  voice_channel = ctx.author.voice.channel
-  channel = None
-  voice = discord.utils.get(client.voice_clients, guild=ctx.guild)         
-  if voice_channel != None:
-      channel = voice_channel.name
-      if voice == None:
-        vc = await voice_channel.connect()
-        vc.play(discord.FFmpegPCMAudio(source="sounds/ogey.mp3"))
-        # Sleep while audio is playing.
-        while vc.is_playing():
-            await asyncio.sleep(.1)
-        await vc.disconnect()
-      else:
-        voice.play(discord.FFmpegPCMAudio(source="sounds/ogey.mp3"))   
-  else:
-      await ctx.send(str(ctx.author.name) + "is not in a channel.")
-  # Delete command after the audio is done playing.
-  await ctx.message.delete()    
+  await vcplay(ctx,"sounds/ogey.mp3")    
 
 @client.command()
 async def rrat(ctx):  
-   # Gets voice channel of message author
-  voice_channel = ctx.author.voice.channel
-  channel = None
-  voice = discord.utils.get(client.voice_clients, guild=ctx.guild)         
-  if voice_channel != None:
-      channel = voice_channel.name
-      if voice == None:
-        vc = await voice_channel.connect()
-        vc.play(discord.FFmpegPCMAudio(source="sounds/rrat.mp3"))
-        # Sleep while audio is playing.
-        while vc.is_playing():
-            await asyncio.sleep(.1)
-        await vc.disconnect()
-      else:
-        voice.play(discord.FFmpegPCMAudio(source="sounds/rrat.mp3"))   
-  else:
-      await ctx.send(str(ctx.author.name) + "is not in a channel.")
-  # Delete command after the audio is done playing.
-  await ctx.message.delete()     
+  await vcplay(ctx,"sounds/rrat.mp3")       
 
 @client.command()
-async def fart(ctx):  
-   # Gets voice channel of message author
-  voice_channel = ctx.author.voice.channel
-  channel = None
-  voice = discord.utils.get(client.voice_clients, guild=ctx.guild)         
-  if voice_channel != None:
-      channel = voice_channel.name
-      if voice == None:
-        vc = await voice_channel.connect()
-        vc.play(discord.FFmpegPCMAudio(source="sounds/fart.mp3"))
-        # Sleep while audio is playing.
-        while vc.is_playing():
-            await asyncio.sleep(.1)
-        await vc.disconnect()
-      else:
-        voice.play(discord.FFmpegPCMAudio(source="sounds/fart.mp3"))   
-  else:
-      await ctx.send(str(ctx.author.name) + "is not in a channel.")
-  # Delete command after the audio is done playing.
-  await ctx.message.delete()  
+async def fart(ctx): 
+  await vcplay(ctx,"sounds/fart.mp3")     
 
 @client.command()
 async def mogumogu(ctx):  
-   # Gets voice channel of message author
-  voice_channel = ctx.author.voice.channel
-  channel = None
-  voice = discord.utils.get(client.voice_clients, guild=ctx.guild)         
-  if voice_channel != None:
-      channel = voice_channel.name
-      if voice == None:
-        vc = await voice_channel.connect()
-        vc.play(discord.FFmpegPCMAudio(source="sounds/mogu.mp3"))
-        # Sleep while audio is playing.
-        while vc.is_playing():
-            await asyncio.sleep(.1)
-        await vc.disconnect()
-      else:
-        voice.play(discord.FFmpegPCMAudio(source="sounds/mogu.mp3"))   
-  else:
-      await ctx.send(str(ctx.author.name) + "is not in a channel.")
-  # Delete command after the audio is done playing.
-  await ctx.message.delete()     
+  await vcplay(ctx,"sounds/mogu.mp3")   
 
 @client.command()
 async def bababooey(ctx):  
-   # Gets voice channel of message author
-  voice_channel = ctx.author.voice.channel
-  channel = None
-  voice = discord.utils.get(client.voice_clients, guild=ctx.guild)         
-  if voice_channel != None:
-      channel = voice_channel.name
-      if voice == None:
-        vc = await voice_channel.connect()
-        vc.play(discord.FFmpegPCMAudio(source="sounds/bababooey.mp3"))
-        # Sleep while audio is playing.
-        while vc.is_playing():
-            await asyncio.sleep(.1)
-        await vc.disconnect()
-      else:
-        voice.play(discord.FFmpegPCMAudio(source="sounds/bababooey.mp3"))   
-  else:
-      await ctx.send(str(ctx.author.name) + "is not in a channel.")
-  # Delete command after the audio is done playing.
-  await ctx.message.delete()       
+  await vcplay(ctx,"sounds/bababooey.mp3")    
 
 @client.command()
 async def dog(ctx):  
-   # Gets voice channel of message author
-  voice_channel = ctx.author.voice.channel
-  channel = None
-  voice = discord.utils.get(client.voice_clients, guild=ctx.guild)         
-  if voice_channel != None:
-      channel = voice_channel.name
-      if voice == None:
-        vc = await voice_channel.connect()
-        vc.play(discord.FFmpegPCMAudio(source="sounds/dog.mp3"))
-        # Sleep while audio is playing.
-        while vc.is_playing():
-            await asyncio.sleep(.1)
-        await vc.disconnect()
-      else:
-        voice.play(discord.FFmpegPCMAudio(source="sounds/dog.mp3"))   
-  else:
-      await ctx.send(str(ctx.author.name) + "is not in a channel.")
-  # Delete command after the audio is done playing.
-  await ctx.message.delete()     
+  await vcplay(ctx,"sounds/dog.mp3")     
 
 @client.command()
 async def totsugeki(ctx):  
-   # Gets voice channel of message author
-  voice_channel = ctx.author.voice.channel
-  channel = None
-  voice = discord.utils.get(client.voice_clients, guild=ctx.guild)         
-  if voice_channel != None:
-      channel = voice_channel.name
-      if voice == None:
-        vc = await voice_channel.connect()
-        vc.play(discord.FFmpegPCMAudio(source=random.choice(may_sounds)))
-        # Sleep while audio is playing.
-        while vc.is_playing():
-            await asyncio.sleep(.1)
-        await vc.disconnect()
-      else:
-        voice.play(discord.FFmpegPCMAudio(source=random.choice(may_sounds)))   
-  else:
-      await ctx.send(str(ctx.author.name) + "is not in a channel.")
-  # Delete command after the audio is done playing.
-  await ctx.message.delete()     
+  await vcplay(ctx,random.choice(may_sounds))     
 
 @client.command(aliases=['bong'])
 async def tacobell(ctx):  
-   # Gets voice channel of message author
-  voice_channel = ctx.author.voice.channel
-  channel = None
-  voice = discord.utils.get(client.voice_clients, guild=ctx.guild)         
-  if voice_channel != None:
-      channel = voice_channel.name
-      if voice == None:
-        vc = await voice_channel.connect()
-        vc.play(discord.FFmpegPCMAudio(source="sounds/tacobell.mp3"))
-        # Sleep while audio is playing.
-        while vc.is_playing():
-            await asyncio.sleep(.1)
-        await vc.disconnect()
-      else:
-        voice.play(discord.FFmpegPCMAudio(source="sounds/tacobell.mp3"))   
-  else:
-      await ctx.send(str(ctx.author.name) + "is not in a channel.")
-  # Delete command after the audio is done playing.
-  await ctx.message.delete() 
+  await vcplay(ctx,"sounds/tacobell.mp3")   
 
 @client.command(aliases=['amogus'])
 async def amongus(ctx):  
-   # Gets voice channel of message author
-  voice_channel = ctx.author.voice.channel
-  channel = None
-  voice = discord.utils.get(client.voice_clients, guild=ctx.guild)         
-  if voice_channel != None:
-      channel = voice_channel.name
-      if voice == None:
-        vc = await voice_channel.connect()
-        vc.play(discord.FFmpegPCMAudio(source="sounds/amongus.mp3"))
-        # Sleep while audio is playing.
-        while vc.is_playing():
-            await asyncio.sleep(.1)
-        await vc.disconnect()
-      else:
-        voice.play(discord.FFmpegPCMAudio(source="sounds/amongus.mp3"))   
-  else:
-      await ctx.send(str(ctx.author.name) + "is not in a channel.")
-  # Delete command after the audio is done playing.
-  await ctx.message.delete() 
-
-async def test(ctx, a): 
-
+  await vcplay(ctx,"sounds/amongus.mp3")   
 
 @client.command(aliases=['classtrial'])
-async def danganronpa(ctx):  
-  voice_channel = ctx.author.voice.channel
-  channel = None
-  voice = discord.utils.get(client.voice_clients, guild=ctx.guild)         
-  if voice_channel != None:
-      channel = voice_channel.name
-      if voice == None:
-        vc = await voice_channel.connect()
-        vc.play(discord.FFmpegPCMAudio(source="sounds/danganronpa.mp3"))
-        # Sleep while audio is playing.
-        while vc.is_playing():
-            await asyncio.sleep(.1)
-        await vc.disconnect()
-      else:
-        voice.play(discord.FFmpegPCMAudio(source="sounds/danganronpa.mp3"))   
-  else:
-      await ctx.send(str(ctx.author.name) + "is not in a channel.")
-  # Delete command after the audio is done playing.
-  await ctx.message.delete() 
+async def danganronpa(ctx): 
+  await vcplay(ctx,"sounds/danganronpa.mp3")    
 
 @client.command()
 async def leave(ctx):
     if (ctx.voice_client): # If the bot is in a voice channel 
         await ctx.guild.voice_client.disconnect() # Leave the channel
-        await ctx.send('Bot left', delete_after=3.0)
+        await ctx.send('Sus bot has left the call.', delete_after=3.0)
         await asyncio.sleep(.3)
         await ctx.message.delete()
     else: # But if it isn't
         await ctx.send("I'm not in a voice channel, use the join command to make me join", delete_after=3.0)
+    await ctx.message.delete()    
 
 @client.command()
 async def stop(ctx):
     voice_client = ctx.message.guild.voice_client
     if voice_client.is_playing():
-        await voice_client.stop()
+        voice_client.stop()
+        await ctx.send('Sus bot has been stopped.', delete_after=3.0)
     else:
         await ctx.send("The bot is not playing anything at the moment.", delete_after=3.0)
+    await ctx.message.delete()    
 
 @client.command()
 async def speak(ctx,*, message):        
@@ -983,6 +589,8 @@ async def speak2(ctx,*, message):
 async def join(ctx):        
   voice_channel = ctx.author.voice.channel
   await voice_channel.connect()
+  await ctx.send('Sus bot has joined the call.', delete_after=3.0)
+  await ctx.message.delete()
 
 @client.event
 async def on_command_error(ctx, error):
