@@ -58,6 +58,11 @@ custom_words = [
  "pog"
 ]
 
+may_sounds = [
+"sounds/totsugeki_7UWR0L4.mp3",
+  "sounds/totsugeki-may-2.mp3"
+]
+
 @client.event
 async def on_ready():
     print('We have logged in as {0.user}'.format(client))
@@ -747,6 +752,184 @@ async def rrat(ctx):
   await ctx.message.delete()     
 
 @client.command()
+async def fart(ctx):  
+   # Gets voice channel of message author
+  voice_channel = ctx.author.voice.channel
+  channel = None
+  voice = discord.utils.get(client.voice_clients, guild=ctx.guild)         
+  if voice_channel != None:
+      channel = voice_channel.name
+      if voice == None:
+        vc = await voice_channel.connect()
+        vc.play(discord.FFmpegPCMAudio(source="sounds/fart.mp3"))
+        # Sleep while audio is playing.
+        while vc.is_playing():
+            await asyncio.sleep(.1)
+        await vc.disconnect()
+      else:
+        voice.play(discord.FFmpegPCMAudio(source="sounds/fart.mp3"))   
+  else:
+      await ctx.send(str(ctx.author.name) + "is not in a channel.")
+  # Delete command after the audio is done playing.
+  await ctx.message.delete()  
+
+@client.command()
+async def mogumogu(ctx):  
+   # Gets voice channel of message author
+  voice_channel = ctx.author.voice.channel
+  channel = None
+  voice = discord.utils.get(client.voice_clients, guild=ctx.guild)         
+  if voice_channel != None:
+      channel = voice_channel.name
+      if voice == None:
+        vc = await voice_channel.connect()
+        vc.play(discord.FFmpegPCMAudio(source="sounds/mogu.mp3"))
+        # Sleep while audio is playing.
+        while vc.is_playing():
+            await asyncio.sleep(.1)
+        await vc.disconnect()
+      else:
+        voice.play(discord.FFmpegPCMAudio(source="sounds/mogu.mp3"))   
+  else:
+      await ctx.send(str(ctx.author.name) + "is not in a channel.")
+  # Delete command after the audio is done playing.
+  await ctx.message.delete()     
+
+@client.command()
+async def bababooey(ctx):  
+   # Gets voice channel of message author
+  voice_channel = ctx.author.voice.channel
+  channel = None
+  voice = discord.utils.get(client.voice_clients, guild=ctx.guild)         
+  if voice_channel != None:
+      channel = voice_channel.name
+      if voice == None:
+        vc = await voice_channel.connect()
+        vc.play(discord.FFmpegPCMAudio(source="sounds/bababooey.mp3"))
+        # Sleep while audio is playing.
+        while vc.is_playing():
+            await asyncio.sleep(.1)
+        await vc.disconnect()
+      else:
+        voice.play(discord.FFmpegPCMAudio(source="sounds/bababooey.mp3"))   
+  else:
+      await ctx.send(str(ctx.author.name) + "is not in a channel.")
+  # Delete command after the audio is done playing.
+  await ctx.message.delete()       
+
+@client.command()
+async def dog(ctx):  
+   # Gets voice channel of message author
+  voice_channel = ctx.author.voice.channel
+  channel = None
+  voice = discord.utils.get(client.voice_clients, guild=ctx.guild)         
+  if voice_channel != None:
+      channel = voice_channel.name
+      if voice == None:
+        vc = await voice_channel.connect()
+        vc.play(discord.FFmpegPCMAudio(source="sounds/dog.mp3"))
+        # Sleep while audio is playing.
+        while vc.is_playing():
+            await asyncio.sleep(.1)
+        await vc.disconnect()
+      else:
+        voice.play(discord.FFmpegPCMAudio(source="sounds/dog.mp3"))   
+  else:
+      await ctx.send(str(ctx.author.name) + "is not in a channel.")
+  # Delete command after the audio is done playing.
+  await ctx.message.delete()     
+
+@client.command()
+async def totsugeki(ctx):  
+   # Gets voice channel of message author
+  voice_channel = ctx.author.voice.channel
+  channel = None
+  voice = discord.utils.get(client.voice_clients, guild=ctx.guild)         
+  if voice_channel != None:
+      channel = voice_channel.name
+      if voice == None:
+        vc = await voice_channel.connect()
+        vc.play(discord.FFmpegPCMAudio(source=random.choice(may_sounds)))
+        # Sleep while audio is playing.
+        while vc.is_playing():
+            await asyncio.sleep(.1)
+        await vc.disconnect()
+      else:
+        voice.play(discord.FFmpegPCMAudio(source=random.choice(may_sounds)))   
+  else:
+      await ctx.send(str(ctx.author.name) + "is not in a channel.")
+  # Delete command after the audio is done playing.
+  await ctx.message.delete()     
+
+@client.command(aliases=['bong'])
+async def tacobell(ctx):  
+   # Gets voice channel of message author
+  voice_channel = ctx.author.voice.channel
+  channel = None
+  voice = discord.utils.get(client.voice_clients, guild=ctx.guild)         
+  if voice_channel != None:
+      channel = voice_channel.name
+      if voice == None:
+        vc = await voice_channel.connect()
+        vc.play(discord.FFmpegPCMAudio(source="sounds/tacobell.mp3"))
+        # Sleep while audio is playing.
+        while vc.is_playing():
+            await asyncio.sleep(.1)
+        await vc.disconnect()
+      else:
+        voice.play(discord.FFmpegPCMAudio(source="sounds/tacobell.mp3"))   
+  else:
+      await ctx.send(str(ctx.author.name) + "is not in a channel.")
+  # Delete command after the audio is done playing.
+  await ctx.message.delete() 
+
+@client.command(aliases=['amogus'])
+async def amongus(ctx):  
+   # Gets voice channel of message author
+  voice_channel = ctx.author.voice.channel
+  channel = None
+  voice = discord.utils.get(client.voice_clients, guild=ctx.guild)         
+  if voice_channel != None:
+      channel = voice_channel.name
+      if voice == None:
+        vc = await voice_channel.connect()
+        vc.play(discord.FFmpegPCMAudio(source="sounds/amongus.mp3"))
+        # Sleep while audio is playing.
+        while vc.is_playing():
+            await asyncio.sleep(.1)
+        await vc.disconnect()
+      else:
+        voice.play(discord.FFmpegPCMAudio(source="sounds/amongus.mp3"))   
+  else:
+      await ctx.send(str(ctx.author.name) + "is not in a channel.")
+  # Delete command after the audio is done playing.
+  await ctx.message.delete() 
+
+async def test(ctx, a): 
+
+
+@client.command(aliases=['classtrial'])
+async def danganronpa(ctx):  
+  voice_channel = ctx.author.voice.channel
+  channel = None
+  voice = discord.utils.get(client.voice_clients, guild=ctx.guild)         
+  if voice_channel != None:
+      channel = voice_channel.name
+      if voice == None:
+        vc = await voice_channel.connect()
+        vc.play(discord.FFmpegPCMAudio(source="sounds/danganronpa.mp3"))
+        # Sleep while audio is playing.
+        while vc.is_playing():
+            await asyncio.sleep(.1)
+        await vc.disconnect()
+      else:
+        voice.play(discord.FFmpegPCMAudio(source="sounds/danganronpa.mp3"))   
+  else:
+      await ctx.send(str(ctx.author.name) + "is not in a channel.")
+  # Delete command after the audio is done playing.
+  await ctx.message.delete() 
+
+@client.command()
 async def leave(ctx):
     if (ctx.voice_client): # If the bot is in a voice channel 
         await ctx.guild.voice_client.disconnect() # Leave the channel
@@ -1028,7 +1211,7 @@ async def help(ctx):
   em.add_field(name="why", value="fortnite")
   em.add_field(name="others", value="emote,getemotes,badapple,clip,fastclip,download")
   em.add_field(name="reactions",value="fmega,kotowaru,ascend,jizz")
-  em.add_field(name="vc",value="letsgo,vtubus,leave,ding,yodayo,yodazo,jonathan,joseph,jotaro,josuke,giorno,kira,pillarmen,botansneeze,boom,ogey,rrat")
+  em.add_field(name="vc",value="join,leave,letsgo,vtubus,ding,yodayo,yodazo,jonathan,joseph,jotaro,josuke,giorno,kira,pillarmen,botansneeze,boom,ogey,rrat,fart,mogumogu,bababooey,dog,totsugeki,tacobell,amongus,danganronpa")
   em.add_field(name="TTS",value=" just do \\ while in VC (\"k.help tts\" for more info)")
   await ctx.send(embed = em)
 
@@ -1228,6 +1411,49 @@ async def ogey(ctx):
 async def rrat(ctx):
   em = discord.Embed(title = "Rrat!",   description = 'Plays Pekora\'s rrat in VC.')
   await ctx.send(embed = em)    
+
+@help.command()
+async def fart(ctx):
+  em = discord.Embed(title = "Reverb fart sfx",   description = 'Plays funni fart sound in VC.')
+  await ctx.send(embed = em)   
+
+@help.command()
+async def mogumogu(ctx):
+  em = discord.Embed(title = "Mogu mogu!",   description = 'Plays okayu\'s mogu mogu in VC.')
+  await ctx.send(embed = em)     
+
+@help.command()
+async def bababooey(ctx):
+  em = discord.Embed(title = "Bababooey!",   description = 'Plays bababooey in VC.')
+  await ctx.send(embed = em) 
+
+@help.command()
+async def dog(ctx):
+  em = discord.Embed(title = "What the dog doin?",   description = 'Plays \'what da dog doin\' in VC.')
+  await ctx.send(embed = em)      
+
+@help.command()
+async def totsugeki(ctx):
+  em = discord.Embed(title = "TOTSUGEKI!!!",   description = 'Plays May\'s Totsugeki in VC.')
+  await ctx.send(embed = em) 
+
+@help.command()
+async def tacobell(ctx):
+  em = discord.Embed(title = "Taco Bell bong sfx",   description = 'Plays the funny taco bell sound effect in VC.')
+  em.add_field(name="**Aliases**", value="bong")
+  await ctx.send(embed = em) 
+
+@help.command()
+async def amongus(ctx):
+  em = discord.Embed(title = "AMONGUS!",   description = 'Plays the guy yelling amongus in VC.')
+  em.add_field(name="**Aliases**", value="amogus")
+  await ctx.send(embed = em) 
+
+@help.command()
+async def danganronpa(ctx):
+  em = discord.Embed(title = "Class trial time!",   description = 'Plays \'議論 -HEAT UP-\' from Danganronpa in VC.')
+  em.add_field(name="**Aliases**", value="classtrial")
+  await ctx.send(embed = em) 
 
 keep_alive()
 client.run(os.getenv('TOKEN'))
