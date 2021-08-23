@@ -420,117 +420,127 @@ async def jizz(ctx):
       await webhook.delete()
   await ctx.message.delete()  
 
-async def vcplay(ctx, a): 
+async def vcplay(ctx, a, loop=None): 
   voice_channel = ctx.author.voice.channel
   channel = None
   voice = discord.utils.get(client.voice_clients, guild=ctx.guild)         
   if voice_channel != None:
       channel = voice_channel.name
       if voice == None:
-        vc = await voice_channel.connect()
-        vc.play(discord.FFmpegPCMAudio(source=a))
-        # Sleep while audio is playing.
-        while vc.is_playing():
-            await asyncio.sleep(.1)
-        await vc.disconnect()
+        vc = await voice_channel.connect()       
+        if loop=="loop":
+          def loop():  
+            vc.play(discord.FFmpegPCMAudio(source=a), after=lambda e: loop())
+          loop()
+        else:
+            vc.play(discord.FFmpegPCMAudio(source=a))
       else:
-        voice.play(discord.FFmpegPCMAudio(source=a))   
+        if loop=="loop":
+          def loop2():  
+            voice.play(discord.FFmpegPCMAudio(source=a), after=lambda e: loop2())
+          loop2()
+        else:
+            voice.play(discord.FFmpegPCMAudio(source=a))  
   else:
       await ctx.send(str(ctx.author.name) + "is not in a channel.")
   # Delete command after the audio is done playing.
   await ctx.message.delete() 
 
 @client.command()
-async def letsgo(ctx):  
-  await vcplay(ctx,"sounds/vibez-lets-go.mp3")
+async def letsgo(ctx, loop=None):  
+  await vcplay(ctx,"sounds/vibez-lets-go.mp3",loop)
 
 @client.command()
-async def vtubus(ctx):  
-  await vcplay(ctx,"sounds/vtubus.mp3")
+async def vtubus(ctx, loop=None):  
+  await vcplay(ctx,"sounds/vtubus.mp3",loop)
 
 @client.command()
-async def giorno(ctx):  
-  await vcplay(ctx,"sounds/giorno theme.mp3")
+async def giorno(ctx, loop=None):  
+  await vcplay(ctx,"sounds/giorno theme.mp3",loop)
 
 @client.command()
-async def ding(ctx): 
-  await vcplay(ctx,"sounds/DING DING DING DING DING DING DING DI DI DING.mp3") 
+async def ding(ctx, loop=None): 
+  await vcplay(ctx,"sounds/DING DING DING DING DING DING DING DI DI DING.mp3",loop) 
 
 @client.command()
-async def yodayo(ctx):  
-  await vcplay(ctx,"sounds/Nakiri Ayame's yo dayo_.mp3")
+async def yodayo(ctx, loop=None):  
+  await vcplay(ctx,"sounds/Nakiri Ayame's yo dayo_.mp3",loop)
 
 @client.command()
-async def yodazo(ctx):  
-  await vcplay(ctx,"sounds/Yo Dazo!.mp3")    
+async def yodazo(ctx, loop=None):  
+  await vcplay(ctx,"sounds/Yo Dazo!.mp3",loop)    
 
 @client.command()
-async def jonathan(ctx):  
-  await vcplay(ctx,"sounds/Jonathan's theme but its only the BEST part.mp3")      
+async def jonathan(ctx, loop=None):  
+  await vcplay(ctx,"sounds/Jonathan's theme but its only the BEST part.mp3",loop)      
 
 @client.command()
-async def joseph(ctx):  
-  await vcplay(ctx,"sounds/Joseph's theme but only the good part (1).mp3")        
+async def joseph(ctx, loop=None):  
+  await vcplay(ctx,"sounds/Joseph's theme but only the good part (1).mp3",loop)        
 
 @client.command()
-async def jotaro(ctx):  
-  await vcplay(ctx,"sounds/Jotaro’s theme but it’s only the good part.mp3") 
+async def jotaro(ctx, loop=None):  
+  await vcplay(ctx,"sounds/Jotaro’s theme but it’s only the good part.mp3",loop) 
 
 @client.command()
-async def josuke(ctx):  
-  await vcplay(ctx,"sounds/Josuke theme but it's only the good part.mp3")   
+async def josuke(ctx, loop=None):  
+  await vcplay(ctx,"sounds/Josuke theme but it's only the good part.mp3",loop)   
 
 @client.command()
-async def kira(ctx):  
-  await vcplay(ctx,"sounds/Killer (Yoshikage Kira's Theme) - Jojo's Bizarre Adventure Part 4_ Diamond Is Unbreakable.mp3")        
+async def kira(ctx, loop=None):  
+  await vcplay(ctx,"sounds/Killer (Yoshikage Kira's Theme) - Jojo's Bizarre Adventure Part 4_ Diamond Is Unbreakable.mp3",loop)        
 
 @client.command()
-async def pillarmen(ctx): 
-  await vcplay(ctx,"sounds/Jojo's Bizarre Adventure- Awaken(Pillar Men Theme).mp3")     
+async def pillarmen(ctx, loop=None): 
+  await vcplay(ctx,"sounds/Jojo's Bizarre Adventure- Awaken(Pillar Men Theme).mp3",loop)     
 
 @client.command()
-async def boom(ctx):  
-  await vcplay(ctx,"sounds/boom.mp3")  
+async def boom(ctx, loop=None):  
+  await vcplay(ctx,"sounds/boom.mp3",loop)  
 
 @client.command(aliases=['ogei'])
-async def ogey(ctx):  
-  await vcplay(ctx,"sounds/ogey.mp3")    
+async def ogey(ctx, loop=None):  
+  await vcplay(ctx,"sounds/ogey.mp3",loop)    
 
 @client.command()
-async def rrat(ctx):  
-  await vcplay(ctx,"sounds/rrat.mp3")       
+async def rrat(ctx, loop=None):  
+  await vcplay(ctx,"sounds/rrat.mp3",loop)       
 
 @client.command()
-async def fart(ctx): 
-  await vcplay(ctx,"sounds/fart.mp3")     
+async def fart(ctx, loop=None): 
+  await vcplay(ctx,"sounds/fart.mp3",loop)     
 
 @client.command()
-async def mogumogu(ctx):  
-  await vcplay(ctx,"sounds/mogu.mp3")   
+async def mogumogu(ctx, loop=None):  
+  await vcplay(ctx,"sounds/mogu.mp3",loop)   
 
 @client.command()
-async def bababooey(ctx):  
-  await vcplay(ctx,"sounds/bababooey.mp3")    
+async def bababooey(ctx, loop=None):  
+  await vcplay(ctx,"sounds/bababooey.mp3",loop)    
 
 @client.command()
-async def dog(ctx):  
-  await vcplay(ctx,"sounds/dog.mp3")     
+async def dog(ctx, loop=None):  
+  await vcplay(ctx,"sounds/dog.mp3",loop)     
 
 @client.command()
-async def totsugeki(ctx):  
-  await vcplay(ctx,random.choice(may_sounds))     
+async def totsugeki(ctx, loop=None):  
+  await vcplay(ctx,random.choice(may_sounds),loop)     
 
 @client.command(aliases=['bong'])
-async def tacobell(ctx):  
-  await vcplay(ctx,"sounds/tacobell.mp3")   
+async def tacobell(ctx, loop=None):  
+  await vcplay(ctx,"sounds/tacobell.mp3",loop)   
 
 @client.command(aliases=['amogus'])
-async def amongus(ctx):  
-  await vcplay(ctx,"sounds/amongus.mp3")   
+async def amongus(ctx, loop=None):  
+  await vcplay(ctx,"sounds/amongus.mp3",loop)   
 
 @client.command(aliases=['classtrial'])
-async def danganronpa(ctx): 
-  await vcplay(ctx,"sounds/danganronpa.mp3")    
+async def danganronpa(ctx, loop=None): 
+  await vcplay(ctx,"sounds/danganronpa.mp3",loop)    
+
+@client.command()
+async def botansneeze(ctx, loop=None):  
+  await vcplay(ctx,"sounds/botansneeze.mp3",loop)   
 
 @client.command()
 async def leave(ctx):
@@ -552,6 +562,14 @@ async def stop(ctx):
     else:
         await ctx.send("The bot is not playing anything at the moment.", delete_after=3.0)
     await ctx.message.delete()    
+
+@client.command()
+async def stoploop(ctx):
+  await ctx.guild.voice_client.disconnect()
+  voice_channel = ctx.author.voice.channel
+  await voice_channel.connect()
+  await ctx.send('The loop has been stopped.', delete_after=3.0)
+  await ctx.message.delete()
 
 @client.command()
 async def speak(ctx,*, message):        
@@ -778,48 +796,19 @@ async def download(ctx,link):
       except discord.HTTPException:  
         await ctx.send('File too large, broski <:towashrug:853606191711649812>')
     os.remove(filename)
-    await message.delete()                    
-
-@client.command()
-async def botansneeze(ctx, loop=None):  
-   # Gets voice channel of message author
-  voice_channel = ctx.author.voice.channel
-  channel = None
-  voice = discord.utils.get(client.voice_clients, guild=ctx.guild)   
-  if voice_channel != None:
-      channel = voice_channel.name
-      if voice == None:
-        vc = await voice_channel.connect()
-        
-        if loop=="loop":
-          def loop():  
-            vc.play(discord.FFmpegPCMAudio(source="sounds/botansneeze.mp3"), after=lambda e: loop())
-          loop()
-        else:
-            vc.play(discord.FFmpegPCMAudio(source="sounds/botansneeze.mp3"))
-      else:
-        if loop=="loop":
-          def loop2():  
-            voice.play(discord.FFmpegPCMAudio(source="sounds/botansneeze.mp3"), after=lambda e: loop2())
-          loop2()
-        else:
-            voice.play(discord.FFmpegPCMAudio(source="sounds/botansneeze.mp3"))
-  else:
-      await ctx.send(str(ctx.author.name) + "is not in a channel.")
-  # Delete command after the audio is done playing.
-  await ctx.message.delete()   
+    await message.delete()                       
 
 # ----------------------------------------------------
 # HELP
 @client.group(invoke_without_command=True)
 async def help(ctx):
-  em = discord.Embed(title = "Commands",   description = 'Here are my sussy commands!\nUse k.help <command> for more info on that command.')
+  em = discord.Embed(title = "Commands",   description = 'Here are my sussy commands!\nUse __**k.help <command>**__ for more info on that command.')
   em.add_field(name="copypasta", value="glasses,nene,nenelong,stopamongus,confession,wristworld")
   em.add_field(name="sus", value="on,off,megasus,bulk")
   em.add_field(name="why", value="fortnite")
   em.add_field(name="others", value="emote,getemotes,badapple,clip,fastclip,download")
   em.add_field(name="reactions",value="fmega,kotowaru,ascend,jizz")
-  em.add_field(name="vc",value="join,leave,letsgo,vtubus,ding,yodayo,yodazo,jonathan,joseph,jotaro,josuke,giorno,kira,pillarmen,botansneeze,boom,ogey,rrat,fart,mogumogu,bababooey,dog,totsugeki,tacobell,amongus,danganronpa")
+  em.add_field(name="vc",value="join,stop,stoploop,leave,letsgo,vtubus,ding,yodayo,yodazo,jonathan,joseph,jotaro,josuke,giorno,kira,pillarmen,botansneeze,boom,ogey,rrat,fart,mogumogu,bababooey,dog,totsugeki,tacobell,amongus,danganronpa")
   em.add_field(name="TTS",value=" just do \\ while in VC (\"k.help tts\" for more info)")
   await ctx.send(embed = em)
 
@@ -908,12 +897,7 @@ async def letsgo(ctx):
 @help.command()
 async def vtubus(ctx):
   em = discord.Embed(title = "Vtubus",   description = 'vtubus')
-  await ctx.send(embed = em)    
-
-@help.command()
-async def leave(ctx):
-  em = discord.Embed(title = "Leave VC",   description = 'Force bot to leave VC')
-  await ctx.send(embed = em)   
+  await ctx.send(embed = em)     
 
 @help.command()
 async def ding(ctx):
@@ -1061,6 +1045,27 @@ async def amongus(ctx):
 async def danganronpa(ctx):
   em = discord.Embed(title = "Class trial time!",   description = 'Plays \'議論 -HEAT UP-\' from Danganronpa in VC.')
   em.add_field(name="**Aliases**", value="classtrial")
+  await ctx.send(embed = em) 
+
+@help.command()
+async def join(ctx):
+  em = discord.Embed(title = "Join VC",   description = 'Sus bot will enter the VC.')
+  await ctx.send(embed = em) 
+
+@help.command()
+async def stop(ctx):
+  em = discord.Embed(title = "STOP!",   description = 'Sus bot will stop playing if it\'s playing something in VC.')
+  await ctx.send(embed = em) 
+
+@help.command()
+async def stoploop(ctx):
+  em = discord.Embed(title = "STOP THE LOOP!",   description = 'Sus bot will stop playing if it\'s playing something in VC that has loop mode enabled.')
+  em.add_field(name="**How loop???**", value="k.commandname loop")
+  await ctx.send(embed = em) 
+
+@help.command()
+async def leave(ctx):
+  em = discord.Embed(title = "Sayonara...",   description = 'Sus bot will leave the VC.')
   await ctx.send(embed = em) 
 
 keep_alive()
