@@ -798,6 +798,60 @@ async def download(ctx,link):
     os.remove(filename)
     await message.delete()                       
 
+import google_auth_oauthlib.flow
+import googleapiclient.discovery
+import googleapiclient.errors
+import requests 
+import dateutil.parser as dp
+import datetime
+
+@client.command()
+async def stream(ctx,link):
+  if link.startswith('https://youtu.be'):
+    idd = link.split('/')[-1].split('?')[0]
+  elif link.startswith('https://www.youtube.com/'):
+    idd = link.split('=')[1].split('&')[0]   
+  else:
+    await ctx.send('Not a YT link!', delete_after=3.0) 
+    wrong=True
+  wrong=False
+  if wrong!=True:
+    params = {'part': 'liveStreamingDetails,snippet',
+            'key': 'AIzaSyDps4zwdwoqe53Vr6ARlnhyaDiXAY4RbCE',
+            'id': idd,
+            }
+    
+    url = 'https://www.googleapis.com/youtube/v3/videos'
+    r = requests.get(url, headers=None, params=params).json()
+    isotime = r['items'][0]['liveStreamingDetails']["scheduledStartTime"]
+    title = r['items'][0]['snippet']['title']
+    author = r['items'][0]['snippet']['channelTitle']
+    thumbnail = r['items'][0]['snippet']['thumbnails']['maxres']['url']
+    channelid = r['items'][0]['snippet']['channelId']
+    parsed_t = dp.parse(isotime)
+    t_in_seconds = parsed_t.timestamp()
+    dsctime = "<t:"+str(t_in_seconds).split('.')[0]+":F>"
+    reltime = "<t:"+str(t_in_seconds).split('.')[0]+":R>"
+    dttime= datetime.datetime.strptime(isotime, "%Y-%m-%dT%H:%M:%S%z")
+
+    params2 = {'part': 'snippet',
+            'key': 'AIzaSyDps4zwdwoqe53Vr6ARlnhyaDiXAY4RbCE',
+            'id': channelid,
+            }
+    
+    url = 'https://www.googleapis.com/youtube/v3/channels'
+    r2 = requests.get(url, headers=None, params=params2).json()
+    pfp = r2['items'][0]['snippet']['thumbnails']['default']['url']
+    e = discord.Embed(title=title,timestamp=dttime,description=reltime,url=link)
+    e.set_author(name=author, icon_url=pfp,url="https://www.youtube.com/channel/"+channelid)
+    e.set_image(url=thumbnail)
+    webhook = await ctx.channel.create_webhook(name=ctx.message.author.name)
+    await webhook.send(username=ctx.message.author.name, avatar_url=ctx.message.author.avatar_url,embed = e)
+    webhooks = await ctx.channel.webhooks()
+    for webhook in webhooks:
+            await webhook.delete()        
+    await ctx.message.delete()
+
 # ----------------------------------------------------
 # HELP
 @client.group(invoke_without_command=True)
