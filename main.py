@@ -543,6 +543,10 @@ async def botansneeze(ctx, loop=None):
   await vcplay(ctx,"sounds/botansneeze.mp3",loop)   
 
 @client.command()
+async def water(ctx, loop=None):  
+  await vcplay(ctx,"sounds/water.mp3",loop)   
+
+@client.command()
 async def leave(ctx):
     if (ctx.voice_client): # If the bot is in a voice channel 
         await ctx.guild.voice_client.disconnect() # Leave the channel
@@ -852,6 +856,42 @@ async def stream(ctx,link):
             await webhook.delete()        
     await ctx.message.delete()
 
+from petpetgif import petpet  
+import requests
+from io import BytesIO
+
+@client.command()
+async def pet(ctx,url):
+  if (ctx.message.mentions.__len__()>0):
+    for user in ctx.message.mentions:
+      pfp =requests.get(user.avatar_url)
+      source = BytesIO(pfp.content) # file-like container to hold the emoji in memory
+      source.seek(0)
+      dest = BytesIO() # container to store the petpet gif in memory
+      petpet.make(source, dest)
+      dest.seek(0)
+      webhook = await ctx.channel.create_webhook(name=ctx.message.author.name)
+      await webhook.send(
+            file=discord.File(dest, filename=f"petpet.gif"), username=ctx.message.author.name, avatar_url=ctx.message.author.avatar_url)
+
+      webhooks = await ctx.channel.webhooks()
+      for webhook in webhooks:
+              await webhook.delete()
+  elif url.startswith('http'):
+    pfp =requests.get(url)
+    source = BytesIO(pfp.content) # file-like container to hold the emoji in memory
+    source.seek(0)
+    dest = BytesIO() # container to store the petpet gif in memory
+    petpet.make(source, dest)
+    dest.seek(0)
+    webhook = await ctx.channel.create_webhook(name=ctx.message.author.name)
+    await webhook.send(
+          file=discord.File(dest, filename=f"petpet.gif"), username=ctx.message.author.name, avatar_url=ctx.message.author.avatar_url)
+
+    webhooks = await ctx.channel.webhooks()
+    for webhook in webhooks:
+            await webhook.delete()
+
 # ----------------------------------------------------
 # HELP
 @client.group(invoke_without_command=True)
@@ -860,9 +900,9 @@ async def help(ctx):
   em.add_field(name="copypasta", value="glasses,nene,nenelong,stopamongus,confession,wristworld")
   em.add_field(name="sus", value="on,off,megasus,bulk")
   em.add_field(name="why", value="fortnite")
-  em.add_field(name="others", value="emote,getemotes,badapple,clip,fastclip,download")
+  em.add_field(name="others", value="emote,getemotes,badapple,clip,fastclip,download,stream,pet")
   em.add_field(name="reactions",value="fmega,kotowaru,ascend,jizz")
-  em.add_field(name="vc",value="join,stop,stoploop,leave,letsgo,vtubus,ding,yodayo,yodazo,jonathan,joseph,jotaro,josuke,giorno,kira,pillarmen,botansneeze,boom,ogey,rrat,fart,mogumogu,bababooey,dog,totsugeki,tacobell,amongus,danganronpa")
+  em.add_field(name="vc",value="join,stop,stoploop,leave,letsgo,vtubus,ding,yodayo,yodazo,jonathan,joseph,jotaro,josuke,giorno,kira,pillarmen,botansneeze,boom,ogey,rrat,fart,mogumogu,bababooey,dog,totsugeki,tacobell,amongus,danganronpa,water")
   em.add_field(name="TTS",value=" just do \\ while in VC (\"k.help tts\" for more info)")
   await ctx.send(embed = em)
 
@@ -1120,6 +1160,23 @@ async def stoploop(ctx):
 @help.command()
 async def leave(ctx):
   em = discord.Embed(title = "Sayonara...",   description = 'Sus bot will leave the VC.')
+  await ctx.send(embed = em) 
+
+@help.command()
+async def stream(ctx):
+  em = discord.Embed(title = "YouTube Stream Time Embed",   description = 'Sends an embed of a YouTube stream with its start time.')
+  em.add_field(name="**Syntax**", value="k.stream https://youtu.be/wNMW87foNAI")
+  await ctx.send(embed = em) 
+
+@help.command()
+async def water(ctx):
+  em = discord.Embed(title = "Water and Water and Water Water",   description = 'Plays \'Water and Water and Water Water\'in VC.')
+  await ctx.send(embed = em) 
+
+@help.command()
+async def pet(ctx):
+  em = discord.Embed(title = "Pet user",   description = 'Sends a gif of the mentioned user being petted.')
+  em.add_field(name="**Syntax**", value="k.pet <mentioned user>\nk.pet <image url>")
   await ctx.send(embed = em) 
 
 keep_alive()
