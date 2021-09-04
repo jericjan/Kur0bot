@@ -809,8 +809,11 @@ import requests
 import dateutil.parser as dp
 import datetime
 
+from discord import Webhook, AsyncWebhookAdapter
+import aiohttp
+
 @client.command()
-async def stream(ctx,link):
+async def stream(ctx,link,noembed=None):
   if link.startswith('https://youtu.be'):
     idd = link.split('/')[-1].split('?')[0]
   elif link.startswith('https://www.youtube.com/'):
@@ -830,7 +833,20 @@ async def stream(ctx,link):
     isotime = r['items'][0]['liveStreamingDetails']["scheduledStartTime"]
     title = r['items'][0]['snippet']['title']
     author = r['items'][0]['snippet']['channelTitle']
-    thumbnail = r['items'][0]['snippet']['thumbnails']['maxres']['url']
+    #resos = ['maxres','standard','high','medium','default']
+    try:
+      thumbnail = r['items'][0]['snippet']['thumbnails']['maxres']['url']
+    except Exception:
+      try:
+        thumbnail = r['items'][0]['snippet']['thumbnails']['standard']['url']  
+      except Exception:
+        try:
+         thumbnail = r['items'][0]['snippet']['thumbnails']['high']['url']    
+        except Exception:
+          try:  
+            thumbnail = r['items'][0]['snippet']['thumbnails']['medium']['url']    
+          except Exception:
+            thumbnail = r['items'][0]['snippet']['thumbnails']['default']['url']   
     channelid = r['items'][0]['snippet']['channelId']
     parsed_t = dp.parse(isotime)
     t_in_seconds = parsed_t.timestamp()
@@ -849,11 +865,14 @@ async def stream(ctx,link):
     e = discord.Embed(title=title,timestamp=dttime,description=reltime,url=link)
     e.set_author(name=author, icon_url=pfp,url="https://www.youtube.com/channel/"+channelid)
     e.set_image(url=thumbnail)
-    webhook = await ctx.channel.create_webhook(name=ctx.message.author.name)
-    await webhook.send(username=ctx.message.author.name, avatar_url=ctx.message.author.avatar_url,embed = e)
-    webhooks = await ctx.channel.webhooks()
-    for webhook in webhooks:
-            await webhook.delete()        
+    if noembed!='noembed':
+      async with aiohttp.ClientSession() as session:
+        webhook = Webhook.from_url('https://discord.com/api/webhooks/880667610323234877/oc31FGZ3SPfu7BCru4iOd2ULJAvyOdMi1SOaqNF58sHKBknFbdhK5zfqSZhxS4NZF9pU', adapter=AsyncWebhookAdapter(session))
+        await webhook.send(embed = e)
+    else:
+      async with aiohttp.ClientSession() as session:
+        webhook = Webhook.from_url('https://discord.com/api/webhooks/880667610323234877/oc31FGZ3SPfu7BCru4iOd2ULJAvyOdMi1SOaqNF58sHKBknFbdhK5zfqSZhxS4NZF9pU', adapter=AsyncWebhookAdapter(session))
+        await webhook.send(reltime +" **"+author+"** - ["+title+"](<"+link+">)")      
     await ctx.message.delete()
 
 from petpetgif import petpet  
