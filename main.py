@@ -12,7 +12,10 @@ from datetime import datetime, timedelta
 from shlex import quote, join
 
 #client = discord.Client()
-client = commands.Bot(command_prefix='k.')
+intents = discord.Intents().default()
+intents.presences = True
+
+client = commands.Bot(command_prefix='k.',intents=intents)
 client.remove_command("help")
 sus_words = [
   "amongus", 
@@ -70,7 +73,30 @@ async def on_ready():
 
 client.sus_on = False
 
-
+@client.event
+async def on_member_update(before, after):
+    if before.status is discord.Status.online and after.status is discord.Status.offline and after.guild == client.get_guild(603147860225032192):
+      if after.id == 855897776125640704:
+        print(after.id)
+        print('avi bot ded')
+        channel = client.get_guild(603147860225032192).get_channel(836222286432043018)  # notification channel
+        msg_id = 887707057808085042
+        msg = await channel.fetch_message(msg_id)
+        vc = client.get_guild(603147860225032192).get_channel(887717074191937667)
+        await msg.edit(content="avi bot dead temporarily. password no work. so tell them that as well.")
+        staffch = client.get_guild(603147860225032192).get_channel(812666568613167125)
+        await vc.edit(name='AviBot: dead')
+        await staffch.send('<@97122523086340096> bot ded')
+    elif before.status is discord.Status.offline and after.status is discord.Status.online:
+      if after.id == 855897776125640704:
+        print(after.id)
+        print('avi bot bac')
+        channel = client.get_guild(603147860225032192).get_channel(836222286432043018)  # notification channel
+        msg_id = 887707057808085042
+        msg = await channel.fetch_message(msg_id)
+        vc = client.get_guild(603147860225032192).get_channel(887717074191937667)
+        await msg.edit(content="AviBot is online. (ignore this)")    
+        await vc.edit(name='AviBot: alive')
     
 
 @client.listen('on_message')
@@ -732,8 +758,13 @@ async def fastclip(ctx,link,start,end,filename):
   await message.edit(content='Downloading... This will take a while...')
   process = await asyncio.create_subprocess_exec(*coms, stdout=asyncio.subprocess.PIPE,                      stderr=asyncio.subprocess.PIPE)
   stdout, stderr = await process.communicate()
+  print(stdout)
+  print(stderr)
   #os.rename(filename+".mkv",filename+".mp4")  
-  await ctx.send(file=discord.File(filename+".mp4"))
+  try:
+    await ctx.send(file=discord.File(filename+".mp4"))
+  except Exception:
+     await message.edit(content='I failed.')
   await ctx.send(ctx.message.author.mention)
   os.remove(filename+".mp4")
   await message.delete()
@@ -807,7 +838,6 @@ import googleapiclient.discovery
 import googleapiclient.errors
 import requests 
 import dateutil.parser as dp
-import datetime
 
 from discord import Webhook, AsyncWebhookAdapter
 import aiohttp
@@ -852,7 +882,7 @@ async def stream(ctx,link,noembed=None):
     t_in_seconds = parsed_t.timestamp()
     dsctime = "<t:"+str(t_in_seconds).split('.')[0]+":F>"
     reltime = "<t:"+str(t_in_seconds).split('.')[0]+":R>"
-    dttime= datetime.datetime.strptime(isotime, "%Y-%m-%dT%H:%M:%S%z")
+    dttime= datetime.strptime(isotime, "%Y-%m-%dT%H:%M:%S%z")
 
     params2 = {'part': 'snippet',
             'key': 'AIzaSyDps4zwdwoqe53Vr6ARlnhyaDiXAY4RbCE',
