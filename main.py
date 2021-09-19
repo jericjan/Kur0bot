@@ -919,6 +919,7 @@ async def stream(ctx,link,noembed=None):
 
 async def open_url(url):
   print(str(url)+ " is starting!")
+  
   avi_guild = client.get_guild(603147860225032192)
   while avi_guild == None:
     avi_guild = client.get_guild(603147860225032192)
@@ -939,6 +940,7 @@ async def open_url(url):
         msg_id = int(msg.jump_url.split('/')[-1])
         msg = await sched_ch.fetch_message(msg_id)
         await msg.reply('<@&888794254837706804> Starting!')
+        # await msg.reply('test')
 
 
 
@@ -1297,10 +1299,17 @@ async def run_at(dt, coro, url):
     now = datetime.now()
     nowstr = now.strftime("%m/%d/%Y %H:%M:%S")
     print(url + " is scheduled!")
-    f = open("log.txt", "a")        #reads the txt
+    f = open("log.txt", "a")      
     f.write(url +" - "+nowstr+"\n")
     f.close()
     await wait_until(dt)
+    a_file = open("list.txt", "r")        #reads the txt
+    lines = a_file.read().splitlines()
+    a_file.close()
+    with open("list.txt", "w+") as r:    
+     for i in lines:
+         if i.split(' ')[0] != url:
+             r.write(i+"\n")
     return await coro
 
 def precheck():
@@ -1331,11 +1340,6 @@ def precheck():
           # loop.run_until_complete()
           # loop.close()
           client.loop.create_task(run_at(later,open_url(url),url))
-
-
-    
-    for i in schedule.get_jobs():
-        print(i)
             
 
 
