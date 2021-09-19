@@ -8,8 +8,11 @@ import asyncio
 import aiohttp
 import subprocess
 from gtts import gTTS
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from shlex import quote, join
+import schedule
+import threading
+import time
 
 #client = discord.Client()
 intents = discord.Intents().default()
@@ -883,6 +886,14 @@ async def stream(ctx,link,noembed=None):
     dsctime = "<t:"+str(t_in_seconds).split('.')[0]+":F>"
     reltime = "<t:"+str(t_in_seconds).split('.')[0]+":R>"
     dttime= datetime.strptime(isotime, "%Y-%m-%dT%H:%M:%S%z")
+    dayofweek = parsed_t.weekday()
+
+    f = open("list.txt", "a")          #add stream url and time to list.txt
+    f.write(link+" "+parsed_t.strftime('%a %b %d %Y %H:%M:%S')+"\n")
+    f.close()
+    a_file = open("list.txt", "r")        #reads list.txt
+    lines = a_file.read().splitlines()
+    a_file.close()
 
     params2 = {'part': 'snippet',
             'key': 'AIzaSyDps4zwdwoqe53Vr6ARlnhyaDiXAY4RbCE',
@@ -904,6 +915,32 @@ async def stream(ctx,link,noembed=None):
         webhook = Webhook.from_url('https://discord.com/api/webhooks/880667610323234877/oc31FGZ3SPfu7BCru4iOd2ULJAvyOdMi1SOaqNF58sHKBknFbdhK5zfqSZhxS4NZF9pU', adapter=AsyncWebhookAdapter(session))
         await webhook.send(reltime +" **"+author+"** - ["+title+"](<"+link+">)")      
     await ctx.message.delete()
+    client.loop.create_task(run_at(parsed_t.replace(tzinfo=None),open_url(link)))
+
+async def open_url(url):
+  print(str(url)+ " is starting!")
+  avi_guild = client.get_guild(603147860225032192)
+  while avi_guild == None:
+    avi_guild = client.get_guild(603147860225032192)
+    await asyncio.sleep(1)
+  else:  
+    print('got guild!')
+    sched_ch = avi_guild.get_channel(879702977898741770)
+    print('got channel!')
+    messages = await sched_ch.history(limit=200).flatten()
+    print('got messages')
+  
+  for msg in messages:
+    for i in msg.embeds:
+    #  print(i.url)
+      if i.url == url: 
+        print('found specific message')
+        print(msg.jump_url.split('/')[-1])
+        msg_id = int(msg.jump_url.split('/')[-1])
+        msg = await sched_ch.fetch_message(msg_id)
+        await msg.reply('<@&888794254837706804> Starting!')
+
+
 
 from petpetgif import petpet  
 import requests
@@ -940,6 +977,29 @@ async def pet(ctx,url):
     webhooks = await ctx.channel.webhooks()
     for webhook in webhooks:
             await webhook.delete()
+
+@client.command()
+async def sched(ctx):
+  sched_ch = client.get_guild(603147860225032192).get_channel(879702977898741770)
+  messages = await sched_ch.history(limit=200).flatten()
+  #print(messages)
+  
+  for msg in messages:
+    #print(msg)
+    if msg.embeds: 
+      print(msg.embeds[0].url + " " +msg.jump_url)
+
+    if "Holidays!／角巻わため【original】" in msg.content:
+            print(msg.jump_url)
+
+@client.command()
+async def tasks(ctx):
+  # tasks = client.loop.all_tasks()
+  # for i in tasks:
+  #   await ctx.send(i.get_coro())
+  #   await ctx.send(i.get_name())
+ client.loop.set_debug(True)
+
 
 # ----------------------------------------------------
 # HELP
@@ -1228,6 +1288,68 @@ async def pet(ctx):
   em.add_field(name="**Syntax**", value="k.pet <mentioned user>\nk.pet <image url>")
   await ctx.send(embed = em) 
 
+async def wait_until(dt):
+    # sleep until the specified datetime
+    now = datetime.now()
+    await asyncio.sleep((dt - now).total_seconds())
+
+async def run_at(dt, coro, url):
+    now = datetime.now()
+    nowstr = now.strftime("%m/%d/%Y %H:%M:%S")
+    print(url + " is scheduled!")
+    f = open("log.txt", "a")        #reads the txt
+    f.write(url +" - "+nowstr+"\n")
+    f.close()
+    await wait_until(dt)
+    return await coro
+
+def precheck():
+    
+    if not os.path.isfile('list.txt'):
+        file = open("list.txt", "w") #creates txt if doesn't exist
+        file.close() 
+    a_file = open("list.txt", "r")        #reads the txt
+    lines = a_file.read().splitlines()
+    a_file.close()
+    #print(lines)
+    with open("list.txt", "w+") as r:    
+     for i in lines:
+         later = datetime.strptime(i.split(' ', 1)[1], '%a %b %d %Y %H:%M:%S')
+         now  = datetime.now()
+         
+         if later > now:
+             r.write(i+"\n")
+         url = i.split(' ')[0]    
+         day = i.split(' ')[1]
+         timee = i.split(' ')[5]    
+         if later > now + timedelta(days=6):
+                 print('more than 1 week')
+         else:   
+          # loop = asyncio.new_event_loop()
+          # asyncio.set_event_loop(loop)
+
+          # loop.run_until_complete()
+          # loop.close()
+          client.loop.create_task(run_at(later,open_url(url),url))
+
+
+    
+    for i in schedule.get_jobs():
+        print(i)
+            
+
+
+
+tcheck = threading.Thread(target=precheck) 
+tcheck.start() 
+print('schedules checked!')
 keep_alive()
 client.run(os.getenv('TOKEN'))
 
+
+
+
+
+# if __name__ == '__main__':
+    # run app in debug mode on port 5000
+    #schedule.clear()
