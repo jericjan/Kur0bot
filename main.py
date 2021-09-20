@@ -17,6 +17,7 @@ import time
 #client = discord.Client()
 intents = discord.Intents().default()
 intents.presences = True
+intents.members = True
 
 client = commands.Bot(command_prefix='k.',intents=intents)
 client.remove_command("help")
@@ -73,6 +74,34 @@ may_sounds = [
 async def on_ready():
     print('We have logged in as {0.user}'.format(client))
     await client.change_presence(activity=discord.Game(name="sus gaming | k.help"))
+    avi_guild = client.get_guild(603147860225032192)
+    while avi_guild == None:
+      avi_guild = client.get_guild(603147860225032192)
+    else:  
+      print(avi_guild)
+      avibot = avi_guild.get_member(855897776125640704)
+      while avibot == None:
+        avibot = avi_guild.get_member(855897776125640704)
+      else:  
+        if avibot.status is discord.Status.offline:
+          print('avibot ded')
+         # channel = client.get_guild(603147860225032192).get_channel(836222286432043018)  # notification channel
+         # msg_id = 887707057808085042
+          #msg = await channel.fetch_message(msg_id)
+          vc = client.get_guild(603147860225032192).get_channel(887717074191937667)
+          #await msg.edit(content="avi bot dead temporarily. password no work. so tell them that as well.")
+         # staffch = client.get_guild(603147860225032192).get_channel(812666568613167125)
+          await vc.edit(name='AviBot: dead')
+         # await staffch.send('<@97122523086340096> bot ded')
+        if avibot.status is discord.Status.online:  
+          print('avi bot bac')
+         # channel = client.get_guild(603147860225032192).get_channel(836222286432043018)  # notification channel
+         # msg_id = 887707057808085042
+         # msg = await channel.fetch_message(msg_id)
+          vc = client.get_guild(603147860225032192).get_channel(887717074191937667)
+         # await msg.edit(content="AviBot is online. (ignore this)")    
+          await vc.edit(name='AviBot: alive')
+
 
 client.sus_on = False
 
@@ -82,23 +111,23 @@ async def on_member_update(before, after):
       if after.id == 855897776125640704:
         print(after.id)
         print('avi bot ded')
-        channel = client.get_guild(603147860225032192).get_channel(836222286432043018)  # notification channel
-        msg_id = 887707057808085042
-        msg = await channel.fetch_message(msg_id)
+       # channel = client.get_guild(603147860225032192).get_channel(836222286432043018)  # notification channel
+      #  msg_id = 887707057808085042
+       # msg = await channel.fetch_message(msg_id)
         vc = client.get_guild(603147860225032192).get_channel(887717074191937667)
-        await msg.edit(content="avi bot dead temporarily. password no work. so tell them that as well.")
-        staffch = client.get_guild(603147860225032192).get_channel(812666568613167125)
+       # await msg.edit(content="avi bot dead temporarily. password no work. so tell them that as well.")
+       # staffch = client.get_guild(603147860225032192).get_channel(812666568613167125)
         await vc.edit(name='AviBot: dead')
-        await staffch.send('<@97122523086340096> bot ded')
+        #await staffch.send('<@97122523086340096> bot ded')
     elif before.status is discord.Status.offline and after.status is discord.Status.online:
       if after.id == 855897776125640704:
         print(after.id)
         print('avi bot bac')
-        channel = client.get_guild(603147860225032192).get_channel(836222286432043018)  # notification channel
-        msg_id = 887707057808085042
-        msg = await channel.fetch_message(msg_id)
+       # channel = client.get_guild(603147860225032192).get_channel(836222286432043018)  # notification channel
+       # msg_id = 887707057808085042
+       # msg = await channel.fetch_message(msg_id)
         vc = client.get_guild(603147860225032192).get_channel(887717074191937667)
-        await msg.edit(content="AviBot is online. (ignore this)")    
+       # await msg.edit(content="AviBot is online. (ignore this)")    
         await vc.edit(name='AviBot: alive')
     
 
@@ -1002,6 +1031,9 @@ async def tasks(ctx):
   #   await ctx.send(i.get_name())
  client.loop.set_debug(True)
 
+@client.command()
+async def ping(ctx):
+    await ctx.send(f'My ping is {round (client.latency * 1000)}ms!')
 
 # ----------------------------------------------------
 # HELP
