@@ -604,6 +604,11 @@ async def botansneeze(ctx, loop=None):
 async def water(ctx, loop=None):  
   await vcplay(ctx,"sounds/water.mp3",loop)   
 
+
+@client.command()
+async def necoarc(ctx, loop=None):  
+  await vcplay(ctx,"sounds/necoarc.mp3",loop)     
+
 @client.command()
 async def leave(ctx):
     if (ctx.voice_client): # If the bot is in a voice channel 
@@ -772,7 +777,7 @@ async def fastclip(ctx,link,start,end,filename):
   shour = startsplit[0]
   sminute=startsplit[1]
   ssecond=startsplit[2]
-  result1 = timedelta(hours=int(shour),minutes=int(sminute),seconds=int(ssecond)) - timedelta(seconds=30)
+  result1 = timedelta(hours=int(shour),minutes=int(sminute),seconds=int(ssecond))
   endsplit = end.split(":")
   ehour = endsplit[0]
   eminute=endsplit[1]
@@ -785,7 +790,7 @@ async def fastclip(ctx,link,start,end,filename):
   dirlinks = stdout.decode('utf-8').split("\n")
   vid = dirlinks[0]
   aud = dirlinks[1] 
-  coms = ['ffmpeg', '-ss', str(result1), '-i',  vid, '-ss', '30', '-t', str(result2), '-c:v', 'copy', '-c:a', 'copy', filename+".mp4"]
+  coms = ['ffmpeg', '-ss', str(result1), '-i',  vid, '-t', str(result2), '-c:v', 'copy', '-c:a', 'copy', filename+".mp4"]
   print(join(coms))
   await message.edit(content='Downloading... This will take a while...')
   process = await asyncio.create_subprocess_exec(*coms, stdout=asyncio.subprocess.PIPE,                      stderr=asyncio.subprocess.PIPE)
@@ -800,6 +805,8 @@ async def fastclip(ctx,link,start,end,filename):
   await ctx.send(ctx.message.author.mention)
   os.remove(filename+".mp4")
   await message.delete()
+
+from facebook_scraper import get_posts
 
 @client.command()
 async def download(ctx,link):
@@ -834,6 +841,8 @@ async def download(ctx,link):
         await ctx.send('File too large, broski <:towashrug:853606191711649812>')
     os.remove(filename)
     await message.delete()  
+  elif "facebook.com" in link:
+    await ctx.send('I can\'t do Facebook links, unfortunately. It should work but idk why it don\'t')
   else:
     message = await ctx.send('Downloading...')
     coms = ['youtube-dl', '-f','best',link]
@@ -862,6 +871,8 @@ async def download(ctx,link):
         await ctx.send(file=discord.File(filename))
       except discord.HTTPException:  
         await ctx.send('File too large, broski <:towashrug:853606191711649812>')
+      except Exception as e:  
+        await message.edit(content=e)  
     os.remove(filename)
     await message.delete()                       
 
@@ -884,6 +895,7 @@ async def stream(ctx,link,noembed=None):
     await ctx.send('Not a YT link!', delete_after=3.0) 
     wrong=True
   wrong=False
+  print(idd)
   if wrong!=True:
     params = {'part': 'liveStreamingDetails,snippet',
             'key': 'AIzaSyDps4zwdwoqe53Vr6ARlnhyaDiXAY4RbCE',
@@ -946,8 +958,20 @@ async def stream(ctx,link,noembed=None):
     await ctx.message.delete()
     client.loop.create_task(run_at(parsed_t.replace(tzinfo=None),open_url(link),link))
 
+async def clear_list():
+  a_file = open("list.txt", "r")        
+  lines = a_file.read().splitlines()
+  a_file.close()
+  with open("list.txt", "w+") as r:    
+    for i in lines:
+        if i.split(' ')[0] != url:
+            r.write(i+"\n")    
+
 async def open_url(url):
   print(str(url)+ " is starting!")
+  f = open("log.txt", "a")      
+  f.write("open_url running "+url+"\n")
+  f.close()
   
   avi_guild = client.get_guild(603147860225032192)
   while avi_guild == None:
@@ -969,15 +993,10 @@ async def open_url(url):
         msg_id = int(msg.jump_url.split('/')[-1])
         msg = await sched_ch.fetch_message(msg_id)
         await msg.reply('<@&888794254837706804> Starting!')
-
-  a_file = open("list.txt", "r")        #reads the txt
-  lines = a_file.read().splitlines()
-  a_file.close()
-  with open("list.txt", "w+") as r:    
-    for i in lines:
-        if i.split(' ')[0] != url:
-            r.write(i+"\n")      
-        # await msg.reply('test')
+        #await msg.reply('test')
+  clear_list()  
+  
+       
 
 
 
@@ -1053,7 +1072,7 @@ async def help(ctx):
   em.add_field(name="why", value="fortnite")
   em.add_field(name="others", value="emote,getemotes,badapple,clip,fastclip,download,stream,pet")
   em.add_field(name="reactions",value="fmega,kotowaru,ascend,jizz")
-  em.add_field(name="vc",value="join,stop,stoploop,leave,letsgo,vtubus,ding,yodayo,yodazo,jonathan,joseph,jotaro,josuke,giorno,kira,pillarmen,botansneeze,boom,ogey,rrat,fart,mogumogu,bababooey,dog,totsugeki,tacobell,amongus,danganronpa,water")
+  em.add_field(name="vc",value="join,stop,stoploop,leave,letsgo,vtubus,ding,yodayo,yodazo,jonathan,joseph,jotaro,josuke,giorno,kira,pillarmen,botansneeze,boom,ogey,rrat,fart,mogumogu,bababooey,dog,totsugeki,tacobell,amongus,danganronpa,water,necoarc")
   em.add_field(name="TTS",value=" just do \\ while in VC (\"k.help tts\" for more info)")
   await ctx.send(embed = em)
 
@@ -1325,6 +1344,11 @@ async def water(ctx):
   await ctx.send(embed = em) 
 
 @help.command()
+async def necoarc(ctx):
+  em = discord.Embed(title = "Neco arc",   description = 'Plays neco arc in VC.')
+  await ctx.send(embed = em) 
+
+@help.command()
 async def pet(ctx):
   em = discord.Embed(title = "Pet user",   description = 'Sends a gif of the mentioned user being petted.')
   em.add_field(name="**Syntax**", value="k.pet <mentioned user>\nk.pet <image url>")
@@ -1340,9 +1364,12 @@ async def run_at(dt, coro, url):
     nowstr = now.strftime("%m/%d/%Y %H:%M:%S")
     print(url + " is scheduled!")
     f = open("log.txt", "a")      
-    f.write(url +" - "+nowstr+"\n")
+    f.write(url +" - scheduled at "+nowstr+"\n")
     f.close()
     await wait_until(dt)
+    f = open("log.txt", "a")      
+    f.write(url +" starting!"+"\n")
+    f.close()
     return await coro
 
 def precheck():

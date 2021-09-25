@@ -15,6 +15,7 @@ google-auth-oauthlib = "^0.4.5"
 google-api-python-client = "^2.18.0"
 pet-pet-gif = "^1.0.1"
 schedule = "^1.1.0"
+facebook-scraper = "^0.2.46"
 
 [tool.poetry.dev-dependencies]
 
