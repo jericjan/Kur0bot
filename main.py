@@ -984,16 +984,31 @@ async def open_url(url):
     messages = await sched_ch.history(limit=200).flatten()
     print('got messages')
   
+  count = 0
   for msg in messages:
-    for i in msg.embeds:
-    #  print(i.url)
-      if i.url == url: 
-        print('found specific message')
-        print(msg.jump_url.split('/')[-1])
-        msg_id = int(msg.jump_url.split('/')[-1])
-        msg = await sched_ch.fetch_message(msg_id)
-        await msg.reply('<@&888794254837706804> Starting!')
-        #await msg.reply('test')
+    #print(msg)
+    if msg.reference is not None and not msg.is_system(): 
+      
+      
+      msg_id = int(msg.reference.message_id)
+      msgg = await sched_ch.fetch_message(msg_id)
+      for i in msgg.embeds:
+        if i.url == url:
+          print(i.url)
+          count += 1
+  print(str(count) + ' times')    
+
+  if count == 0:
+    for msg in messages:
+      for i in msg.embeds:
+      #  print(i.url)
+        if i.url == url: 
+          print('found specific message')
+          print(msg.jump_url.split('/')[-1])
+          msg_id = int(msg.jump_url.split('/')[-1])
+          msg = await sched_ch.fetch_message(msg_id)
+          await msg.reply('<@&888794254837706804> Starting!')
+          #await msg.reply('test')
   clear_list()  
   
        
@@ -1037,18 +1052,27 @@ async def pet(ctx,url):
             await webhook.delete()
 
 @client.command()
-async def sched(ctx):
+async def sched(ctx,url):
   sched_ch = client.get_guild(603147860225032192).get_channel(879702977898741770)
   messages = await sched_ch.history(limit=200).flatten()
   #print(messages)
-  
+  count = 0
   for msg in messages:
     #print(msg)
-    if msg.embeds: 
-      print(msg.embeds[0].url + " " +msg.jump_url)
+    if msg.reference is not None and not msg.is_system(): 
+      
+      
+      msg_id = int(msg.reference.message_id)
+      msgg = await sched_ch.fetch_message(msg_id)
+      for i in msgg.embeds:
+        if i.url == url:
+          print(i.url)
+          count += 1
+  print(str(count) + ' times')        
 
-    if "Holidays!／角巻わため【original】" in msg.content:
-            print(msg.jump_url)
+        
+         
+
 
 @client.command()
 async def tasks(ctx):
