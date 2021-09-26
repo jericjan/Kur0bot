@@ -610,6 +610,10 @@ async def necoarc(ctx, loop=None):
   await vcplay(ctx,"sounds/necoarc.mp3",loop)     
 
 @client.command()
+async def vsauce(ctx, loop=None):  
+  await vcplay(ctx,"sounds/vsauce.mp3",loop)   
+
+@client.command()
 async def leave(ctx):
     if (ctx.voice_client): # If the bot is in a voice channel 
         await ctx.guild.voice_client.disconnect() # Leave the channel
@@ -777,6 +781,44 @@ async def fastclip(ctx,link,start,end,filename):
   shour = startsplit[0]
   sminute=startsplit[1]
   ssecond=startsplit[2]
+  result1 = timedelta(hours=int(shour),minutes=int(sminute),seconds=int(ssecond)) - timedelta(seconds=30)
+  endsplit = end.split(":")
+  ehour = endsplit[0]
+  eminute=endsplit[1]
+  esecond=endsplit[2]
+  result2 = timedelta(hours=int(ehour),minutes=int(eminute),seconds=int(esecond)) - timedelta(hours=int(shour),minutes=int(sminute),seconds=int(ssecond))
+  out = await asyncio.create_subprocess_exec(*coms, stdout=asyncio.subprocess.PIPE,                      stderr=asyncio.subprocess.PIPE)
+  stdout, stderr = await out.communicate()
+  print(stdout)
+  print(stderr)
+  dirlinks = stdout.decode('utf-8').split("\n")
+  vid = dirlinks[0]
+  aud = dirlinks[1] 
+  coms = ['ff mpeg', '-ss', str(result1), '-i',  vid, '-ss', '30', '-t', str(result2), '-c:v', 'copy', '-c:a', 'copy', filename+".mp4"]
+  print(join(coms))
+  await message.edit(content='Downloading... This will take a while...')
+  process = await asyncio.create_subprocess_exec(*coms, stdout=asyncio.subprocess.PIPE,                      stderr=asyncio.subprocess.PIPE)
+  stdout, stderr = await process.communicate()
+  print(stdout)
+  print(stderr)
+  #os.rename(filename+".mkv",filename+".mp4")  
+  try:
+    await ctx.send(file=discord.File(filename+".mp4"))
+  except Exception:
+     await message.edit(content='I failed.')
+  await ctx.send(ctx.message.author.mention)
+  os.remove(filename+".mp4")
+  await message.delete()
+
+@client.command()
+async def fastclip2(ctx,link,start,end,filename):
+  message = await ctx.send('Fetching url...')
+  coms = ['youtube-dl', '-g', '-f','best','--youtube-skip-dash-manifest', link]
+  print(join(coms))
+  startsplit = start.split(":")
+  shour = startsplit[0]
+  sminute=startsplit[1]
+  ssecond=startsplit[2]
   result1 = timedelta(hours=int(shour),minutes=int(sminute),seconds=int(ssecond))
   endsplit = end.split(":")
   ehour = endsplit[0]
@@ -790,7 +832,7 @@ async def fastclip(ctx,link,start,end,filename):
   dirlinks = stdout.decode('utf-8').split("\n")
   vid = dirlinks[0]
   aud = dirlinks[1] 
-  coms = ['ffmpeg', '-ss', str(result1), '-i',  vid, '-t', str(result2), '-c:v', 'copy', '-c:a', 'copy', filename+".mp4"]
+  coms = ['ff mpeg', '-ss', str(result1), '-i',  vid, '-t', str(result2), '-c:v', 'copy', '-c:a', 'copy', filename+".mp4"]
   print(join(coms))
   await message.edit(content='Downloading... This will take a while...')
   process = await asyncio.create_subprocess_exec(*coms, stdout=asyncio.subprocess.PIPE,                      stderr=asyncio.subprocess.PIPE)
@@ -1096,7 +1138,7 @@ async def help(ctx):
   em.add_field(name="why", value="fortnite")
   em.add_field(name="others", value="emote,getemotes,badapple,clip,fastclip,download,stream,pet")
   em.add_field(name="reactions",value="fmega,kotowaru,ascend,jizz")
-  em.add_field(name="vc",value="join,stop,stoploop,leave,letsgo,vtubus,ding,yodayo,yodazo,jonathan,joseph,jotaro,josuke,giorno,kira,pillarmen,botansneeze,boom,ogey,rrat,fart,mogumogu,bababooey,dog,totsugeki,tacobell,amongus,danganronpa,water,necoarc")
+  em.add_field(name="vc",value="join,stop,stoploop,leave,letsgo,vtubus,ding,yodayo,yodazo,jonathan,joseph,jotaro,josuke,giorno,kira,pillarmen,botansneeze,boom,ogey,rrat,fart,mogumogu,bababooey,dog,totsugeki,tacobell,amongus,danganronpa,water,necoarc,vsauce")
   em.add_field(name="TTS",value=" just do \\ while in VC (\"k.help tts\" for more info)")
   await ctx.send(embed = em)
 
@@ -1371,6 +1413,11 @@ async def water(ctx):
 async def necoarc(ctx):
   em = discord.Embed(title = "Neco arc",   description = 'Plays neco arc in VC.')
   await ctx.send(embed = em) 
+
+@help.command()
+async def vsauce(ctx):
+  em = discord.Embed(title = "Vsauce music",   description = 'Plays the vsauce music in VC.')
+  await ctx.send(embed = em)   
 
 @help.command()
 async def pet(ctx):
