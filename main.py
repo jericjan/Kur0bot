@@ -1057,7 +1057,7 @@ async def open_url(url):
           msg = await sched_ch.fetch_message(msg_id)
           await msg.reply('<@&888794254837706804> Starting!')
           #await msg.reply('test')
-  clear_list()  
+  await clear_list()  
   
        
 
