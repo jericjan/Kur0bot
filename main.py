@@ -878,7 +878,10 @@ async def download(ctx,link):
         thing = await out2.stdout.read()
         filename = thing.decode('utf-8').split("\n")[0]
         await message.edit(content="Sending video...")  
-        await ctx.send(file=discord.File(filename))
+        try:
+          await ctx.send(file=discord.File(filename))
+        except Exception as e:
+         await ctx.send(e)   
       except discord.HTTPException:  
         await ctx.send('File too large, broski <:towashrug:853606191711649812>')
     os.remove(filename)
@@ -910,7 +913,10 @@ async def download(ctx,link):
         thing = await out2.stdout.read()
         filename = thing.decode('utf-8').split("\n")[0]
         await message.edit(content="Sending video...")  
-        await ctx.send(file=discord.File(filename))
+        try:
+          await ctx.send(file=discord.File(filename))
+        except Exception as e:
+         await ctx.send(e)   
       except discord.HTTPException:  
         await ctx.send('File too large, broski <:towashrug:853606191711649812>')
       except Exception as e:  
