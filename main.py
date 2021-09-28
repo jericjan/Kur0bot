@@ -794,7 +794,7 @@ async def fastclip(ctx,link,start,end,filename):
   dirlinks = stdout.decode('utf-8').split("\n")
   vid = dirlinks[0]
   aud = dirlinks[1] 
-  coms = ['ff mpeg', '-ss', str(result1), '-i',  vid, '-ss', '30', '-t', str(result2), '-c:v', 'copy', '-c:a', 'copy', filename+".mp4"]
+  coms = ['ffmpeg', '-ss', str(result1), '-i',  vid, '-ss', '30', '-t', str(result2), '-c:v', 'copy', '-c:a', 'copy', filename+".mp4"]
   print(join(coms))
   await message.edit(content='Downloading... This will take a while...')
   process = await asyncio.create_subprocess_exec(*coms, stdout=asyncio.subprocess.PIPE,                      stderr=asyncio.subprocess.PIPE)
@@ -832,7 +832,7 @@ async def fastclip2(ctx,link,start,end,filename):
   dirlinks = stdout.decode('utf-8').split("\n")
   vid = dirlinks[0]
   aud = dirlinks[1] 
-  coms = ['ff mpeg', '-ss', str(result1), '-i',  vid, '-t', str(result2), '-c:v', 'copy', '-c:a', 'copy', filename+".mp4"]
+  coms = ['ffmpeg', '-ss', str(result1), '-i',  vid, '-t', str(result2), '-c:v', 'copy', '-c:a', 'copy', filename+".mp4"]
   print(join(coms))
   await message.edit(content='Downloading... This will take a while...')
   process = await asyncio.create_subprocess_exec(*coms, stdout=asyncio.subprocess.PIPE,                      stderr=asyncio.subprocess.PIPE)
@@ -848,15 +848,15 @@ async def fastclip2(ctx,link,start,end,filename):
   os.remove(filename+".mp4")
   await message.delete()
 
-from facebook_scraper import get_posts
+
 
 @client.command()
 async def download(ctx,link):
   import codecs
   if "reddit.com" in link:
     message = await ctx.send('Downloading...')
-    coms = ['youtube-dl', '-f','bestvideo+bestaudio',link]
-    coms2 = ['youtube-dl', '--get-filename',link]
+    coms = ['youtube-dl', '-f','bestvideo+bestaudio',"--cookies","cookies (12).txt",link]
+    coms2 = ['youtube-dl', '--get-filename',"--cookies","cookies (12).txt",link]
     print(join(coms))
     print(join(coms2))
     proc = await asyncio.create_subprocess_exec(*coms, 
