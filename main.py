@@ -183,7 +183,7 @@ async def sus2(message):
     msg = message.content.lower()        
     if "twitter.com" in msg:
       print("twitter link!")
-      args = ["youtube-dl","-j",msg]
+      args = ["yt-dlp","-j",msg]
       print(args)
       proc = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE,stdin=subprocess.PIPE)
       stdout_value = proc.stdout.read() + proc.stderr.read()
@@ -195,7 +195,7 @@ async def sus2(message):
         m1 = await message.channel.send("Beep boop! That is a twitter video!")
         await asyncio.sleep(.1)
         m2 = await message.channel.send('Imma give direct video link...')
-        args = ["youtube-dl","--get-url",msg]
+        args = ["yt-dlp","--get-url",msg]
         print(args)
         proc = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE,stdin=subprocess.PIPE)
         stdout_value = proc.stdout.read() + proc.stderr.read()
@@ -211,7 +211,7 @@ async def sus3(message):
     if message.author == client.user:
         return
     msg = message.content.lower()        
-    if msg.startswith('\\ '):
+    if msg.startswith('] '):
         voice_channel = message.author.voice.channel
         channel = None
         tts = gTTS(msg)
@@ -225,7 +225,7 @@ async def sus3(message):
               vc.play(discord.FFmpegPCMAudio(source="sounds/tts.mp3")) 
             else:
               voice.play(discord.FFmpegPCMAudio(source="sounds/tts.mp3"))
-    if msg.startswith('\\au '):
+    if msg.startswith('] '):
         voice_channel = message.author.voice.channel
         channel = None
         tts = gTTS(msg[3:], lang='en', tld='com.au')
@@ -239,7 +239,7 @@ async def sus3(message):
               vc.play(discord.FFmpegPCMAudio(source="sounds/tts.mp3")) 
             else:
               voice.play(discord.FFmpegPCMAudio(source="sounds/tts.mp3"))            
-    if msg.startswith('\\uk '):
+    if msg.startswith(']uk '):
         voice_channel = message.author.voice.channel
         channel = None
         tts = gTTS(msg[3:], lang='en', tld='co.uk')
@@ -253,7 +253,7 @@ async def sus3(message):
               vc.play(discord.FFmpegPCMAudio(source="sounds/tts.mp3")) 
             else:
               voice.play(discord.FFmpegPCMAudio(source="sounds/tts.mp3"))
-    if msg.startswith('\\in '):
+    if msg.startswith(']in '):
         voice_channel = message.author.voice.channel
         channel = None
         tts = gTTS(msg[3:], lang='en', tld='co.in')
@@ -614,6 +614,10 @@ async def vsauce(ctx, loop=None):
   await vcplay(ctx,"sounds/vsauce.mp3",loop)   
 
 @client.command()
+async def gigachad(ctx, loop=None):  
+  await vcplay(ctx,"sounds/gigachad.mp3",loop)   
+
+@client.command()
 async def leave(ctx):
     if (ctx.voice_client): # If the bot is in a voice channel 
         await ctx.guild.voice_client.disconnect() # Leave the channel
@@ -721,7 +725,7 @@ async def clip(ctx,link,start,end,filename):
   if os.path.isfile(filename+".mp4"):
     os.remove(filename+".mp4")  
   message = await ctx.send('Fetching url...')
-  coms = ['youtube-dl', '-g', '-f','best','--youtube-skip-dash-manifest', link]
+  coms = ['yt-dlp', '-g', '-f','best','--youtube-skip-dash-manifest', link]
   print(join(coms))
   startsplit = start.split(":")
   shour = startsplit[0]
@@ -775,7 +779,7 @@ async def clip(ctx,link,start,end,filename):
 @client.command()
 async def fastclip(ctx,link,start,end,filename):
   message = await ctx.send('Fetching url...')
-  coms = ['youtube-dl', '-g', '-f','best','--youtube-skip-dash-manifest', link]
+  coms = ['yt-dlp', '-g', '-f','best','--youtube-skip-dash-manifest', link]
   print(join(coms))
   startsplit = start.split(":")
   shour = startsplit[0]
@@ -813,7 +817,7 @@ async def fastclip(ctx,link,start,end,filename):
 @client.command()
 async def fastclip2(ctx,link,start,end,filename):
   message = await ctx.send('Fetching url...')
-  coms = ['youtube-dl', '-g', '-f','best','--youtube-skip-dash-manifest', link]
+  coms = ['yt-dlp', '-g', '-f','best','--youtube-skip-dash-manifest', link]
   print(join(coms))
   startsplit = start.split(":")
   shour = startsplit[0]
@@ -855,8 +859,8 @@ async def download(ctx,link):
   import codecs
   if "reddit.com" in link:
     message = await ctx.send('Downloading...')
-    coms = ['youtube-dl', '-f','bestvideo+bestaudio',"--cookies","cookies (12).txt",link]
-    coms2 = ['youtube-dl', '--get-filename',"--cookies","cookies (12).txt",link]
+    coms = ['yt-dlp', '-f','bestvideo+bestaudio',"--cookies","cookies (12).txt",link]
+    coms2 = ['yt-dlp', '--get-filename',"--cookies","cookies (12).txt",link]
     print(join(coms))
     print(join(coms2))
     proc = await asyncio.create_subprocess_exec(*coms, 
@@ -886,12 +890,12 @@ async def download(ctx,link):
         await ctx.send('File too large, broski <:towashrug:853606191711649812>')
     os.remove(filename)
     await message.delete()  
-  elif "facebook.com" in link:
-    await ctx.send('I can\'t do Facebook links, unfortunately. It should work but idk why it don\'t')
+  # elif "facebook.com" in link:
+  #   await ctx.send('I can\'t do Facebook links, unfortunately. It should work but idk why it don\'t')
   else:
     message = await ctx.send('Downloading...')
-    coms = ['youtube-dl', '-f','best',link]
-    coms2 = ['youtube-dl', '-f','best', '--get-filename',link]
+    coms = ['yt-dlp', '-f','best',link]
+    coms2 = ['yt-dlp', '-f','best', '--get-filename',link]
     print(join(coms))
     print(join(coms2))
     proc = await asyncio.create_subprocess_exec(*coms, 
@@ -1145,7 +1149,7 @@ async def help(ctx):
   em.add_field(name="others", value="emote,getemotes,badapple,clip,fastclip,download,stream,pet")
   em.add_field(name="reactions",value="fmega,kotowaru,ascend,jizz")
   em.add_field(name="vc",value="join,stop,stoploop,leave,letsgo,vtubus,ding,yodayo,yodazo,jonathan,joseph,jotaro,josuke,giorno,kira,pillarmen,botansneeze,boom,ogey,rrat,fart,mogumogu,bababooey,dog,totsugeki,tacobell,amongus,danganronpa,water,necoarc,vsauce")
-  em.add_field(name="TTS",value=" just do \\ while in VC (\"k.help tts\" for more info)")
+  em.add_field(name="TTS",value=" just do ] while in VC (\"k.help tts\" for more info)")
   await ctx.send(embed = em)
 
 
@@ -1288,8 +1292,8 @@ async def pillarmen(ctx):
 @help.command()
 async def tts(ctx):
   em = discord.Embed(title = "Text to speech",   description = 'Send a TTS message in VC')
-  em.add_field(name="**Syntax**", value="\\ <message>")
-  em.add_field(name="**Accents**", value="\\ (US default)\n\\au (Australia)\n\\uk (United Kingdom)\n\\in (India)")
+  em.add_field(name="**Syntax**", value="] <message>")
+  em.add_field(name="**Accents**", value="] (US default)\n]au (Australia)\n]uk (United Kingdom)\n]in (India)")
   await ctx.send(embed = em)               
 
 @help.command()
@@ -1424,6 +1428,11 @@ async def necoarc(ctx):
 async def vsauce(ctx):
   em = discord.Embed(title = "Vsauce music",   description = 'Plays the vsauce music in VC.')
   await ctx.send(embed = em)   
+
+@help.command()
+async def gigachad(ctx):
+  em = discord.Embed(title = "Gigachad",   description = 'Plays a bit of \'Can You Feel My Heart\' in VC.')
+  await ctx.send(embed = em)  
 
 @help.command()
 async def pet(ctx):
