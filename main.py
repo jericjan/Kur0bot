@@ -9,7 +9,8 @@ import aiohttp
 import subprocess
 from gtts import gTTS
 from datetime import datetime, timedelta, timezone
-from shlex import quote, join
+from shlex import quote
+from shlex import join as shjoin
 import schedule
 import threading
 import time
@@ -184,7 +185,7 @@ async def sus2(message):
     msg = message.content.lower()        
     if "twitter.com" in msg:
       print("twitter link!")
-      args = ["yt-dlp","-j",msg]
+      args = ["youtube-dl","-j",msg]
       print(args)
       proc = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE,stdin=subprocess.PIPE)
       stdout_value = proc.stdout.read() + proc.stderr.read()
@@ -196,7 +197,7 @@ async def sus2(message):
         m1 = await message.channel.send("Beep boop! That is a twitter video!")
         await asyncio.sleep(.1)
         m2 = await message.channel.send('Imma give direct video link...')
-        args = ["yt-dlp","--get-url",msg]
+        args = ["youtube-dl","--get-url",msg]
         print(args)
         proc = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE,stdin=subprocess.PIPE)
         stdout_value = proc.stdout.read() + proc.stderr.read()
@@ -727,7 +728,7 @@ async def clip(ctx,link,start,end,filename):
     os.remove(filename+".mp4")  
   message = await ctx.send('Fetching url...')
   coms = ['yt-dlp', '-g', '-f','best','--youtube-skip-dash-manifest', link]
-  print(join(coms))
+  print(shjoin(coms))
   startsplit = start.split(":")
   shour = startsplit[0]
   sminute=startsplit[1]
@@ -745,7 +746,7 @@ async def clip(ctx,link,start,end,filename):
   vid = dirlinks[0]
   aud = dirlinks[1] 
   coms = ['ffmpeg', '-ss', str(result1), '-i',  vid, '-ss', '30', '-t', str(result2), '-c:v', 'libx264', '-c:a', 'copy', filename+".mkv"]
-  print(join(coms))
+  print(shjoin(coms))
   await message.edit(content='Downloading... This will take a while...')
   try:
     process = await asyncio.create_subprocess_exec(*coms, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
@@ -781,7 +782,7 @@ async def clip(ctx,link,start,end,filename):
 async def fastclip(ctx,link,start,end,filename):
   message = await ctx.send('Fetching url...')
   coms = ['yt-dlp', '-g', '-f','best','--youtube-skip-dash-manifest', link]
-  print(join(coms))
+  print(shjoin(coms))
   startsplit = start.split(":")
   shour = startsplit[0]
   sminute=startsplit[1]
@@ -800,7 +801,7 @@ async def fastclip(ctx,link,start,end,filename):
   vid = dirlinks[0]
   aud = dirlinks[1] 
   coms = ['ffmpeg', '-ss', str(result1), '-i',  vid, '-ss', '30', '-t', str(result2), '-c:v', 'copy', '-c:a', 'copy', filename+".mp4"]
-  print(join(coms))
+  print(shjoin(coms))
   await message.edit(content='Downloading... This will take a while...')
   process = await asyncio.create_subprocess_exec(*coms, stdout=asyncio.subprocess.PIPE,                      stderr=asyncio.subprocess.PIPE)
   stdout, stderr = await process.communicate()
@@ -819,7 +820,7 @@ async def fastclip(ctx,link,start,end,filename):
 async def fastclip2(ctx,link,start,end,filename):
   message = await ctx.send('Fetching url...')
   coms = ['yt-dlp', '-g', '-f','best','--youtube-skip-dash-manifest', link]
-  print(join(coms))
+  print(shjoin(coms))
   startsplit = start.split(":")
   shour = startsplit[0]
   sminute=startsplit[1]
@@ -838,12 +839,23 @@ async def fastclip2(ctx,link,start,end,filename):
   vid = dirlinks[0]
   aud = dirlinks[1] 
   coms = ['ffmpeg', '-ss', str(result1), '-i',  vid, '-t', str(result2), '-c:v', 'copy', '-c:a', 'copy', filename+".mp4"]
-  print(join(coms))
+  
+  print(shjoin(coms))
   await message.edit(content='Downloading... This will take a while...')
   process = await asyncio.create_subprocess_exec(*coms, stdout=asyncio.subprocess.PIPE,                      stderr=asyncio.subprocess.PIPE)
-  stdout, stderr = await process.communicate()
-  print(stdout)
-  print(stderr)
+  #stdout, stderr = await process.communicate()
+  while process.returncode is None:
+    line = await process.stdout.read(100)
+    if not line:
+            break
+    #await message.edit(content=line.decode('utf-8'))
+    await ctx.send(line.decode('utf-8'))
+    await asyncio.sleep(1)
+  if process.returncode != 0:
+      await ctx.send('return code is not 0. i give up')
+      return
+  #print(stdout)
+  #print(stderr)
   #os.rename(filename+".mkv",filename+".mp4")  
   try:
     await ctx.send(file=discord.File(filename+".mp4"))
@@ -860,10 +872,10 @@ async def download(ctx,link):
   import codecs
   if "reddit.com" in link:
     message = await ctx.send('Downloading...')
-    coms = ['yt-dlp', '-f','bestvideo+bestaudio',"--cookies","cookies (12).txt",link]
-    coms2 = ['yt-dlp', '--get-filename',"--cookies","cookies (12).txt",link]
-    print(join(coms))
-    print(join(coms2))
+    coms = ['yt-dlp', '-f','bestvideo+bestaudio',"--cookies","cookies (17).txt",link]
+    coms2 = ['yt-dlp', '--get-filename',"--cookies","cookies (17).txt",link]
+    print(shjoin(coms))
+    print(shjoin(coms2))
     proc = await asyncio.create_subprocess_exec(*coms, 
             stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
     #stdout, stderr = await proc.communicate()
@@ -871,8 +883,26 @@ async def download(ctx,link):
       line = await proc.stdout.read(100)
       if not line:
               break
-      await message.edit(content=line.decode('utf-8'))
+      #await message.edit(content=line.decode('utf-8'))
+      await ctx.send(line.decode('utf-8'))
       await asyncio.sleep(1)
+    if proc.returncode != 0:
+      await ctx.send('return code is not 0. trying something else')
+      coms = ['yt-dlp',"--cookies","cookies (17).txt",link]
+      print(shjoin(coms))
+      proc = await asyncio.create_subprocess_exec(*coms, 
+              stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+      #stdout, stderr = await proc.communicate()
+      while proc.returncode is None:
+        line = await proc.stdout.read(100)
+        if not line:
+                break
+        await message.edit(content=line.decode('utf-8'))
+        #await ctx.send(line.decode('utf-8'))
+        await asyncio.sleep(1)  
+      if proc.returncode != 0:
+        await ctx.send('return code is not 0. i give up')
+        return
     await message.edit(content="Almost there...")  
     out2 = await asyncio.create_subprocess_exec(*coms2, 
                         stdout=subprocess.PIPE, stderr=subprocess.STDOUT)  
@@ -905,8 +935,8 @@ async def download(ctx,link):
     # return_data.seek(0)
     coms = ['yt-dlp', '-f','best','--cookies','cookies (15).txt',link]
     coms2 = ['yt-dlp', '-f','best', '--get-filename','--cookies','cookies (15).txt',link]
-    print(join(coms))
-    print(join(coms2))
+    print(shjoin(coms))
+    print(shjoin(coms2))
     proc = await asyncio.create_subprocess_exec(*coms, 
              stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
  
@@ -921,8 +951,38 @@ async def download(ctx,link):
                         stdout=subprocess.PIPE, stderr=subprocess.STDOUT)  
     while out2.returncode is None:
       await message.edit(content="A little more...")  
+  elif "instagram.com" in link:
+    message = await ctx.send('Downloading...')
+    cookiecoms = ['gpg','--pinentry-mode=loopback','--passphrase',os.getenv('FBPASSPHRASE'),"instacook.txt.gpg"]
+    cookieproc = await asyncio.create_subprocess_exec(*cookiecoms, 
+            stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+    stdout, stderr = await cookieproc.communicate()  
+    # res = stdout.decode('UTF-8').split('\n')[2:]
+    # fin = '\n'.join(res)
+    # print(fin)
+    # return_data = io.BytesIO()
+    # return_data.write(fin.encode())
+    # return_data.seek(0)
+    coms = ['yt-dlp', '-f','best','--cookies','instacook.txt',link]
+    coms2 = ['yt-dlp', '-f','best', '--get-filename','--cookies','instacook.txt',link]
+    print(shjoin(coms))
+    print(shjoin(coms2))
+    proc = await asyncio.create_subprocess_exec(*coms, 
+             stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+ 
+    while proc.returncode is None:
+      line = await proc.stdout.read(100)
+      if not line:
+              break
+      await message.edit(content=line.decode('utf-8'))
+      await asyncio.sleep(1)
+    await message.edit(content="Almost there...")  
+    out2 = await asyncio.create_subprocess_exec(*coms2, 
+                        stdout=subprocess.PIPE, stderr=subprocess.STDOUT)  
+    while out2.returncode is None:
+      await message.edit(content="A little more...")        
     else:  
-      os.remove('cookies (15).txt')
+      os.remove('instacook.txt')
       try:
         thing = await out2.stdout.read()
         filename = thing.decode('utf-8').split("\n")[-2]
@@ -946,8 +1006,8 @@ async def download(ctx,link):
     message = await ctx.send('Downloading...')
     coms = ['yt-dlp', '-f','best',link]
     coms2 = ['yt-dlp', '-f','best', '--get-filename',link]
-    print(join(coms))
-    print(join(coms2))
+    print(shjoin(coms))
+    print(shjoin(coms2))
     proc = await asyncio.create_subprocess_exec(*coms, 
             stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
     #stdout, stderr = await proc.communicate()
@@ -1188,6 +1248,19 @@ async def tasks(ctx):
 async def ping(ctx):
     await ctx.send(f'My ping is {round (client.latency * 1000)}ms!')
 
+
+@client.command()
+async def makeembed(ctx, title, description):
+  embed=discord.Embed(title=title, description=description)
+  await ctx.send(embed=embed)
+  await ctx.message.delete()  
+
+@client.command()
+async def editembed(ctx, id: int, title, description): 
+  msg = await ctx.fetch_message(id)
+  embed=discord.Embed(title=title, description=description)
+  await msg.edit(embed=embed)
+  await ctx.message.delete()  
 # ----------------------------------------------------
 # HELP
 @client.group(invoke_without_command=True)
