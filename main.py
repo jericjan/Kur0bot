@@ -792,7 +792,7 @@ async def clip(ctx,link,start,end,filename):
     await message.edit(content='An error occured... Uh, try it again.')
 
 @client.command()
-async def fastclip(ctx,link,start,end,filename):
+async def fastclip3(ctx,link,start,end,filename):
   message = await ctx.send('Fetching url...')
   coms = ['yt-dlp', '-g', '-f','best','--youtube-skip-dash-manifest', link]
   print(shjoin(coms))
@@ -893,7 +893,7 @@ async def fastclip2(ctx,link,start,end,filename):
 
 
 @client.command()
-async def fastclip3(ctx,link,start,end,filename):
+async def fastclip(ctx,link,start,end,filename):
   message = await ctx.send('Fetching url...')
   coms = ['yt-dlp', '-g', '-f','best','--youtube-skip-dash-manifest', link]
   print(shjoin(coms))
@@ -1561,7 +1561,7 @@ async def clip(ctx):
 
 @help.command()
 async def fastclip(ctx):
-  em = discord.Embed(title = "Quickly clip a YT Video",   description = 'clips a YouTube video given the start and end times (HH:MM:SS)\n**FASTER** than `clip` but inaccurate')
+  em = discord.Embed(title = "Quickly clip a YT Video",   description = 'clips a YouTube video given the start and end times (HH:MM:SS)\n**FASTER** than `clip` but will start at the nearest keyframe, so it\'ll start a couple seconds earlier than the given timestamp')
   em.add_field(name="**Syntax**", value="k.clip <url> <start time> <end time> <filename>")
   em.add_field(name="**Example**", value="k.fastclip https://www.youtube.com/watch?v=dQw4w9WgXcQ 00:00:52 00:01:05 filename")
   await ctx.send(embed = em)
