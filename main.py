@@ -15,6 +15,7 @@ import schedule
 import threading
 import time
 import io
+import math
 
 #client = discord.Client()
 intents = discord.Intents().default()
@@ -733,7 +734,16 @@ async def clip(ctx,link,start,end,filename):
   shour = startsplit[0]
   sminute=startsplit[1]
   ssecond=startsplit[2]
-  result1 = timedelta(hours=int(shour),minutes=int(sminute),seconds=int(ssecond)) - timedelta(seconds=30)
+  date_time = datetime.strptime(start, "%H:%M:%S")
+  a_timedelta = date_time - datetime(1900, 1, 1)
+  seconds = a_timedelta.total_seconds()
+  print(seconds)
+  if seconds < 30:
+    print('less than 30 seconds!')
+    result1 = timedelta(hours=int(shour),minutes=int(sminute),seconds=int(ssecond))
+  else:
+    print('it is at least 30 seconds.')  
+    result1 = timedelta(hours=int(shour),minutes=int(sminute),seconds=int(ssecond)) - timedelta(seconds=30)
   endsplit = end.split(":")
   ehour = endsplit[0]
   eminute=endsplit[1]
@@ -745,7 +755,10 @@ async def clip(ctx,link,start,end,filename):
   dirlinks = stdout.decode('utf-8').split("\n")
   vid = dirlinks[0]
   aud = dirlinks[1] 
-  coms = ['ffmpeg', '-ss', str(result1), '-i',  vid, '-ss', '30', '-t', str(result2), '-c:v', 'libx264', '-c:a', 'copy', filename+".mkv"]
+  if seconds < 30:
+    coms = ['ffmpeg', '-ss', str(result1), '-i',  vid, '-t', str(result2), '-c:v', 'libx264', '-c:a', 'copy', filename+".mkv"]  
+  else:
+    coms = ['ffmpeg', '-ss', str(result1), '-i',  vid, '-ss', '30', '-t', str(result2), '-c:v', 'libx264', '-c:a', 'copy', filename+".mkv"]  
   print(shjoin(coms))
   await message.edit(content='Downloading... This will take a while...')
   try:
@@ -787,7 +800,17 @@ async def fastclip(ctx,link,start,end,filename):
   shour = startsplit[0]
   sminute=startsplit[1]
   ssecond=startsplit[2]
-  result1 = timedelta(hours=int(shour),minutes=int(sminute),seconds=int(ssecond)) - timedelta(seconds=30)
+  date_time = datetime.strptime(start, "%H:%M:%S")
+  a_timedelta = date_time - datetime(1900, 1, 1)
+  seconds = a_timedelta.total_seconds()
+  print(seconds)
+  if seconds < 30:
+    print('less than 30 seconds!')
+    result1 = timedelta(hours=int(shour),minutes=int(sminute),seconds=int(ssecond))
+  else:
+    print('it is at least 30 seconds.')  
+    result1 = timedelta(hours=int(shour),minutes=int(sminute),seconds=int(ssecond)) - timedelta(seconds=30)
+  
   endsplit = end.split(":")
   ehour = endsplit[0]
   eminute=endsplit[1]
@@ -800,13 +823,16 @@ async def fastclip(ctx,link,start,end,filename):
   dirlinks = stdout.decode('utf-8').split("\n")
   vid = dirlinks[0]
   aud = dirlinks[1] 
-  coms = ['ffmpeg', '-ss', str(result1), '-i',  vid, '-ss', '30', '-t', str(result2), '-c:v', 'copy', '-c:a', 'copy', filename+".mp4"]
+  if seconds < 30:
+    coms = ['ffmpeg', '-ss', str(result1), '-i',  vid, '-t', str(result2), '-c:v', 'copy', '-c:a', 'copy', filename+".mp4"]
+  else:
+    coms = ['ffmpeg', '-ss', str(result1), '-i',  vid, '-ss', '30', '-t', str(result2), '-c:v', 'copy', '-c:a', 'copy', filename + ".mp4"]
   print(shjoin(coms))
   await message.edit(content='Downloading... This will take a while...')
   process = await asyncio.create_subprocess_exec(*coms, stdout=asyncio.subprocess.PIPE,                      stderr=asyncio.subprocess.PIPE)
   stdout, stderr = await process.communicate()
   print(stdout)
-  print(stderr)
+  print(stderr.decode('utf-8'))
   #os.rename(filename+".mkv",filename+".mp4")  
   try:
     await ctx.send(file=discord.File(filename+".mp4"))
@@ -824,7 +850,7 @@ async def fastclip2(ctx,link,start,end,filename):
   startsplit = start.split(":")
   shour = startsplit[0]
   sminute=startsplit[1]
-  ssecond=startsplit[2]
+  ssecond=startsplit[2]  
   result1 = timedelta(hours=int(shour),minutes=int(sminute),seconds=int(ssecond))
   endsplit = end.split(":")
   ehour = endsplit[0]
@@ -838,7 +864,7 @@ async def fastclip2(ctx,link,start,end,filename):
   dirlinks = stdout.decode('utf-8').split("\n")
   vid = dirlinks[0]
   aud = dirlinks[1] 
-  coms = ['ffmpeg', '-ss', str(result1), '-i',  vid, '-t', str(result2), '-c:v', 'copy', '-c:a', 'copy', filename+".mp4"]
+  coms = ['ffmpeg','-ss', str(result1), '-i',  vid, '-t', str(result2), '-c:v', 'copy', '-c:a', 'copy', filename+".mp4"]
   
   print(shjoin(coms))
   await message.edit(content='Downloading... This will take a while...')
@@ -866,6 +892,107 @@ async def fastclip2(ctx,link,start,end,filename):
   await message.delete()
 
 
+@client.command()
+async def fastclip3(ctx,link,start,end,filename):
+  message = await ctx.send('Fetching url...')
+  coms = ['yt-dlp', '-g', '-f','best','--youtube-skip-dash-manifest', link]
+  print(shjoin(coms))
+  startsplit = start.split(":")
+  shour = startsplit[0]
+  sminute=startsplit[1]
+  ssecond=startsplit[2]
+  date_time = datetime.strptime(start, "%H:%M:%S")
+  a_timedelta = date_time - datetime(1900, 1, 1)
+  seconds = a_timedelta.total_seconds()
+  print(seconds)
+  if seconds < 30:
+    print('less than 30 seconds!')
+    result1 = timedelta(hours=int(shour),minutes=int(sminute),seconds=int(ssecond))
+  else:
+    print('it is at least 30 seconds.')  
+    result1 = timedelta(hours=int(shour),minutes=int(sminute),seconds=int(ssecond)) - timedelta(seconds=30)
+  
+  endsplit = end.split(":")
+  ehour = endsplit[0]
+  eminute=endsplit[1]
+  esecond=endsplit[2]
+  result2 = timedelta(hours=int(ehour),minutes=int(eminute),seconds=int(esecond)) - timedelta(hours=int(shour),minutes=int(sminute),seconds=int(ssecond)) + timedelta(seconds=30)
+  out = await asyncio.create_subprocess_exec(*coms, stdout=asyncio.subprocess.PIPE,                      stderr=asyncio.subprocess.PIPE)
+  stdout, stderr = await out.communicate()
+  print(stdout)
+  print(stderr)
+  dirlinks = stdout.decode('utf-8').split("\n")
+  vid = dirlinks[0]
+  aud = dirlinks[1] 
+  if seconds < 30:
+    coms = ['ffmpeg', '-ss', str(result1), '-i',  vid, '-t', str(result2), '-c:v', 'copy', '-c:a', 'copy', filename+".mp4"]
+  else:
+    coms = ['ffmpeg','-noaccurate_seek','-ss', str(result1), '-i',  vid, '-t', str(result2), '-c:v', 'copy', '-c:a', 'copy', filename + ".mp4"]
+  print(shjoin(coms))
+  await message.edit(content='Downloading... This will take a while...')
+  process = await asyncio.create_subprocess_exec(*coms, stdout=asyncio.subprocess.PIPE,                      stderr=asyncio.subprocess.PIPE)
+  stdout, stderr = await process.communicate()
+  print(stdout)
+  print(stderr.decode('utf-8'))
+  #os.rename(filename+".mkv",filename+".mp4")  
+
+  def max_le(seq, val):
+    """
+    Same as max_lt(), but items in seq equal to val apply as well.
+
+    >>> max_le([2, 3, 7, 11], 10)
+    7
+    >>> max_le((1, 3, 6, 11), 6)
+    6
+    """
+
+    idx = len(seq)-1
+    while idx >= 0:
+        if seq[idx] <= val:
+            return seq[idx]
+        idx -= 1
+
+    return None
+
+  def round_down(n, decimals=0):
+    multiplier = 10 ** decimals
+    return math.floor(n * multiplier) / multiplier
+
+  coms = ['ffprobe', '-v', 'error', '-skip_frame', 'nokey', '-show_entries', "frame=pkt_pts_time", "-select_streams", "v", "-of", "csv=p=0", filename + ".mp4"]
+  process = await asyncio.create_subprocess_exec(*coms, stdout=asyncio.subprocess.PIPE,                      stderr=asyncio.subprocess.PIPE)
+  stdout, stderr = await process.communicate()
+  print(stdout.decode('utf-8'))
+  timelist_str = stdout.decode('utf-8').strip().split("\n")
+  print(timelist_str)
+  timelist_float = [float(i) for i in timelist_str]
+
+  if seconds < 30:
+    keyframe = round_down(max_le(timelist_float, seconds), 1)
+    await ctx.send("Clipping "+ str(round_down(seconds-keyframe,1))+ " seconds earlier to nearest keyframe...")
+  
+    
+  else:  
+    keyframe = round_down(max_le(timelist_float, 30), 1)
+    await ctx.send("Clipping "+ str(round_down(30-keyframe,1))+ " seconds earlier to nearest keyframe...")
+
+  coms = ['ffmpeg','-noaccurate_seek','-i',  filename + ".mp4", '-ss', str(keyframe),'-t', str(result2), '-c:v', 'copy', '-c:a', 'copy', filename + "_final.mp4"]
+  process = await asyncio.create_subprocess_exec(*coms, stdout=asyncio.subprocess.PIPE,                      stderr=asyncio.subprocess.PIPE)
+  stdout, stderr = await process.communicate()
+  print(stdout)
+  print(stderr.decode('utf-8'))
+
+  
+
+
+  try:
+    
+    await ctx.send(file=discord.File(filename + "_final.mp4"))
+  except Exception:
+     await message.edit(content='I failed.')
+  await ctx.send(ctx.message.author.mention)
+  os.remove(filename+".mp4")
+  os.remove(filename+"_final.mp4")
+  await message.delete()
 
 @client.command()
 async def download(ctx,link):
