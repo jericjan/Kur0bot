@@ -1035,6 +1035,82 @@ async def fastclip(ctx,link,start,end,filename):
   await message.delete()
 
 @client.command()
+async def clipaudio(ctx,link,start,end,filename, filetype=None):
+  if filetype not in ['mp3','wav','ogg']:
+    await ctx.send('Missing or no filetype provided. I can do mp3, wav, and ogg.')
+    return
+
+  message = await ctx.send('Fetching url...')
+  coms = ['yt-dlp', '-g', '-f','251', link]
+  print(shjoin(coms))
+  startsplit = start.split(":")
+  shour = startsplit[0]
+  sminute=startsplit[1]
+  ssecond=startsplit[2]
+  date_time = datetime.strptime(start, "%H:%M:%S")
+  a_timedelta = date_time - datetime(1900, 1, 1)
+  seconds = a_timedelta.total_seconds()
+  print(seconds)
+  if seconds < 30:
+    print('less than 30 seconds!')
+    result1 = timedelta(hours=int(shour),minutes=int(sminute),seconds=int(ssecond))
+  else:
+    print('it is at least 30 seconds.')  
+    result1 = timedelta(hours=int(shour),minutes=int(sminute),seconds=int(ssecond)) - timedelta(seconds=30)
+  
+  endsplit = end.split(":")
+  ehour = endsplit[0]
+  eminute=endsplit[1]
+  esecond=endsplit[2]
+  result2 = timedelta(hours=int(ehour),minutes=int(eminute),seconds=int(esecond)) - timedelta(hours=int(shour),minutes=int(sminute),seconds=int(ssecond))
+  out = await asyncio.create_subprocess_exec(*coms, stdout=asyncio.subprocess.PIPE,                      stderr=asyncio.subprocess.PIPE)
+  stdout, stderr = await out.communicate()
+  print(stdout)
+  print(stderr)
+  dirlinks = stdout.decode('utf-8').split("\n")
+  vid = dirlinks[0]
+  aud = dirlinks[1] 
+  if seconds < 30:
+    coms = ['ffmpeg', '-ss', str(result1), '-i',  vid, '-t', str(result2), '-c:v', 'copy', '-c:a', 'copy', filename+".ogg"]
+  else:
+    coms = ['ffmpeg', '-ss', str(result1), '-i',  vid, '-ss', '30', '-t', str(result2), '-c:v', 'copy', '-c:a', 'copy', filename + ".ogg"]
+  print(shjoin(coms))
+  await message.edit(content='Downloading... This will take a while...')
+  process = await asyncio.create_subprocess_exec(*coms, stdout=asyncio.subprocess.PIPE,                      stderr=asyncio.subprocess.PIPE)
+  stdout, stderr = await process.communicate()
+  print(stdout)
+  print(stderr.decode('utf-8'))
+
+
+  if filetype == 'ogg':
+    pass
+  elif filetype == 'mp3':
+    coms = ['ffmpeg', '-i',filename + ".ogg",'-codec:a','libmp3lame','-q:a','0', filename + ".mp3"]
+    print(shjoin(coms))
+    await message.edit(content='Using libmp3lame to convert to VBR 0 MP3...')
+    process = await asyncio.create_subprocess_exec(*coms, stdout=asyncio.subprocess.PIPE,                      stderr=asyncio.subprocess.PIPE)
+    stdout, stderr = await process.communicate()
+    print(stdout)
+    print(stderr.decode('utf-8'))
+  elif filetype == 'wav':
+    coms = ['ffmpeg', '-i',filename + ".ogg", filename + ".wav"]
+    print(shjoin(coms))
+    process = await asyncio.create_subprocess_exec(*coms, stdout=asyncio.subprocess.PIPE,                      stderr=asyncio.subprocess.PIPE)
+    stdout, stderr = await process.communicate()
+    print(stdout)
+    print(stderr.decode('utf-8'))
+
+  #os.rename(filename+".mkv",filename+".mp4")  
+  try:
+    await ctx.send(file=discord.File(filename+"."+ filetype.lower()))
+  except Exception:
+     await message.edit(content='I failed.')
+  await ctx.send(ctx.message.author.mention)
+  os.remove(filename+".ogg")
+  os.remove(filename+"."+filetype.lower())
+  await message.delete()
+
+@client.command()
 async def download(ctx,link):
   import codecs
   if "reddit.com" in link:
@@ -1436,7 +1512,7 @@ async def help(ctx):
   em.add_field(name="copypasta", value="glasses,nene,nenelong,stopamongus,confession,wristworld")
   em.add_field(name="sus", value="on,off,megasus,bulk")
   em.add_field(name="why", value="fortnite")
-  em.add_field(name="others", value="emote,getemotes,badapple,clip,fastclip,download,stream,pet")
+  em.add_field(name="others", value="emote,getemotes,badapple,clip,fastclip,clipaudio,download,stream,pet")
   em.add_field(name="reactions",value="fmega,kotowaru,ascend,jizz")
   em.add_field(name="vc",value="join,stop,stoploop,leave,letsgo,vtubus,ding,yodayo,yodazo,jonathan,joseph,jotaro,josuke,giorno,kira,pillarmen,botansneeze,boom,ogey,rrat,fart,mogumogu,bababooey,dog,totsugeki,tacobell,amongus,danganronpa,water,necoarc,vsauce")
   em.add_field(name="TTS",value=" just do ] while in VC (\"k.help tts\" for more info)")
@@ -1729,6 +1805,14 @@ async def pet(ctx):
   em = discord.Embed(title = "Pet user",   description = 'Sends a gif of the mentioned user being petted.')
   em.add_field(name="**Syntax**", value="k.pet <mentioned user>\nk.pet <image url>")
   await ctx.send(embed = em) 
+
+@help.command()
+async def clipaudio(ctx):
+  em = discord.Embed(title = "Clip Audio",   description = 'Clips the audio of a given YouTube video')
+  em.add_field(name="**Syntax**", value="k.clipaudio <url> <start time> <end time> <filename> <filetype>")
+  em.add_field(name="**Filetypes**", value="mp3\nwav\nogg")
+  em.add_field(name="**Example**", value="k.clipaudio https://www.youtube.com/watch?v=UIp6_0kct_U 00:00:56 00:01:05 poger mp3")
+  await ctx.send(embed = em)  
 
 async def wait_until(dt):
     # sleep until the specified datetime
