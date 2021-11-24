@@ -933,7 +933,10 @@ async def fastclip(ctx,link,start,end,filename):
   ehour = endsplit[0]
   eminute=endsplit[1]
   esecond=endsplit[2]
-  result2 = timedelta(hours=int(ehour),minutes=int(eminute),seconds=int(esecond)) - timedelta(hours=int(shour),minutes=int(sminute),seconds=int(ssecond)) + timedelta(seconds=30)
+  if seconds < 30:  
+    result2 = timedelta(hours=int(ehour),minutes=int(eminute),seconds=int(esecond))
+  else:  
+    result2 = timedelta(hours=int(ehour),minutes=int(eminute),seconds=int(esecond)) - timedelta(hours=int(shour),minutes=int(sminute),seconds=int(ssecond)) + timedelta(seconds=30)
   out = await asyncio.create_subprocess_exec(*coms, stdout=asyncio.subprocess.PIPE,                      stderr=asyncio.subprocess.PIPE)
   stdout, stderr = await out.communicate()
   print(stdout)
@@ -1011,7 +1014,13 @@ async def fastclip(ctx,link,start,end,filename):
     else:
       prev_keyframe = max_le(timelist_float, seconds) 
       next_keyframe = min_gt(timelist_float, seconds)   
-      keyframe= (prev_keyframe + next_keyframe) / 2   
+      print('after '+ str(prev_keyframe))
+      print('before ' + str(next_keyframe))
+      if next_keyframe == None:
+        print('no next keyframe!')
+        keyframe = prev_keyframe
+      else:  
+        keyframe= (prev_keyframe + next_keyframe) / 2   
     print('keyframe is '+"{:.6f}".format(keyframe))
     await ctx.send("Clipping "+ str(round_down(seconds-prev_keyframe,round_number))+ " seconds earlier to nearest keyframe...")
   
