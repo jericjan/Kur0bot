@@ -16,6 +16,7 @@ import threading
 import time
 import io
 import math
+import re
 
 #client = discord.Client()
 intents = discord.Intents().default()
@@ -723,6 +724,14 @@ async def badapple(ctx, *, message=None):
 
 @client.command()
 async def clip(ctx,link,start,end,filename):
+
+  if re.match("\d{2}:\d{2}:\d{2}",start) != None and re.match("\d{2}:\d{2}:\d{2}",end) != None:
+    print('good timestamps!')
+  else:
+    print('bad timestamps!')
+    await ctx.send('Timestamps are wrong. Please provide it in HH:MM:SS')
+    return
+
   if os.path.isfile(filename+".mkv"):
     os.remove(filename+".mkv")
   if os.path.isfile(filename+".mp4"):
@@ -894,6 +903,14 @@ async def fastclip2(ctx,link,start,end,filename):
 
 @client.command()
 async def fastclip(ctx,link,start,end,filename):
+
+  if re.match("\d{2}:\d{2}:\d{2}",start) != None and re.match("\d{2}:\d{2}:\d{2}",end) != None:
+    print('good timestamps!')
+  else:
+    print('bad timestamps!')
+    await ctx.send('Timestamps are wrong. Please provide it in HH:MM:SS')
+    return
+
   message = await ctx.send('Fetching url...')
   coms = ['yt-dlp', '-g', '-f','best','--youtube-skip-dash-manifest', link]
   print(shjoin(coms))
@@ -1038,6 +1055,14 @@ async def fastclip(ctx,link,start,end,filename):
 async def clipaudio(ctx,link,start,end,filename, filetype=None):
   if filetype not in ['mp3','wav','ogg']:
     await ctx.send('Missing or no filetype provided. I can do mp3, wav, and ogg.')
+    return
+
+  
+  if re.match("\d{2}:\d{2}:\d{2}",start) != None and re.match("\d{2}:\d{2}:\d{2}",end) != None:
+    print('good timestamps!')
+  else:
+    print('bad timestamps!')
+    await ctx.send('Timestamps are wrong. Please provide it in HH:MM:SS')
     return
 
   message = await ctx.send('Fetching url...')
