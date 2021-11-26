@@ -951,7 +951,189 @@ async def fastclip(ctx,link,start,end,filename):
   print(shjoin(coms))
   await message.edit(content='Downloading... This will take a while...')
   process = await asyncio.create_subprocess_exec(*coms, stdout=asyncio.subprocess.PIPE,                      stderr=asyncio.subprocess.PIPE)
+
+  # while process.returncode is None:
+  #     line = await process.stdout.readline()
+  #     if not line:
+  #             break
+  #     await ctx.send(line.decode('utf-8'))
+
+
   stdout, stderr = await process.communicate()
+  print(stdout)
+  print(stderr.decode('utf-8'))
+  #os.rename(filename+".mkv",filename+".mp4")  
+
+  def max_le(seq, val):
+    """
+    Same as max_lt(), but items in seq equal to val apply as well.
+
+    >>> max_le([2, 3, 7, 11], 10)
+    7
+    >>> max_le((1, 3, 6, 11), 6)
+    6
+    """
+
+    idx = len(seq)-1
+    while idx >= 0:
+        if seq[idx] <= val:
+            return seq[idx]
+        idx -= 1
+
+    return None
+
+  def min_gt(seq, val):
+    """
+    Return smallest item in seq for which item > val applies.
+    None is returned if seq was empty or all items in seq were <= val.
+
+    >>> min_gt([1, 3, 6, 7], 4)
+    6
+    >>> min_gt([2, 4, 7, 11], 5)
+    7
+    """
+
+    for v in seq:
+        if v > val:
+            return v
+    return None
+
+  def round_down(n, decimals=0):
+    multiplier = 10 ** decimals
+    return math.floor(n * multiplier) / multiplier
+
+  coms = ['ffprobe', '-v', 'error', '-skip_frame', 'nokey', '-show_entries', "frame=pkt_pts_time", "-select_streams", "v", "-of", "csv=p=0", filename + "_temp.mp4"]
+  process = await asyncio.create_subprocess_exec(*coms, stdout=asyncio.subprocess.PIPE,                      stderr=asyncio.subprocess.PIPE)
+  stdout, stderr = await process.communicate()
+  print(stderr)
+  print(stdout.decode('utf-8'))
+  timelist_str = stdout.decode('utf-8').strip().split("\n")
+  print(timelist_str)
+  timelist_float = [float(i) for i in timelist_str]
+  print(timelist_float)
+
+  round_number = 1
+  round_frames = False
+  
+
+  if seconds < 30:
+    if round_frames == True:
+      keyframe = round_down(max_le(timelist_float, seconds), round_number)
+    else:
+      prev_keyframe = max_le(timelist_float, seconds) 
+      next_keyframe = min_gt(timelist_float, seconds)   
+      print('after '+ str(prev_keyframe))
+      print('before ' + str(next_keyframe))
+      if next_keyframe == None:
+        print('no next keyframe!')
+        keyframe = prev_keyframe
+      else:  
+        keyframe= (prev_keyframe + next_keyframe) / 2   
+    print('keyframe is '+"{:.6f}".format(keyframe))
+    if round_down(seconds-prev_keyframe,round_number) == 0:
+      await ctx.send("<:callipog:850365252637032479> Poggers. No need to clip to nearest keyframe.")
+    else:  
+      await ctx.send("Clipping "+ str(round_down(seconds-prev_keyframe,round_number))+ " seconds earlier to nearest keyframe...")
+  
+    
+  else:  
+    if round_frames == True:
+      keyframe = round_down(max_le(timelist_float, 30), round_number)
+    else:
+      prev_keyframe = max_le(timelist_float, 30)
+      next_keyframe = min_gt(timelist_float, 30)
+      keyframe= (prev_keyframe + next_keyframe) / 2 
+    print('keyframe is '+str(keyframe))
+    if round_down(30-prev_keyframe,round_number) == 0:
+      await ctx.send("<:callipog:850365252637032479> Poggers. No need to clip to nearest keyframe.")
+    else:  
+      await ctx.send("Clipping "+ str(round_down(30-prev_keyframe,round_number))+ " seconds earlier to nearest keyframe...")
+
+  coms = ['ffmpeg','-noaccurate_seek', '-ss', "{:.6f}".format(keyframe),'-i',  filename + "_temp.mp4", '-c:v', 'copy', '-c:a', 'copy','-avoid_negative_ts','make_zero', filename + ".mp4"]
+  print(shjoin(coms))
+  process = await asyncio.create_subprocess_exec(*coms, stdout=asyncio.subprocess.PIPE,                      stderr=asyncio.subprocess.PIPE)
+  stdout, stderr = await process.communicate()
+  print(stdout)
+  print(stderr.decode('utf-8'))
+
+  coms = ['ffprobe', '-v', 'error', '-skip_frame', 'nokey', '-show_entries', "frame=pkt_pts_time", "-select_streams", "v", "-of", "csv=p=0", filename + ".mp4"]
+  process = await asyncio.create_subprocess_exec(*coms, stdout=asyncio.subprocess.PIPE,                      stderr=asyncio.subprocess.PIPE)
+  stdout, stderr = await process.communicate()
+  print(stderr)
+  print('final keyframes:')
+  print(stdout.decode('utf-8'))
+
+
+  try:
+    
+    await ctx.send(file=discord.File(filename + ".mp4"))
+  except Exception:
+     await message.edit(content='I failed.')
+  await ctx.send(ctx.message.author.mention)
+  os.remove(filename+".mp4")
+  os.remove(filename+"_temp.mp4")
+  await message.delete()
+
+@client.command()
+async def idclip(ctx,link,start,end,filename,id,id2):
+
+  if re.match("\d{2}:\d{2}:\d{2}",start) != None and re.match("\d{2}:\d{2}:\d{2}",end) != None:
+    print('good timestamps!')
+  else:
+    print('bad timestamps!')
+    await ctx.send('Timestamps are wrong. Please provide it in HH:MM:SS')
+    return
+
+  message = await ctx.send('Fetching url...')
+  coms = ['yt-dlp', '-g', '-f',id+"+"+id2, link]
+  print(shjoin(coms))
+  startsplit = start.split(":")
+  shour = startsplit[0]
+  sminute=startsplit[1]
+  ssecond=startsplit[2]
+  date_time = datetime.strptime(start, "%H:%M:%S")
+  a_timedelta = date_time - datetime(1900, 1, 1)
+  seconds = a_timedelta.total_seconds()
+  print(seconds)
+  if seconds < 30:
+    print('less than 30 seconds!')
+    result1 = timedelta(hours=int(shour),minutes=int(sminute),seconds=int(ssecond))
+  else:
+    print('it is at least 30 seconds.')  
+    result1 = timedelta(hours=int(shour),minutes=int(sminute),seconds=int(ssecond)) - timedelta(seconds=30)
+  
+  endsplit = end.split(":")
+  ehour = endsplit[0]
+  eminute=endsplit[1]
+  esecond=endsplit[2]
+  if seconds < 30:  
+    result2 = timedelta(hours=int(ehour),minutes=int(eminute),seconds=int(esecond))
+  else:  
+    result2 = timedelta(hours=int(ehour),minutes=int(eminute),seconds=int(esecond)) - timedelta(hours=int(shour),minutes=int(sminute),seconds=int(ssecond)) + timedelta(seconds=30)
+  out = await asyncio.create_subprocess_exec(*coms, stdout=asyncio.subprocess.PIPE,                      stderr=asyncio.subprocess.PIPE)
+  stdout, stderr = await out.communicate()
+  print(stdout)
+  print(stderr)
+  dirlinks = stdout.decode('utf-8').split("\n")
+  vid = dirlinks[0]
+  aud = dirlinks[1] 
+  if seconds < 30:
+    coms = ['ffmpeg', '-i',  vid, '-t', str(result2), '-c:v', 'copy', '-c:a', 'copy', filename+"_temp.mp4"]
+  else:
+    coms = ['ffmpeg','-noaccurate_seek','-ss', str(result1), '-i',  vid, '-t', str(result2), '-c:v', 'copy', '-c:a', 'copy', filename + "_temp.mp4"]
+  print(shjoin(coms))
+  await message.edit(content='Downloading... This will take a while...')
+  process = await asyncio.create_subprocess_exec(*coms, stdout=asyncio.subprocess.PIPE,                      stderr=asyncio.subprocess.PIPE)
+
+  while process.returncode is None:
+      line = await process.stdout.readline()
+      if not line:
+              break
+      #await message.edit(content=line.decode('utf-8'))
+      await ctx.send(line.decode('utf-8'))
+      #await asyncio.sleep(1)
+
+  #stdout, stderr = await process.communicate()
   print(stdout)
   print(stderr.decode('utf-8'))
   #os.rename(filename+".mkv",filename+".mp4")  
@@ -1060,6 +1242,7 @@ async def fastclip(ctx,link,start,end,filename):
   os.remove(filename+"_temp.mp4")
   await message.delete()
 
+
 @client.command()
 async def clipaudio(ctx,link,start,end,filename, filetype=None):
   if filetype not in ['mp3','wav','ogg']:
@@ -1105,7 +1288,7 @@ async def clipaudio(ctx,link,start,end,filename, filetype=None):
   vid = dirlinks[0]
   aud = dirlinks[1] 
   if seconds < 30:
-    coms = ['ffmpeg', '-ss', str(result1), '-i',  vid, '-t', str(result2), '-c:v', 'copy', '-c:a', 'copy', filename+".ogg"]
+    coms = ['ffmpeg', '-i',  vid, '-ss', str(result1),'-t', str(result2), '-c:v', 'copy', '-c:a', 'copy', filename+".ogg"]
   else:
     coms = ['ffmpeg', '-ss', str(result1), '-i',  vid, '-ss', '30', '-t', str(result2), '-c:v', 'copy', '-c:a', 'copy', filename + ".ogg"]
   print(shjoin(coms))
@@ -1143,6 +1326,8 @@ async def clipaudio(ctx,link,start,end,filename, filetype=None):
   os.remove(filename+".ogg")
   os.remove(filename+"."+filetype.lower())
   await message.delete()
+
+
 
 @client.command()
 async def download(ctx,link):
@@ -1543,12 +1728,12 @@ async def editembed(ctx, id: int, title, description):
 @client.group(invoke_without_command=True)
 async def help(ctx):
   em = discord.Embed(title = "Commands",   description = 'Here are my sussy commands!\nUse __**k.help <command>**__ for more info on that command.')
-  em.add_field(name="copypasta", value="glasses,nene,nenelong,stopamongus,confession,wristworld")
-  em.add_field(name="sus", value="on,off,megasus,bulk")
+  em.add_field(name="copypasta", value="glasses\nnene\nnenelong\nstopamongus\nconfession\nwristworld")
+  em.add_field(name="sus", value="on\noff\nmegasus\nbulk")
   em.add_field(name="why", value="fortnite")
-  em.add_field(name="others", value="emote,getemotes,badapple,clip,fastclip,clipaudio,download,stream,pet")
-  em.add_field(name="reactions",value="fmega,kotowaru,ascend,jizz")
-  em.add_field(name="vc",value="join,stop,stoploop,leave,letsgo,vtubus,ding,yodayo,yodazo,jonathan,joseph,jotaro,josuke,giorno,kira,pillarmen,botansneeze,boom,ogey,rrat,fart,mogumogu,bababooey,dog,totsugeki,tacobell,amongus,danganronpa,water,necoarc,vsauce")
+  em.add_field(name="others", value="emote\ngetemotes\nbadapple\nclip\nfastclip\nclipaudio\ndownload\nstream\npet")
+  em.add_field(name="reactions",value="fmega\nkotowaru\nascend\njizz")
+  em.add_field(name="vc",value="join\nstop\nstoploop\nleave\nletsgo\nvtubus\nding\nyodayo\nyodazo\njonathan\njoseph\njotaro\njosuke\ngiorno\nkira\npillarmen\nbotansneeze\nboom\nogey\nrrat\nfart\nmogumogu\nbababooey\ndog\ntotsugeki\ntacobell\namongus\ndanganronpa\nwater\nnecoarc\nvsauce")
   em.add_field(name="TTS",value=" just do ] while in VC (\"k.help tts\" for more info)")
   await ctx.send(embed = em)
 
