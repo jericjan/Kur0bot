@@ -1042,7 +1042,11 @@ async def fastclip(ctx,link,start,end,filename):
     else:
       prev_keyframe = max_le(timelist_float, 30)
       next_keyframe = min_gt(timelist_float, 30)
-      keyframe= (prev_keyframe + next_keyframe) / 2 
+      if next_keyframe == None:
+        print('no next keyframe!')
+        keyframe = prev_keyframe
+      else:  
+        keyframe= (prev_keyframe + next_keyframe) / 2 
     print('keyframe is '+str(keyframe))
     if round_down(30-prev_keyframe,round_number) == 0:
       await ctx.send("<:callipog:850365252637032479> Poggers. No need to clip to nearest keyframe.")
@@ -1522,7 +1526,7 @@ async def stream(ctx,link,noembed=None):
   print(idd)
   if wrong!=True:
     params = {'part': 'liveStreamingDetails,snippet',
-            'key': 'AIzaSyDps4zwdwoqe53Vr6ARlnhyaDiXAY4RbCE',
+            'key': os.getenv('YT_API_KEY'),
             'id': idd,
             }
     
@@ -1561,7 +1565,7 @@ async def stream(ctx,link,noembed=None):
     a_file.close()
 
     params2 = {'part': 'snippet',
-            'key': 'AIzaSyDps4zwdwoqe53Vr6ARlnhyaDiXAY4RbCE',
+            'key': os.getenv('YT_API_KEY'),
             'id': channelid,
             }
     
@@ -1580,7 +1584,10 @@ async def stream(ctx,link,noembed=None):
         webhook = Webhook.from_url('https://discord.com/api/webhooks/880667610323234877/oc31FGZ3SPfu7BCru4iOd2ULJAvyOdMi1SOaqNF58sHKBknFbdhK5zfqSZhxS4NZF9pU', adapter=AsyncWebhookAdapter(session))
         await webhook.send(reltime +" **"+author+"** - ["+title+"](<"+link+">)")      
     await ctx.message.delete()
-    client.loop.create_task(run_at(parsed_t.replace(tzinfo=None),open_url(link),link))
+    try:
+      client.loop.create_task(run_at(parsed_t.replace(tzinfo=None),open_url(link),link))
+    except Exception as e:
+      await ctx.send('Error: '+e)  
 
 async def clear_list():
   a_file = open("list.txt", "r")        
