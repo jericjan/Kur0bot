@@ -1349,8 +1349,8 @@ async def download(ctx,link):
       line = await proc.stdout.read(100)
       if not line:
               break
-      #await message.edit(content=line.decode('utf-8'))
-      await ctx.send(line.decode('utf-8'))
+      await message.edit(content=line.decode('utf-8'))
+      #await ctx.send(line.decode('utf-8'))
       await asyncio.sleep(1)
     if proc.returncode != 0:
       await ctx.send('return code is not 0. trying something else')
