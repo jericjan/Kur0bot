@@ -1720,16 +1720,101 @@ async def ping(ctx):
 
 @client.command()
 async def makeembed(ctx, title, description):
-  embed=discord.Embed(title=title, description=description)
-  await ctx.send(embed=embed)
-  await ctx.message.delete()  
+  if ctx.author.id == 396892407884546058:
+    print("is kur0")
+    embed=discord.Embed(title=title, description=description)
+    await ctx.send(embed=embed)
+    await ctx.message.delete() 
+  else: 
+    print(ctx.author.id)
+    await ctx.send("only kur0 can do this lel")
+    await ctx.message.delete() 
 
 @client.command()
 async def editembed(ctx, id: int, title, description): 
-  msg = await ctx.fetch_message(id)
-  embed=discord.Embed(title=title, description=description)
-  await msg.edit(embed=embed)
-  await ctx.message.delete()  
+  if ctx.author.id == 396892407884546058:
+    print("is kur0")
+    msg = await ctx.fetch_message(id)
+    embed=discord.Embed(title=title, description=description)
+    await msg.edit(embed=embed)
+    await ctx.message.delete()  
+  else: 
+    print(ctx.author.id)
+    await ctx.send("only kur0 can do this lel")
+    await ctx.message.delete()   
+
+from ftplib import FTP
+#from aiomcrcon import Client as mcrconClient
+from mcrcon import MCRcon
+#from rcon import rcon
+
+@client.command()
+async def addoffline(ctx,username): 
+  avi_guild = client.get_guild(603147860225032192)
+  while avi_guild == None:
+    pass
+  else:  
+    admin = discord.utils.get(avi_guild.roles, name="Admin")
+    moderator = discord.utils.get(avi_guild.roles, name="Moderator")
+    avilon = discord.utils.get(avi_guild.roles, name="Aweelom")
+  roles = [admin,moderator,avilon]
+  if any(role in roles for role in ctx.author.roles) or ctx.author.id == 216830153441935360:
+    await ctx.send('Adding '+str(username)+" to list of offline users...")
+  
+    ftp = FTP(host='us01.pebblehost.com')
+    ftp.login(user=os.getenv("PEBBLE_EMAIL"),passwd=os.getenv("PEBBLE_PASS"))
+    # ftp.cwd('mods')
+    # ftp.cwd('EasyAuth')
+    r = io.BytesIO()
+    ftp.retrbinary('RETR /mods/EasyAuth/config.json', r.write)
+    config=json.loads(r.getvalue())
+    config["main"]["forcedOfflinePlayers"].append(username.lower())
+    print(config["main"]["forcedOfflinePlayers"])
+    dump = (json.dumps(config, indent=2).encode('utf-8'))
+    #print(dump)
+    ftp.storbinary('STOR /mods/EasyAuth/config.json', io.BytesIO(dump))
+    #print(ftp.retrlines('LIST'))
+    # coms = ["mcrcon", "-H", "51.81.142.14", "--password", str(os.getenv("RCON_PASS")), "-w", "1", "auth reload"]
+
+    # out = await asyncio.create_subprocess_exec(*coms, 
+    #          stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+    # stdout, stderr = await out.communicate()
+    # print(stdout.decode())
+    # print(stderr)
+    # mc_client = mcrconClient("51.81.142.14", 25575, str(os.getenv("RCON_PASS")))
+    # await mc_client.connect()
+
+    # response = await mc_client.send_cmd("/say a")
+    # print(response)
+    # await mc_client.close()
+
+    with MCRcon("51.81.142.14", str(os.getenv("RCON_PASS")),8082) as mcr:
+      resp = mcr.command("/auth reload")
+      print(resp)
+    await ctx.send("Done!")
+
+    # response = await rcon('/say a',host='51.81.142.14', port=25575, passwd=str(os.getenv("RCON_PASS")))
+    # print(response)
+  else:        
+      await ctx.send("Only Avi/Admins/Mods can use this command")
+
+
+@client.command()
+async def rolecheck(ctx): 
+    avi_guild = client.get_guild(603147860225032192)
+    while avi_guild == None:
+      pass
+    else:  
+      admin = discord.utils.get(avi_guild.roles, name="Admin")
+      moderator = discord.utils.get(avi_guild.roles, name="Moderator")
+      avilon = discord.utils.get(avi_guild.roles, name="Aweelom")
+    roles = [admin,moderator,avilon]
+    if any(role in roles for role in ctx.author.roles) or ctx.author.id == 216830153441935360:
+        await ctx.send('You match the roles!')
+    else:        
+        await ctx.send("Only Avi/Admins/Mods can use this command")
+
+
 # ----------------------------------------------------
 # HELP
 @client.group(invoke_without_command=True)
