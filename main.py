@@ -1722,9 +1722,17 @@ async def ping(ctx):
 async def makeembed(ctx, title, description):
   if ctx.author.id == 396892407884546058:
     print("is kur0")
-    embed=discord.Embed(title=title, description=description)
-    await ctx.send(embed=embed)
-    await ctx.message.delete() 
+    if description.startswith("https"):
+      print("description is url")
+      x = requests.get('https://quiet-sun-6d6e.cantilfrederick.workers.dev/?'+str(description))
+      embed=discord.Embed(title=title, description=x.text)
+      await ctx.send(embed=embed)
+      await ctx.message.delete()  
+    else:  
+      print("description is text")
+      embed=discord.Embed(title=title, description=description)
+      await ctx.send(embed=embed)
+      await ctx.message.delete() 
   else: 
     print(ctx.author.id)
     await ctx.send("only kur0 can do this lel")
@@ -1734,10 +1742,19 @@ async def makeembed(ctx, title, description):
 async def editembed(ctx, id: int, title, description): 
   if ctx.author.id == 396892407884546058:
     print("is kur0")
-    msg = await ctx.fetch_message(id)
-    embed=discord.Embed(title=title, description=description)
-    await msg.edit(embed=embed)
-    await ctx.message.delete()  
+    if description.startswith("https"):
+      print("description is url")
+      msg = await ctx.fetch_message(id)
+      x = requests.get('https://quiet-sun-6d6e.cantilfrederick.workers.dev/?'+str(description))
+      embed=discord.Embed(title=title, description=x.text)
+      await msg.edit(embed=embed)
+      await ctx.message.delete()  
+    else:  
+      print("description is text")
+      msg = await ctx.fetch_message(id)
+      embed=discord.Embed(title=title, description=description)
+      await msg.edit(embed=embed)
+      await ctx.message.delete()  
   else: 
     print(ctx.author.id)
     await ctx.send("only kur0 can do this lel")
