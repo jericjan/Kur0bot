@@ -1339,6 +1339,10 @@ async def clipaudio(ctx,link,start,end,filename, filetype=None):
 async def download(ctx,link):
   import codecs
   if "reddit.com" in link:
+    cookiecoms = ['gpg','--pinentry-mode=loopback','--passphrase',os.getenv('ENCRYPTPASSPHRASE'),"cookies (17).txt.gpg"]
+    cookieproc = await asyncio.create_subprocess_exec(*cookiecoms, 
+            stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+    stdout, stderr = await cookieproc.communicate()  
     message = await ctx.send('Downloading...')
     coms = ['yt-dlp', '-f','bestvideo+bestaudio',"--cookies","cookies (17).txt",link]
     coms2 = ['yt-dlp', '--get-filename',"--cookies","cookies (17).txt",link]
@@ -1377,6 +1381,7 @@ async def download(ctx,link):
     while out2.returncode is None:
       await message.edit(content="A little more...")  
     else:  
+      os.remove("cookies (17).txt")
       try:
         thing = await out2.stdout.read()
         filename = thing.decode('utf-8').split("\n")[0]
@@ -1389,9 +1394,12 @@ async def download(ctx,link):
         await ctx.send('File too large, broski <:towashrug:853606191711649812>')
     os.remove(filename)
     await message.delete()  
+
+
   elif "facebook.com" in link:
     message = await ctx.send('Downloading...')
-    cookiecoms = ['gpg','--pinentry-mode=loopback','--passphrase',os.getenv('FBPASSPHRASE'),"cookies (15).txt.gpg"]
+    # encypted with `gpg -c --pinentry-mode=loopback your-file.txt`
+    cookiecoms = ['gpg','--pinentry-mode=loopback','--passphrase',os.getenv('ENCRYPTPASSPHRASE'),"cookies (15).txt.gpg"]
     cookieproc = await asyncio.create_subprocess_exec(*cookiecoms, 
             stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
     stdout, stderr = await cookieproc.communicate()  
@@ -1419,9 +1427,28 @@ async def download(ctx,link):
                         stdout=subprocess.PIPE, stderr=subprocess.STDOUT)  
     while out2.returncode is None:
       await message.edit(content="A little more...")  
+    else:  
+      os.remove('cookies (15).txt')
+      try:
+        thing = await out2.stdout.read()
+        filename = thing.decode('utf-8').split("\n")[-2]
+        print(thing.decode('utf-8'))
+        await message.edit(content="Sending video...")  
+        try:
+          await ctx.send(file=discord.File(filename))
+        except Exception as e:
+         await ctx.send(e)   
+      except discord.HTTPException:  
+        await ctx.send('File too large, broski <:towashrug:853606191711649812>')
+      except Exception as e:  
+        await message.edit(content=e)  
+    os.remove(filename)
+
+    await message.delete() 
+
   elif "instagram.com" in link:
     message = await ctx.send('Downloading...')
-    cookiecoms = ['gpg','--pinentry-mode=loopback','--passphrase',os.getenv('FBPASSPHRASE'),"instacook.txt.gpg"]
+    cookiecoms = ['gpg','--pinentry-mode=loopback','--passphrase',os.getenv('ENCRYPTPASSPHRASE'),"instacook.txt.gpg"]
     cookieproc = await asyncio.create_subprocess_exec(*cookiecoms, 
             stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
     stdout, stderr = await cookieproc.communicate()  
