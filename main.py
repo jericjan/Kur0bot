@@ -1804,9 +1804,10 @@ async def repost(ctx, url):
     stdout, stderr = await out.communicate()
     print(stdout.decode())
     await msg.edit(content=msg.content+"Done!")
-    if "www.youtube.com" in url:
-      fixed_link = url[0:43]
-
+    if "www.youtube.com/watch" in url:
+      fixed_link = 'https://youtu.be/'+url[32:43]
+    elif "www.youtube.com/shorts" in url:
+      fixed_link = 'https://youtu.be/'+url[27:38]
     elif "youtu.be" in url:
       fixed_link = url[0:28]
 
