@@ -1819,10 +1819,14 @@ async def repost(ctx, url):
     out = await asyncio.create_subprocess_exec(*coms, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
     stdout, stderr = await out.communicate()
     print(stdout.decode())
-    if out.returncode != 0:
+
+    if out.returncode == 0:
       await msg.edit(content=msg.content+"Done! ("+str(out.returncode)+")")
     else:
-      await msg.edit(content=msg.content+"\n Return code: "+str(out.returncode)+"\n"+stderr.decode())  
+      try:
+        await msg.edit(content=msg.content+"\n Return code: "+str(out.returncode)+"\n"+stderr.decode())  
+      except:
+        await msg.edit(content=msg.content+"\n Return code: "+str(out.returncode)+"\n"+stdout.decode())  
       return
         
     #get title and filename
@@ -1841,10 +1845,14 @@ async def repost(ctx, url):
       else:  
         os.remove(i)
     print(fname)  
-    if out.returncode != 0:
+
+    if out.returncode == 0:
       await msg.edit(content=msg.content+"Done! ("+str(out.returncode)+")")
     else:
-      await msg.edit(content=msg.content+"\n Return code: "+str(out.returncode)+"\n"+stderr.decode())  
+      try:
+        await msg.edit(content=msg.content+"\n Return code: "+str(out.returncode)+"\n"+stderr.decode())  
+      except:
+        await msg.edit(content=msg.content+"\n Return code: "+str(out.returncode)+"\n"+stdout.decode())  
       return
     await msg.edit(content=msg.content+"\n"+"Copying to Drive...")
     coms = ["rclone/rclone", "copy", fname, "g2:/archived youtube vids/", "--transfers", "20", "--checkers", "20", "-v", "--stats=5s", "--buffer-size", "128M", "--drive-chunk-size", "128M", "--drive-acknowledge-abuse", "--drive-keep-revision-forever", "--drive-server-side-across-configs=true", "--suffix=2021_12_22_092152", "--suffix-keep-extension"]
@@ -1852,10 +1860,14 @@ async def repost(ctx, url):
     stdout, stderr = await out.communicate()
     print(stdout.decode())
     #print(stderr)
-    if out.returncode != 0:
+
+    if out.returncode == 0:
       await msg.edit(content=msg.content+"Done! ("+str(out.returncode)+")")
     else:
-      await msg.edit(content=msg.content+"\n Return code: "+str(out.returncode)+"\n"+stderr.decode())  
+      try:
+        await msg.edit(content=msg.content+"\n Return code: "+str(out.returncode)+"\n"+stderr.decode())  
+      except:
+        await msg.edit(content=msg.content+"\n Return code: "+str(out.returncode)+"\n"+stdout.decode())  
       return
 
     await msg.edit(content=msg.content+"\n"+"Uploading to FB...")
@@ -1875,10 +1887,14 @@ async def repost(ctx, url):
     else:
       print("We gucci, my dude.")
       vid_id = (data['id'])
-      if out.returncode != 0:
+
+      if out.returncode == 0:
         await msg.edit(content=msg.content+"Done! ("+str(out.returncode)+")")
       else:
-        await msg.edit(content=msg.content+"\n Return code: "+str(out.returncode)+"\n"+stderr.decode())  
+        try:
+          await msg.edit(content=msg.content+"\n Return code: "+str(out.returncode)+"\n"+stderr.decode())  
+        except:
+          await msg.edit(content=msg.content+"\n Return code: "+str(out.returncode)+"\n"+stdout.decode())  
         return
       await msg.delete()
       await ctx.send(title+ " has been uploaded!")
