@@ -1012,6 +1012,7 @@ async def fastclip(ctx,link,start,end,filename):
   timelist_str = stdout.decode('utf-8').strip().split("\n")
   print(timelist_str)
   timelist_float = [float(i) for i in timelist_str]
+  timelist_float.sort()
   print(timelist_float)
 
   round_number = 1
