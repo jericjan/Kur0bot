@@ -1843,7 +1843,7 @@ async def repost(ctx, url):
         
     #get title and filename
     await msg.edit(content=msg.content+"\n"+"Getting title and filename...")
-    coms = ['yt-dlp','--get-title','--get-filename','-o',"%(title)s-%(id)s",fixed_link]
+    coms = ['yt-dlp','--get-title','--get-filename','-o',"%(title)s-%(id)s",'--no-warnings',fixed_link]
     out = await asyncio.create_subprocess_exec(*coms, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
     stdout, stderr = await out.communicate()
     result = stdout.decode()
@@ -1866,6 +1866,7 @@ async def repost(ctx, url):
       except:
         await msg.edit(content=msg.content+"\n Return code: "+str(out.returncode)+"\n"+stdout.decode())  
       return
+    #copy to drive
     await msg.edit(content=msg.content+"\n"+"Copying to Drive...")
     coms = ["rclone/rclone", "copy", fname, "g2:/archived youtube vids/", "--transfers", "20", "--checkers", "20", "-v", "--stats=5s", "--buffer-size", "128M", "--drive-chunk-size", "128M", "--drive-acknowledge-abuse", "--drive-keep-revision-forever", "--drive-server-side-across-configs=true", "--suffix=2021_12_22_092152", "--suffix-keep-extension"]
     out = await asyncio.create_subprocess_exec(*coms, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
@@ -1881,7 +1882,7 @@ async def repost(ctx, url):
       except:
         await msg.edit(content=msg.content+"\n Return code: "+str(out.returncode)+"\n"+stdout.decode())  
       return
-
+    #upload to fb
     await msg.edit(content=msg.content+"\n"+"Uploading to FB...")
     access_token = os.getenv("FB_ACCESS_TOKEN")
 
