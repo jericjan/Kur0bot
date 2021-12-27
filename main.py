@@ -947,9 +947,9 @@ async def fastclip(ctx,link,start,end,filename):
   vid = dirlinks[0]
   aud = dirlinks[1] 
   if seconds < 30:
-    coms = ['ffmpeg', '-i',  vid, '-t', str(result2), '-c:v', 'copy', '-c:a', 'copy', filename+"_temp.mp4"]
+    coms = ['ffmpeg', '-i',  vid, '-t', str(result2), '-c:v', 'copy', '-c:a', 'copy', filename+"_temp0.mp4"]
   else:
-    coms = ['ffmpeg','-noaccurate_seek','-ss', str(result1), '-i',  vid, '-t', str(result2), '-c:v', 'copy', '-c:a', 'copy', filename + "_temp.mp4"]
+    coms = ['ffmpeg','-noaccurate_seek','-ss', str(result1), '-i',  vid, '-t', str(result2), '-c:v', 'copy', '-c:a', 'copy', filename + "_temp0.mp4"]
   print(shjoin(coms))
   await message.edit(content='Downloading... This will take a while...')
   process = await asyncio.create_subprocess_exec(*coms, stdout=asyncio.subprocess.PIPE,                      stderr=asyncio.subprocess.PIPE)
@@ -1004,7 +1004,7 @@ async def fastclip(ctx,link,start,end,filename):
     multiplier = 10 ** decimals
     return math.floor(n * multiplier) / multiplier
 
-  coms = ['ffprobe', '-v', 'error', '-skip_frame', 'nokey', '-show_entries', "frame=pkt_pts_time", "-select_streams", "v", "-of", "csv=p=0", filename + "_temp.mp4"]
+  coms = ['ffprobe', '-v', 'error', '-skip_frame', 'nokey', '-show_entries', "frame=pkt_pts_time", "-select_streams", "v", "-of", "csv=p=0", filename + "_temp0.mp4"]
   process = await asyncio.create_subprocess_exec(*coms, stdout=asyncio.subprocess.PIPE,                      stderr=asyncio.subprocess.PIPE)
   stdout, stderr = await process.communicate()
   print(stderr)
@@ -1014,6 +1014,12 @@ async def fastclip(ctx,link,start,end,filename):
   timelist_float = [float(i) for i in timelist_str]
   timelist_float.sort()
   print(timelist_float)
+
+  # remuxes so keyframes work, magic.
+  coms = ['ffmpeg/ffmpeg', '-i', filename + "_temp0.mp4", '-c:v', 'copy', '-c:a', 'copy','-report',filename + "_temp.mp4"]
+  process = await asyncio.create_subprocess_exec(*coms, stdout=asyncio.subprocess.PIPE,                      stderr=asyncio.subprocess.PIPE)
+  stdout, stderr = await process.communicate()
+  print(stdout.decode('utf-8'))
 
   round_number = 1
   round_frames = False
@@ -1056,7 +1062,7 @@ async def fastclip(ctx,link,start,end,filename):
     else:  
       await ctx.send("Clipping "+ str(round_down(30-prev_keyframe,round_number))+ " seconds earlier to nearest keyframe...")
 
-  coms = ['ffmpeg','-noaccurate_seek', '-ss', "{:.6f}".format(keyframe),'-i',  filename + "_temp.mp4", '-c:v', 'copy', '-c:a', 'copy','-avoid_negative_ts','make_zero', filename + ".mp4"]
+  coms = ['ffmpeg/ffmpeg','-noaccurate_seek', '-ss', "{:.6f}".format(keyframe),'-i',  filename + "_temp.mp4", '-c:v', 'copy', '-c:a', 'copy','-avoid_negative_ts','make_zero', filename + ".mp4"]
   print(shjoin(coms))
   process = await asyncio.create_subprocess_exec(*coms, stdout=asyncio.subprocess.PIPE,                      stderr=asyncio.subprocess.PIPE)
   stdout, stderr = await process.communicate()
@@ -1078,6 +1084,7 @@ async def fastclip(ctx,link,start,end,filename):
      await message.edit(content='I failed.')
   await ctx.send(ctx.message.author.mention)
   os.remove(filename+".mp4")
+  os.remove(filename+"_temp0.mp4")
   os.remove(filename+"_temp.mp4")
   await message.delete()
 
@@ -1339,7 +1346,7 @@ async def clipaudio(ctx,link,start,end,filename, filetype=None):
 @client.command()
 async def download(ctx,link):
   import codecs
-  if "reddit.com" in link:
+  if "reddit.com" in link or "v.redd.it" in link:
     cookiecoms = ['gpg','--pinentry-mode=loopback','--passphrase',os.getenv('ENCRYPTPASSPHRASE'),"cookies (17).txt.gpg"]
     cookieproc = await asyncio.create_subprocess_exec(*cookiecoms, 
             stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
@@ -1390,7 +1397,8 @@ async def download(ctx,link):
         try:
           await ctx.send(file=discord.File(filename))
         except Exception as e:
-         await ctx.send(e)   
+         await ctx.send(e)  
+         await ctx.send(type(e).__name__)
       except discord.HTTPException:  
         await ctx.send('File too large, broski <:towashrug:853606191711649812>')
     os.remove(filename)
@@ -2422,7 +2430,19 @@ tcheck = threading.Thread(target=precheck)
 tcheck.start() 
 print('schedules checked!')
 keep_alive()
-client.run(os.getenv('TOKEN'))
+isDiscordrunning = False
+try:
+  client.run(os.getenv('TOKEN'))
+  isDiscordrunning = True
+except Exception as e:
+  while isDiscordrunning is False:    
+    try:
+      client.run(os.getenv('TOKEN'))
+      isDiscordrunning = True
+    except Exception as e:  
+      print('nope. not working')
+      print(type(e).__name__)
+      time.sleep(900)
 
 
 

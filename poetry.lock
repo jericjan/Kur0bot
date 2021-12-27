@@ -575,7 +575,7 @@ python-versions = "*"
 
 [[package]]
 name = "yt-dlp"
-version = "2021.10.10"
+version = "2021.12.25"
 description = "Command-line program to download videos from YouTube.com and many other other video platforms."
 category = "main"
 optional = false
