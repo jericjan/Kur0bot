@@ -1016,7 +1016,7 @@ async def fastclip(ctx,link,start,end,filename):
   print(timelist_float)
 
   # remuxes so keyframes work, magic.
-  coms = ['ffmpeg/ffmpeg', '-i', filename + "_temp0.mp4", '-c:v', 'copy', '-c:a', 'copy','-report',filename + "_temp.mp4"]
+  coms = ['ffmpeg-git/ffmpeg', '-i', filename + "_temp0.mp4", '-c:v', 'copy', '-c:a', 'copy',filename + "_temp.mp4"]
   process = await asyncio.create_subprocess_exec(*coms, stdout=asyncio.subprocess.PIPE,                      stderr=asyncio.subprocess.PIPE)
   stdout, stderr = await process.communicate()
   print(stdout.decode('utf-8'))
@@ -1062,7 +1062,7 @@ async def fastclip(ctx,link,start,end,filename):
     else:  
       await ctx.send("Clipping "+ str(round_down(30-prev_keyframe,round_number))+ " seconds earlier to nearest keyframe...")
 
-  coms = ['ffmpeg/ffmpeg','-noaccurate_seek', '-ss', "{:.6f}".format(keyframe),'-i',  filename + "_temp.mp4", '-c:v', 'copy', '-c:a', 'copy','-avoid_negative_ts','make_zero', filename + ".mp4"]
+  coms = ['ffmpeg','-noaccurate_seek', '-ss', "{:.6f}".format(keyframe),'-i',  filename + "_temp.mp4", '-c:v', 'copy', '-c:a', 'copy','-avoid_negative_ts','make_zero', filename + ".mp4"]
   print(shjoin(coms))
   process = await asyncio.create_subprocess_exec(*coms, stdout=asyncio.subprocess.PIPE,                      stderr=asyncio.subprocess.PIPE)
   stdout, stderr = await process.communicate()
