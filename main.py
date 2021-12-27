@@ -1249,8 +1249,10 @@ async def idclip(ctx,link,start,end,filename,id,id2):
   try:
     
     await ctx.send(file=discord.File(filename + ".mp4"))
-  except Exception:
+  except Exception as e:
      await message.edit(content='I failed.')
+     await ctx.send(e)
+     print("Could not send video\n"+e)
   await ctx.send(ctx.message.author.mention)
   os.remove(filename+".mp4")
   os.remove(filename+"_temp.mp4")
@@ -1353,7 +1355,7 @@ async def download(ctx,link):
     stdout, stderr = await cookieproc.communicate()  
     message = await ctx.send('Downloading...')
     coms = ['yt-dlp', '-f','bestvideo+bestaudio',"--cookies","cookies (17).txt",link]
-    coms2 = ['yt-dlp', '--get-filename',"--cookies","cookies (17).txt",link]
+    coms2 = ['yt-dlp', '--get-filename',"--cookies","cookies (17).txt",'--no-warnings',link]
     print(shjoin(coms))
     print(shjoin(coms2))
     proc = await asyncio.create_subprocess_exec(*coms, 
@@ -1419,7 +1421,7 @@ async def download(ctx,link):
     # return_data.write(fin.encode())
     # return_data.seek(0)
     coms = ['yt-dlp', '-f','best','--cookies','cookies (15).txt',link]
-    coms2 = ['yt-dlp', '-f','best', '--get-filename','--cookies','cookies (15).txt',link]
+    coms2 = ['yt-dlp', '-f','best', '--get-filename','--cookies','cookies (15).txt','--no-warnings',link]
     print(shjoin(coms))
     print(shjoin(coms2))
     proc = await asyncio.create_subprocess_exec(*coms, 
@@ -1468,7 +1470,7 @@ async def download(ctx,link):
     # return_data.write(fin.encode())
     # return_data.seek(0)
     coms = ['yt-dlp', '-f','best','--cookies','instacook.txt',link]
-    coms2 = ['yt-dlp', '-f','best', '--get-filename','--cookies','instacook.txt',link]
+    coms2 = ['yt-dlp', '-f','best', '--get-filename','--cookies','instacook.txt','--no-warnings',link]
     print(shjoin(coms))
     print(shjoin(coms2))
     proc = await asyncio.create_subprocess_exec(*coms, 
@@ -1506,10 +1508,11 @@ async def download(ctx,link):
 
 
      #await ctx.send('I can\'t do Facebook links, unfortunately. It should work but idk why it don\'t')
+  #yt links usually   
   else:
     message = await ctx.send('Downloading...')
     coms = ['yt-dlp', '-f','best',link]
-    coms2 = ['yt-dlp', '-f','best', '--get-filename',link]
+    coms2 = ['yt-dlp', '-f','best', '--get-filename','--no-warnings',link]
     print(shjoin(coms))
     print(shjoin(coms2))
     proc = await asyncio.create_subprocess_exec(*coms, 
