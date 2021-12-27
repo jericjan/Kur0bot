@@ -46,7 +46,10 @@ sus_replies = [
   "sus",
   "you sussy baka",
   "AMOGUS!!! SO SUS!!",
-  "sus gaming"
+  "sus gaming",
+  "sussy bussy baka!",
+  "amonug impostoer??",
+  "is that an among us reference?"
 ]
 
 pass_words = [
