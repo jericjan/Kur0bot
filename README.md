@@ -13,3 +13,19 @@ It *might* require more permissions than the one above, and it won't tell you th
 
 To do list:
 - Use youtube-dl instead of mp3 files for vc commands
+
+Notes:
+
+- in root folder, there is folder `ffmpeg-git` that contains latest release of git master from https://johnvansickle.com/ffmpeg/
+
+- in root folder, there is folder `rclone` which contains rclone inside
+
+environment variables:
+-  "TOKEN":
+-  "YT_API_KEY":
+ - "PEBBLE_EMAIL": 
+ - "PEBBLE_PASS": 
+ - "RCON_PASS": 
+-  "RCLONE_CONFIG_URL": 
+-  "FB_ACCESS_TOKEN": 
+-  "ENCRYPTPASSPHRASE": 
