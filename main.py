@@ -1034,7 +1034,14 @@ async def fastclip(ctx,link,start,end,filename):
       keyframe = round_down(max_le(timelist_float, seconds), round_number)
     else:
       prev_keyframe = max_le(timelist_float, seconds) 
-      next_keyframe = min_gt(timelist_float, seconds)   
+      if prev_keyframe == timelist_float[-1]: #if prev_keyframe is last 
+        coms = ['ffprobe', '-v', 'error', '-show_entries', "format=duration", "-of", "default=noprint_wrappers=1:nokey=1", filename + "_temp0.mp4"]#get duration
+        process = await asyncio.create_subprocess_exec(*coms, stdout=asyncio.subprocess.PIPE,                      stderr=asyncio.subprocess.PIPE)
+        stdout, stderr = await process.communicate()
+        print(stderr)
+        next_keyframe=float(stdout.decode('utf-8'))
+      else:  
+        next_keyframe = min_gt(timelist_float, seconds)   
       print('after '+ str(prev_keyframe))
       print('before ' + str(next_keyframe))
       if next_keyframe == None:
