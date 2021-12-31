@@ -49,7 +49,8 @@ sus_replies = [
   "sus gaming",
   "sussy bussy baka!",
   "amonug impostoer??",
-  "is that an among us reference?"
+  "is that an among us reference?",
+  "ඞ"
 ]
 
 pass_words = [
@@ -1511,6 +1512,43 @@ async def download(ctx,link):
 
 
      #await ctx.send('I can\'t do Facebook links, unfortunately. It should work but idk why it don\'t')
+#tiktok
+  elif "tiktok.com" in link:
+    message = await ctx.send('Downloading...')
+    coms = ['tiktok-yt-dlp/yt-dlp', '-f','best',link]
+    coms2 = ['tiktok-yt-dlp/yt-dlp', '-f','best', '--get-filename','--no-warnings',link]
+    print(shjoin(coms))
+    print(shjoin(coms2))
+    proc = await asyncio.create_subprocess_exec(*coms, 
+            stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+    #stdout, stderr = await proc.communicate()
+    while proc.returncode is None:
+      line = await proc.stdout.read(100)
+      if not line:
+              break
+      await message.edit(content=line.decode('utf-8'))
+      await asyncio.sleep(1)
+    await message.edit(content="Almost there...")  
+    out2 = await asyncio.create_subprocess_exec(*coms2, 
+                        stdout=subprocess.PIPE, stderr=subprocess.STDOUT)  
+    while out2.returncode is None:
+      await message.edit(content="A little more...")  
+    else:  
+      try:
+        thing = await out2.stdout.read()
+        filename = thing.decode('utf-8').split("\n")[0]
+        await message.edit(content="Sending video...")  
+        try:
+          await ctx.send(file=discord.File(filename))
+        except Exception as e:
+         await ctx.send(e)   
+      except discord.HTTPException:  
+        await ctx.send('File too large, broski <:towashrug:853606191711649812>')
+      except Exception as e:  
+        await message.edit(content=e)  
+    os.remove(filename)
+    await message.delete()   
+     
   #yt links usually   
   else:
     message = await ctx.send('Downloading...')
