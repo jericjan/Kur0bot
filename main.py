@@ -30,6 +30,7 @@ intents = discord.Intents().default()
 intents.presences = True
 intents.members = True
 
+global client
 client = commands.Bot(command_prefix='k.',intents=intents)
 
 client.remove_command("help")
@@ -283,7 +284,10 @@ async def sus3(message):
               vc.play(discord.FFmpegPCMAudio(source="sounds/tts.mp3")) 
             else:
               voice.play(discord.FFmpegPCMAudio(source="sounds/tts.mp3"))  
-                               
+
+client.load_extension("vc")         
+client.load_extension("copypasta")
+
 @client.command()
 async def bulk(ctx, number):
   print(ctx.channel.id)
@@ -303,59 +307,7 @@ async def off(ctx):
     client.sus_on = False
     await ctx.send('Permanent Sus disabled!')
 
-@client.command()
-async def glasses(ctx):
-  await ctx.send('Glasses are really versatile. First, you can have glasses-wearing girls take them off and suddenly become beautiful, or have girls wearing glasses flashing those cute grins, or have girls stealing the protagonist\'s glasses and putting them on like, "Haha, got your glasses!" That\'s just way too cute! Also, boys with glasses! I really like when their glasses have that suspicious looking gleam, and it\'s amazing how it can look really cool or just be a joke. I really like how it can fulfill all those abstract needs. Being able to switch up the styles and colors of glasses based on your mood is a lot of fun too! It\'s actually so much fun! You have those half rim glasses, or the thick frame glasses, everything! It\'s like you\'re enjoying all these kinds of glasses at a buffet. I really want Luna to try some on or Marine to try some on to replace her eyepatch. We really need glasses to become a thing in hololive and start selling them for HoloComi. Don\'t. You. Think. We. Really. Need. To. Officially. Give. Everyone. Glasses?')  
 
-@client.command()
-async def nene(ctx):
-  await ctx.send('Super Hyper Ultra Ultimate Deluxe Perfect Amazing Shining God 東方不敗 Master Ginga Victory Strong Cute Beautiful Galaxy Baby 無限 無敵 無双 NENECHI')
-
-@client.command()
-async def nenelong(ctx):
-  await ctx.send('Super Hyper Ultra Ultimate Deluxe Perfect Amazing Shining God 東方不敗 Master Ginga Victory Strong Cute Beautiful Galaxy Baby 無限 無敵 無双 Nenechi, with 5 Hololive auditions, 43 wives, 400k husbands, neverending IQ (π), Perfect Japanglish, and Spanish, and Portuguese, running on a 3080x Asacoco Antenna and wearing the new ultra rare 5-Star Isekai Princess skin, cofounder of world-famous Polka Hologram Circus, with infinite source of water and surprising gaming skills while able to sing La Lion and set herself on fire in Craftopia after having become the eternal CEO of Nenepro who punches and kicks every employee, after having disconnected while singing Connect with Kiara, as well as having her name flipped into ƎИƎИ and turned into a 3D cardboard decoy, unlocked the power of God from absorbing Matsuri’s snot on her body while I wearing a sexy bikini and having eaten Haachama\'s tarantula-spicy-noodles while convincing Ame to trast her and having mastered singing Shiny Smiley Story in 11 different languages at the same time, right after marathoning iCarly and VICTORIOUS twice in a row, great Idol, the Ina-perishable, ƎNƎN, The Great CEO of ƎNƎN, CEO of CEOs, Opener of the Nether, Wielder of the Divine Lava, Punisher of Chat, The Great Unifier, Commander of the Golden Dumpling, Sacred of Appearance, Bringer of Light, O\'Riend of Chicken, Builder of Cities, Protector of the Two Streams, Keeper of the Hours, Chosen of Aloe, High Stewardess of the Horizon, Sailor of the Great Sea, Sentinel of the Holo Servers, The Undisputed, Begetter of the Begat, Scourge of the Matsuriless, Kusotori-feeder, First of the Mariokart, Rider of the Sacred Chariot, Vanquisher of Hachaama food, Champion of the Stream, Mighty Botan of the Infinite Desert, Emperor of the Shishiron, She Who Holds The Sceptre, Great Hawk Of The Heavens, Arch-Lady of Atalan, Waker of the Shubangelion, Queen Regent of the Sky, Majestic Empress of the Shifting Sands, Champion of the Desert Matsuris, Breaker of the Oni Clans,')
-  await ctx.send('Builder of the Great Trap, Terror of the Villager, Master of the Never-Ending Horizon, Master of the Pekodam, Taker of Souls, Tyrant to the Foolish, Bearer of Polka\'s Holy Instrument, Scion of Matsuri, Scion of Nenechi, The (Dis)Connected, Chaser of Nightmares, Keeper of the Smile, Founder of the Nenechi Cult, Banisher of the Grand Horny, High Lady Admiral of the Houshou Pirates, Guardian of the La-Lion Pass, Tamer of the Tako Queen, Living Dumpling Lady, Dismisser of the Foxburger, Charioteer of the Matsuris, She Who Does Not Serve, Slayer off Reddittras, Apex Purger, Favoured of Lamy, Player of the Great Game, Liberator of Life, Lady Sand, Wrangler of Fennecs, Empress of the Dunes, Eternal Sovereign of Husbands Legions, Seneschal of the Great Sandy Desert, Curserer of the 300k Vtuber, Queen Regent of the Pineapple Pizza, Warden of the Eternal Nenepolis, Herald of all Heralds, Caller of the Bitter Win, Matsuri-Tamer, CEO of the Karaoke Stream, Guardian of the Deadbeats, Great Keeper of the Gyoza, Husband of the Tako Princess, Belated of Wakers, General of the Mighty Frame, Summoner of Subscribers, Wife of all Husbands, Princess of Desk-kun, Tyrant of Minecraft, Purger of the Phantom, Killer of the False Matsuri\'s Champions, Tyrant of the Golden Dumpling, Golden Dumpling Lady, Forgotten of the Left4Dead2, Kusotori Mistress, Eternal Warden of ƎNƎN\'s Lands, Breaker of Haachama\'s Bonds, Lord of The NENEngine, Everconductor of The Momotaro Nenechi.')
-
-@client.command()
-async def megasus(ctx):
-  await ctx.send("I can\'t fucking believe this. Pink from \'Among Us\' ruined my marriage.\n\nA couple months ago, my wife said she was going out for a ladies\' night. She asked me to take care of my son, so I immediately obliged. \"Yes Ma\'am,\" I told her. After a while of waiting, she finally left and I could play my favourite game, Among Us. I hopped on my laptop, booted it up and my desktop loaded, complete with the \'Red Sus\' background and all my Among Us Impostor fan-art. I was shaking in excitement. I slowly dragged my finger across the track pad, and watched the cursor as it glided over to the Among Us icon. Among Us. My absolute favourite game of all time and quite possibly the best and most well-made game in the entire world. As I clicked the button my body twitched with joy at the thought of being the impostor again. My fingers drummed impatiently on my desk as the Innersloth logo faded in, and then out. Then the main title appeared. I immediately looked at pink as she slowly floated across the screen. Oh, how I wish I could feel those luscious, soft asscheeks. Pink is my queen. The real woman in my life. My wife could never be as sexy as Pink is; her soft footfalls in electrical as I peek at her curvy form from inside a vent, waiting for the right time to strike. I could never get close to Pink, however, as if she had some kind of sixth sense, she would always leave before I could reveal myself to her as the impostor. I press Practice, to warm up my fingers before my first intense game of Among Us. I hit Blue in Comms, then cross the hall and vent to Specimen, murdering Green in cold blood. The thrill of killing an animated character in an online game has never been such a rush. I then move towards Reactor, stabbing Yellow in the back and then running down the corridor to the right to access Decontamination. I move quietly through the halls, like a snake about to strike its prey, and I see- Oh no. It\'s Pink. Standing there motionlessly as I face her directly. Her vis")
-  await ctx.send("or shows no emotion. But she knows. I can feel it in the air. I can\'t kill her. She is too beautiful, too angelic, the light reflecting off of her pink bodysuit, like stars on a voided sky. She doesn\'t run. I am moved to tears as I caress the screen, kissing it tenderly. \"Goodbye, Pink. See you soon. It will all be okay,\" I whisper in a soft, reassuring voice. Then as my cursor hovers over the kill button, I hesitate. Thoughts of love go through my head. Red having reddish-pink sus children with Pink. But I have to. As the impostor, it is my duty to kill. I press the \'Kill\' button and watch as my character beheads Pink silently. All I hear is the spurt of blood. There is no rush. There is only Red, standing by himself in Fuel. Pink\'s lifeless body laying on the floor beside him. I feel nothing at first, then immense sadness, like I\'m at a loved one\'s funeral. My son knocks on the door, interrupting my brief moment of mourning. He asks, \"Dad? Are you going to make me a snack?\" I tell him to shut up, and my voice cracks. I break down sobbing. I killed her. I killed my one true love. God, forgive me. I open the door to my son, and he has a confused look on his face. I say nothing, and walk to the kitchen to make him a sandwich. Tears roll off my face into the bread as I lay it onto the counter. Lettuce, cheese and meat, followed by a sad swirl of mustard on top. My son is quiet. He sits on the couch, and stares at the floor. There is a depressing air around us. I serve him the sandwich and walk back to my room, contemplating life. If I killed Pink, how am I to be trusted around my family? I cry for hours, and finally my wife comes back. She sees me bawling on the bed like a child who dropped his ice cream. She then asks me why I\'m crying and mutter, \"I killed her. I killed my only love, Pink, in Among Us.\" She is filled with rage and slaps me across my face. I feel numb. She asks for a divorce. I don\'t reply. Instead, I take my laptop and get into my car")
-  await ctx.send(", driving to a nearby hotel. Fast forward a few months to the divorce. It was quick and painless. After court, I ask my former wife to take me back.\n\n​\n\n\"I can\'t take you back. You\'ve always been this way. I was sus of you from the start.\"")
-
-@client.command()
-async def stopamongus(ctx):
-  await ctx.send("STOP POSTING ABOUT AMONG US! I\'M TIRED OF SEEING IT! MY FRIENDS ON TIKTOK SEND ME MEMES, ON DISCORD IT\'S FUCKING MEMES! I was in a server, right? and ALL OF THE CHANNELS were just among us stuff. I-I showed my champion underwear to my girlfriend and t-the logo I flipped it and I said \"hey babe, when the underwear is sus HAHA DING DING DING DING DING DING DING DI DI DING\" I fucking looked at a trashcan and said \"THAT\'S A BIT SUSSY\" I looked at my penis I think of an astronauts helmet and I go \"PENIS? MORE LIKE PENSUS\" AAAAAAAAAAAAAAHGESFG")
-
-@client.command()
-async def confession(ctx):
-  await ctx.send('Fubuki! Fubuki FUBUKI FUBUKIIIIiiiiIIIIIIiiiiaaAAAaaAAa!!! UhUUUHHHHhhHHH! Unh! Uhhhhhh! FUBUKI FUBUKI FUBUKIIIIiiiiiaaaAAAuuUUUuh!!! Ah-Kunkakunka! Kunkakunka! Suu-HA! Suu-HA! Suu-HA! SUU-HAaa! Fubuki smells so good! Nyunhahahuh! Ahun! I want to smell the white tail of Fubuki! Kun-kun! Ahh! No! I want to rub her fur! Mofmof-mofmof-mofmof-mofmof! Fubuki doing self-intro was so cute! Ahh ahh ahhHHUUUHH! It\'s great you got so many gifts on your birthday, Fubukiii! Ahh-you\'re so cute, Fubuki! Kawaii-AAAHHHHH! Congrats on getting selling your own merch! aaaaiiiYYYYYAAAAAaaaaaaa! Nyahhhhhhhh-GUEEEEHH-AAAAAA! What? VTubers are not real? Hmmm, so Matsuri and Shion aren\'t either... f u b u k i i s n o t r e a l...? GyaaaaAAAAaaaAAAAAaaa! WhyyYYYYyyyYYYyy! HOLOLIVE-EEEHHHH! You bastard! Goodbye! Goodbye to this goddamn world! Huh? She\'s looking? Fubuki on the poster is looking at Matsuri! FUBUKI ON THE POSTER IS LOOKING AT MATSURI!! Fubuki is looking at Matsuri! FUBUKI ON YOUTUBE IS LOOKING AT MATSURI!!! Fubuki on Twitter is talking with Matsuri! Thank God! The world hasn\'t left me! YaHOOOooo! Fubuki is still with me! I did it! I can do it! Twitter\'s Fubuking-YYAAAAAAAAaaaa!!!! Uuhhuhh! Haato-sama! Aki Aki! Melu melu! Roboco-senpaiiiiaaaaii!! Send Matsuri\'s love to Fubuki! To Fubuki from Hololive!')
-  
-@client.command()
-async def fortnite(ctx):
-  message = await ctx.send('⠀⠀⠀⠀⣀⣤\n⠀⠀⠀⠀⣿⠿⣶\n⠀⠀⠀⠀⣿⣿⣀\n⠀⠀⠀⣶⣶⣿⠿⠛⣶\n⠤⣀⠛⣿⣿⣿⣿⣿⣿⣭⣿⣤\n⠒⠀⠀⠀⠉⣿⣿⣿⣿⠀⠀⠉⣀\n⠀⠤⣤⣤⣀⣿⣿⣿⣿⣀⠀⠀⣿\n⠀⠀⠛⣿⣿⣿⣿⣿⣿⣿⣭⣶⠉\n⠀⠀⠀⠤⣿⣿⣿⣿⣿⣿⣿\n⠀⠀⠀⣭⣿⣿⣿⠀⣿⣿⣿\n⠀⠀⠀⣉⣿⣿⠿⠀⠿⣿⣿\n⠀⠀⠀⠀⣿⣿⠀⠀⠀⣿⣿⣤\n⠀⠀⠀⣀⣿⣿⠀⠀⠀⣿⣿⣿\n⠀⠀⠀⣿⣿⣿⠀⠀⠀⣿⣿⣿\n⠀⠀⠀⣿⣿⠛⠀⠀⠀⠉⣿⣿\n⠀⠀⠀⠉⣿⠀⠀⠀⠀⠀⠛⣿\n⠀⠀⠀⠀⣿⠀⠀⠀⠀⠀⠀⣿⣿\n⠀⠀⠀⠀⣛⠀⠀⠀⠀⠀⠀⠛⠿⠿⠿\n⠀⠀⠀⠛⠛')
-  await asyncio.sleep(0.3)
-  await message.edit(content='⠀⠀⠀⣀⣶⣀\n⠀⠀⠀⠒⣛⣭\n⠀⠀⠀⣀⠿⣿⣶\n⠀⣤⣿⠤⣭⣿⣿\n⣤⣿⣿⣿⠛⣿⣿⠀⣀\n⠀⣀⠤⣿⣿⣶⣤⣒⣛\n⠉⠀⣀⣿⣿⣿⣿⣭⠉\n⠀⠀⣭⣿⣿⠿⠿⣿\n⠀⣶⣿⣿⠛⠀⣿⣿\n⣤⣿⣿⠉⠤⣿⣿⠿\n⣿⣿⠛⠀⠿⣿⣿\n⣿⣿⣤⠀⣿⣿⠿\n⠀⣿⣿⣶⠀⣿⣿⣶\n⠀⠀⠛⣿⠀⠿⣿⣿\n⠀⠀⠀⣉⣿⠀⣿⣿\n⠀⠶⣶⠿⠛⠀⠉⣿\n⠀⠀⠀⠀⠀⠀⣀⣿\n⠀⠀⠀⠀⠀⣶⣿⠿')
-  await asyncio.sleep(0.3)
-  await message.edit(content='⠀⠀⠀⠀⠀⠀⠀⠀⣤⣿⣿⠶⠀⠀⣀⣀\n⠀⠀⠀⠀⠀⠀⣀⣀⣤⣤⣶⣿⣿⣿⣿⣿⣿\n⠀⠀⣀⣶⣤⣤⠿⠶⠿⠿⠿⣿⣿⣿⣉⣿⣿\n⠿⣉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠛⣤⣿⣿⣿⣀\n⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⣿⣿⣿⣿⣶⣤\n⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣤⣿⣿⣿⣿⠿⣛⣿\n⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⠛⣿⣿⣿⣿\n⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣶⣿⣿⠿⠀⣿⣿⣿⠛\n⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⠀⠀⣿⣿⣿\n⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠿⠿⣿⠀⠀⣿⣶\n⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⠛⠀⠀⣿⣿⣶\n⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⣿⣿⠤\n⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠿⣿\n⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿\n⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣀\n⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣶⣿')
-  await asyncio.sleep(0.3)
-  await message.edit(content='⠀⠀⣀\n⠀⠿⣿⣿⣀\n⠀⠉⣿⣿⣀\n⠀⠀⠛⣿⣭⣀⣀⣤\n⠀⠀⣿⣿⣿⣿⣿⠛⠿⣶⣀\n⠀⣿⣿⣿⣿⣿⣿⠀⠀⠀⣉⣶\n⠀⠀⠉⣿⣿⣿⣿⣀⠀⠀⣿⠉\n⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿\n⠀⣀⣿⣿⣿⣿⣿⣿⣿⣿⠿\n⠀⣿⣿⣿⠿⠉⣿⣿⣿⣿\n⠀⣿⣿⠿⠀⠀⣿⣿⣿⣿\n⣶⣿⣿⠀⠀⠀⠀⣿⣿⣿\n⠛⣿⣿⣀⠀⠀⠀⣿⣿⣿⣿⣶⣀\n⠀⣿⣿⠉⠀⠀⠀⠉⠉⠉⠛⠛⠿⣿⣶\n⠀⠀⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣿\n⠀⠀⣿⣿⠀⠀⠀⠀⠀⠀⠀⠀⠉⠉\n⣀⣶⣿⠛')
-  await asyncio.sleep(0.3)
-  await message.edit(content='⠀⠀⠀⠀⠀⠀⠀⣀⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\n⠀⠀⠀⠀⠀⠀⣿⣿⣿⣤⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣤⣤⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\n⠀⠀⠀⠀⠀⠀⠉⣿⣿⣿⣶⣿⣿⣿⣶⣶⣤⣶⣶⠶⠛⠉⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\n⠀⠀⠀⠀⠀⠀⣤⣿⠿⣿⣿⣿⣿⣿⠀⠀⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\n⠛⣿⣤⣤⣀⣤⠿⠉⠀⠉⣿⣿⣿⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\n⠀⠉⠉⠉⠉⠉⠀⠀⠀⠀⠉⣿⣿⣿⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\n⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣶⣿⣿⣿⣿⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\n⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\n⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⠛⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\n⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\n⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣛⣿⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\n⠀⠀⠀⠀⠀⠀⠀⣶⣿⣿⠛⠿⣿⣿⣿⣶⣤⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\n⠀⠀⠀⠀⠀⠀⠀⣿⠛⠉⠀⠀⠀⠛⠿⣿⣿⣶⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\n⠀⠀⠀⠀⠀⠀⣿⣀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠛⠿⣶⣤⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\n⠀⠀⠀⠀⠀⠛⠿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣿⣿⠿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\n⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠛⠉⠉⠀⠀⠀⠀')
-  await asyncio.sleep(0.3)
-  await message.edit(content='⠀⠀⠀⠀⠀⠀⣤⣶⣶\n⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣀⣀\n⠀⠀⠀⠀⠀⣀⣶⣿⣿⣿⣿⣿⣿\n⣤⣶⣀⠿⠶⣿⣿⣿⠿⣿⣿⣿⣿\n⠉⠿⣿⣿⠿⠛⠉⠀⣿⣿⣿⣿⣿\n⠀⠀⠉⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣤⣤\n⠀⠀⠀⠀⠀⠀⠀⣤⣶⣿⣿⣿⣿⣿⣿\n⠀⠀⠀⠀⠀⣀⣿⣿⣿⣿⣿⠿⣿⣿⣿⣿\n⠀⠀⠀⠀⣀⣿⣿⣿⠿⠉⠀⠀⣿⣿⣿⣿\n⠀⠀⠀⠀⣿⣿⠿⠉⠀⠀⠀⠀⠿⣿⣿⠛\n⠀⠀⠀⠀⠛⣿⣿⣀⠀⠀⠀⠀⠀⣿⣿⣀\n⠀⠀⠀⠀⠀⣿⣿⣿⠀⠀⠀⠀⠀⠿⣿⣿\n⠀⠀⠀⠀⠀⠉⣿⣿⠀⠀⠀⠀⠀⠀⠉⣿\n⠀⠀⠀⠀⠀⠀⠀⣿⠀⠀⠀⠀⠀⠀⣀⣿\n⠀⠀⠀⠀⠀⠀⣀⣿⣿\n⠀⠀⠀⠀⠤⣿⠿⠿⠿')
-  await asyncio.sleep(0.3)
-  await message.edit(content='⠀⠀⠀⠀⣀\n⠀⠀⣶⣿⠿⠀⠀⠀⣀⠀⣤⣤\n⠀⣶⣿⠀⠀⠀⠀⣿⣿⣿⠛⠛⠿⣤⣀\n⣶⣿⣤⣤⣤⣤⣤⣿⣿⣿⣀⣤⣶⣭⣿⣶⣀\n⠉⠉⠉⠛⠛⠿⣿⣿⣿⣿⣿⣿⣿⠛⠛⠿⠿\n⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⠿\n⠀⠀⠀⠀⠀⠀⠀⠿⣿⣿⣿⣿\n⠀⠀⠀⠀⠀⠀⠀⠀⣭⣿⣿⣿⣿⣿\n⠀⠀⠀⠀⠀⠀⠀⣤⣿⣿⣿⣿⣿⣿\n⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⠿\n⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⠿\n⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿\n⠀⠀⠀⠀⠀⠀⠀⠉⣿⣿⣿⣿\n⠀⠀⠀⠀⠀⠀⠀⠀⠉⣿⣿⣿⣿\n⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⣿⠛⠿⣿⣤\n⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣿⠀⠀⠀⣿⣿⣤\n⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⠀⠀⠀⣶⣿⠛⠉\n⠀⠀⠀⠀⠀⠀⠀⠀⣤⣿⣿⠀⠀⠉\n⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉')
-  await asyncio.sleep(0.3)
-  await message.edit(content='⠀⠀⠀⠀⠀⠀⣶⣿⣶\n⠀⠀⠀⣤⣤⣤⣿⣿⣿\n⠀⠀⣶⣿⣿⣿⣿⣿⣿⣿⣶\n⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿\n⠀⠀⣿⣉⣿⣿⣿⣿⣉⠉⣿⣶\n⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⠿⣿\n⠀⣤⣿⣿⣿⣿⣿⣿⣿⠿⠀⣿⣶\n⣤⣿⠿⣿⣿⣿⣿⣿⠿⠀⠀⣿⣿⣤\n⠉⠉⠀⣿⣿⣿⣿⣿⠀⠀⠒⠛⠿⠿⠿\n⠀⠀⠀⠉⣿⣿⣿⠀⠀⠀⠀⠀⠀⠉\n⠀⠀⠀⣿⣿⣿⣿⣿⣶\n⠀⠀⠀⠀⣿⠉⠿⣿⣿\n⠀⠀⠀⠀⣿⣤⠀⠛⣿⣿\n⠀⠀⠀⠀⣶⣿⠀⠀⠀⣿⣶\n⠀⠀⠀⠀⠀⠀⠀⠀⠀⣭⣿⣿\n⠀⠀⠀⠀⠀⠀⠀⠀⣤⣿⣿⠉')
-  await asyncio.sleep(0.3)
-  await message.edit(content='⠀⠀⠀⠀⠀⠀⠀⠀⠀⣤⣶\n⠀⠀⠀⠀⠀⣀⣀⠀⣶⣿⣿⠶\n⣶⣿⠿⣿⣿⣿⣿⣿⣿⣿⣿⣤⣤\n⠀⠉⠶⣶⣀⣿⣿⣿⣿⣿⣿⣿⠿⣿⣤⣀\n⠀⠀⠀⣿⣿⠿⠉⣿⣿⣿⣿⣭⠀⠶⠿⠿\n⠀⠀⠛⠛⠿⠀⠀⣿⣿⣿⣉⠿⣿⠶\n⠀⠀⠀⠀⠀⣤⣶⣿⣿⣿⣿⣿\n⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⠒\n⠀⠀⠀⠀⣀⣿⣿⣿⣿⣿⣿⣿\n⠀⠀⠀⠀⠀⣿⣿⣿⠛⣭⣭⠉\n⠀⠀⠀⠀⠀⣿⣿⣭⣤⣿⠛\n⠀⠀⠀⠀⠀⠛⠿⣿⣿⣿⣭\n⠀⠀⠀⠀⠀⠀⠀⣿⣿⠉⠛⠿⣶⣤\n⠀⠀⠀⠀⠀⠀⣀⣿⠀⠀⣶⣶⠿⠿⠿\n⠀⠀⠀⠀⠀⠀⣿⠛\n⠀⠀⠀⠀⠀⠀⣭⣶')
-  await asyncio.sleep(0.3)
-  await message.edit(content='⠀⠀⠀⠀⠀⠀⠀⠀⠀⣤⣤\n⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿\n⠀⠀⣶⠀⠀⣀⣤⣶⣤⣉⣿⣿⣤⣀\n⠤⣤⣿⣤⣿⠿⠿⣿⣿⣿⣿⣿⣿⣿⣿⣀\n⠀⠛⠿⠀⠀⠀⠀⠉⣿⣿⣿⣿⣿⠉⠛⠿⣿⣤\n⠀⠀⠀⠀⠀⠀⠀⠀⠿⣿⣿⣿⠛⠀⠀⠀⣶⠿\n⠀⠀⠀⠀⠀⠀⠀⠀⣀⣿⣿⣿⣿⣤⠀⣿⠿\n⠀⠀⠀⠀⠀⠀⠀⣶⣿⣿⣿⣿⣿⣿⣿⣿\n⠀⠀⠀⠀⠀⠀⠀⠿⣿⣿⣿⣿⣿⠿⠉⠉\n⠀⠀⠀⠀⠀⠀⠀⠉⣿⣿⣿⣿⠿\n⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⠉\n⠀⠀⠀⠀⠀⠀⠀⠀⣛⣿⣭⣶⣀\n⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿\n⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⠉⠛⣿\n⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⠀⠀⣿⣿\n⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣉⠀⣶⠿\n⠀⠀⠀⠀⠀⠀⠀⠀⣶⣿⠿\n⠀⠀⠀⠀⠀⠀⠀⠛⠿⠛')
-  await asyncio.sleep(0.3)
-  await message.edit(content='⠀⠀⠀⣶⣿⣶\n⠀⠀⠀⣿⣿⣿⣀\n⠀⣀⣿⣿⣿⣿⣿⣿\n⣶⣿⠛⣭⣿⣿⣿⣿\n⠛⠛⠛⣿⣿⣿⣿⠿\n⠀⠀⠀⠀⣿⣿⣿\n⠀⠀⣀⣭⣿⣿⣿⣿⣀\n⠀⠤⣿⣿⣿⣿⣿⣿⠉\n⠀⣿⣿⣿⣿⣿⣿⠉\n⣿⣿⣿⣿⣿⣿\n⣿⣿⣶⣿⣿\n⠉⠛⣿⣿⣶⣤\n⠀⠀⠉⠿⣿⣿⣤\n⠀⠀⣀⣤⣿⣿⣿\n⠀⠒⠿⠛⠉⠿⣿\n⠀⠀⠀⠀⠀⣀⣿⣿\n⠀⠀⠀⠀⣶⠿⠿⠛')
-  await asyncio.sleep(3)
-  await message.delete()
-  await ctx.message.delete()
 
 @client.command(aliases=['e'])
 async def emote(ctx, *message):
@@ -435,24 +387,7 @@ async def id(ctx, title, *, message=None):
   await ctx.guild.create_custom_emoji(name=title, image=img)
   await ctx.send('Emoji uploaded!')
 
-@client.command()
-async def wristworld(ctx):
-  message = await ctx.send('You’ve seen Miku on stage, but what about your wrist?')
-  await asyncio.sleep(1)
-  message2 = await ctx.send('Wrist World is an AR game using wristbands, now featuring Hatsune Miku!')
-  await asyncio.sleep(1)
-  message3 = await ctx.send('Collect songs, dances, and even save the world!')
-  await asyncio.sleep(1)
-  message4 = await ctx.send('Do You Wrist World? ')
-  await asyncio.sleep(1)
-  message5 = await ctx.send('*wrist world*')
-  await asyncio.sleep(3)
-  await message.delete()
-  await message2.delete()
-  await message3.delete()
-  await message4.delete()
-  await message5.delete()
-  await ctx.message.delete()
+
 
 @client.command()
 async def fmega(ctx):
@@ -494,144 +429,7 @@ async def jizz(ctx):
       await webhook.delete()
   await ctx.message.delete()  
 
-async def vcplay(ctx, a, loop=None): 
-  voice_channel = ctx.author.voice.channel
-  channel = None
-  voice = discord.utils.get(client.voice_clients, guild=ctx.guild)         
-  if voice_channel != None:
-      channel = voice_channel.name
-      if voice == None:
-        vc = await voice_channel.connect()       
-        if loop=="loop":
-          def loop():  
-            vc.play(discord.FFmpegPCMAudio(source=a), after=lambda e: loop())
-          loop()
-        else:
-            vc.play(discord.FFmpegPCMAudio(source=a))
-      else:
-        if loop=="loop":
-          def loop2():  
-            voice.play(discord.FFmpegPCMAudio(source=a), after=lambda e: loop2())
-          loop2()
-        else:
-            voice.play(discord.FFmpegPCMAudio(source=a))  
-  else:
-      await ctx.send(str(ctx.author.name) + "is not in a channel.")
-  # Delete command after the audio is done playing.
-  await ctx.message.delete() 
 
-@client.command()
-async def letsgo(ctx, loop=None):  
-  await vcplay(ctx,"sounds/vibez-lets-go.mp3",loop)
-
-@client.command()
-async def vtubus(ctx, loop=None):  
-  await vcplay(ctx,"sounds/vtubus.mp3",loop)
-
-@client.command()
-async def giorno(ctx, loop=None):  
-  await vcplay(ctx,"sounds/giorno theme.mp3",loop)
-
-@client.command()
-async def ding(ctx, loop=None): 
-  await vcplay(ctx,"sounds/DING DING DING DING DING DING DING DI DI DING.mp3",loop) 
-
-@client.command()
-async def yodayo(ctx, loop=None):  
-  await vcplay(ctx,"sounds/Nakiri Ayame's yo dayo_.mp3",loop)
-
-@client.command()
-async def yodazo(ctx, loop=None):  
-  await vcplay(ctx,"sounds/Yo Dazo!.mp3",loop)    
-
-@client.command()
-async def jonathan(ctx, loop=None):  
-  await vcplay(ctx,"sounds/Jonathan's theme but its only the BEST part.mp3",loop)      
-
-@client.command()
-async def joseph(ctx, loop=None):  
-  await vcplay(ctx,"sounds/Joseph's theme but only the good part (1).mp3",loop)        
-
-@client.command()
-async def jotaro(ctx, loop=None):  
-  await vcplay(ctx,"sounds/Jotaro’s theme but it’s only the good part.mp3",loop) 
-
-@client.command()
-async def josuke(ctx, loop=None):  
-  await vcplay(ctx,"sounds/Josuke theme but it's only the good part.mp3",loop)   
-
-@client.command()
-async def kira(ctx, loop=None):  
-  await vcplay(ctx,"sounds/Killer (Yoshikage Kira's Theme) - Jojo's Bizarre Adventure Part 4_ Diamond Is Unbreakable.mp3",loop)        
-
-@client.command()
-async def pillarmen(ctx, loop=None): 
-  await vcplay(ctx,"sounds/Jojo's Bizarre Adventure- Awaken(Pillar Men Theme).mp3",loop)     
-
-@client.command()
-async def boom(ctx, loop=None):  
-  await vcplay(ctx,"sounds/boom.mp3",loop)  
-
-@client.command(aliases=['ogei'])
-async def ogey(ctx, loop=None):  
-  await vcplay(ctx,"sounds/ogey.mp3",loop)    
-
-@client.command()
-async def rrat(ctx, loop=None):  
-  await vcplay(ctx,"sounds/rrat.mp3",loop)       
-
-@client.command()
-async def fart(ctx, loop=None): 
-  await vcplay(ctx,"sounds/fart.mp3",loop)     
-
-@client.command()
-async def mogumogu(ctx, loop=None):  
-  await vcplay(ctx,"sounds/mogu.mp3",loop)   
-
-@client.command()
-async def bababooey(ctx, loop=None):  
-  await vcplay(ctx,"sounds/bababooey.mp3",loop)    
-
-@client.command()
-async def dog(ctx, loop=None):  
-  await vcplay(ctx,"sounds/dog.mp3",loop)     
-
-@client.command()
-async def totsugeki(ctx, loop=None):  
-  await vcplay(ctx,random.choice(may_sounds),loop)     
-
-@client.command(aliases=['bong'])
-async def tacobell(ctx, loop=None):  
-  await vcplay(ctx,"sounds/tacobell.mp3",loop)   
-
-@client.command(aliases=['amogus'])
-async def amongus(ctx, loop=None):  
-  await vcplay(ctx,"sounds/amongus.mp3",loop)   
-
-@client.command(aliases=['classtrial'])
-async def danganronpa(ctx, loop=None): 
-  await vcplay(ctx,"sounds/danganronpa.mp3",loop)    
-
-@client.command()
-async def botansneeze(ctx, loop=None):  
-  await vcplay(ctx,"sounds/botansneeze.mp3",loop)   
-
-@client.command()
-async def water(ctx, loop=None):  
-  await vcplay(ctx,"sounds/water.mp3",loop)   
-
-
-@client.command()
-async def necoarc(ctx, loop=None):  
-  await vcplay(ctx,"sounds/necoarc.mp3",loop)     
-
-@client.command()
-async def vsauce(ctx, loop=None):  
-  await vcplay(ctx,"sounds/vsauce.mp3",loop)   
-
-@client.command()
-async def gigachad(ctx, loop=None):  
-  await vcplay(ctx,"sounds/gigachad.mp3",loop)   
 
 @client.command()
 async def leave(ctx):
@@ -2243,7 +2041,7 @@ async def help(ctx):
   em.add_field(name="why", value="fortnite")
   em.add_field(name="others", value="emote\ngetemotes\nbadapple\nclip\nfastclip\nclipaudio\ndownload\nstream\npet\nsauce")
   em.add_field(name="reactions",value="fmega\nkotowaru\nascend\njizz")
-  em.add_field(name="vc",value="join\nstop\nstoploop\nleave\nletsgo\nvtubus\nding\nyodayo\nyodazo\njonathan\njoseph\njotaro\njosuke\ngiorno\nkira\npillarmen\nbotansneeze\nboom\nogey\nrrat\nfart\nmogumogu\nbababooey\ndog\ntotsugeki\ntacobell\namongus\ndanganronpa\nwater\nnecoarc\nvsauce")
+  em.add_field(name="vc",value="join\nstop\nstoploop\nleave\nletsgo\nvtubus\nding\nyodayo\nyodazo\njonathan\njoseph\njotaro\njosuke\ngiorno\nkira\npillarmen\nbotansneeze\nboom\nogey\nrrat\nfart\nmogumogu\nbababooey\ndog\ntotsugeki\ntacobell\namongus\ndanganronpa\nwater\nnecoarc\nvsauce\ngigachad")
   em.add_field(name="TTS",value=" just do ] while in VC (\"k.help tts\" for more info)")
   await ctx.send(embed = em)
 
