@@ -29,3 +29,4 @@ environment variables:
 -  "RCLONE_CONFIG_URL": 
 -  "FB_ACCESS_TOKEN": 
 -  "ENCRYPTPASSPHRASE": 
+-  "SAUCENAO_KEY": 

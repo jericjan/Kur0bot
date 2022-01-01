@@ -1,5 +1,7 @@
 import discord
-from discord.ext import commands
+print("Running Pycord {0}".format(discord.__version__))
+from discord.ext import commands, pages
+from discord.ui import Button, View
 import os
 import json
 from keep_alive import keep_alive
@@ -20,12 +22,16 @@ import re
 import glob
 
 
+
+
+
 #client = discord.Client()
 intents = discord.Intents().default()
 intents.presences = True
 intents.members = True
 
 client = commands.Bot(command_prefix='k.',intents=intents)
+
 client.remove_command("help")
 sus_words = [
   "amongus", 
@@ -1599,7 +1605,7 @@ import googleapiclient.errors
 import requests 
 import dateutil.parser as dp
 
-from discord import Webhook, AsyncWebhookAdapter
+from discord import Webhook
 import aiohttp
 
 @client.command()
@@ -1666,11 +1672,11 @@ async def stream(ctx,link,noembed=None):
     e.set_image(url=thumbnail)
     if noembed!='noembed':
       async with aiohttp.ClientSession() as session:
-        webhook = Webhook.from_url('https://discord.com/api/webhooks/880667610323234877/oc31FGZ3SPfu7BCru4iOd2ULJAvyOdMi1SOaqNF58sHKBknFbdhK5zfqSZhxS4NZF9pU', adapter=AsyncWebhookAdapter(session))
+        webhook = Webhook.from_url('https://discord.com/api/webhooks/880667610323234877/oc31FGZ3SPfu7BCru4iOd2ULJAvyOdMi1SOaqNF58sHKBknFbdhK5zfqSZhxS4NZF9pU',session=session)
         await webhook.send(embed = e)
     else:
       async with aiohttp.ClientSession() as session:
-        webhook = Webhook.from_url('https://discord.com/api/webhooks/880667610323234877/oc31FGZ3SPfu7BCru4iOd2ULJAvyOdMi1SOaqNF58sHKBknFbdhK5zfqSZhxS4NZF9pU', adapter=AsyncWebhookAdapter(session))
+        webhook = Webhook.from_url('https://discord.com/api/webhooks/880667610323234877/oc31FGZ3SPfu7BCru4iOd2ULJAvyOdMi1SOaqNF58sHKBknFbdhK5zfqSZhxS4NZF9pU', session=session)
         await webhook.send(reltime +" **"+author+"** - ["+title+"](<"+link+">)")      
     await ctx.message.delete()
     try:
@@ -2117,7 +2123,112 @@ async def rolecheck(ctx):
     else:        
         await ctx.send("Only Avi/Admins/Mods can use this command")
 
+from saucenao_api import SauceNao
 
+
+
+@client.command(aliases=['findsauce','sauce'])
+async def getsauce(ctx, link=None): 
+
+  if link == None:
+    print(ctx.message.attachments)#a list
+    print(ctx.message.reference)
+    if ctx.message.attachments:#message has images
+      print("is attachment")
+      link = ctx.message.attachments[0].url
+    elif ctx.message.reference is not None:#message is replying
+      print('is reply')
+      id = ctx.message.reference.message_id
+      msg = await ctx.channel.fetch_message(id)
+      if msg.attachments:#if replied has image
+        link= msg.attachments[0].url
+      elif msg.embeds:  #if replied has link
+        link=msg.embeds[0].url
+        
+       # print("embmeds: {0}".format(msg.embeds))
+        # if re.search(r'http.*\bpng\b|http.*\bjpg\b|http.*\bjpeg\b',msg.content):
+        #   link = re.search(r'http.*\bpng\b|http.*\bjpg\b|http.*\bjpeg\b',msg.content)[0]
+      #link= msg.attachments[0].url
+      else:
+        await ctx.send("the message you replied to has no image, baka!")
+    else:
+      await ctx.send("you did something wrong. brug. try again.")  
+      return
+    print(link)
+
+  msg = await ctx.send("Getting sauce...")
+  sauce = SauceNao(os.getenv('SAUCENAO_KEY'))
+  try:
+    results = sauce.from_url(link)  # or from_file()
+  except Exception as e:
+    print("I fail. Reason:\n{0}".format(e))  
+    return
+  print("{0} results!".format(len(results)))
+  result_count = len(results)
+  results_dict={}
+  embed_dict = {}
+  i = 0
+  while i < result_count:
+    results_dict[i]=results[i]
+    i+=1
+    print(len(results_dict))
+  for i in range(len(results_dict)):
+  # await ctx.send(results_dict[i].title)
+    try:   
+      embed_dict[i] = discord.Embed(title=results_dict[i].title,description="{0}% accurate".format(results_dict[i].similarity),url=results_dict[i].urls[0])
+      embed_dict[i].set_author(name=results_dict[i].author)
+      embed_dict[i].set_image(url=results_dict[i].thumbnail)
+    # embed_dict[i].set_footer(text="{0}/{1}".format(i+1,result_count))
+    except IndexError:
+      embed_dict[i] = discord.Embed(title=results_dict[i].title,description="{0}% accurate".format(results_dict[i].similarity))
+      embed_dict[i].set_author(name=results_dict[i].author)
+      embed_dict[i].set_image(url=results_dict[i].thumbnail)
+    #  embed_dict[i].set_footer(text="{0}/{1}".format(i+1,result_count))
+    except Exception as e:
+      print(e)
+    try:  
+      await msg.delete()  
+    except:
+      pass  
+    # button1 = Button(label="Previous")  
+    # button2 = Button(label="Next")  
+
+    # async def prev_callback(interaction):
+    #   await interaction.response.send_message() #i want it to send outside_var
+
+
+    # button1.callback = prev_callback()
+    # view= View()
+    # view.add_item(button1)
+    # view.add_item(button2)
+  paginator = pages.Paginator(pages=embed_dict)
+  await paginator.send(ctx)
+  #await ctx.send(embed=embed_dict[i],view=view)
+    # await buttons.send(
+    # channel = ctx.channel.id,
+    # content = None,
+    # embed = embed_dict[i],
+    # components = [
+    # ActionRow([
+    # Button(
+    #   style = ButtonType().Secondary,
+    #   label = "Previous",
+    #   custom_id = "previous"
+    #       ),
+    # Button(
+    #   style = ButtonType().Secondary,
+    #   label = "Next",
+    #   custom_id = "next"
+    #       )
+    # ])
+    # ])  
+
+
+
+
+    # await ctx.send(embed = e)
+
+  
 # ----------------------------------------------------
 # HELP
 @client.group(invoke_without_command=True)
@@ -2126,7 +2237,7 @@ async def help(ctx):
   em.add_field(name="copypasta", value="glasses\nnene\nnenelong\nstopamongus\nconfession\nwristworld")
   em.add_field(name="sus", value="on\noff\nmegasus\nbulk")
   em.add_field(name="why", value="fortnite")
-  em.add_field(name="others", value="emote\ngetemotes\nbadapple\nclip\nfastclip\nclipaudio\ndownload\nstream\npet")
+  em.add_field(name="others", value="emote\ngetemotes\nbadapple\nclip\nfastclip\nclipaudio\ndownload\nstream\npet\nsauce")
   em.add_field(name="reactions",value="fmega\nkotowaru\nascend\njizz")
   em.add_field(name="vc",value="join\nstop\nstoploop\nleave\nletsgo\nvtubus\nding\nyodayo\nyodazo\njonathan\njoseph\njotaro\njosuke\ngiorno\nkira\npillarmen\nbotansneeze\nboom\nogey\nrrat\nfart\nmogumogu\nbababooey\ndog\ntotsugeki\ntacobell\namongus\ndanganronpa\nwater\nnecoarc\nvsauce")
   em.add_field(name="TTS",value=" just do ] while in VC (\"k.help tts\" for more info)")
@@ -2176,13 +2287,13 @@ async def confession(ctx):
 async def fortnite(ctx):
   em = discord.Embed(title = "Fortnite",   description = 'Sends the fortnite dance in text')
   await ctx.send(embed = em)
-@help.command()
+@help.command(aliases=['e'])
 async def emote(ctx):
   em = discord.Embed(title = "Emote",   description = 'Sends an animated emote from any server that this bot is in.')
   em.add_field(name="**Syntax**", value="k.emote <emotename>")
   em.add_field(name="**Aliases**", value="e")
   await ctx.send(embed = em)
-@help.command()
+@help.command(aliases=['ge'])
 async def getemotes(ctx):
   em = discord.Embed(title = "Get Emotes!",   description = 'Sends all emotes that this bot has. It has emotes for all servers it\'s in.')
   em.add_field(name="**Aliases**", value="ge")
@@ -2313,7 +2424,7 @@ async def boom(ctx):
   em = discord.Embed(title = "Vine Boom SFX",   description = 'plays the funni boom sfx in vc')
   await ctx.send(embed = em)  
 
-@help.command()
+@help.command(aliases=['ogei'])
 async def ogey(ctx):
   em = discord.Embed(title = "Ogey...",   description = 'Plays Pekora\'s ogey in VC.')
   em.add_field(name="**Aliases**", value="ogei")
@@ -2349,19 +2460,19 @@ async def totsugeki(ctx):
   em = discord.Embed(title = "TOTSUGEKI!!!",   description = 'Plays May\'s Totsugeki in VC.')
   await ctx.send(embed = em) 
 
-@help.command()
+@help.command(aliases=['bong'])
 async def tacobell(ctx):
   em = discord.Embed(title = "Taco Bell bong sfx",   description = 'Plays the funny taco bell sound effect in VC.')
   em.add_field(name="**Aliases**", value="bong")
   await ctx.send(embed = em) 
 
-@help.command()
+@help.command(aliases=['amogus'])
 async def amongus(ctx):
   em = discord.Embed(title = "AMONGUS!",   description = 'Plays the guy yelling amongus in VC.')
   em.add_field(name="**Aliases**", value="amogus")
   await ctx.send(embed = em) 
 
-@help.command()
+@help.command(aliases=['classtrial'])
 async def danganronpa(ctx):
   em = discord.Embed(title = "Class trial time!",   description = 'Plays \'議論 -HEAT UP-\' from Danganronpa in VC.')
   em.add_field(name="**Aliases**", value="classtrial")
@@ -2418,6 +2529,13 @@ async def gigachad(ctx):
 async def pet(ctx):
   em = discord.Embed(title = "Pet user",   description = 'Sends a gif of the mentioned user being petted.')
   em.add_field(name="**Syntax**", value="k.pet <mentioned user>\nk.pet <image url>")
+  await ctx.send(embed = em) 
+
+@help.command(aliases=['findsauce','getsauce'])
+async def sauce(ctx):
+  em = discord.Embed(title = "Get sauce",   description = 'Uses Saucenao API to find sauce.')
+  em.add_field(name="**Syntax**", value="k.sauce <url>\nUpload image with k.sauce\nReply to a message with k.sauce ")
+  em.add_field(name="**Aliases**", value="findsauce,getsauce")
   await ctx.send(embed = em) 
 
 @help.command()
