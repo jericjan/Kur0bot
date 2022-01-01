@@ -3,6 +3,9 @@
 
 from discord.ext import commands
 import discord
+import random
+
+may_sounds = ["sounds/totsugeki_7UWR0L4.mp3", "sounds/totsugeki-may-2.mp3"]
 
 
 class Vc(commands.Cog):

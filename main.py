@@ -66,8 +66,6 @@ sugoma_replies = ["sugoma balls!! hahahaaaaa", "sugoma.... sugoma balls!!!!!!!"]
 
 custom_words = ["amgus", "amogus", "sushi", "pog"]
 
-may_sounds = ["sounds/totsugeki_7UWR0L4.mp3", "sounds/totsugeki-may-2.mp3"]
-
 
 @client.event
 async def on_ready():
