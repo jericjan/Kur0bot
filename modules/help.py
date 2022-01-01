@@ -11,10 +11,10 @@ class Help(commands.Cog):
         )
         em.add_field(
             name="copypasta",
-            value="glasses\nnene\nnenelong\nstopamongus\nconfession\nwristworld",
+            value="glasses\nnene\nnenelong\nstopamongus\nconfession\nwristworld\nmegasus",
         )
-        em.add_field(name="sus", value="on\noff\nmegasus\nbulk")
-        em.add_field(name="why", value="fortnite")
+        em.add_field(name="sus", value="on\noff\nbulk")
+        em.add_field(name="ascii", value="fortnite")
         em.add_field(
             name="others",
             value="emote\ngetemotes\nbadapple\nclip\nfastclip\nclipaudio\ndownload\nstream\npet\nsauce",

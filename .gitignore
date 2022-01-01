@@ -1,2 +1,3 @@
 /ffmpeg-git/
 /rclone/
+__pycache__/
