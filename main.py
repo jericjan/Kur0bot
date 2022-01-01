@@ -2175,10 +2175,11 @@ async def getsauce(ctx, link=None):
   for i in range(len(results_dict)):
   # await ctx.send(results_dict[i].title)
     try:   
+      site_name=re.search(r'(?<=https:\/\/)[^\/]*',results_dict[i].urls[0])
       embed_dict[i] = discord.Embed(title=results_dict[i].title,description="{0}% accurate".format(results_dict[i].similarity),url=results_dict[i].urls[0])
       embed_dict[i].set_author(name=results_dict[i].author)
       embed_dict[i].set_image(url=results_dict[i].thumbnail)
-    # embed_dict[i].set_footer(text="{0}/{1}".format(i+1,result_count))
+      embed_dict[i].set_footer(text=site_name[0])
     except IndexError:
       embed_dict[i] = discord.Embed(title=results_dict[i].title,description="{0}% accurate".format(results_dict[i].similarity))
       embed_dict[i].set_author(name=results_dict[i].author)
