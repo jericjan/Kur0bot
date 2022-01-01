@@ -2160,6 +2160,9 @@ async def getsauce(ctx, link=None):
   sauce = SauceNao(os.getenv('SAUCENAO_KEY'))
   try:
     results = sauce.from_url(link)  # or from_file()
+    print("30S: {0}".format(results.short_remaining))
+    print("24H: {0}".format(results.long_remaining))
+    await msg.edit(content='30s limit: {0} request(s) left\n24h limit: {1} request(s) left'.format(results.short_remaining,results.long_remaining),delete_after=5)
   except Exception as e:
     print("I fail. Reason:\n{0}".format(e))  
     return
@@ -2187,10 +2190,10 @@ async def getsauce(ctx, link=None):
     #  embed_dict[i].set_footer(text="{0}/{1}".format(i+1,result_count))
     except Exception as e:
       print(e)
-    try:  
-      await msg.delete()  
-    except:
-      pass  
+    # try:  
+    #   await msg.delete()  
+    # except:
+    #   pass  
     # button1 = Button(label="Previous")  
     # button2 = Button(label="Next")  
 
