@@ -47,6 +47,33 @@ class Vc(commands.Cog):
         await ctx.message.delete()
 
     @commands.command()
+    async def join(self, ctx):
+        voice_channel = ctx.author.voice.channel
+        await voice_channel.connect()
+        await ctx.send("Sus bot has joined the call.", delete_after=3.0)
+        await ctx.message.delete()
+
+    @commands.command()
+    async def stop(self, ctx):
+        voice_client = ctx.message.guild.voice_client
+        if voice_client.is_playing():
+            voice_client.stop()
+            await ctx.send("Sus bot has been stopped.", delete_after=3.0)
+        else:
+            await ctx.send(
+                "The bot is not playing anything at the moment.", delete_after=3.0
+            )
+        await ctx.message.delete()
+
+    @commands.command()
+    async def stoploop(self, ctx):
+        await ctx.guild.voice_client.disconnect()
+        voice_channel = ctx.author.voice.channel
+        await voice_channel.connect()
+        await ctx.send("The loop has been stopped.", delete_after=3.0)
+        await ctx.message.delete()
+
+    @commands.command()
     async def letsgo(self, ctx, loop=None):
         await self.vcplay(ctx, "sounds/vibez-lets-go.mp3", loop)
 
@@ -63,6 +90,20 @@ class Vc(commands.Cog):
         await self.vcplay(
             ctx, "sounds/DING DING DING DING DING DING DING DI DI DING.mp3", loop
         )
+
+    @commands.command()
+    async def leave(self, ctx):
+        if ctx.voice_client:  # If the bot is in a voice channel
+            await ctx.guild.voice_client.disconnect()  # Leave the channel
+            await ctx.send("Sus bot has left the call.", delete_after=3.0)
+            #  await asyncio.sleep(0.3)
+            await ctx.message.delete()
+        else:  # But if it isn't
+            await ctx.send(
+                "I'm not in a voice channel, use the join command to make me join",
+                delete_after=3.0,
+            )
+        await ctx.message.delete()
 
     @commands.command()
     async def yodayo(self, ctx, loop=None):

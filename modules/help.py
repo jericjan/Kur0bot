@@ -17,7 +17,7 @@ class Help(commands.Cog):
         em.add_field(name="ascii", value="fortnite")
         em.add_field(
             name="others",
-            value="emote\ngetemotes\nbadapple\nclip\nfastclip\nclipaudio\ndownload\nstream\npet\nsauce",
+            value="emote\ngetemotes\nbadapple\nclip\nfastclip\nclipaudio\ndownload\nstream\npet\nsauce\nping",
         )
         em.add_field(name="reactions", value="fmega\nkotowaru\nascend\njizz")
         em.add_field(
@@ -481,6 +481,14 @@ class Help(commands.Cog):
         em.add_field(
             name="**Example**",
             value="k.clipaudio https://www.youtube.com/watch?v=UIp6_0kct_U 00:00:56 00:01:05 poger mp3",
+        )
+        await ctx.send(embed=em)
+
+    @help.command()
+    async def ping(self, ctx):
+        em = discord.Embed(
+            title="Ping",
+            description="Pings the bot. What else would this be lol.",
         )
         await ctx.send(embed=em)
 
