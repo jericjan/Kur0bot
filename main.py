@@ -660,6 +660,7 @@ while isDiscordrunning is False:
 
         r = requests.head(url="https://discord.com/api/v1")
         print(f"{type(e).__name__}: {r.status_code}")
+        #print(e)
         if r.status_code == 429:
           print('Rate limited again lmao')
         try:
