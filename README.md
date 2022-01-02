@@ -14,6 +14,7 @@ It *might* require more permissions than the one above, and it won't tell you th
 To do list:
 - new help menu with discord select menus
 - continue splitting file into modules
+- k.id command compresss feature
 
 Notes:
 
