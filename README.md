@@ -22,6 +22,8 @@ Notes:
 
 - in root folder, there is folder `rclone` which contains rclone inside
 
+- in root folder, there is folder `tiktok-yt-dlp` which contains unofficial patched ver. of yt-dlp that works with new TikTok API
+
 environment variables:
 -  "TOKEN":
 -  "YT_API_KEY":
