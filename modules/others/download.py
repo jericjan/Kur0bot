@@ -12,8 +12,8 @@ class Download(commands.Cog):
     #     self.client = client
 
     @commands.command()
-    async def download(self, ctx, link):
-
+    async def download(self, ctx, link):#reddit, facebook, instagram, tiktok, yt
+        
         if "reddit.com" in link or "v.redd.it" in link:
             cookiecoms = [
                 "gpg",
@@ -32,7 +32,7 @@ class Download(commands.Cog):
                 "-f",
                 "bestvideo+bestaudio",
                 "--cookies",
-                "cookies (17).txt",
+                "cookies (17).txt","--no-warnings",
                 link,
             ]
             coms2 = [
@@ -50,7 +50,7 @@ class Download(commands.Cog):
             )
             # stdout, stderr = await proc.communicate()
             while proc.returncode is None:
-                line = await proc.stdout.read(100)
+                line = await proc.stdout.readline()
                 if not line:
                     break
                 await message.edit(content=line.decode("utf-8"))
@@ -58,14 +58,14 @@ class Download(commands.Cog):
                 await asyncio.sleep(1)
             if proc.returncode != 0:
                 await ctx.send("return code is not 0. trying something else")
-                coms = ["yt-dlp", "--cookies", "cookies (17).txt", link]
+                coms = ["yt-dlp", "--cookies", "cookies (17).txt", "--no-warnings",link]
                 print(shjoin(coms))
                 proc = await asyncio.create_subprocess_exec(
                     *coms, stdout=subprocess.PIPE, stderr=subprocess.STDOUT
                 )
                 # stdout, stderr = await proc.communicate()
                 while proc.returncode is None:
-                    line = await proc.stdout.read(100)
+                    line = await proc.stdout.readline()
                     if not line:
                         break
                     await message.edit(content=line.decode("utf-8"))
@@ -118,7 +118,7 @@ class Download(commands.Cog):
             # return_data = io.BytesIO()
             # return_data.write(fin.encode())
             # return_data.seek(0)
-            coms = ["yt-dlp", "-f", "best", "--cookies", "cookies (15).txt", link]
+            coms = ["yt-dlp", "-f", "best", "--cookies", "cookies (15).txt","--no-warnings", link]
             coms2 = [
                 "yt-dlp",
                 "-f",
@@ -136,7 +136,7 @@ class Download(commands.Cog):
             )
 
             while proc.returncode is None:
-                line = await proc.stdout.read(100)
+                line = await proc.stdout.readline()
                 if not line:
                     break
                 await message.edit(content=line.decode("utf-8"))
@@ -187,7 +187,7 @@ class Download(commands.Cog):
             # return_data = io.BytesIO()
             # return_data.write(fin.encode())
             # return_data.seek(0)
-            coms = ["yt-dlp", "-f", "best", "--cookies", "instacook.txt", link]
+            coms = ["yt-dlp", "-f", "best", "--cookies", "instacook.txt","--no-warnings", link]
             coms2 = [
                 "yt-dlp",
                 "-f",
@@ -205,7 +205,7 @@ class Download(commands.Cog):
             )
 
             while proc.returncode is None:
-                line = await proc.stdout.read(100)
+                line = await proc.stdout.readline()
                 if not line:
                     break
                 await message.edit(content=line.decode("utf-8"))
@@ -241,9 +241,9 @@ class Download(commands.Cog):
         # tiktok
         elif "tiktok.com" in link:
             message = await ctx.send("Downloading...")
-            coms = ["tiktok-yt-dlp/yt-dlp", "-f", "best", link]
+            coms = ["yt-dlp", "-f", "best","--no-warnings", link]
             coms2 = [
-                "tiktok-yt-dlp/yt-dlp",
+                "yt-dlp",
                 "-f",
                 "best",
                 "--get-filename",
@@ -257,7 +257,7 @@ class Download(commands.Cog):
             )
             # stdout, stderr = await proc.communicate()
             while proc.returncode is None:
-                line = await proc.stdout.read(100)
+                line = await proc.stdout.readline()
                 if not line:
                     break
                 await message.edit(content=line.decode("utf-8"))
@@ -289,7 +289,7 @@ class Download(commands.Cog):
         # yt links usually
         else:
             message = await ctx.send("Downloading...")
-            coms = ["yt-dlp", "-f", "best", link]
+            coms = ["yt-dlp", "-f", "best","--no-warnings", link]
             coms2 = ["yt-dlp", "-f", "best", "--get-filename", "--no-warnings", link]
             print(shjoin(coms))
             print(shjoin(coms2))
@@ -298,7 +298,7 @@ class Download(commands.Cog):
             )
             # stdout, stderr = await proc.communicate()
             while proc.returncode is None:
-                line = await proc.stdout.read(100)
+                line = await proc.stdout.readline()
                 if not line:
                     break
                 await message.edit(content=line.decode("utf-8"))
