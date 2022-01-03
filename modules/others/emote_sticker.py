@@ -78,14 +78,13 @@ class EmoteSticker(commands.Cog):
         if "cdn.discordapp.com" in message:
             async with aiohttp.ClientSession() as session:
                 async with session.get(
-                    "https://cdn.discordapp.com/emojis/"
-                    + message.split("/")[4].split(".")[0]
+                    f"https://cdn.discordapp.com/emojis/{message.split('/')[4].split('.')[0]}"
                 ) as response:
                     img = await response.read()
         else:
             async with aiohttp.ClientSession() as session:
                 async with session.get(
-                    "https://cdn.discordapp.com/emojis/" + message
+                    f"https://cdn.discordapp.com/emojis/{message}"
                 ) as response:
                     img = await response.read()
         # now img contains the bytes of the image, let's create the emoji

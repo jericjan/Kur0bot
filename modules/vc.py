@@ -42,7 +42,7 @@ class Vc(commands.Cog):
                 else:
                     voice.play(discord.FFmpegPCMAudio(source=a))
         else:
-            await ctx.send(str(ctx.author.name) + "is not in a channel.")
+            await ctx.send(f"{ctx.author.name} is not in a channel.")
         # Delete command after the audio is done playing.
         await ctx.message.delete()
 

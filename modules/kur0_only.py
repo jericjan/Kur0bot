@@ -16,8 +16,7 @@ class Kur0only(commands.Cog):
             if description.startswith("https"):
                 print("description is url")
                 x = requests.get(
-                    "https://quiet-sun-6d6e.cantilfrederick.workers.dev/?"
-                    + str(description)
+                    f"https://quiet-sun-6d6e.cantilfrederick.workers.dev/?{description}"
                 )
                 embed = discord.Embed(title=title, description=x.text)
                 await ctx.send(embed=embed)
@@ -40,8 +39,7 @@ class Kur0only(commands.Cog):
                 print("description is url")
                 msg = await ctx.fetch_message(id)
                 x = requests.get(
-                    "https://quiet-sun-6d6e.cantilfrederick.workers.dev/?"
-                    + str(description)
+                    f"https://quiet-sun-6d6e.cantilfrederick.workers.dev/?{description}"
                 )
                 embed = discord.Embed(title=title, description=x.text)
                 await msg.edit(embed=embed)
@@ -67,8 +65,8 @@ class Kur0only(commands.Cog):
                 *coms, stdout=subprocess.PIPE, stderr=subprocess.STDOUT
             )
             stdout, stderr = await out.communicate()
-            msg = await msg.edit(content=msg.content + "\n" + stdout.decode())
-            msg = await msg.edit(content=msg.content + "\n" + "Download config file...")
+            msg = await msg.edit(content=f"{msg.content}\n{stdout.decode()}")
+            msg = await msg.edit(content=f"{msg.content}\nDownload config file...")
             coms = [
                 "wget",
                 os.getenv("RCLONE_CONFIG_URL"),
@@ -80,18 +78,18 @@ class Kur0only(commands.Cog):
             )
             stdout, stderr = await out.communicate()
             print(stdout.decode())
-            msg = await msg.edit(content=msg.content + "Done!")
+            msg = await msg.edit(content=f"{msg.content}Done!")
             if "www.youtube.com/watch" in url:
-                fixed_link = "https://youtu.be/" + url[32:43]
+                fixed_link = f"https://youtu.be/{url[32:43]}"
             elif "www.youtube.com/shorts" in url:
-                fixed_link = "https://youtu.be/" + url[27:38]
+                fixed_link = f"https://youtu.be/{url[27:38]}"
             elif "youtu.be" in url:
                 fixed_link = url[0:28]
 
             else:
                 fixed_link = url
             # download vid
-            msg = await msg.edit(content=msg.content + "\n" + "Downloading video...")
+            msg = await msg.edit(content=f"{msg.content}\nDownloading video...")
             coms = [
                 "yt-dlp",
                 "-i",
@@ -118,31 +116,21 @@ class Kur0only(commands.Cog):
             print(stdout.decode())
 
             if out.returncode == 0:
-                msg = await msg.edit(
-                    content=msg.content + "Done! (" + str(out.returncode) + ")"
-                )
+                msg = await msg.edit(content=f"{msg.content}Done! ({out.returncode})")
             else:
                 try:
                     msg = await msg.edit(
-                        content=msg.content
-                        + "\n Return code: "
-                        + str(out.returncode)
-                        + "\n"
-                        + stderr.decode()
+                        content=f"{msg.content}\n Return code: {out.returncode}\n{stderr.decode()}"
                     )
                 except:
                     msg = await msg.edit(
-                        content=msg.content
-                        + "\n Return code: "
-                        + str(out.returncode)
-                        + "\n"
-                        + stdout.decode()
+                        content=f"{msg.content}\n Return code: {out.returncode}\n{stdout.decode()}"
                     )
                 return
 
             # get title and filename
             msg = await msg.edit(
-                content=msg.content + "\n" + "Getting title and filename..."
+                content=f"{msg.content}\nGetting title and filename..."
             )
             coms = [
                 "yt-dlp",
@@ -160,8 +148,8 @@ class Kur0only(commands.Cog):
             result = stdout.decode()
             title = result.splitlines()[-2]
             filename = result.splitlines()[-1]
-            print(title + "\n" + filename)
-            fname1 = glob.glob(glob.escape(filename) + ".*")
+            print(f"{title}\n{filename}")
+            fname1 = glob.glob(f"{glob.escape(filename)}.*")
             for i in fname1:
                 if not i.endswith(".srt") and not i.endswith(".json"):
                     fname = i
@@ -170,29 +158,19 @@ class Kur0only(commands.Cog):
             print(fname)
 
             if out.returncode == 0:
-                msg = await msg.edit(
-                    content=msg.content + "Done! (" + str(out.returncode) + ")"
-                )
+                msg = await msg.edit(content=f"{msg.content}Done! ({out.returncode})")
             else:
                 try:
                     msg = await msg.edit(
-                        content=msg.content
-                        + "\n Return code: "
-                        + str(out.returncode)
-                        + "\n"
-                        + stderr.decode()
+                        content=f"{msg.content}\n Return code: {out.returncode}\n{stderr.decode()}"
                     )
                 except:
                     msg = await msg.edit(
-                        content=msg.content
-                        + "\n Return code: "
-                        + str(out.returncode)
-                        + "\n"
-                        + stdout.decode()
+                        content=f"{msg.content}\n Return code: {out.returncode}\n{stdout.decode()}"
                     )
                 return
             # copy to drive
-            msg = await msg.edit(content=msg.content + "\n" + "Copying to Drive...")
+            msg = await msg.edit(content=f"{msg.content}\nCopying to Drive...")
             coms = [
                 "rclone/rclone",
                 "copy",
@@ -222,41 +200,27 @@ class Kur0only(commands.Cog):
             # print(stderr)
 
             if out.returncode == 0:
-                msg = await msg.edit(
-                    content=msg.content + "Done! (" + str(out.returncode) + ")"
-                )
+                msg = await msg.edit(content=f"{msg.content}Done! ({out.returncode})")
             else:
                 try:
                     msg = await msg.edit(
-                        content=msg.content
-                        + "\n Return code: "
-                        + str(out.returncode)
-                        + "\n"
-                        + stderr.decode()
+                        content=f"{msg.content}\n Return code: {out.returncode}\n{stderr.decode()}"
                     )
                 except:
                     msg = await msg.edit(
-                        content=msg.content
-                        + "\n Return code: "
-                        + str(out.returncode)
-                        + "\n"
-                        + stdout.decode()
+                        content=f"{msg.content}\n Return code: {out.returncode}\n{stdout.decode()}"
                     )
                 return
             # upload to fb
-            msg = await msg.edit(content=msg.content + "\n" + "Uploading to FB...")
+            msg = await msg.edit(content=f"{msg.content}\nUploading to FB...")
             access_token = os.getenv("FB_ACCESS_TOKEN")
 
-            url = (
-                "https://graph-video.facebook.com/v8.0/100887555109330/videos?access_token="
-                + access_token
-                + "&limit=10"
-            )
+            url = f"https://graph-video.facebook.com/v8.0/100887555109330/videos?access_token={access_token}&limit=10"
             files = {"file": ("vid.mp4", open(fname, mode="rb"))}
             flag = requests.post(
                 url,
                 files=files,
-                data={"description": title + "\n(NOT MINE) Source: " + fixed_link},
+                data={"description": f"{title}\n(NOT MINE) Source: {fixed_link}"},
             )  # .text
             flagg = flag.text
 
@@ -271,35 +235,26 @@ class Kur0only(commands.Cog):
 
                 if out.returncode == 0:
                     msg = await msg.edit(
-                        content=msg.content + "Done! (" + str(out.returncode) + ")"
+                        content=f"{msg.content}Done! ({out.returncode})"
                     )
                 else:
                     try:
                         msg = await msg.edit(
-                            content=msg.content
-                            + "\n Return code: "
-                            + str(out.returncode)
-                            + "\n"
-                            + stderr.decode()
+                            content=f"{msg.content}\n Return code: {out.returncode}\n{stderr.decode()}"
                         )
                     except:
                         msg = await msg.edit(
-                            content=msg.content
-                            + "\n Return code: "
-                            + str(out.returncode)
-                            + "\n"
-                            + stdout.decode()
+                            content=f"{msg.content}\n Return code: {out.returncode}\n{stdout.decode()}"
                         )
                     return
                 await msg.delete()
-                await ctx.send(title + " has been uploaded!")
+                await ctx.send(f"{title} has been uploaded!")
                 await ctx.send(
-                    "Vid link: https://web.facebook.com/100887555109330/videos/"
-                    + vid_id
+                    f"Vid link: https://web.facebook.com/100887555109330/videos/{vid_id}"
                 )
-                post_link = "https://web.facebook.com/100887555109330/videos/" + vid_id
+                post_link = f"https://web.facebook.com/100887555109330/videos/{vid_id}"
                 await ctx.send(
-                    "Share to FB: https://www.facebook.com/sharer.php?u=" + post_link
+                    f"Share to FB: https://www.facebook.com/sharer.php?u={post_link}"
                 )
                 os.remove(fname)
         else:

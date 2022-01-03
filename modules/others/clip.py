@@ -84,7 +84,7 @@ class Clip(commands.Cog):
                 "copy",
                 "-c:a",
                 "copy",
-                filename + "_temp0.mp4",
+                f"{filename}_temp0.mp4",
             ]
         else:
             coms = [
@@ -100,7 +100,7 @@ class Clip(commands.Cog):
                 "copy",
                 "-c:a",
                 "copy",
-                filename + "_temp0.mp4",
+                f"{filename}_temp0.mp4",
             ]
         print(shjoin(coms))
         await message.edit(content="Downloading... This will take a while...")
@@ -169,7 +169,7 @@ class Clip(commands.Cog):
             "v",
             "-of",
             "csv=p=0",
-            filename + "_temp0.mp4",
+            f"{filename}_temp0.mp4",
         ]
         process = await asyncio.create_subprocess_exec(
             *coms, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE
@@ -187,12 +187,12 @@ class Clip(commands.Cog):
         coms = [
             "ffmpeg-git/ffmpeg",
             "-i",
-            filename + "_temp0.mp4",
+            f"{filename}_temp0.mp4",
             "-c:v",
             "copy",
             "-c:a",
             "copy",
-            filename + "_temp.mp4",
+            f"{filename}_temp.mp4",
         ]
         process = await asyncio.create_subprocess_exec(
             *coms, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE
@@ -217,7 +217,7 @@ class Clip(commands.Cog):
                         "format=duration",
                         "-of",
                         "default=noprint_wrappers=1:nokey=1",
-                        filename + "_temp0.mp4",
+                        f"{filename}_temp0.mp4",
                     ]  # get duration
                     process = await asyncio.create_subprocess_exec(
                         *coms,
@@ -229,23 +229,21 @@ class Clip(commands.Cog):
                     next_keyframe = float(stdout.decode("utf-8"))
                 else:
                     next_keyframe = min_gt(timelist_float, seconds)
-                print("after " + str(prev_keyframe))
-                print("before " + str(next_keyframe))
+                print(f"after {prev_keyframe}")
+                print(f"before {next_keyframe}")
                 if next_keyframe == None:
                     print("no next keyframe!")
                     keyframe = prev_keyframe
                 else:
                     keyframe = (prev_keyframe + next_keyframe) / 2
-            print("keyframe is " + "{:.6f}".format(keyframe))
+            print(f"keyframe is {keyframe:.6f}")
             if round_down(seconds - prev_keyframe, round_number) == 0:
                 await ctx.send(
                     "<:callipog:850365252637032479> Poggers. No need to clip to nearest keyframe."
                 )
             else:
                 await ctx.send(
-                    "Clipping "
-                    + str(round_down(seconds - prev_keyframe, round_number))
-                    + " seconds earlier to nearest keyframe..."
+                    f"Clipping {round_down(seconds - prev_keyframe, round_number)} seconds earlier to nearest keyframe..."
                 )
 
         else:
@@ -259,16 +257,14 @@ class Clip(commands.Cog):
                     keyframe = prev_keyframe
                 else:
                     keyframe = (prev_keyframe + next_keyframe) / 2
-            print("keyframe is " + str(keyframe))
+            print(f"keyframe is {keyframe}")
             if round_down(30 - prev_keyframe, round_number) == 0:
                 await ctx.send(
                     "<:callipog:850365252637032479> Poggers. No need to clip to nearest keyframe."
                 )
             else:
                 await ctx.send(
-                    "Clipping "
-                    + str(round_down(30 - prev_keyframe, round_number))
-                    + " seconds earlier to nearest keyframe..."
+                    f"Clipping {round_down(30 - prev_keyframe, round_number)} seconds earlier to nearest keyframe..."
                 )
 
         coms = [
@@ -277,14 +273,14 @@ class Clip(commands.Cog):
             "-ss",
             "{:.6f}".format(keyframe),
             "-i",
-            filename + "_temp.mp4",
+            f"{filename}_temp.mp4",
             "-c:v",
             "copy",
             "-c:a",
             "copy",
             "-avoid_negative_ts",
             "make_zero",
-            filename + ".mp4",
+            f"{filename}.mp4",
         ]
         print(shjoin(coms))
         process = await asyncio.create_subprocess_exec(
@@ -306,7 +302,7 @@ class Clip(commands.Cog):
             "v",
             "-of",
             "csv=p=0",
-            filename + ".mp4",
+            f"{filename}.mp4",
         ]
         process = await asyncio.create_subprocess_exec(
             *coms, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE
@@ -318,13 +314,13 @@ class Clip(commands.Cog):
 
         try:
 
-            await ctx.send(file=discord.File(filename + ".mp4"))
+            await ctx.send(file=discord.File(f"{filename}.mp4"))
         except Exception:
             await message.edit(content="I failed.")
         await ctx.send(ctx.message.author.mention)
-        os.remove(filename + ".mp4")
-        os.remove(filename + "_temp0.mp4")
-        os.remove(filename + "_temp.mp4")
+        os.remove(f"{filename}.mp4")
+        os.remove(f"{filename}_temp0.mp4")
+        os.remove(f"{filename}_temp.mp4")
         await message.delete()
 
     @commands.command()
@@ -341,7 +337,7 @@ class Clip(commands.Cog):
             return
 
         message = await ctx.send("Fetching url...")
-        coms = ["yt-dlp", "-g", "-f", id + "+" + id2, link]
+        coms = ["yt-dlp", "-g", "-f", f"{id}+{id2}", link]
         print(shjoin(coms))
         startsplit = start.split(":")
         shour = startsplit[0]
@@ -398,7 +394,7 @@ class Clip(commands.Cog):
                 "copy",
                 "-c:a",
                 "copy",
-                filename + "_temp.mp4",
+                f"{filename}_temp.mp4",
             ]
         else:
             coms = [
@@ -414,7 +410,7 @@ class Clip(commands.Cog):
                 "copy",
                 "-c:a",
                 "copy",
-                filename + "_temp.mp4",
+                f"{filename}_temp.mp4",
             ]
         print(shjoin(coms))
         await message.edit(content="Downloading... This will take a while...")
@@ -485,7 +481,7 @@ class Clip(commands.Cog):
             "v",
             "-of",
             "csv=p=0",
-            filename + "_temp.mp4",
+            f"{filename}_temp.mp4",
         ]
         process = await asyncio.create_subprocess_exec(
             *coms, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE
@@ -507,18 +503,16 @@ class Clip(commands.Cog):
             else:
                 prev_keyframe = max_le(timelist_float, seconds)
                 next_keyframe = min_gt(timelist_float, seconds)
-                print("after " + str(prev_keyframe))
-                print("before " + str(next_keyframe))
+                print(f"after {prev_keyframe}")
+                print(f"before {next_keyframe}")
                 if next_keyframe == None:
                     print("no next keyframe!")
                     keyframe = prev_keyframe
                 else:
                     keyframe = (prev_keyframe + next_keyframe) / 2
-            print("keyframe is " + "{:.6f}".format(keyframe))
+            print(f"keyframe is {keyframe:.6f}")
             await ctx.send(
-                "Clipping "
-                + str(round_down(seconds - prev_keyframe, round_number))
-                + " seconds earlier to nearest keyframe..."
+                f"Clipping {round_down(seconds - prev_keyframe, round_number)} seconds earlier to nearest keyframe..."
             )
 
         else:
@@ -528,11 +522,9 @@ class Clip(commands.Cog):
                 prev_keyframe = max_le(timelist_float, 30)
                 next_keyframe = min_gt(timelist_float, 30)
                 keyframe = (prev_keyframe + next_keyframe) / 2
-            print("keyframe is " + str(keyframe))
+            print(f"keyframe is {keyframe}")
             await ctx.send(
-                "Clipping "
-                + str(round_down(30 - prev_keyframe, round_number))
-                + " seconds earlier to nearest keyframe..."
+                f"Clipping {round_down(30 - prev_keyframe, round_number)} seconds earlier to nearest keyframe..."
             )
 
         coms = [
@@ -541,14 +533,14 @@ class Clip(commands.Cog):
             "-ss",
             "{:.6f}".format(keyframe),
             "-i",
-            filename + "_temp.mp4",
+            f"{filename}_temp.mp4",
             "-c:v",
             "copy",
             "-c:a",
             "copy",
             "-avoid_negative_ts",
             "make_zero",
-            filename + ".mp4",
+            f"{filename}.mp4",
         ]
         print(shjoin(coms))
         process = await asyncio.create_subprocess_exec(
@@ -570,7 +562,7 @@ class Clip(commands.Cog):
             "v",
             "-of",
             "csv=p=0",
-            filename + ".mp4",
+            f"{filename}.mp4",
         ]
         process = await asyncio.create_subprocess_exec(
             *coms, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE
@@ -582,14 +574,14 @@ class Clip(commands.Cog):
 
         try:
 
-            await ctx.send(file=discord.File(filename + ".mp4"))
+            await ctx.send(file=discord.File(f"{filename}.mp4"))
         except Exception as e:
             await message.edit(content="I failed.")
             await ctx.send(e)
-            print("Could not send video\n" + e)
+            print(f"Could not send video\n{e}")
         await ctx.send(ctx.message.author.mention)
-        os.remove(filename + ".mp4")
-        os.remove(filename + "_temp.mp4")
+        os.remove(f"{filename}.mp4")
+        os.remove(f"{filename}_temp.mp4")
         await message.delete()
 
     @commands.command()
@@ -661,7 +653,7 @@ class Clip(commands.Cog):
                 "copy",
                 "-c:a",
                 "copy",
-                filename + ".ogg",
+                f"{filename}.ogg",
             ]
         else:
             coms = [
@@ -678,7 +670,7 @@ class Clip(commands.Cog):
                 "copy",
                 "-c:a",
                 "copy",
-                filename + ".ogg",
+                f"{filename}.ogg",
             ]
         print(shjoin(coms))
         await message.edit(content="Downloading... This will take a while...")
@@ -695,12 +687,12 @@ class Clip(commands.Cog):
             coms = [
                 "ffmpeg",
                 "-i",
-                filename + ".ogg",
+                f"{filename}.ogg",
                 "-codec:a",
                 "libmp3lame",
                 "-q:a",
                 "0",
-                filename + ".mp3",
+                f"{filename}.mp3",
             ]
             print(shjoin(coms))
             await message.edit(content="Using libmp3lame to convert to VBR 0 MP3...")
@@ -711,7 +703,7 @@ class Clip(commands.Cog):
             print(stdout)
             print(stderr.decode("utf-8"))
         elif filetype == "wav":
-            coms = ["ffmpeg", "-i", filename + ".ogg", filename + ".wav"]
+            coms = ["ffmpeg", "-i", f"{filename}.ogg", f"{filename}.wav"]
             print(shjoin(coms))
             process = await asyncio.create_subprocess_exec(
                 *coms, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE
@@ -722,12 +714,12 @@ class Clip(commands.Cog):
 
         # os.rename(filename+".mkv",filename+".mp4")
         try:
-            await ctx.send(file=discord.File(filename + "." + filetype.lower()))
+            await ctx.send(file=discord.File(f"{filename}.{filetype.lower()}"))
         except Exception:
             await message.edit(content="I failed.")
         await ctx.send(ctx.message.author.mention)
-        os.remove(filename + ".ogg")
-        os.remove(filename + "." + filetype.lower())
+        os.remove(f"{filename}.ogg")
+        os.remove(f"{filename}.{filetype.lower()}")
         await message.delete()
 
     @commands.command()
@@ -743,10 +735,10 @@ class Clip(commands.Cog):
             await ctx.send("Timestamps are wrong. Please provide it in HH:MM:SS")
             return
 
-        if os.path.isfile(filename + ".mkv"):
-            os.remove(filename + ".mkv")
-        if os.path.isfile(filename + ".mp4"):
-            os.remove(filename + ".mp4")
+        if os.path.isfile(f"{filename}.mkv"):
+            os.remove(f"{filename}.mkv")
+        if os.path.isfile(f"{filename}.mp4"):
+            os.remove(f"{filename}.mp4")
         message = await ctx.send("Fetching url...")
         coms = ["yt-dlp", "-g", "-f", "best", "--youtube-skip-dash-manifest", link]
         print(shjoin(coms))
@@ -795,7 +787,7 @@ class Clip(commands.Cog):
                 "libx264",
                 "-c:a",
                 "copy",
-                filename + ".mkv",
+                f"{filename}.mkv",
             ]
         else:
             coms = [
@@ -812,7 +804,7 @@ class Clip(commands.Cog):
                 "libx264",
                 "-c:a",
                 "copy",
-                filename + ".mkv",
+                f"{filename}.mkv",
             ]
         print(shjoin(coms))
         await message.edit(content="Downloading... This will take a while...")
@@ -847,14 +839,14 @@ class Clip(commands.Cog):
                         percentage = (
                             currtime.total_seconds() / result2.total_seconds()
                         ) * 100
-                        print(str(percentage) + "% complete...")
+                        print(f"{percentage}% complete...")
                         await message.edit(
-                            content=str(round(percentage, 2)) + "% complete..."
+                            content=f"{round(percentage, 2)}% complete..."
                         )
-            os.rename(filename + ".mkv", filename + ".mp4")
-            await ctx.send(file=discord.File(filename + ".mp4"))
+            os.rename(f"{filename}.mkv", f"{filename}.mp4")
+            await ctx.send(file=discord.File(f"{filename}.mp4"))
             # await ctx.send(ctx.message.author.mention)
-            os.remove(filename + ".mp4")
+            os.remove(f"{filename}.mp4")
             await message.delete()
         except ValueError:
             await message.edit(content="An error occured... Uh, try it again.")
@@ -912,7 +904,7 @@ class Clip(commands.Cog):
                 "copy",
                 "-c:a",
                 "copy",
-                filename + ".mp4",
+                f"{filename}.mp4",
             ]
         else:
             coms = [
@@ -929,7 +921,7 @@ class Clip(commands.Cog):
                 "copy",
                 "-c:a",
                 "copy",
-                filename + ".mp4",
+                f"{filename}.mp4",
             ]
         print(shjoin(coms))
         await message.edit(content="Downloading... This will take a while...")
@@ -941,11 +933,11 @@ class Clip(commands.Cog):
         print(stderr.decode("utf-8"))
         # os.rename(filename+".mkv",filename+".mp4")
         try:
-            await ctx.send(file=discord.File(filename + ".mp4"))
+            await ctx.send(file=discord.File(f"{filename}.mp4"))
         except Exception:
             await message.edit(content="I failed.")
         await ctx.send(ctx.message.author.mention)
-        os.remove(filename + ".mp4")
+        os.remove(f"{filename}.mp4")
         await message.delete()
 
     @commands.command()
@@ -988,7 +980,7 @@ class Clip(commands.Cog):
             "copy",
             "-c:a",
             "copy",
-            filename + ".mp4",
+            f"{filename}.mp4",
         ]
 
         print(shjoin(coms))
@@ -1011,11 +1003,11 @@ class Clip(commands.Cog):
         # print(stderr)
         # os.rename(filename+".mkv",filename+".mp4")
         try:
-            await ctx.send(file=discord.File(filename + ".mp4"))
+            await ctx.send(file=discord.File(f"{filename}.mp4"))
         except Exception:
             await message.edit(content="I failed.")
         await ctx.send(ctx.message.author.mention)
-        os.remove(filename + ".mp4")
+        os.remove(f"{filename}.mp4")
         await message.delete()
 
 

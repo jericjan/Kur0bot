@@ -30,7 +30,7 @@ class PacifamOnly(commands.Cog):
             any(role in roles for role in ctx.author.roles)
             or ctx.author.id == 216830153441935360
         ):
-            await ctx.send("Adding " + str(username) + " to list of offline users...")
+            await ctx.send(f"Adding {username} to list of offline users...")
 
             ftp = FTP(host="us01.pebblehost.com")
             ftp.login(user=os.getenv("PEBBLE_EMAIL"), passwd=os.getenv("PEBBLE_PASS"))
@@ -40,7 +40,7 @@ class PacifamOnly(commands.Cog):
             ftp.retrbinary("RETR /mods/EasyAuth/config.json", r.write)
             config = json.loads(r.getvalue())
             if username.lower() in config["main"]["forcedOfflinePlayers"]:
-                await ctx.send(str(username) + " is alreading in the list!")
+                await ctx.send(f"{username} is alreading in the list!")
                 return
             else:
                 config["main"]["forcedOfflinePlayers"].append(username.lower())
@@ -95,8 +95,7 @@ class PacifamOnly(commands.Cog):
             config = json.loads(r.getvalue())
             print(config["main"]["forcedOfflinePlayers"])
             await ctx.send(
-                "Players added to the offline list are: "
-                + ", ".join(config["main"]["forcedOfflinePlayers"])
+                f"Players added to the offline list are: {', '.join(config['main']['forcedOfflinePlayers'])}"
             )
         else:
             await ctx.send("Only Avi/Admins/Mods can use this command")
@@ -115,9 +114,7 @@ class PacifamOnly(commands.Cog):
             any(role in roles for role in ctx.author.roles)
             or ctx.author.id == 216830153441935360
         ):
-            await ctx.send(
-                "Removing " + str(username) + " from list of offline users..."
-            )
+            await ctx.send(f"Removing {username} from list of offline users...")
 
             ftp = FTP(host="us01.pebblehost.com")
             ftp.login(user=os.getenv("PEBBLE_EMAIL"), passwd=os.getenv("PEBBLE_PASS"))
@@ -129,7 +126,7 @@ class PacifamOnly(commands.Cog):
             if username.lower() in config["main"]["forcedOfflinePlayers"]:
                 config["main"]["forcedOfflinePlayers"].remove(username.lower())
             else:
-                await ctx.send(str(username) + " isn't in the list!")
+                await ctx.send(f"{username} isn't in the list!")
                 return
             print(config["main"]["forcedOfflinePlayers"])
             dump = json.dumps(config, indent=2).encode("utf-8")

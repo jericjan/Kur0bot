@@ -1,6 +1,6 @@
 import discord
 
-print("Running Pycord {0}".format(discord.__version__))
+print(f"Running Pycord {discord.__version__}")
 from discord.ext import commands, pages
 from discord.ui import Button, View
 import os
@@ -27,7 +27,7 @@ intents = discord.Intents().default()
 intents.presences = True
 intents.members = True
 
-#global client
+# global client
 client = commands.Bot(command_prefix="k.", intents=intents)
 
 client.remove_command("help")
@@ -68,7 +68,7 @@ custom_words = ["amgus", "amogus", "sushi", "pog"]
 
 @client.event
 async def on_ready():
-    print("We have logged in as {0.user}".format(client))
+    print(f"We have logged in as {client.user}")
     await client.change_presence(activity=discord.Game(name="sus gaming | k.help"))
     avi_guild = client.get_guild(603147860225032192)
     while avi_guild == None:
@@ -432,13 +432,13 @@ async def stream(ctx, link, noembed=None):
         channelid = r["items"][0]["snippet"]["channelId"]
         parsed_t = dp.parse(isotime)
         t_in_seconds = parsed_t.timestamp()
-        dsctime = "<t:" + str(t_in_seconds).split(".")[0] + ":F>"
-        reltime = "<t:" + str(t_in_seconds).split(".")[0] + ":R>"
+        dsctime = f"<t:{str(t_in_seconds).split('.')[0]}:F>"
+        reltime = f"<t:{str(t_in_seconds).split('.')[0]}:R>"
         dttime = datetime.strptime(isotime, "%Y-%m-%dT%H:%M:%S%z")
         dayofweek = parsed_t.weekday()
 
         f = open("list.txt", "a")  # add stream url and time to list.txt
-        f.write(link + " " + parsed_t.strftime("%a %b %d %Y %H:%M:%S") + "\n")
+        f.write(f"{link} {parsed_t.strftime('%a %b %d %Y %H:%M:%S')}\n")
         f.close()
         a_file = open("list.txt", "r")  # reads list.txt
         lines = a_file.read().splitlines()
@@ -457,7 +457,7 @@ async def stream(ctx, link, noembed=None):
         e.set_author(
             name=author,
             icon_url=pfp,
-            url="https://www.youtube.com/channel/" + channelid,
+            url=f"https://www.youtube.com/channel/{channelid}",
         )
         e.set_image(url=thumbnail)
         if noembed != "noembed":
@@ -473,32 +473,30 @@ async def stream(ctx, link, noembed=None):
                     "https://discord.com/api/webhooks/880667610323234877/oc31FGZ3SPfu7BCru4iOd2ULJAvyOdMi1SOaqNF58sHKBknFbdhK5zfqSZhxS4NZF9pU",
                     session=session,
                 )
-                await webhook.send(
-                    reltime + " **" + author + "** - [" + title + "](<" + link + ">)"
-                )
+                await webhook.send(f"{reltime} **{author}** - [{title}](<{link}>)")
         await ctx.message.delete()
         try:
             client.loop.create_task(
                 run_at(parsed_t.replace(tzinfo=None), open_url(link), link)
             )
         except Exception as e:
-            await ctx.send("Error: " + e)
+            await ctx.send(f"Error: {e}")
 
 
-async def clear_list():
+async def clear_list(url):
     a_file = open("list.txt", "r")
     lines = a_file.read().splitlines()
     a_file.close()
     with open("list.txt", "w+") as r:
         for i in lines:
             if i.split(" ")[0] != url:
-                r.write(i + "\n")
+                r.write(f"{i}\n")
 
 
 async def open_url(url):
-    print(str(url) + " is starting!")
+    print(f"{url} is starting!")
     f = open("log.txt", "a")
-    f.write("open_url running " + url + "\n")
+    f.write(f"open_url running {url}\n")
     f.close()
 
     avi_guild = client.get_guild(603147860225032192)
@@ -523,7 +521,7 @@ async def open_url(url):
                 if i.url == url:
                     print(i.url)
                     count += 1
-    print(str(count) + " times")
+    print(f"{count} times")
 
     if count == 0:
         for msg in messages:
@@ -536,7 +534,7 @@ async def open_url(url):
                     msg = await sched_ch.fetch_message(msg_id)
                     await msg.reply("<@&888794254837706804> Starting!")
                     # await msg.reply('test')
-    await clear_list()
+    await clear_list(url)
 
 
 from io import BytesIO
@@ -558,7 +556,7 @@ async def sched(ctx, url):
                 if i.url == url:
                     print(i.url)
                     count += 1
-    print(str(count) + " times")
+    print(f"{count} times")
 
 
 @client.command()
@@ -603,13 +601,13 @@ async def wait_until(dt):
 async def run_at(dt, coro, url):
     now = datetime.now()
     nowstr = now.strftime("%m/%d/%Y %H:%M:%S")
-    print(url + " is scheduled!")
+    print(f"{url} is scheduled!")
     f = open("log.txt", "a")
-    f.write(url + " - scheduled at " + nowstr + "\n")
+    f.write(f"{url} - scheduled at {nowstr}\n")
     f.close()
     await wait_until(dt)
     f = open("log.txt", "a")
-    f.write(url + " starting!" + "\n")
+    f.write(f"{url} starting!\n")
     f.close()
     return await coro
 
@@ -649,7 +647,7 @@ tcheck.start()
 print("schedules checked!")
 keep_alive()
 isDiscordrunning = False
-#client.run(os.getenv("TOKEN"))
+# client.run(os.getenv("TOKEN"))
 
 while isDiscordrunning is False:
     try:
@@ -660,17 +658,17 @@ while isDiscordrunning is False:
 
         r = requests.head(url="https://discord.com/api/v1")
         print(f"{type(e).__name__}: {r.status_code}")
-        #print(e)
+        # print(e)
         if r.status_code == 429:
-          print('Rate limited again lmao')
+            print("Rate limited again lmao")
         try:
-            minutes=round(int(r.headers['Retry-After']) / 60)
+            minutes = round(int(r.headers["Retry-After"]) / 60)
             print(f"{minutes} minutes left")
-            print(f"Tring again in {(minutes*60)+1} seconds...")
-            time.sleep((minutes*60)+3)
+            print(f"Trying again in {(minutes*60)+1} seconds...")
+            time.sleep((minutes * 60) + 3)
         except:
             print("No rate limit")
-            print("Tring again in 15 minutes")
+            print("Trying again in 15 minutes")
             time.sleep(900)
 
 
