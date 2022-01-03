@@ -1,3 +1,7 @@
+import time
+
+start_time = time.time()
+
 import discord
 
 print(f"Running Pycord {discord.__version__}")
@@ -16,7 +20,7 @@ from shlex import quote
 from shlex import join as shjoin
 import schedule
 import threading
-import time
+
 import io
 import math
 import re
@@ -68,7 +72,8 @@ custom_words = ["amgus", "amogus", "sushi", "pog"]
 
 @client.event
 async def on_ready():
-    print(f"We have logged in as {client.user}")
+
+    print(f"\033[92m{(time.time() - start_time):.2f}s - We have logged in as {client.user}\033[0m")
     await client.change_presence(activity=discord.Game(name="sus gaming | k.help"))
     avi_guild = client.get_guild(603147860225032192)
     while avi_guild == None:
@@ -295,6 +300,7 @@ async def vc_tts(message):
                 voice.play(discord.FFmpegPCMAudio(source="sounds/tts.mp3"))
 
 
+print(f"{(time.time() - start_time):.2f}s - Importing Kur0's modules...")
 client.load_extension("modules.vc")
 client.load_extension("modules.copypasta")
 client.load_extension("modules.help")
@@ -308,6 +314,7 @@ client.load_extension("modules.others.pet")
 client.load_extension("modules.others.sauce")
 client.load_extension("modules.pacifam_only")
 client.load_extension("modules.kur0_only")
+print(f"{(time.time() - start_time):.2f}s - Done!")
 
 
 @client.command()
@@ -644,13 +651,14 @@ def precheck():
 
 tcheck = threading.Thread(target=precheck)
 tcheck.start()
-print("schedules checked!")
+print(f"{(time.time() - start_time):.2f}s - schedules checked!")
 keep_alive()
 isDiscordrunning = False
 # client.run(os.getenv("TOKEN"))
 
 while isDiscordrunning is False:
     try:
+        print(f"{(time.time() - start_time):.2f}s - Connecting to bot...")
         client.run(os.getenv("TOKEN"))
         isDiscordrunning = True
     except Exception as e:
