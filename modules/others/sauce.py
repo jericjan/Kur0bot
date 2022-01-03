@@ -40,18 +40,16 @@ class Sauce(commands.Cog):
         sauce = SauceNao(os.getenv("SAUCENAO_KEY"))
         try:
             results = sauce.from_url(link)  # or from_file()
-            print("30S: {0}".format(results.short_remaining))
-            print("24H: {0}".format(results.long_remaining))
+            print(f"30S: {results.short_remaining}")
+            print(f"24H: {results.long_remaining}")
             await msg.edit(
-                content="30s limit: {0} request(s) left\n24h limit: {1} request(s) left".format(
-                    results.short_remaining, results.long_remaining
-                ),
+                content=f"30s limit: {results.short_remaining} request(s) left\n24h limit: {results.long_remaining} request(s) left",
                 delete_after=5,
             )
         except Exception as e:
-            await msg.edit("I fail. Reason:\n{0}".format(e))
+            await msg.edit(f"I fail. Reason:\n{e}")
             return
-        print("{0} results!".format(len(results)))
+        print(f"{len(results)} results!")
         result_count = len(results)
         results_dict = {}
         embed_dict = {}
@@ -66,7 +64,7 @@ class Sauce(commands.Cog):
                 site_name = re.search(r"(?<=https:\/\/)[^\/]*", results_dict[i].urls[0])
                 embed_dict[i] = discord.Embed(
                     title=results_dict[i].title,
-                    description="{0}% accurate".format(results_dict[i].similarity),
+                    description=f"{results_dict[i].similarity}% accurate",
                     url=results_dict[i].urls[0],
                 )
                 embed_dict[i].set_author(name=results_dict[i].author)
@@ -75,7 +73,7 @@ class Sauce(commands.Cog):
             except IndexError:
                 embed_dict[i] = discord.Embed(
                     title=results_dict[i].title,
-                    description="{0}% accurate".format(results_dict[i].similarity),
+                    description=f"{results_dict[i].similarity}% accurate",
                 )
                 embed_dict[i].set_author(name=results_dict[i].author)
                 embed_dict[i].set_image(url=results_dict[i].thumbnail)
