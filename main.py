@@ -73,7 +73,9 @@ custom_words = ["amgus", "amogus", "sushi", "pog"]
 @client.event
 async def on_ready():
 
-    print(f"\033[92m{(time.time() - start_time):.2f}s - We have logged in as {client.user}\033[0m")
+    print(
+        f"\033[92m{(time.time() - start_time):.2f}s - We have logged in as {client.user}\033[0m"
+    )
     await client.change_presence(activity=discord.Game(name="sus gaming | k.help"))
     avi_guild = client.get_guild(603147860225032192)
     while avi_guild == None:
@@ -382,6 +384,7 @@ async def on_command_error(ctx, error):
             delete_after=3.0,
         )
         await ctx.message.delete()
+    print(error)
     raise error  # re-raise the error so all the errors will still show up in console
 
 
@@ -659,7 +662,10 @@ isDiscordrunning = False
 while isDiscordrunning is False:
     try:
         print(f"{(time.time() - start_time):.2f}s - Connecting to bot...")
-        client.run(os.getenv("TOKEN"))
+        if client.is_ready() == False:
+            client.run(os.getenv("TOKEN"))
+        else:
+            print("Already running.")
         isDiscordrunning = True
     except Exception as e:
         print("nope. not working")
@@ -672,12 +678,14 @@ while isDiscordrunning is False:
         try:
             minutes = round(int(r.headers["Retry-After"]) / 60)
             print(f"{minutes} minutes left")
-            print(f"Trying again in {(minutes*60)+1} seconds...")
-            time.sleep((minutes * 60) + 3)
+            # print(f"Trying again in {(minutes*60)+1} seconds...")
+            print("Trying again in 5 seconds")
+            time.sleep(5)
+            os.system("busybox reboot")
         except:
             print("No rate limit")
-            print("Trying again in 15 minutes")
-            time.sleep(900)
+            print("Trying again in 5 seconds")
+            time.sleep(5)
 
 
 # if __name__ == '__main__':

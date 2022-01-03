@@ -12,8 +12,8 @@ class Download(commands.Cog):
     #     self.client = client
 
     @commands.command()
-    async def download(self, ctx, link):#reddit, facebook, instagram, tiktok, yt
-        
+    async def download(self, ctx, link):  # reddit, facebook, instagram, tiktok, yt
+
         if "reddit.com" in link or "v.redd.it" in link:
             cookiecoms = [
                 "gpg",
@@ -32,7 +32,8 @@ class Download(commands.Cog):
                 "-f",
                 "bestvideo+bestaudio",
                 "--cookies",
-                "cookies (17).txt","--no-warnings",
+                "cookies (17).txt",
+                "--no-warnings",
                 link,
             ]
             coms2 = [
@@ -58,7 +59,13 @@ class Download(commands.Cog):
                 await asyncio.sleep(1)
             if proc.returncode != 0:
                 await ctx.send("return code is not 0. trying something else")
-                coms = ["yt-dlp", "--cookies", "cookies (17).txt", "--no-warnings",link]
+                coms = [
+                    "yt-dlp",
+                    "--cookies",
+                    "cookies (17).txt",
+                    "--no-warnings",
+                    link,
+                ]
                 print(shjoin(coms))
                 proc = await asyncio.create_subprocess_exec(
                     *coms, stdout=subprocess.PIPE, stderr=subprocess.STDOUT
@@ -118,7 +125,15 @@ class Download(commands.Cog):
             # return_data = io.BytesIO()
             # return_data.write(fin.encode())
             # return_data.seek(0)
-            coms = ["yt-dlp", "-f", "best", "--cookies", "cookies (15).txt","--no-warnings", link]
+            coms = [
+                "yt-dlp",
+                "-f",
+                "best",
+                "--cookies",
+                "cookies (15).txt",
+                "--no-warnings",
+                link,
+            ]
             coms2 = [
                 "yt-dlp",
                 "-f",
@@ -187,7 +202,15 @@ class Download(commands.Cog):
             # return_data = io.BytesIO()
             # return_data.write(fin.encode())
             # return_data.seek(0)
-            coms = ["yt-dlp", "-f", "best", "--cookies", "instacook.txt","--no-warnings", link]
+            coms = [
+                "yt-dlp",
+                "-f",
+                "best",
+                "--cookies",
+                "instacook.txt",
+                "--no-warnings",
+                link,
+            ]
             coms2 = [
                 "yt-dlp",
                 "-f",
@@ -241,7 +264,7 @@ class Download(commands.Cog):
         # tiktok
         elif "tiktok.com" in link:
             message = await ctx.send("Downloading...")
-            coms = ["yt-dlp", "-f", "best","--no-warnings", link]
+            coms = ["yt-dlp", "-f", "best", "--no-warnings", link]
             coms2 = [
                 "yt-dlp",
                 "-f",
@@ -289,7 +312,7 @@ class Download(commands.Cog):
         # yt links usually
         else:
             message = await ctx.send("Downloading...")
-            coms = ["yt-dlp", "-f", "best","--no-warnings", link]
+            coms = ["yt-dlp", "-f", "best", "--no-warnings", link]
             coms2 = ["yt-dlp", "-f", "best", "--get-filename", "--no-warnings", link]
             print(shjoin(coms))
             print(shjoin(coms2))
