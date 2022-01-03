@@ -15,7 +15,7 @@ To do list:
 - new help menu with discord select menus
 - continue splitting file into modules
 - k.id command compresss feature
-- replace shit with superior f-strings
+
 Notes:
 
 - in root folder, there is folder `ffmpeg-git` that contains latest release of git master from https://johnvansickle.com/ffmpeg/
