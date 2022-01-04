@@ -18,9 +18,9 @@ from gtts import gTTS
 from datetime import datetime, timedelta
 
 import requests
-
+import re
 import threading
-
+import io
 
 headers = {"Authorization": f"Bot {os.getenv('TOKEN')}"}
 r = requests.get(
@@ -232,24 +232,15 @@ async def sus(message):
 async def twitter_video_link_giver(message):
     if message.author == client.user:
         return
+
     msg = message.content.lower()
     if "twitter.com" in msg:
-        print("twitter link!")
-        args = ["youtube-dl", "-j", msg]
-        print(args)
-        proc = subprocess.Popen(
-            args, stdout=subprocess.PIPE, stderr=subprocess.PIPE, stdin=subprocess.PIPE
-        )
-        stdout_value = proc.stdout.read() + proc.stderr.read()
-        json_list = json.loads(stdout_value)
-        ext = json_list["ext"]
-        webpageurl = json_list["webpage_url"]
-        print(ext)
-        if ext == "mp4" and "twitter.com" in webpageurl:
-            m1 = await message.channel.send("Beep boop! That is a twitter video!")
-            await asyncio.sleep(0.1)
-            m2 = await message.channel.send("Imma give direct video link...")
-            args = ["youtube-dl", "--get-url", msg]
+        threads = []
+        links = re.findall("http.*twitter.com/.*/status/\d*", msg)
+        print([x for x in links])
+        for i in links:
+            print("twitter link!")
+            args = ["youtube-dl", "-j", i]
             print(args)
             proc = subprocess.Popen(
                 args,
@@ -258,12 +249,27 @@ async def twitter_video_link_giver(message):
                 stdin=subprocess.PIPE,
             )
             stdout_value = proc.stdout.read() + proc.stderr.read()
-            await message.channel.send(stdout_value.decode("utf-8"))
-            await m1.delete()
-            await m2.delete()
-            # json_list = json.loads(mixed_Slist[0])
-            # title = json_list['ext']
-            # print(title)
+            # print(stdout_value.decode("utf-8"))
+            json_list = json.loads(stdout_value)
+            ext = json_list["ext"]
+            webpageurl = json_list["webpage_url"]
+            print(ext)
+            if ext == "mp4" and "twitter.com" in webpageurl:
+                m1 = await message.channel.send(
+                    "Beep boop! That is a twitter video!\nImma give direct video link..."
+                )
+
+                msg = await message.channel.send(json_list["url"])
+                if not msg.embeds:
+                    await m1.edit(content="No embeds. Trying to manually upload...")
+                    r = requests.get(json_list["url"])
+                    # print(r.content)
+                    vid = io.BytesIO(r.content)
+                    filename = json_list["url"].split("/")[-1].split("?")[0]
+                    await message.channel.send(
+                        file=discord.File(vid, filename=filename)
+                    )
+                await m1.delete()
 
 
 @client.listen("on_message")
