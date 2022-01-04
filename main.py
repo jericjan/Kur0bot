@@ -63,6 +63,25 @@ sus_replies = [
     "ඞ",
 ]
 
+hidden_commands = [
+    "addoffline",
+    "makeembed",
+    "sched",
+    "tasks",
+    "removeoffline",
+    "idclip",
+    "nene",
+    "editembed",
+    "sticker",
+    "rolecheck",
+    "viewoffline",
+    "repost",
+    "fastclip3",
+    "fastclip2",
+    "speak",
+    "speak2",
+]
+
 pass_words = ["password", "pass word"]
 
 sugma_replies = ["sugma balls!! hahahaaaaa", "sugma.... sugma balls!!!!!!!"]
@@ -377,6 +396,9 @@ async def speak2(ctx, *, message):
             voice.play(discord.FFmpegPCMAudio(source="sounds/tts.mp3"))
 
 
+import difflib
+
+
 @client.event
 async def on_command_error(ctx, error):
     if isinstance(error, commands.CommandOnCooldown):
@@ -387,6 +409,17 @@ async def on_command_error(ctx, error):
         await ctx.message.delete()
         print(dir(error))
         print(f"error: {error}\nerror args: {error.args}")
+    elif isinstance(error, commands.CommandNotFound):
+        err = str(error).split('"')
+        commandss = [c.name for c in client.commands if c.name not in hidden_commands]
+        print(commandss)
+        similar = difflib.get_close_matches(err[1], commandss)
+        if similar:
+            await ctx.send(
+                f"bruh. there's no '{err[1]}' command.\ndid you mean:\n`{', '.join(similar)}`?"
+            )
+        else:
+            await ctx.send(f"bruh. there's no '{err[1]}' command.")
     else:
         print(error)
         print(dir(error))
