@@ -1,6 +1,6 @@
 from flask import Flask, cli, request
 from threading import Thread
-import sys
+#import sys
 import requests
 
 cli.show_server_banner = lambda *_: None
@@ -34,7 +34,7 @@ def run():
         except OSError as e:
             if e == "[Errno 98] Address already in use":
                 print("Flask already running. Killing it.")
-            resp = requests.post("https://Kur0bot.jericjanjan.repl.co/shutdown")
+            requests.post("https://Kur0bot.jericjanjan.repl.co/shutdown")
 
 
 def keep_alive():

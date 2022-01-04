@@ -4,7 +4,7 @@ import asyncio
 import os
 from shlex import join as shjoin
 import subprocess
-import codecs
+#import codecs
 
 
 class Download(commands.Cog):

@@ -2,7 +2,7 @@ from discord.ext import commands
 import discord
 import asyncio
 import re
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timedelta
 from shlex import join as shjoin
 import math
 import os
@@ -72,7 +72,7 @@ class Clip(commands.Cog):
         print(stderr)
         dirlinks = stdout.decode("utf-8").split("\n")
         vid = dirlinks[0]
-        aud = dirlinks[1]
+       # aud = dirlinks[1]
         if seconds < 30:
             coms = [
                 "ffmpeg",
@@ -382,7 +382,7 @@ class Clip(commands.Cog):
         print(stderr)
         dirlinks = stdout.decode("utf-8").split("\n")
         vid = dirlinks[0]
-        aud = dirlinks[1]
+       # aud = dirlinks[1]
         if seconds < 30:
             coms = [
                 "ffmpeg",
@@ -639,7 +639,7 @@ class Clip(commands.Cog):
         print(stderr)
         dirlinks = stdout.decode("utf-8").split("\n")
         vid = dirlinks[0]
-        aud = dirlinks[1]
+        #aud = dirlinks[1]
         if seconds < 30:
             coms = [
                 "ffmpeg",
@@ -773,7 +773,7 @@ class Clip(commands.Cog):
         stdout, stderr = await out.communicate()
         dirlinks = stdout.decode("utf-8").split("\n")
         vid = dirlinks[0]
-        aud = dirlinks[1]
+        #aud = dirlinks[1]
         if seconds < 30:
             coms = [
                 "ffmpeg",
@@ -890,7 +890,7 @@ class Clip(commands.Cog):
         print(stderr)
         dirlinks = stdout.decode("utf-8").split("\n")
         vid = dirlinks[0]
-        aud = dirlinks[1]
+       # aud = dirlinks[1]
         if seconds < 30:
             coms = [
                 "ffmpeg",
@@ -967,7 +967,7 @@ class Clip(commands.Cog):
         print(stderr)
         dirlinks = stdout.decode("utf-8").split("\n")
         vid = dirlinks[0]
-        aud = dirlinks[1]
+        #aud = dirlinks[1]
         coms = [
             "ffmpeg",
             "-ss",

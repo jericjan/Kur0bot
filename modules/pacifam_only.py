@@ -1,6 +1,5 @@
 from discord.ext import commands
 import discord
-import asyncio
 from ftplib import FTP
 import os
 import json

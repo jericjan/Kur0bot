@@ -1,6 +1,5 @@
 from discord.ext import commands, pages
 import discord
-import asyncio
 from saucenao_api import SauceNao
 import os
 import re

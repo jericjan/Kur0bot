@@ -3,7 +3,6 @@ import requests
 from io import BytesIO
 from discord.ext import commands
 import discord
-import asyncio
 
 
 class Pet(commands.Cog):

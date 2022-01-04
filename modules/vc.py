@@ -14,10 +14,10 @@ class Vc(commands.Cog):
 
     async def vcplay(self, ctx, a, loop=None):
         voice_channel = ctx.author.voice.channel
-        channel = None
+
         voice = discord.utils.get(self.client.voice_clients, guild=ctx.guild)
         if voice_channel != None:
-            channel = voice_channel.name
+
             if voice == None:
                 vc = await voice_channel.connect()
                 if loop == "loop":

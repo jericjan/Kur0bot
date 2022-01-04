@@ -5,8 +5,7 @@ start_time = time.time()
 import discord
 
 print(f"Running Pycord {discord.__version__}")
-from discord.ext import commands, pages
-from discord.ui import Button, View
+from discord.ext import commands
 import os
 
 import json
@@ -16,15 +15,15 @@ import asyncio
 import aiohttp
 import subprocess
 from gtts import gTTS
-from datetime import datetime, timedelta, timezone
-from shlex import quote
-from shlex import join as shjoin
-import schedule
+from datetime import datetime, timedelta
+
+
+
 import threading
 
-import io
-import math
-import re
+
+
+
 
 
 # client = discord.Client()
@@ -70,7 +69,8 @@ hidden_commands = [
     "tasks",
     "removeoffline",
     "idclip",
-    "nene",
+    "id",
+    "stream",
     "editembed",
     "sticker",
     "rolecheck",
@@ -267,13 +267,13 @@ async def vc_tts(message):
     msg = message.content.lower()
     if msg.startswith("] "):
         voice_channel = message.author.voice.channel
-        channel = None
+
         tts = gTTS(msg)
         with open("sounds/tts.mp3", "wb") as f:
             tts.write_to_fp(f)
         voice = discord.utils.get(client.voice_clients, guild=message.guild)
         if voice_channel != None:
-            channel = voice_channel.name
+
             if voice == None:
                 vc = await voice_channel.connect()
                 vc.play(discord.FFmpegPCMAudio(source="sounds/tts.mp3"))
@@ -281,13 +281,13 @@ async def vc_tts(message):
                 voice.play(discord.FFmpegPCMAudio(source="sounds/tts.mp3"))
     if msg.startswith("] "):
         voice_channel = message.author.voice.channel
-        channel = None
+
         tts = gTTS(msg[3:], lang="en", tld="com.au")
         with open("sounds/tts.mp3", "wb") as f:
             tts.write_to_fp(f)
         voice = discord.utils.get(client.voice_clients, guild=message.guild)
         if voice_channel != None:
-            channel = voice_channel.name
+
             if voice == None:
                 vc = await voice_channel.connect()
                 vc.play(discord.FFmpegPCMAudio(source="sounds/tts.mp3"))
@@ -295,13 +295,13 @@ async def vc_tts(message):
                 voice.play(discord.FFmpegPCMAudio(source="sounds/tts.mp3"))
     if msg.startswith("]uk "):
         voice_channel = message.author.voice.channel
-        channel = None
+
         tts = gTTS(msg[3:], lang="en", tld="co.uk")
         with open("sounds/tts.mp3", "wb") as f:
             tts.write_to_fp(f)
         voice = discord.utils.get(client.voice_clients, guild=message.guild)
         if voice_channel != None:
-            channel = voice_channel.name
+
             if voice == None:
                 vc = await voice_channel.connect()
                 vc.play(discord.FFmpegPCMAudio(source="sounds/tts.mp3"))
@@ -309,13 +309,13 @@ async def vc_tts(message):
                 voice.play(discord.FFmpegPCMAudio(source="sounds/tts.mp3"))
     if msg.startswith("]in "):
         voice_channel = message.author.voice.channel
-        channel = None
+
         tts = gTTS(msg[3:], lang="en", tld="co.in")
         with open("sounds/tts.mp3", "wb") as f:
             tts.write_to_fp(f)
         voice = discord.utils.get(client.voice_clients, guild=message.guild)
         if voice_channel != None:
-            channel = voice_channel.name
+
             if voice == None:
                 vc = await voice_channel.connect()
                 vc.play(discord.FFmpegPCMAudio(source="sounds/tts.mp3"))
@@ -365,13 +365,13 @@ async def off(ctx):
 @client.command()
 async def speak(ctx, *, message):
     voice_channel = ctx.author.voice.channel
-    channel = None
+
     tts = gTTS(message)
     with open("sounds/tts.mp3", "wb") as f:
         tts.write_to_fp(f)
     voice = discord.utils.get(client.voice_clients, guild=ctx.guild)
     if voice_channel != None:
-        channel = voice_channel.name
+
         if voice == None:
             vc = await voice_channel.connect()
             vc.play(discord.FFmpegPCMAudio(source="sounds/tts.mp3"))
@@ -382,13 +382,13 @@ async def speak(ctx, *, message):
 @client.command()
 async def speak2(ctx, *, message):
     voice_channel = ctx.author.voice.channel
-    channel = None
+
     tts = gTTS(message, lang="en", tld="com.au")
     with open("sounds/tts.mp3", "wb") as f:
         tts.write_to_fp(f)
     voice = discord.utils.get(client.voice_clients, guild=ctx.guild)
     if voice_channel != None:
-        channel = voice_channel.name
+
         if voice == None:
             vc = await voice_channel.connect()
             vc.play(discord.FFmpegPCMAudio(source="sounds/tts.mp3"))
@@ -427,14 +427,13 @@ async def on_command_error(ctx, error):
     raise error  # re-raise the error so all the errors will still show up in console
 
 
-import google_auth_oauthlib.flow
-import googleapiclient.discovery
-import googleapiclient.errors
+
+
+
 import requests
 import dateutil.parser as dp
 
 from discord import Webhook
-import aiohttp
 
 
 @client.command()
@@ -481,16 +480,16 @@ async def stream(ctx, link, noembed=None):
         channelid = r["items"][0]["snippet"]["channelId"]
         parsed_t = dp.parse(isotime)
         t_in_seconds = parsed_t.timestamp()
-        dsctime = f"<t:{str(t_in_seconds).split('.')[0]}:F>"
+      #  dsctime = f"<t:{str(t_in_seconds).split('.')[0]}:F>"
         reltime = f"<t:{str(t_in_seconds).split('.')[0]}:R>"
         dttime = datetime.strptime(isotime, "%Y-%m-%dT%H:%M:%S%z")
-        dayofweek = parsed_t.weekday()
+      #  dayofweek = parsed_t.weekday()
 
         f = open("list.txt", "a")  # add stream url and time to list.txt
         f.write(f"{link} {parsed_t.strftime('%a %b %d %Y %H:%M:%S')}\n")
         f.close()
         a_file = open("list.txt", "r")  # reads list.txt
-        lines = a_file.read().splitlines()
+     #   lines = a_file.read().splitlines()
         a_file.close()
 
         params2 = {
@@ -586,7 +585,7 @@ async def open_url(url):
     await clear_list(url)
 
 
-from io import BytesIO
+
 
 
 @client.command()
@@ -678,8 +677,8 @@ def precheck():
             if later > now:
                 r.write(i + "\n")
             url = i.split(" ")[0]
-            day = i.split(" ")[1]
-            timee = i.split(" ")[5]
+          #  day = i.split(" ")[1]
+          #  timee = i.split(" ")[5]
             if later > now + timedelta(days=6):
                 print("more than 1 week")
             else:
