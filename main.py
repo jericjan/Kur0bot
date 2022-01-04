@@ -17,13 +17,19 @@ import subprocess
 from gtts import gTTS
 from datetime import datetime, timedelta
 
-
+import requests
 
 import threading
 
 
-
-
+headers = {"Authorization": f"Bot {os.getenv('TOKEN')}"}
+r = requests.get(
+    url="https://discord.com/api/v9/channels/809247468084133898", headers=headers
+)
+if r.status_code == 429:
+    print(f"{(time.time() - start_time):.2f}s - Rate limited again lmao")
+else:
+    print(f"{(time.time() - start_time):.2f}s - Not rate limited. ({r.status_code})")
 
 
 # client = discord.Client()
@@ -427,10 +433,6 @@ async def on_command_error(ctx, error):
     raise error  # re-raise the error so all the errors will still show up in console
 
 
-
-
-
-import requests
 import dateutil.parser as dp
 
 from discord import Webhook
@@ -480,16 +482,16 @@ async def stream(ctx, link, noembed=None):
         channelid = r["items"][0]["snippet"]["channelId"]
         parsed_t = dp.parse(isotime)
         t_in_seconds = parsed_t.timestamp()
-      #  dsctime = f"<t:{str(t_in_seconds).split('.')[0]}:F>"
+        #  dsctime = f"<t:{str(t_in_seconds).split('.')[0]}:F>"
         reltime = f"<t:{str(t_in_seconds).split('.')[0]}:R>"
         dttime = datetime.strptime(isotime, "%Y-%m-%dT%H:%M:%S%z")
-      #  dayofweek = parsed_t.weekday()
+        #  dayofweek = parsed_t.weekday()
 
         f = open("list.txt", "a")  # add stream url and time to list.txt
         f.write(f"{link} {parsed_t.strftime('%a %b %d %Y %H:%M:%S')}\n")
         f.close()
         a_file = open("list.txt", "r")  # reads list.txt
-     #   lines = a_file.read().splitlines()
+        #   lines = a_file.read().splitlines()
         a_file.close()
 
         params2 = {
@@ -585,9 +587,6 @@ async def open_url(url):
     await clear_list(url)
 
 
-
-
-
 @client.command()
 async def sched(ctx, url):
     sched_ch = client.get_guild(603147860225032192).get_channel(879702977898741770)
@@ -677,8 +676,8 @@ def precheck():
             if later > now:
                 r.write(i + "\n")
             url = i.split(" ")[0]
-          #  day = i.split(" ")[1]
-          #  timee = i.split(" ")[5]
+            #  day = i.split(" ")[1]
+            #  timee = i.split(" ")[5]
             if later > now + timedelta(days=6):
                 print("more than 1 week")
             else:
@@ -700,16 +699,14 @@ isDiscordrunning = False
 from running_check import check
 
 proc_id = os.getpid()
-print(f"Process ID: {proc_id}")
+print(f"{(time.time() - start_time):.2f}s - Process ID: {proc_id}")
 check(start_time, proc_id)
 
 while isDiscordrunning is False:
     try:
         print(f"{(time.time() - start_time):.2f}s - Connecting to bot...")
-        if client.is_ready() == False:
-            client.run(os.getenv("TOKEN"))
-        else:
-            print("Already running.")
+
+        client.run(os.getenv("TOKEN"))
         isDiscordrunning = True
     except Exception as e:
         print("nope. not working")
