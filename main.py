@@ -33,8 +33,8 @@ intents.presences = True
 intents.members = True
 
 # global client
-game = discord.Activity(name='sus gaming | k.help', type=discord.ActivityType.playing)
-client = commands.Bot(command_prefix="k.", intents=intents,activity=game)
+game = discord.Activity(name="sus gaming | k.help", type=discord.ActivityType.playing)
+client = commands.Bot(command_prefix="k.", intents=intents, activity=game)
 
 client.remove_command("help")
 sus_words = [
@@ -78,7 +78,7 @@ async def on_ready():
     print(
         f"\033[92m{(time.time() - start_time):.2f}s - We have logged in as {client.user}\033[0m"
     )
-  #  await client.change_presence(activity=discord.Game(name="sus gaming | k.help"))
+    #  await client.change_presence(activity=discord.Game(name="sus gaming | k.help"))
     avi_guild = client.get_guild(603147860225032192)
     while avi_guild == None:
         avi_guild = client.get_guild(603147860225032192)
@@ -387,10 +387,10 @@ async def on_command_error(ctx, error):
         await ctx.message.delete()
         print(dir(error))
         print(f"error: {error}\nerror args: {error.args}")
-    else:    
-      print(error)
-      print(dir(error))
-      await ctx.send(error)
+    else:
+        print(error)
+        print(dir(error))
+        await ctx.send(error)
     raise error  # re-raise the error so all the errors will still show up in console
 
 
@@ -666,9 +666,10 @@ isDiscordrunning = False
 # client.run(os.getenv("TOKEN"))
 
 from running_check import check
+
 proc_id = os.getpid()
 print(f"Process ID: {proc_id}")
-check(start_time,proc_id)
+check(start_time, proc_id)
 
 while isDiscordrunning is False:
     try:
