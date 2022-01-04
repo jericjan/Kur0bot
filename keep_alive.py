@@ -27,7 +27,8 @@ def run():
       app.run(host='0.0.0.0',port=8080)
       isRunning = True
     except OSError as e:
-      print(e)
+      if e =="[Errno 98] Address already in use":
+        print("Flask already running. Killing it.")
       resp = requests.post('https://Kur0bot.jericjanjan.repl.co/shutdown')
       
 def keep_alive():

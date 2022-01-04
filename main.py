@@ -32,7 +32,8 @@ intents.presences = True
 intents.members = True
 
 # global client
-client = commands.Bot(command_prefix="k.", intents=intents)
+game = discord.Activity(name='sus gaming | k.help', type=discord.ActivityType.playing)
+client = commands.Bot(command_prefix="k.", intents=intents,activity=game)
 
 client.remove_command("help")
 sus_words = [
@@ -76,7 +77,7 @@ async def on_ready():
     print(
         f"\033[92m{(time.time() - start_time):.2f}s - We have logged in as {client.user}\033[0m"
     )
-    await client.change_presence(activity=discord.Game(name="sus gaming | k.help"))
+  #  await client.change_presence(activity=discord.Game(name="sus gaming | k.help"))
     avi_guild = client.get_guild(603147860225032192)
     while avi_guild == None:
         avi_guild = client.get_guild(603147860225032192)
@@ -379,12 +380,16 @@ async def speak2(ctx, *, message):
 async def on_command_error(ctx, error):
     if isinstance(error, commands.CommandOnCooldown):
         await ctx.send(
-            "Ayo this command is on cooldown.\nWait for %.2fs to try it again."
-            % error.retry_after,
+            f"Ayo this command is on cooldown.\nWait for {error.retry_after:.2f}s to try it again.",
             delete_after=3.0,
         )
         await ctx.message.delete()
-    print(error)
+        print(dir(error))
+        print(f"error: {error}\nerror args: {error.args}")
+    else:    
+      print(error)
+      print(dir(error))
+      await ctx.send(error)
     raise error  # re-raise the error so all the errors will still show up in console
 
 
@@ -659,6 +664,8 @@ keep_alive()
 isDiscordrunning = False
 # client.run(os.getenv("TOKEN"))
 
+from running_check import check
+check(start_time)
 while isDiscordrunning is False:
     try:
         print(f"{(time.time() - start_time):.2f}s - Connecting to bot...")

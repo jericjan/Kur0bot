@@ -45,19 +45,19 @@ class Badapple(commands.Cog):
             username=ctx.message.author.name,
             avatar_url=ctx.message.author.display_avatar.url,
         )
-        #   await asyncio.sleep(0.5)
+        await asyncio.sleep(0.5)
         await webhook.send(
             f"{''.join([str(i) for i in list2])}",
             username=ctx.message.author.name,
             avatar_url=ctx.message.author.display_avatar.url,
         )
-        #   await asyncio.sleep(0.5)
+        await asyncio.sleep(0.5)
         await webhook.send(
             f"{''.join([str(i) for i in list3])}",
             username=ctx.message.author.name,
             avatar_url=ctx.message.author.display_avatar.url,
         )
-        # await asyncio.sleep(0.5)
+        await asyncio.sleep(0.5)
         await webhook.send(
             f"{''.join([str(i) for i in list4])}",
             username=ctx.message.author.name,
