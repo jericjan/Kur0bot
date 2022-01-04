@@ -8,6 +8,7 @@ print(f"Running Pycord {discord.__version__}")
 from discord.ext import commands, pages
 from discord.ui import Button, View
 import os
+
 import json
 from keep_alive import keep_alive
 import random
@@ -665,7 +666,10 @@ isDiscordrunning = False
 # client.run(os.getenv("TOKEN"))
 
 from running_check import check
-check(start_time)
+proc_id = os.getpid()
+print(f"Process ID: {proc_id}")
+check(start_time,proc_id)
+
 while isDiscordrunning is False:
     try:
         print(f"{(time.time() - start_time):.2f}s - Connecting to bot...")
