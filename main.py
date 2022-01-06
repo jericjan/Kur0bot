@@ -15,7 +15,9 @@ import asyncio
 import aiohttp
 import subprocess
 from gtts import gTTS
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
+import pytz
+
 
 import requests
 import re
@@ -352,6 +354,17 @@ client.load_extension("modules.pacifam_only")
 client.load_extension("modules.kur0_only")
 print(f"{(time.time() - start_time):.2f}s - Done!")
 
+
+@client.before_invoke
+async def common(ctx):
+    tz = pytz.timezone('Asia/Manila')
+    curr_time = datetime.now(tz)
+    clean_time = curr_time.strftime("%m/%d/%Y %I:%M %p")
+    final = f"{clean_time} - k.{ctx.invoked_with} command used\n"
+    print(final)
+    f = open("log.txt", "a")
+    f.write(final)
+    f.close()
 
 @client.command()
 async def bulk(ctx, number):
