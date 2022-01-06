@@ -260,6 +260,7 @@ async def twitter_video_link_giver(message):
                 )
 
                 msg = await message.channel.send(json_list["url"])
+                await asyncio.sleep(3)
                 if not msg.embeds:
                     await m1.edit(content="No embeds. Trying to manually upload...")
                     r = requests.get(json_list["url"])
@@ -441,6 +442,32 @@ async def on_command_error(ctx, error):
 
 import dateutil.parser as dp
 
+
+@client.command()
+async def when(ctx, link):
+    if link.startswith("https://youtu.be"):
+        idd = link.split("/")[-1].split("?")[0]
+        wrong = False
+    elif link.startswith("https://www.youtube.com/"):
+        idd = link.split("=")[1].split("&")[0]
+        wrong = False
+    else:
+        await ctx.send("Not a YT link!", delete_after=3.0)
+        wrong = True
+    print(idd)
+    if wrong != True:
+        params = {
+            "part": "snippet",
+            "key": os.getenv("YT_API_KEY"),
+            "id": idd,
+        }
+        url = "https://www.googleapis.com/youtube/v3/videos"
+        r = requests.get(url, headers=None, params=params).json()
+        publish_time = r["items"][0]["snippet"]["publishedAt"]
+        epoch_time = dp.parse(publish_time).timestamp()
+        await ctx.send(f"<t:{epoch_time:.0f}:F>")
+
+
 from discord import Webhook
 
 
@@ -448,12 +475,14 @@ from discord import Webhook
 async def stream(ctx, link, noembed=None):
     if link.startswith("https://youtu.be"):
         idd = link.split("/")[-1].split("?")[0]
+        wrong = False
     elif link.startswith("https://www.youtube.com/"):
         idd = link.split("=")[1].split("&")[0]
+        wrong = False
     else:
         await ctx.send("Not a YT link!", delete_after=3.0)
         wrong = True
-    wrong = False
+
     print(idd)
     if wrong != True:
         params = {
