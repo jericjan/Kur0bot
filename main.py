@@ -105,6 +105,7 @@ async def on_ready():
     print(
         f"\033[92m{(time.time() - start_time):.2f}s - We have logged in as {client.user}\033[0m"
     )
+    await log('Bot started',False)
     #  await client.change_presence(activity=discord.Game(name="sus gaming | k.help"))
     avi_guild = client.get_guild(603147860225032192)
     while avi_guild == None:
@@ -355,16 +356,24 @@ client.load_extension("modules.kur0_only")
 print(f"{(time.time() - start_time):.2f}s - Done!")
 
 
-@client.before_invoke
-async def common(ctx):
+async def log(text,printText=None):
     tz = pytz.timezone('Asia/Manila')
     curr_time = datetime.now(tz)
     clean_time = curr_time.strftime("%m/%d/%Y %I:%M %p")
-    final = f"{clean_time} - k.{ctx.invoked_with} command used\n"
-    print(final)
+    final = f"{clean_time} - {text}\n"
+    if printText==False:
+      pass
+    else:  
+      print(final)
     f = open("log.txt", "a")
     f.write(final)
     f.close()
+
+@client.before_invoke
+async def common(ctx):
+    text = f'k.{ctx.invoked_with} command used'
+    print=True
+    await log(str(text))
 
 @client.command()
 async def bulk(ctx, number):
@@ -450,6 +459,7 @@ async def on_command_error(ctx, error):
         print(error)
         print(dir(error))
         await ctx.send(error)
+    await log(error, False)    
     raise error  # re-raise the error so all the errors will still show up in console
 
 

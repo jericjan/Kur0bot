@@ -175,7 +175,7 @@ class Kur0only(commands.Cog):
                 "rclone/rclone",
                 "copy",
                 fname,
-                "g2:/archived youtube vids/",
+                "g3:/archived youtube vids/",
                 "--transfers",
                 "20",
                 "--checkers",
