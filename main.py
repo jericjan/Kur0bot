@@ -15,7 +15,7 @@ import asyncio
 import aiohttp
 import subprocess
 from gtts import gTTS
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timedelta
 import pytz
 
 
@@ -23,6 +23,23 @@ import requests
 import re
 import threading
 import io
+import atexit
+import signal
+
+
+def goodbye():
+    print("Exiting...")
+    f = open("log.txt", "a")
+    f.write("Exiting...\n")
+    f.close()
+
+
+atexit.register(goodbye)
+signal.signal(signal.SIGTERM, goodbye)
+signal.signal(signal.SIGINT, goodbye)
+# signal.signal(signal.SIGKILL, goodbye)
+# signal.signal(signal.SIGSTOP, goodbye)
+signal.signal(signal.SIGHUP, goodbye)
 
 headers = {"Authorization": f"Bot {os.getenv('TOKEN')}"}
 r = requests.get(
