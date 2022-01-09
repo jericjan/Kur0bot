@@ -105,7 +105,7 @@ async def on_ready():
     print(
         f"\033[92m{(time.time() - start_time):.2f}s - We have logged in as {client.user}\033[0m"
     )
-    await log('Bot started',False)
+    await log("Bot started", False)
     #  await client.change_presence(activity=discord.Game(name="sus gaming | k.help"))
     avi_guild = client.get_guild(603147860225032192)
     while avi_guild == None:
@@ -118,6 +118,7 @@ async def on_ready():
         else:
             if avibot.status is discord.Status.offline:
                 print("avibot ded")
+                await log("avi bot ded", False)
                 # channel = client.get_guild(603147860225032192).get_channel(836222286432043018)  # notification channel
                 # msg_id = 887707057808085042
                 # msg = await channel.fetch_message(msg_id)
@@ -130,6 +131,7 @@ async def on_ready():
             # await staffch.send('<@97122523086340096> bot ded')
             if avibot.status is discord.Status.online:
                 print("avi bot bac")
+                await log("avi bot bac", False)
                 # channel = client.get_guild(603147860225032192).get_channel(836222286432043018)  # notification channel
                 # msg_id = 887707057808085042
                 # msg = await channel.fetch_message(msg_id)
@@ -153,6 +155,7 @@ async def on_member_update(before, after):
         if after.id == 855897776125640704:
             print(after.id)
             print("avi bot ded")
+            await log("avi bot ded", False)
             # channel = client.get_guild(603147860225032192).get_channel(836222286432043018)  # notification channel
             #  msg_id = 887707057808085042
             # msg = await channel.fetch_message(msg_id)
@@ -168,6 +171,7 @@ async def on_member_update(before, after):
         if after.id == 855897776125640704:
             print(after.id)
             print("avi bot bac")
+            await log("avi bot bac", False)
             # channel = client.get_guild(603147860225032192).get_channel(836222286432043018)  # notification channel
             # msg_id = 887707057808085042
             # msg = await channel.fetch_message(msg_id)
@@ -211,24 +215,30 @@ async def sus(message):
                     await message.channel.send(
                         random.choice(sus_replies), delete_after=3.0
                     )
+                    await log("sussy reply", False)
                 if client.sus_on:
                     await message.channel.send(random.choice(sus_replies))
+                    await log("sussy reply", False)
         else:
             if "amgus" in msg:
                 await message.channel.send(
                     random.choice(sugma_replies), delete_after=3.0
                 )
+                await log("sussy reply", False)
             if "amogus" in msg:
                 await message.channel.send(
                     random.choice(sugoma_replies), delete_after=3.0
                 )
+                await log("sussy reply", False)
             if "sushi" in msg:
                 await message.channel.send(
                     "remove the hi from sushi. what do you get? <:sus:850628234746920971>",
                     delete_after=3.0,
                 )
+                await log("sussy reply", False)
             if "pog" in msg:
                 await message.channel.send("poggusus", delete_after=3.0)
+                await log("sussy reply", False)
 
 
 @client.listen("on_message")
@@ -243,6 +253,7 @@ async def twitter_video_link_giver(message):
         print([x for x in links])
         for i in links:
             print("twitter link!")
+            await log("twitter link!", False)
             args = ["youtube-dl", "-j", i]
             print(args)
             proc = subprocess.Popen(
@@ -261,6 +272,7 @@ async def twitter_video_link_giver(message):
                 m1 = await message.channel.send(
                     "Beep boop! That is a twitter video!\nImma give direct video link..."
                 )
+                await log("twitter video!", False)
 
                 msg = await message.channel.send(json_list["url"])
                 await asyncio.sleep(3)
@@ -283,7 +295,7 @@ async def vc_tts(message):
     msg = message.content.lower()
     if msg.startswith("] "):
         voice_channel = message.author.voice.channel
-
+        await log("] command used", True)
         tts = gTTS(msg)
         with open("sounds/tts.mp3", "wb") as f:
             tts.write_to_fp(f)
@@ -295,7 +307,8 @@ async def vc_tts(message):
                 vc.play(discord.FFmpegPCMAudio(source="sounds/tts.mp3"))
             else:
                 voice.play(discord.FFmpegPCMAudio(source="sounds/tts.mp3"))
-    if msg.startswith("] "):
+    if msg.startswith("]au "):
+        await log("]au command used", True)
         voice_channel = message.author.voice.channel
 
         tts = gTTS(msg[3:], lang="en", tld="com.au")
@@ -310,6 +323,7 @@ async def vc_tts(message):
             else:
                 voice.play(discord.FFmpegPCMAudio(source="sounds/tts.mp3"))
     if msg.startswith("]uk "):
+        await log("]uk command used", True)
         voice_channel = message.author.voice.channel
 
         tts = gTTS(msg[3:], lang="en", tld="co.uk")
@@ -324,6 +338,7 @@ async def vc_tts(message):
             else:
                 voice.play(discord.FFmpegPCMAudio(source="sounds/tts.mp3"))
     if msg.startswith("]in "):
+        await log("]in command used", True)
         voice_channel = message.author.voice.channel
 
         tts = gTTS(msg[3:], lang="en", tld="co.in")
@@ -356,24 +371,26 @@ client.load_extension("modules.kur0_only")
 print(f"{(time.time() - start_time):.2f}s - Done!")
 
 
-async def log(text,printText=None):
-    tz = pytz.timezone('Asia/Manila')
+async def log(text, printText=None):
+    tz = pytz.timezone("Asia/Manila")
     curr_time = datetime.now(tz)
     clean_time = curr_time.strftime("%m/%d/%Y %I:%M %p")
     final = f"{clean_time} - {text}\n"
-    if printText==False:
-      pass
-    else:  
-      print(final)
+    if printText == False:
+        pass
+    else:
+        print(final)
     f = open("log.txt", "a")
     f.write(final)
     f.close()
 
+
 @client.before_invoke
 async def common(ctx):
-    text = f'k.{ctx.invoked_with} command used'
-    print=True
+    text = f"k.{ctx.invoked_with} command used"
+    print = True
     await log(str(text))
+
 
 @client.command()
 async def bulk(ctx, number):
@@ -459,7 +476,7 @@ async def on_command_error(ctx, error):
         print(error)
         print(dir(error))
         await ctx.send(error)
-    await log(error, False)    
+    await log(error, False)
     raise error  # re-raise the error so all the errors will still show up in console
 
 
