@@ -1,10 +1,11 @@
 import time
 
 start_time = time.time()
-import sys
 
+#import sys
 # sys.stdout = open('console_log.txt', 'a')
 # sys.stderr = open('console_log.txt', 'a')
+
 # import discord
 import disnake
 
@@ -26,7 +27,7 @@ import pytz
 import requests
 import re
 import threading
-import io
+# import io #used in twitter_link_giver
 import atexit
 import signal
 
@@ -271,7 +272,7 @@ async def twitter_video_link_giver(message):
 
     msg = message.content.lower()
     if "twitter.com" in msg:
-        threads = []
+        #threads = []
         links = re.findall("http.*twitter.com/.*/status/\d*", msg)
         print([x for x in links])
         for i in links:
@@ -411,7 +412,7 @@ async def log(text, printText=None):
 @client.before_invoke
 async def common(ctx):
     text = f"k.{ctx.invoked_with} command used"
-    print = True
+    #print = True
     await log(str(text))
 
 

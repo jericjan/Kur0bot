@@ -1,6 +1,5 @@
 from disnake.ext import commands  # , pages
 from ..paginator import ButtonPaginator
-from ..paginator import MessageInteractionWrapper
 import disnake
 from saucenao_api import SauceNao
 import os
