@@ -1,5 +1,5 @@
-from discord.ext import commands
-import discord
+from disnake.ext import commands
+import disnake
 import asyncio
 
 
@@ -8,7 +8,7 @@ class Badapple(commands.Cog):
         self.client = client
 
     def getemote(self, ctx, name):
-        return discord.utils.get(self.client.emojis, name=name)
+        return disnake.utils.get(self.client.emojis, name=name)
 
     @commands.command()
     @commands.cooldown(1.0, 60.0, commands.BucketType.guild)

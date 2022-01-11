@@ -1,8 +1,8 @@
 from petpetgif import petpet
 import requests
 from io import BytesIO
-from discord.ext import commands
-import discord
+from disnake.ext import commands
+import disnake
 
 
 class Pet(commands.Cog):
@@ -20,7 +20,7 @@ class Pet(commands.Cog):
                 dest.seek(0)
                 webhook = await ctx.channel.create_webhook(name=ctx.message.author.name)
                 await webhook.send(
-                    file=discord.File(dest, filename=f"petpet.gif"),
+                    file=disnake.File(dest, filename=f"petpet.gif"),
                     username=ctx.message.author.name,
                     avatar_url=ctx.message.author.display_avatar.url,
                 )
@@ -39,7 +39,7 @@ class Pet(commands.Cog):
             dest.seek(0)
             webhook = await ctx.channel.create_webhook(name=ctx.message.author.name)
             await webhook.send(
-                file=discord.File(dest, filename=f"petpet.gif"),
+                file=disnake.File(dest, filename=f"petpet.gif"),
                 username=ctx.message.author.name,
                 avatar_url=ctx.message.author.display_avatar.url,
             )

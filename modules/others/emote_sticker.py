@@ -1,5 +1,5 @@
-from discord.ext import commands
-import discord
+from disnake.ext import commands
+import disnake
 import asyncio
 import aiohttp
 
@@ -15,7 +15,7 @@ class EmoteSticker(commands.Cog):
         webhook = await ctx.channel.create_webhook(name=ctx.message.author.name)
         print(message)
         for i in range(len(message)):
-            emoji = discord.utils.get(self.client.emojis, name=message[i])
+            emoji = disnake.utils.get(self.client.emojis, name=message[i])
             emojistr = str(emoji)
             emoji_list.append(emojistr)
         if emoji == None:
@@ -57,7 +57,7 @@ class EmoteSticker(commands.Cog):
         server = ctx.message.guild
         emojis = [str(x) for x in server.emojis]
         message = ""
-        embed = discord.Embed()
+        embed = disnake.Embed()
         for guild in self.client.guilds:
             if guild.id != 856415893305950228 and guild.id != 856412098459860993:
                 print(guild.id)

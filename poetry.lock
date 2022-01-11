@@ -120,6 +120,23 @@ optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
 
 [[package]]
+name = "disnake"
+version = "2.3.0"
+description = "A Python wrapper for the Discord API"
+category = "main"
+optional = false
+python-versions = ">=3.8.0"
+
+[package.dependencies]
+aiohttp = ">=3.7.0,<3.9.0"
+
+[package.extras]
+discord = ["discord-disnake"]
+docs = ["sphinx (==4.0.2)", "sphinxcontrib-trio (==1.1.2)", "sphinxcontrib-websupport"]
+speed = ["orjson (>=3.5.4)", "aiodns (>=1.1)", "brotli", "cchardet"]
+voice = ["PyNaCl (>=1.3.0,<1.5)"]
+
+[[package]]
 name = "flask"
 version = "2.0.2"
 description = "A simple framework for building complex web applications."
@@ -391,29 +408,6 @@ optional = false
 python-versions = ">=3.5"
 
 [[package]]
-name = "py-cord"
-version = "2.0.0a4748+gc602bc45"
-description = "A Python wrapper for the Discord API"
-category = "main"
-optional = false
-python-versions = ">=3.8.0"
-develop = false
-
-[package.dependencies]
-aiohttp = ">=3.6.0,<3.9.0"
-
-[package.extras]
-docs = ["sphinx (==4.3.2)", "sphinxcontrib-trio (==1.1.2)", "sphinxcontrib-websupport"]
-speed = ["orjson (>=3.5.4)", "aiodns (>=1.1)", "brotlipy", "cchardet"]
-voice = ["PyNaCl (>=1.3.0,<1.5)"]
-
-[package.source]
-type = "git"
-url = "https://github.com/Pycord-Development/pycord.git"
-reference = "master"
-resolved_reference = "c602bc453450d018c5c4b876f9203431e7b5ff3b"
-
-[[package]]
 name = "pyasn1"
 version = "0.4.8"
 description = "ASN.1 types and codecs"
@@ -661,7 +655,7 @@ websockets = "*"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "892dc5db91cd711f3738abbf6d22ac0f2fe60ae6623af282c3cfda8c238ec54a"
+content-hash = "b72a2b3c7c819753bf4c2179656385378798c2771f805d3e99708dad0817e47a"
 
 [metadata.files]
 aiohttp = [
@@ -786,6 +780,10 @@ click = [
 colorama = [
     {file = "colorama-0.4.4-py2.py3-none-any.whl", hash = "sha256:9f47eda37229f68eee03b24b9748937c7dc3868f906e8ba69fbcbdd3bc5dc3e2"},
     {file = "colorama-0.4.4.tar.gz", hash = "sha256:5941b2b48a20143d2267e95b1c2a7603ce057ee39fd88e7329b0c292aa16869b"},
+]
+disnake = [
+    {file = "disnake-2.3.0-py3-none-any.whl", hash = "sha256:bc98d577e523d057714611f07782faa3e459c90300c51adb15c44fe0e480acf7"},
+    {file = "disnake-2.3.0.tar.gz", hash = "sha256:fb0d393fdbdcc2bded7f323de7b3c3d2af7c066e039a7292a7ad404c463ff259"},
 ]
 flask = [
     {file = "Flask-2.0.2-py3-none-any.whl", hash = "sha256:cb90f62f1d8e4dc4621f52106613488b5ba826b2e1e10a33eac92f723093ab6a"},
@@ -1075,7 +1073,6 @@ protobuf = [
     {file = "protobuf-3.19.1-py2.py3-none-any.whl", hash = "sha256:e813b1c9006b6399308e917ac5d298f345d95bb31f46f02b60cd92970a9afa17"},
     {file = "protobuf-3.19.1.tar.gz", hash = "sha256:62a8e4baa9cb9e064eb62d1002eca820857ab2138440cb4b3ea4243830f94ca7"},
 ]
-py-cord = []
 pyasn1 = [
     {file = "pyasn1-0.4.8-py2.4.egg", hash = "sha256:fec3e9d8e36808a28efb59b489e4528c10ad0f480e57dcc32b4de5c9d8c9fdf3"},
     {file = "pyasn1-0.4.8-py2.5.egg", hash = "sha256:0458773cfe65b153891ac249bcf1b5f8f320b7c2ce462151f8fa74de8934becf"},

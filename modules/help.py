@@ -1,11 +1,11 @@
-from discord.ext import commands
-import discord
+from disnake.ext import commands
+import disnake
 
 
 class Help(commands.Cog):
     @commands.group(invoke_without_command=True)
     async def help(self, ctx):
-        em = discord.Embed(
+        em = disnake.Embed(
             title="Commands",
             description="Here are my sussy commands!\nUse __**k.help <command>**__ for more info on that command.",
         )
@@ -31,26 +31,26 @@ class Help(commands.Cog):
 
     @help.command()
     async def glasses(self, ctx):
-        em = discord.Embed(
+        em = disnake.Embed(
             title="Glasses", description="Gives the entire fubuki glasses copypasta"
         )
         await ctx.send(embed=em)
 
     @help.command()
     async def nene(self, ctx):
-        em = discord.Embed(title="Nene", description="Gives Nenechi's full title")
+        em = disnake.Embed(title="Nene", description="Gives Nenechi's full title")
         await ctx.send(embed=em)
 
     @help.command()
     async def nenelong(self, ctx):
-        em = discord.Embed(
+        em = disnake.Embed(
             title="Nene", description="Gives Nenechi's LONGER full title"
         )
         await ctx.send(embed=em)
 
     @help.command()
     async def on(self, ctx):
-        em = discord.Embed(
+        em = disnake.Embed(
             title="On",
             description="Enables permanent sus mode. Sus replies do not get deleted within 3 seconds.",
         )
@@ -58,7 +58,7 @@ class Help(commands.Cog):
 
     @help.command()
     async def off(self, ctx):
-        em = discord.Embed(
+        em = disnake.Embed(
             title="Off",
             description="Disables permanent sus mode. Sus replies get deleted within 3 seconds.",
         )
@@ -66,7 +66,7 @@ class Help(commands.Cog):
 
     @help.command()
     async def megasus(self, ctx):
-        em = discord.Embed(
+        em = disnake.Embed(
             title="Megasus",
             description="Gives some random amongus copypasta I found on reddit.",
         )
@@ -74,13 +74,13 @@ class Help(commands.Cog):
 
     @help.command()
     async def bulk(self, ctx):
-        em = discord.Embed(title="Bulk", description="Sends sus messages in bulk.")
+        em = disnake.Embed(title="Bulk", description="Sends sus messages in bulk.")
         em.add_field(name="**Syntax**", value="k.bulk <number>")
         await ctx.send(embed=em)
 
     @help.command()
     async def stopamongus(self, ctx):
-        em = discord.Embed(
+        em = disnake.Embed(
             title="Stop posting about Among Us!",
             description="Sends the stop posting about among us copypasta",
         )
@@ -88,7 +88,7 @@ class Help(commands.Cog):
 
     @help.command()
     async def confession(self, ctx):
-        em = discord.Embed(
+        em = disnake.Embed(
             title="Matsuri's Confession",
             description="Sends Matsuri's confession to Fubuki",
         )
@@ -96,14 +96,14 @@ class Help(commands.Cog):
 
     @help.command()
     async def fortnite(self, ctx):
-        em = discord.Embed(
+        em = disnake.Embed(
             title="Fortnite", description="Sends the fortnite dance in text"
         )
         await ctx.send(embed=em)
 
     @help.command(aliases=["e"])
     async def emote(self, ctx):
-        em = discord.Embed(
+        em = disnake.Embed(
             title="Emote",
             description="Sends an animated emote from any server that this bot is in.",
         )
@@ -113,7 +113,7 @@ class Help(commands.Cog):
 
     @help.command(aliases=["ge"])
     async def getemotes(self, ctx):
-        em = discord.Embed(
+        em = disnake.Embed(
             title="Get Emotes!",
             description="Sends all emotes that this bot has. It has emotes for all servers it's in.",
         )
@@ -122,28 +122,28 @@ class Help(commands.Cog):
 
     @help.command()
     async def wristworld(self, ctx):
-        em = discord.Embed(
+        em = disnake.Embed(
             title="Wristworld", description="Sends the wristworld miku copypasta."
         )
         await ctx.send(embed=em)
 
     @help.command()
     async def fmega(self, ctx):
-        em = discord.Embed(
+        em = disnake.Embed(
             title="F Mega!", description="Sends the F MEGA gif from Jojo's."
         )
         await ctx.send(embed=em)
 
     @help.command()
     async def kotowaru(self, ctx):
-        em = discord.Embed(
+        em = disnake.Embed(
             title="Daga kotowaru!", description="Use this to refuse someone's offer"
         )
         await ctx.send(embed=em)
 
     @help.command()
     async def ascend(self, ctx):
-        em = discord.Embed(
+        em = disnake.Embed(
             title="Ascend to Heaven!",
             description="Use this to to ascend when something glorious occurs.",
         )
@@ -151,78 +151,78 @@ class Help(commands.Cog):
 
     @help.command()
     async def jizz(self, ctx):
-        em = discord.Embed(title="Jizz", description="Use this to jizz.")
+        em = disnake.Embed(title="Jizz", description="Use this to jizz.")
         await ctx.send(embed=em)
 
     @help.command()
     async def letsgo(self, ctx):
-        em = discord.Embed(title="Let's go!", description="Playus 'Let's gooo' in vc")
+        em = disnake.Embed(title="Let's go!", description="Playus 'Let's gooo' in vc")
         await ctx.send(embed=em)
 
     @help.command()
     async def vtubus(self, ctx):
-        em = discord.Embed(title="Vtubus", description="vtubus")
+        em = disnake.Embed(title="Vtubus", description="vtubus")
         await ctx.send(embed=em)
 
     @help.command()
     async def ding(self, ctx):
-        em = discord.Embed(
+        em = disnake.Embed(
             title="Ding ding ding ding ding ddi di ding", description="amongus"
         )
         await ctx.send(embed=em)
 
     @help.command()
     async def yodayo(self, ctx):
-        em = discord.Embed(
+        em = disnake.Embed(
             title="Yo dayo!", description="Plays Ayame's 'Yo dayo!' in VC"
         )
         await ctx.send(embed=em)
 
     @help.command()
     async def yodazo(self, ctx):
-        em = discord.Embed(
+        em = disnake.Embed(
             title="Yo dazo!", description="Plays Ayame's 'Yo dazo!' in VC"
         )
         await ctx.send(embed=em)
 
     @help.command()
     async def jonathan(self, ctx):
-        em = discord.Embed(
+        em = disnake.Embed(
             title="Jonathan's theme", description="Plays Jonathan's theme in VC"
         )
         await ctx.send(embed=em)
 
     @help.command()
     async def joseph(self, ctx):
-        em = discord.Embed(
+        em = disnake.Embed(
             title="Joseph's theme", description="Plays Joseph's theme in VC"
         )
         await ctx.send(embed=em)
 
     @help.command()
     async def jotaro(self, ctx):
-        em = discord.Embed(
+        em = disnake.Embed(
             title="Jotaro's theme", description="Plays Jotaro's theme in VC"
         )
         await ctx.send(embed=em)
 
     @help.command()
     async def josuke(self, ctx):
-        em = discord.Embed(
+        em = disnake.Embed(
             title="Josuke's theme", description="Plays Josuke's theme in VC"
         )
         await ctx.send(embed=em)
 
     @help.command()
     async def giorno(self, ctx):
-        em = discord.Embed(
+        em = disnake.Embed(
             title="Giorno's theme", description="Plays Giorno's theme in VC"
         )
         await ctx.send(embed=em)
 
     @help.command()
     async def kira(self, ctx):
-        em = discord.Embed(
+        em = disnake.Embed(
             title="Yoshikage Kira's theme",
             description="Plays Yoshikage Kira's theme in VC",
         )
@@ -230,14 +230,14 @@ class Help(commands.Cog):
 
     @help.command()
     async def pillarmen(self, ctx):
-        em = discord.Embed(
+        em = disnake.Embed(
             title="Pillar Men Theme", description="Plays the Pillar Men Theme in VC"
         )
         await ctx.send(embed=em)
 
     @help.command()
     async def tts(self, ctx):
-        em = discord.Embed(
+        em = disnake.Embed(
             title="Text to speech", description="Send a TTS message in VC"
         )
         em.add_field(name="**Syntax**", value="] <message>")
@@ -249,7 +249,7 @@ class Help(commands.Cog):
 
     @help.command()
     async def badapple(self, ctx):
-        em = discord.Embed(
+        em = disnake.Embed(
             title="Bad Apple but in custom emotes",
             description="Sends 80 animated emotes that all make up the Bad Apple PV (Only works on PC)",
         )
@@ -258,7 +258,7 @@ class Help(commands.Cog):
 
     @help.command()
     async def clip(self, ctx):
-        em = discord.Embed(
+        em = disnake.Embed(
             title="Clip a YT Video",
             description="clips a YouTube video given the start and end times (HH:MM:SS)\n**SLOWER** than `fastclip` but accurate",
         )
@@ -273,7 +273,7 @@ class Help(commands.Cog):
 
     @help.command()
     async def fastclip(self, ctx):
-        em = discord.Embed(
+        em = disnake.Embed(
             title="Quickly clip a YT Video",
             description="clips a YouTube video given the start and end times (HH:MM:SS)\n**FASTER** than `clip` but will start at the nearest keyframe, so it'll start a couple seconds earlier than the given timestamp",
         )
@@ -288,7 +288,7 @@ class Help(commands.Cog):
 
     @help.command()
     async def download(self, ctx):
-        em = discord.Embed(
+        em = disnake.Embed(
             title="Download a YT Video", description="Download a YouTube of your choice"
         )
         em.add_field(name="**Syntax**", value="k.download <url>")
@@ -296,7 +296,7 @@ class Help(commands.Cog):
 
     @help.command()
     async def botansneeze(self, ctx):
-        em = discord.Embed(
+        em = disnake.Embed(
             title="Botan Sneeze", description="because fuck you, have a botan sneeze"
         )
         em.add_field(name="**Syntax**", value="k.botansneeze [loop]")
@@ -304,58 +304,58 @@ class Help(commands.Cog):
 
     @help.command()
     async def boom(self, ctx):
-        em = discord.Embed(
+        em = disnake.Embed(
             title="Vine Boom SFX", description="plays the funni boom sfx in vc"
         )
         await ctx.send(embed=em)
 
     @help.command(aliases=["ogei"])
     async def ogey(self, ctx):
-        em = discord.Embed(title="Ogey...", description="Plays Pekora's ogey in VC.")
+        em = disnake.Embed(title="Ogey...", description="Plays Pekora's ogey in VC.")
         em.add_field(name="**Aliases**", value="ogei")
         await ctx.send(embed=em)
 
     @help.command()
     async def rrat(self, ctx):
-        em = discord.Embed(title="Rrat!", description="Plays Pekora's rrat in VC.")
+        em = disnake.Embed(title="Rrat!", description="Plays Pekora's rrat in VC.")
         await ctx.send(embed=em)
 
     @help.command()
     async def fart(self, ctx):
-        em = discord.Embed(
+        em = disnake.Embed(
             title="Reverb fart sfx", description="Plays funni fart sound in VC."
         )
         await ctx.send(embed=em)
 
     @help.command()
     async def mogumogu(self, ctx):
-        em = discord.Embed(
+        em = disnake.Embed(
             title="Mogu mogu!", description="Plays okayu's mogu mogu in VC."
         )
         await ctx.send(embed=em)
 
     @help.command()
     async def bababooey(self, ctx):
-        em = discord.Embed(title="Bababooey!", description="Plays bababooey in VC.")
+        em = disnake.Embed(title="Bababooey!", description="Plays bababooey in VC.")
         await ctx.send(embed=em)
 
     @help.command()
     async def dog(self, ctx):
-        em = discord.Embed(
+        em = disnake.Embed(
             title="What the dog doin?", description="Plays 'what da dog doin' in VC."
         )
         await ctx.send(embed=em)
 
     @help.command()
     async def totsugeki(self, ctx):
-        em = discord.Embed(
+        em = disnake.Embed(
             title="TOTSUGEKI!!!", description="Plays May's Totsugeki in VC."
         )
         await ctx.send(embed=em)
 
     @help.command(aliases=["bong"])
     async def tacobell(self, ctx):
-        em = discord.Embed(
+        em = disnake.Embed(
             title="Taco Bell bong sfx",
             description="Plays the funny taco bell sound effect in VC.",
         )
@@ -364,7 +364,7 @@ class Help(commands.Cog):
 
     @help.command(aliases=["amogus"])
     async def amongus(self, ctx):
-        em = discord.Embed(
+        em = disnake.Embed(
             title="AMONGUS!", description="Plays the guy yelling amongus in VC."
         )
         em.add_field(name="**Aliases**", value="amogus")
@@ -372,7 +372,7 @@ class Help(commands.Cog):
 
     @help.command(aliases=["classtrial"])
     async def danganronpa(self, ctx):
-        em = discord.Embed(
+        em = disnake.Embed(
             title="Class trial time!",
             description="Plays '議論 -HEAT UP-' from Danganronpa in VC.",
         )
@@ -381,12 +381,12 @@ class Help(commands.Cog):
 
     @help.command()
     async def join(self, ctx):
-        em = discord.Embed(title="Join VC", description="Sus bot will enter the VC.")
+        em = disnake.Embed(title="Join VC", description="Sus bot will enter the VC.")
         await ctx.send(embed=em)
 
     @help.command()
     async def stop(self, ctx):
-        em = discord.Embed(
+        em = disnake.Embed(
             title="STOP!",
             description="Sus bot will stop playing if it's playing something in VC.",
         )
@@ -394,7 +394,7 @@ class Help(commands.Cog):
 
     @help.command()
     async def stoploop(self, ctx):
-        em = discord.Embed(
+        em = disnake.Embed(
             title="STOP THE LOOP!",
             description="Sus bot will stop playing if it's playing something in VC that has loop mode enabled.",
         )
@@ -403,14 +403,14 @@ class Help(commands.Cog):
 
     @help.command()
     async def leave(self, ctx):
-        em = discord.Embed(
+        em = disnake.Embed(
             title="Sayonara...", description="Sus bot will leave the VC."
         )
         await ctx.send(embed=em)
 
     @help.command()
     async def stream(self, ctx):
-        em = discord.Embed(
+        em = disnake.Embed(
             title="YouTube Stream Time Embed",
             description="Sends an embed of a YouTube stream with its start time.",
         )
@@ -419,7 +419,7 @@ class Help(commands.Cog):
 
     @help.command()
     async def water(self, ctx):
-        em = discord.Embed(
+        em = disnake.Embed(
             title="Water and Water and Water Water",
             description="Plays 'Water and Water and Water Water'in VC.",
         )
@@ -427,19 +427,19 @@ class Help(commands.Cog):
 
     @help.command()
     async def necoarc(self, ctx):
-        em = discord.Embed(title="Neco arc", description="Plays neco arc in VC.")
+        em = disnake.Embed(title="Neco arc", description="Plays neco arc in VC.")
         await ctx.send(embed=em)
 
     @help.command()
     async def vsauce(self, ctx):
-        em = discord.Embed(
+        em = disnake.Embed(
             title="Vsauce music", description="Plays the vsauce music in VC."
         )
         await ctx.send(embed=em)
 
     @help.command()
     async def gigachad(self, ctx):
-        em = discord.Embed(
+        em = disnake.Embed(
             title="Gigachad",
             description="Plays a bit of 'Can You Feel My Heart' in VC.",
         )
@@ -447,7 +447,7 @@ class Help(commands.Cog):
 
     @help.command()
     async def pet(self, ctx):
-        em = discord.Embed(
+        em = disnake.Embed(
             title="Pet user",
             description="Sends a gif of the mentioned user being petted.",
         )
@@ -458,7 +458,7 @@ class Help(commands.Cog):
 
     @help.command(aliases=["findsauce", "getsauce"])
     async def sauce(self, ctx):
-        em = discord.Embed(
+        em = disnake.Embed(
             title="Get sauce", description="Uses Saucenao API to find sauce."
         )
         em.add_field(
@@ -470,7 +470,7 @@ class Help(commands.Cog):
 
     @help.command()
     async def clipaudio(self, ctx):
-        em = discord.Embed(
+        em = disnake.Embed(
             title="Clip Audio", description="Clips the audio of a given YouTube video"
         )
         em.add_field(
@@ -486,7 +486,7 @@ class Help(commands.Cog):
 
     @help.command()
     async def ping(self, ctx):
-        em = discord.Embed(
+        em = disnake.Embed(
             title="Ping",
             description="Pings the bot. What else would this be lol.",
         )

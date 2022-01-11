@@ -1,5 +1,5 @@
-from discord.ext import commands
-import discord
+from disnake.ext import commands
+import disnake
 import asyncio
 import os
 from shlex import join as shjoin
@@ -95,11 +95,11 @@ class Download(commands.Cog):
                     filename = thing.decode("utf-8").split("\n")[0]
                     await message.edit(content="Sending video...")
                     try:
-                        await ctx.send(file=discord.File(filename))
+                        await ctx.send(file=disnake.File(filename))
                     except Exception as e:
                         await ctx.send(e)
                         await ctx.send(type(e).__name__)
-                except discord.HTTPException:
+                except disnake.HTTPException:
                     await ctx.send(
                         "File too large, broski <:towashrug:853606191711649812>"
                     )
@@ -171,10 +171,10 @@ class Download(commands.Cog):
                     print(thing.decode("utf-8"))
                     await message.edit(content="Sending video...")
                     try:
-                        await ctx.send(file=discord.File(filename))
+                        await ctx.send(file=disnake.File(filename))
                     except Exception as e:
                         await ctx.send(e)
-                except discord.HTTPException:
+                except disnake.HTTPException:
                     await ctx.send(
                         "File too large, broski <:towashrug:853606191711649812>"
                     )
@@ -248,10 +248,10 @@ class Download(commands.Cog):
                     print(thing.decode("utf-8"))
                     await message.edit(content="Sending video...")
                     try:
-                        await ctx.send(file=discord.File(filename))
+                        await ctx.send(file=disnake.File(filename))
                     except Exception as e:
                         await ctx.send(e)
-                except discord.HTTPException:
+                except disnake.HTTPException:
                     await ctx.send(
                         "File too large, broski <:towashrug:853606191711649812>"
                     )
@@ -298,10 +298,10 @@ class Download(commands.Cog):
                     filename = thing.decode("utf-8").split("\n")[0]
                     await message.edit(content="Sending video...")
                     try:
-                        await ctx.send(file=discord.File(filename))
+                        await ctx.send(file=disnake.File(filename))
                     except Exception as e:
                         await ctx.send(e)
-                except discord.HTTPException:
+                except disnake.HTTPException:
                     await ctx.send(
                         "File too large, broski <:towashrug:853606191711649812>"
                     )
@@ -339,10 +339,10 @@ class Download(commands.Cog):
                     filename = thing.decode("utf-8").split("\n")[0]
                     await message.edit(content="Sending video...")
                     try:
-                        await ctx.send(file=discord.File(filename))
+                        await ctx.send(file=disnake.File(filename))
                     except Exception as e:
                         await ctx.send(e)
-                except discord.HTTPException:
+                except disnake.HTTPException:
                     await ctx.send(
                         "File too large, broski <:towashrug:853606191711649812>"
                     )

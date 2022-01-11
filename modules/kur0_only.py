@@ -1,5 +1,5 @@
-from discord.ext import commands
-import discord
+from disnake.ext import commands
+import disnake
 import asyncio
 import subprocess
 import os
@@ -18,12 +18,12 @@ class Kur0only(commands.Cog):
                 x = requests.get(
                     f"https://quiet-sun-6d6e.cantilfrederick.workers.dev/?{description}"
                 )
-                embed = discord.Embed(title=title, description=x.text)
+                embed = disnake.Embed(title=title, description=x.text)
                 await ctx.send(embed=embed)
                 await ctx.message.delete()
             else:
                 print("description is text")
-                embed = discord.Embed(title=title, description=description)
+                embed = disnake.Embed(title=title, description=description)
                 await ctx.send(embed=embed)
                 await ctx.message.delete()
         else:
@@ -41,13 +41,13 @@ class Kur0only(commands.Cog):
                 x = requests.get(
                     f"https://quiet-sun-6d6e.cantilfrederick.workers.dev/?{description}"
                 )
-                embed = discord.Embed(title=title, description=x.text)
+                embed = disnake.Embed(title=title, description=x.text)
                 await msg.edit(embed=embed)
                 await ctx.message.delete()
             else:
                 print("description is text")
                 msg = await ctx.fetch_message(id)
-                embed = discord.Embed(title=title, description=description)
+                embed = disnake.Embed(title=title, description=description)
                 await msg.edit(embed=embed)
                 await ctx.message.delete()
         else:

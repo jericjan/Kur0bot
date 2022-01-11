@@ -1,5 +1,5 @@
-from discord.ext import commands
-import discord
+from disnake.ext import commands
+import disnake
 import asyncio
 import re
 from datetime import datetime, timedelta
@@ -314,7 +314,7 @@ class Clip(commands.Cog):
 
         try:
 
-            await ctx.send(file=discord.File(f"{filename}.mp4"))
+            await ctx.send(file=disnake.File(f"{filename}.mp4"))
         except Exception:
             await message.edit(content="I failed.")
         await ctx.send(ctx.message.author.mention)
@@ -574,7 +574,7 @@ class Clip(commands.Cog):
 
         try:
 
-            await ctx.send(file=discord.File(f"{filename}.mp4"))
+            await ctx.send(file=disnake.File(f"{filename}.mp4"))
         except Exception as e:
             await message.edit(content="I failed.")
             await ctx.send(e)
@@ -714,7 +714,7 @@ class Clip(commands.Cog):
 
         # os.rename(filename+".mkv",filename+".mp4")
         try:
-            await ctx.send(file=discord.File(f"{filename}.{filetype.lower()}"))
+            await ctx.send(file=disnake.File(f"{filename}.{filetype.lower()}"))
         except Exception:
             await message.edit(content="I failed.")
         await ctx.send(ctx.message.author.mention)
@@ -844,7 +844,7 @@ class Clip(commands.Cog):
                             content=f"{round(percentage, 2)}% complete..."
                         )
             os.rename(f"{filename}.mkv", f"{filename}.mp4")
-            await ctx.send(file=discord.File(f"{filename}.mp4"))
+            await ctx.send(file=disnake.File(f"{filename}.mp4"))
             # await ctx.send(ctx.message.author.mention)
             os.remove(f"{filename}.mp4")
             await message.delete()
@@ -933,7 +933,7 @@ class Clip(commands.Cog):
         print(stderr.decode("utf-8"))
         # os.rename(filename+".mkv",filename+".mp4")
         try:
-            await ctx.send(file=discord.File(f"{filename}.mp4"))
+            await ctx.send(file=disnake.File(f"{filename}.mp4"))
         except Exception:
             await message.edit(content="I failed.")
         await ctx.send(ctx.message.author.mention)
@@ -1003,7 +1003,7 @@ class Clip(commands.Cog):
         # print(stderr)
         # os.rename(filename+".mkv",filename+".mp4")
         try:
-            await ctx.send(file=discord.File(f"{filename}.mp4"))
+            await ctx.send(file=disnake.File(f"{filename}.mp4"))
         except Exception:
             await message.edit(content="I failed.")
         await ctx.send(ctx.message.author.mention)

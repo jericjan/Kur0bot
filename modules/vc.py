@@ -1,8 +1,8 @@
 # followed this https://gist.github.com/15696/a1b10f044fbd658ce76ab1f862a1bda2
 # client becomes self.client
 
-from discord.ext import commands
-import discord
+from disnake.ext import commands
+import disnake
 import random
 
 may_sounds = ["sounds/totsugeki_7UWR0L4.mp3", "sounds/totsugeki-may-2.mp3"]
@@ -15,7 +15,7 @@ class Vc(commands.Cog):
     async def vcplay(self, ctx, a, loop=None):
         voice_channel = ctx.author.voice.channel
 
-        voice = discord.utils.get(self.client.voice_clients, guild=ctx.guild)
+        voice = disnake.utils.get(self.client.voice_clients, guild=ctx.guild)
         if voice_channel != None:
 
             if voice == None:
@@ -24,23 +24,23 @@ class Vc(commands.Cog):
 
                     def loop():
                         vc.play(
-                            discord.FFmpegPCMAudio(source=a), after=lambda e: loop()
+                            disnake.FFmpegPCMAudio(source=a), after=lambda e: loop()
                         )
 
                     loop()
                 else:
-                    vc.play(discord.FFmpegPCMAudio(source=a))
+                    vc.play(disnake.FFmpegPCMAudio(source=a))
             else:
                 if loop == "loop":
 
                     def loop2():
                         voice.play(
-                            discord.FFmpegPCMAudio(source=a), after=lambda e: loop2()
+                            disnake.FFmpegPCMAudio(source=a), after=lambda e: loop2()
                         )
 
                     loop2()
                 else:
-                    voice.play(discord.FFmpegPCMAudio(source=a))
+                    voice.play(disnake.FFmpegPCMAudio(source=a))
         else:
             await ctx.send(f"{ctx.author.name} is not in a channel.")
         # Delete command after the audio is done playing.

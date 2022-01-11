@@ -1,5 +1,7 @@
-from discord.ext import commands, pages
-import discord
+from disnake.ext import commands  # , pages
+from ..paginator import ButtonPaginator
+from ..paginator import MessageInteractionWrapper
+import disnake
 from saucenao_api import SauceNao
 import os
 import re
@@ -61,7 +63,7 @@ class Sauce(commands.Cog):
             # await ctx.send(results_dict[i].title)
             try:
                 site_name = re.search(r"(?<=https:\/\/)[^\/]*", results_dict[i].urls[0])
-                embed_dict[i] = discord.Embed(
+                embed_dict[i] = disnake.Embed(
                     title=results_dict[i].title,
                     description=f"{results_dict[i].similarity}% accurate",
                     url=results_dict[i].urls[0],
@@ -70,7 +72,7 @@ class Sauce(commands.Cog):
                 embed_dict[i].set_image(url=results_dict[i].thumbnail)
                 embed_dict[i].set_footer(text=site_name[0])
             except IndexError:
-                embed_dict[i] = discord.Embed(
+                embed_dict[i] = disnake.Embed(
                     title=results_dict[i].title,
                     description=f"{results_dict[i].similarity}% accurate",
                 )
@@ -93,8 +95,14 @@ class Sauce(commands.Cog):
             # view= View()
             # view.add_item(button1)
             # view.add_item(button2)
-        paginator = pages.Paginator(pages=embed_dict)
+        # paginator = pages.Paginator(pages=embed_dict)
+
+        embed_list = list(embed_dict.values())
+
+        paginator = ButtonPaginator(segments=embed_list)
         await paginator.send(ctx)
+
+        # await paginator.send(ctx)
         # await ctx.send(embed=embed_dict[i],view=view)
         # await buttons.send(
         # channel = ctx.channel.id,

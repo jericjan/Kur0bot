@@ -1,5 +1,5 @@
-from discord.ext import commands
-import discord
+from disnake.ext import commands
+import disnake
 from ftplib import FTP
 import os
 import json
@@ -21,9 +21,9 @@ class PacifamOnly(commands.Cog):
         while avi_guild == None:
             pass
         else:
-            admin = discord.utils.get(avi_guild.roles, name="Admin")
-            moderator = discord.utils.get(avi_guild.roles, name="Moderator")
-            avilon = discord.utils.get(avi_guild.roles, name="Aweelom")
+            admin = disnake.utils.get(avi_guild.roles, name="Admin")
+            moderator = disnake.utils.get(avi_guild.roles, name="Moderator")
+            avilon = disnake.utils.get(avi_guild.roles, name="Aweelom")
         roles = [admin, moderator, avilon]
         if (
             any(role in roles for role in ctx.author.roles)
@@ -78,9 +78,9 @@ class PacifamOnly(commands.Cog):
         while avi_guild == None:
             pass
         else:
-            admin = discord.utils.get(avi_guild.roles, name="Admin")
-            moderator = discord.utils.get(avi_guild.roles, name="Moderator")
-            avilon = discord.utils.get(avi_guild.roles, name="Aweelom")
+            admin = disnake.utils.get(avi_guild.roles, name="Admin")
+            moderator = disnake.utils.get(avi_guild.roles, name="Moderator")
+            avilon = disnake.utils.get(avi_guild.roles, name="Aweelom")
         roles = [admin, moderator, avilon]
         if (
             any(role in roles for role in ctx.author.roles)
@@ -105,9 +105,9 @@ class PacifamOnly(commands.Cog):
         while avi_guild == None:
             pass
         else:
-            admin = discord.utils.get(avi_guild.roles, name="Admin")
-            moderator = discord.utils.get(avi_guild.roles, name="Moderator")
-            avilon = discord.utils.get(avi_guild.roles, name="Aweelom")
+            admin = disnake.utils.get(avi_guild.roles, name="Admin")
+            moderator = disnake.utils.get(avi_guild.roles, name="Moderator")
+            avilon = disnake.utils.get(avi_guild.roles, name="Aweelom")
         roles = [admin, moderator, avilon]
         if (
             any(role in roles for role in ctx.author.roles)

@@ -1,11 +1,15 @@
 import time
 
 start_time = time.time()
+import sys
 
-import discord
+# sys.stdout = open('console_log.txt', 'a')
+# sys.stderr = open('console_log.txt', 'a')
+# import discord
+import disnake
 
-print(f"Running Pycord {discord.__version__}")
-from discord.ext import commands
+print(f"Running Disnake {disnake.__version__}")
+from disnake.ext import commands
 import os
 
 import json
@@ -27,8 +31,10 @@ import atexit
 import signal
 
 
-def goodbye():
+def goodbye(a=None, b=None):
     print("Exiting...")
+    #sys.stdout.close()
+
     f = open("log.txt", "a")
     f.write("Exiting...\n")
     f.close()
@@ -52,12 +58,12 @@ else:
 
 
 # client = discord.Client()
-intents = discord.Intents().default()
+intents = disnake.Intents().default()
 intents.presences = True
 intents.members = True
 
 # global client
-game = discord.Activity(name="sus gaming | k.help", type=discord.ActivityType.playing)
+game = disnake.Activity(name="sus gaming | k.help", type=disnake.ActivityType.playing)
 client = commands.Bot(command_prefix="k.", intents=intents, activity=game)
 
 client.remove_command("help")
@@ -133,7 +139,7 @@ async def on_ready():
         while avibot == None:
             avibot = avi_guild.get_member(855897776125640704)
         else:
-            if avibot.status is discord.Status.offline:
+            if avibot.status is disnake.Status.offline:
                 print("avibot ded")
                 await log("avi bot ded", False)
                 # channel = client.get_guild(603147860225032192).get_channel(836222286432043018)  # notification channel
@@ -146,7 +152,7 @@ async def on_ready():
                 # staffch = client.get_guild(603147860225032192).get_channel(812666568613167125)
                 await vc.edit(name="AviBot: dead")
             # await staffch.send('<@97122523086340096> bot ded')
-            if avibot.status is discord.Status.online:
+            if avibot.status is disnake.Status.online:
                 print("avi bot bac")
                 await log("avi bot bac", False)
                 # channel = client.get_guild(603147860225032192).get_channel(836222286432043018)  # notification channel
@@ -165,8 +171,8 @@ client.sus_on = False
 @client.event
 async def on_member_update(before, after):
     if (
-        before.status is discord.Status.online
-        and after.status is discord.Status.offline
+        before.status is disnake.Status.online
+        and after.status is disnake.Status.offline
         and after.guild == client.get_guild(603147860225032192)
     ):
         if after.id == 855897776125640704:
@@ -182,8 +188,8 @@ async def on_member_update(before, after):
             await vc.edit(name="AviBot: dead")
             # await staffch.send('<@97122523086340096> bot ded')
     elif (
-        before.status is discord.Status.offline
-        and after.status is discord.Status.online
+        before.status is disnake.Status.offline
+        and after.status is disnake.Status.online
     ):
         if after.id == 855897776125640704:
             print(after.id)
@@ -293,15 +299,15 @@ async def twitter_video_link_giver(message):
 
                 msg = await message.channel.send(json_list["url"])
                 await asyncio.sleep(3)
-                if not msg.embeds:
-                    await m1.edit(content="No embeds. Trying to manually upload...")
-                    r = requests.get(json_list["url"])
-                    # print(r.content)
-                    vid = io.BytesIO(r.content)
-                    filename = json_list["url"].split("/")[-1].split("?")[0]
-                    await message.channel.send(
-                        file=discord.File(vid, filename=filename)
-                    )
+                # if not msg.embeds:
+                #     await m1.edit(content="No embeds. Trying to manually upload...")
+                #     r = requests.get(json_list["url"])
+                #     # print(r.content)
+                #     vid = io.BytesIO(r.content)
+                #     filename = json_list["url"].split("/")[-1].split("?")[0]
+                #     await message.channel.send(
+                #         file=disnake.File(vid, filename=filename)
+                #     )
                 await m1.delete()
 
 
@@ -316,14 +322,14 @@ async def vc_tts(message):
         tts = gTTS(msg)
         with open("sounds/tts.mp3", "wb") as f:
             tts.write_to_fp(f)
-        voice = discord.utils.get(client.voice_clients, guild=message.guild)
+        voice = disnake.utils.get(client.voice_clients, guild=message.guild)
         if voice_channel != None:
 
             if voice == None:
                 vc = await voice_channel.connect()
-                vc.play(discord.FFmpegPCMAudio(source="sounds/tts.mp3"))
+                vc.play(disnake.FFmpegPCMAudio(source="sounds/tts.mp3"))
             else:
-                voice.play(discord.FFmpegPCMAudio(source="sounds/tts.mp3"))
+                voice.play(disnake.FFmpegPCMAudio(source="sounds/tts.mp3"))
     if msg.startswith("]au "):
         await log("]au command used", True)
         voice_channel = message.author.voice.channel
@@ -331,14 +337,14 @@ async def vc_tts(message):
         tts = gTTS(msg[3:], lang="en", tld="com.au")
         with open("sounds/tts.mp3", "wb") as f:
             tts.write_to_fp(f)
-        voice = discord.utils.get(client.voice_clients, guild=message.guild)
+        voice = disnake.utils.get(client.voice_clients, guild=message.guild)
         if voice_channel != None:
 
             if voice == None:
                 vc = await voice_channel.connect()
-                vc.play(discord.FFmpegPCMAudio(source="sounds/tts.mp3"))
+                vc.play(disnake.FFmpegPCMAudio(source="sounds/tts.mp3"))
             else:
-                voice.play(discord.FFmpegPCMAudio(source="sounds/tts.mp3"))
+                voice.play(disnake.FFmpegPCMAudio(source="sounds/tts.mp3"))
     if msg.startswith("]uk "):
         await log("]uk command used", True)
         voice_channel = message.author.voice.channel
@@ -346,14 +352,14 @@ async def vc_tts(message):
         tts = gTTS(msg[3:], lang="en", tld="co.uk")
         with open("sounds/tts.mp3", "wb") as f:
             tts.write_to_fp(f)
-        voice = discord.utils.get(client.voice_clients, guild=message.guild)
+        voice = disnake.utils.get(client.voice_clients, guild=message.guild)
         if voice_channel != None:
 
             if voice == None:
                 vc = await voice_channel.connect()
-                vc.play(discord.FFmpegPCMAudio(source="sounds/tts.mp3"))
+                vc.play(disnake.FFmpegPCMAudio(source="sounds/tts.mp3"))
             else:
-                voice.play(discord.FFmpegPCMAudio(source="sounds/tts.mp3"))
+                voice.play(disnake.FFmpegPCMAudio(source="sounds/tts.mp3"))
     if msg.startswith("]in "):
         await log("]in command used", True)
         voice_channel = message.author.voice.channel
@@ -361,14 +367,14 @@ async def vc_tts(message):
         tts = gTTS(msg[3:], lang="en", tld="co.in")
         with open("sounds/tts.mp3", "wb") as f:
             tts.write_to_fp(f)
-        voice = discord.utils.get(client.voice_clients, guild=message.guild)
+        voice = disnake.utils.get(client.voice_clients, guild=message.guild)
         if voice_channel != None:
 
             if voice == None:
                 vc = await voice_channel.connect()
-                vc.play(discord.FFmpegPCMAudio(source="sounds/tts.mp3"))
+                vc.play(disnake.FFmpegPCMAudio(source="sounds/tts.mp3"))
             else:
-                voice.play(discord.FFmpegPCMAudio(source="sounds/tts.mp3"))
+                voice.play(disnake.FFmpegPCMAudio(source="sounds/tts.mp3"))
 
 
 print(f"{(time.time() - start_time):.2f}s - Importing Kur0's modules...")
@@ -438,14 +444,14 @@ async def speak(ctx, *, message):
     tts = gTTS(message)
     with open("sounds/tts.mp3", "wb") as f:
         tts.write_to_fp(f)
-    voice = discord.utils.get(client.voice_clients, guild=ctx.guild)
+    voice = disnake.utils.get(client.voice_clients, guild=ctx.guild)
     if voice_channel != None:
 
         if voice == None:
             vc = await voice_channel.connect()
-            vc.play(discord.FFmpegPCMAudio(source="sounds/tts.mp3"))
+            vc.play(disnake.FFmpegPCMAudio(source="sounds/tts.mp3"))
         else:
-            voice.play(discord.FFmpegPCMAudio(source="sounds/tts.mp3"))
+            voice.play(disnake.FFmpegPCMAudio(source="sounds/tts.mp3"))
 
 
 @client.command()
@@ -455,14 +461,14 @@ async def speak2(ctx, *, message):
     tts = gTTS(message, lang="en", tld="com.au")
     with open("sounds/tts.mp3", "wb") as f:
         tts.write_to_fp(f)
-    voice = discord.utils.get(client.voice_clients, guild=ctx.guild)
+    voice = disnake.utils.get(client.voice_clients, guild=ctx.guild)
     if voice_channel != None:
 
         if voice == None:
             vc = await voice_channel.connect()
-            vc.play(discord.FFmpegPCMAudio(source="sounds/tts.mp3"))
+            vc.play(disnake.FFmpegPCMAudio(source="sounds/tts.mp3"))
         else:
-            voice.play(discord.FFmpegPCMAudio(source="sounds/tts.mp3"))
+            voice.play(disnake.FFmpegPCMAudio(source="sounds/tts.mp3"))
 
 
 import difflib
@@ -525,7 +531,7 @@ async def when(ctx, link):
         await ctx.send(f"<t:{epoch_time:.0f}:F>")
 
 
-from discord import Webhook
+from disnake import Webhook
 
 
 @client.command()
@@ -595,7 +601,7 @@ async def stream(ctx, link, noembed=None):
         url = "https://www.googleapis.com/youtube/v3/channels"
         r2 = requests.get(url, headers=None, params=params2).json()
         pfp = r2["items"][0]["snippet"]["thumbnails"]["default"]["url"]
-        e = discord.Embed(title=title, timestamp=dttime, description=reltime, url=link)
+        e = disnake.Embed(title=title, timestamp=dttime, description=reltime, url=link)
         e.set_author(
             name=author,
             icon_url=pfp,
@@ -718,9 +724,9 @@ async def rolecheck(ctx):
     while avi_guild == None:
         pass
     else:
-        admin = discord.utils.get(avi_guild.roles, name="Admin")
-        moderator = discord.utils.get(avi_guild.roles, name="Moderator")
-        avilon = discord.utils.get(avi_guild.roles, name="Aweelom")
+        admin = disnake.utils.get(avi_guild.roles, name="Admin")
+        moderator = disnake.utils.get(avi_guild.roles, name="Moderator")
+        avilon = disnake.utils.get(avi_guild.roles, name="Aweelom")
     roles = [admin, moderator, avilon]
     if (
         any(role in roles for role in ctx.author.roles)
@@ -792,6 +798,7 @@ from running_check import check
 
 proc_id = os.getpid()
 print(f"{(time.time() - start_time):.2f}s - Process ID: {proc_id}")
+asyncio.run(log(f"Process ID: {proc_id}", False))
 check(start_time, proc_id)
 
 while isDiscordrunning is False:

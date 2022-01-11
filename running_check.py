@@ -1,12 +1,26 @@
 import subprocess
 import time
-
+import pytz
+from datetime import datetime
 
 # coms = ['ps', '-aef']
 # process = subprocess.Popen(coms)
 
 
 # stdout, stderr = process.communicate()
+def log(text, printText=None):
+    tz = pytz.timezone("Asia/Manila")
+    curr_time = datetime.now(tz)
+    clean_time = curr_time.strftime("%m/%d/%Y %I:%M %p")
+    final = f"{clean_time} - {text}\n"
+    if printText == False:
+        pass
+    else:
+        print(final)
+    f = open("log.txt", "a")
+    f.write(final)
+    f.close()
+
 
 # print(stdout.splitlines())
 def check(start_time, proc_id):
@@ -38,6 +52,7 @@ def check(start_time, proc_id):
                         num = num + 1
                         #   print(f"{id}: {name}")
                         print(f"Killing {id}:{name}...")
+                        log(f"Killing {id}:{name}...", False)
                         coms = ["kill", "-9", str(id)]
                         out = subprocess.Popen(
                             coms, stdout=subprocess.PIPE, stderr=subprocess.PIPE
