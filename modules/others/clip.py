@@ -232,7 +232,7 @@ class Clip(commands.Cog):
                 print(f"after {prev_keyframe}")
                 print(f"before {next_keyframe}")
                 if next_keyframe == None:
-                    print("no next keyframe!")
+                    print("no next keyframe!(0)")
                     keyframe = prev_keyframe
                 else:
                     keyframe = (prev_keyframe + next_keyframe) / 2
@@ -251,9 +251,31 @@ class Clip(commands.Cog):
                 keyframe = round_down(max_le(timelist_float, 30), round_number)
             else:
                 prev_keyframe = max_le(timelist_float, 30)
-                next_keyframe = min_gt(timelist_float, 30)
+                if prev_keyframe == timelist_float[-1]:  # if prev_keyframe is last
+                    coms = [
+                        "ffprobe",
+                        "-v",
+                        "error",
+                        "-show_entries",
+                        "format=duration",
+                        "-of",
+                        "default=noprint_wrappers=1:nokey=1",
+                        f"{filename}_temp0.mp4",
+                    ]  # get duration
+                    process = await asyncio.create_subprocess_exec(
+                        *coms,
+                        stdout=asyncio.subprocess.PIPE,
+                        stderr=asyncio.subprocess.PIPE,
+                    )
+                    stdout, stderr = await process.communicate()
+                    print(stderr)
+                    next_keyframe = float(stdout.decode("utf-8"))
+                else:
+                    next_keyframe = min_gt(timelist_float, 30)
+                print(f"after {prev_keyframe}")
+                print(f"before {next_keyframe}")
                 if next_keyframe == None:
-                    print("no next keyframe!")
+                    print("no next keyframe!(1)")
                     keyframe = prev_keyframe
                 else:
                     keyframe = (prev_keyframe + next_keyframe) / 2

@@ -51,13 +51,14 @@ def check(start_time, proc_id):
                     if int(id) != proc_id:
                         num = num + 1
                         #   print(f"{id}: {name}")
-                        print(f"Killing {id}:{name}...")
+                        print(f"Not Killing {id}:{name}...")
                         log(f"Killing {id}:{name}...", False)
-                        coms = ["kill", "-9", str(id)]
-                        out = subprocess.Popen(
-                            coms, stdout=subprocess.PIPE, stderr=subprocess.PIPE
-                        )
-                        stdout, stderr = out.communicate()
+                        # coms = ["kill", "-9", str(id)]
+                        # out = subprocess.Popen(
+                        #     coms, stdout=subprocess.PIPE, stderr=subprocess.PIPE
+                        # )
+                        # stdout, stderr = out.communicate()
+
                     #  print(f"{id}{name} killed!")
     if num > 0:
         print(

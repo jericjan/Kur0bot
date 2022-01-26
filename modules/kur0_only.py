@@ -119,13 +119,16 @@ class Kur0only(commands.Cog):
                 msg = await msg.edit(content=f"{msg.content}Done! ({out.returncode})")
             else:
                 try:
+                    print("test1")
                     msg = await msg.edit(
                         content=f"{msg.content}\n Return code: {out.returncode}\n{stderr.decode()}"
                     )
+
                 except:
                     msg = await msg.edit(
                         content=f"{msg.content}\n Return code: {out.returncode}\n{stdout.decode()}"
                     )
+                    print("test2")
                 return
 
             # get title and filename
