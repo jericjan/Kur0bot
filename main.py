@@ -391,6 +391,7 @@ client.load_extension("modules.others.emote_sticker")
 client.load_extension("modules.others.badapple")
 client.load_extension("modules.others.pet")
 client.load_extension("modules.others.sauce")
+client.load_extension("modules.others.144p")
 client.load_extension("modules.pacifam_only")
 client.load_extension("modules.kur0_only")
 print(f"{(time.time() - start_time):.2f}s - Done!")
@@ -522,7 +523,7 @@ async def when(ctx, link):
     print(idd)
     if wrong != True:
         params = {
-            "part": "snippet",
+            "part": "snippet,liveStreamingDetails",
             "key": os.getenv("YT_API_KEY"),
             "id": idd,
         }
@@ -530,7 +531,19 @@ async def when(ctx, link):
         r = requests.get(url, headers=None, params=params).json()
         publish_time = r["items"][0]["snippet"]["publishedAt"]
         epoch_time = dp.parse(publish_time).timestamp()
-        await ctx.send(f"<t:{epoch_time:.0f}:F>")
+        await ctx.send(f"Video was published at <t:{epoch_time:.0f}:F>")
+        if r["items"][0]["liveStreamingDetails"]:
+            stream_start = r["items"][0]["liveStreamingDetails"]["actualStartTime"]
+            epoch_stream_start = dp.parse(stream_start).timestamp()
+            stream_end = r["items"][0]["liveStreamingDetails"]["actualEndTime"]
+            epoch_stream_end = dp.parse(stream_end).timestamp()
+            stream_schedule = r["items"][0]["liveStreamingDetails"][
+                "scheduledStartTime"
+            ]
+            epoch_stream_schedule = dp.parse(stream_schedule).timestamp()
+            await ctx.send(
+                f"Stream started at <t:{epoch_stream_start:.0f}:F>\nStream ended at <t:{epoch_stream_end:.0f}:F>\nStream was schedule to start at <t:{epoch_stream_schedule:.0f}:F>"
+            )
 
 
 from disnake import Webhook
@@ -718,6 +731,21 @@ async def tasks(ctx):
 @client.command()
 async def ping(ctx):
     await ctx.send(f"My ping is {round (client.latency * 1000)}ms!")
+
+
+@client.command(aliases=["flip"])
+async def coinflip(ctx, *, input):
+    input1 = input.lower()
+    print(f"input is {input1}")
+    choices = ["heads", "tails"]
+    if input1 not in choices:
+        await ctx.send(f"bruhg. there's no {input1} in a coin dummy 😠")
+        return
+    result = random.choice(choices)
+    if input1 == result:
+        await ctx.send(f"It's {result}! You win!")
+    else:
+        await ctx.send(f"It's {result}! You lose!")
 
 
 @client.command()

@@ -17,7 +17,7 @@ class Help(commands.Cog):
         em.add_field(name="ascii", value="fortnite")
         em.add_field(
             name="others",
-            value="emote\ngetemotes\nbadapple\nclip\nfastclip\nclipaudio\ndownload\nstream\npet\nsauce\nping",
+            value="emote\ngetemotes\nbadapple\nclip\nfastclip\nclipaudio\ndownload\nstream\npet\nsauce\nping\ncoinflip",
         )
         em.add_field(name="reactions", value="fmega\nkotowaru\nascend\njizz")
         em.add_field(
@@ -490,6 +490,16 @@ class Help(commands.Cog):
             title="Ping",
             description="Pings the bot. What else would this be lol.",
         )
+        await ctx.send(embed=em)
+
+    @help.command(aliases=["flip"])
+    async def coinflip(self, ctx):
+        em = disnake.Embed(
+            title="Coin Flip",
+            description="Flips a coin. That's it",
+        )
+        em.add_field(name="**Syntax**", value="k.coinflip  heads\nk.coinflip tails")
+        em.add_field(name="**Aliases**", value="flip")
         await ctx.send(embed=em)
 
 

@@ -1,5 +1,6 @@
 from flask import Flask, cli, request
 from threading import Thread
+import os
 
 # import sys
 import requests
@@ -24,6 +25,13 @@ def shutdown_server():
 def shutdown():
     shutdown_server()
     return "Server shutting down..."
+
+
+@app.route("/kill", methods=["POST", "GET"])
+def kill():
+    id = request.args.get("id")
+    os.system(f"kill -9 {id}")
+    return f"Killed {id}..."
 
 
 def run():
