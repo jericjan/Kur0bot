@@ -892,8 +892,217 @@ In content: Must be 2000 or fewer in length.
 02/11/2022 08:57 AM - k.checkhelp command used
 02/11/2022 09:12 AM - k.repost command used
 02/11/2022 09:13 AM - filename is a required argument that is missing.
-02/11/2022 09:13 AM - link is a required argument that is missing.
+02/11/2022 09:13 AM - link is a required argument that is mi  ssing.
 02/11/2022 09:13 AM - k.fastclip command used
 02/11/2022 09:14 AM - k.fastclip command used
 02/11/2022 09:14 AM - k.fastclip command used
 02/11/2022 09:15 AM - k.fastclip command used
+02/11/2022 09:32 AM - k.download command used
+02/11/2022 09:51 AM - Process ID: 3601
+02/11/2022 09:53 AM - Process ID: 3646
+02/11/2022 09:53 AM - Bot started
+02/11/2022 09:53 AM - avi bot bac
+02/11/2022 09:57 AM - Process ID: 3725
+02/11/2022 09:57 AM - Bot started
+02/11/2022 09:57 AM - avi bot bac
+02/11/2022 10:05 AM - Process ID: 3962
+02/11/2022 10:05 AM - Bot started
+02/11/2022 10:11 AM - Process ID: 4003
+02/11/2022 10:11 AM - Bot started
+02/11/2022 10:11 AM - avi bot bac
+02/11/2022 10:11 AM - sussy reply
+02/11/2022 10:11 AM - sussy reply
+02/11/2022 10:11 AM - sussy reply
+02/11/2022 10:11 AM - sussy reply
+02/11/2022 10:11 AM - sussy reply
+02/11/2022 10:16 AM - Process ID: 4107
+02/11/2022 10:16 AM - Bot started
+02/11/2022 10:16 AM - avi bot bac
+02/11/2022 10:16 AM - sussy reply
+02/11/2022 10:16 AM - sussy reply
+02/11/2022 10:16 AM - sussy reply
+02/11/2022 10:24 AM - Process ID: 4392
+02/11/2022 10:24 AM - Bot started
+02/11/2022 10:24 AM - avi bot bac
+02/11/2022 10:25 AM - twitter link!
+02/11/2022 10:25 AM - twitter link!
+02/11/2022 10:25 AM - twitter video!
+02/11/2022 10:25 AM - twitter video!
+02/11/2022 10:25 AM - Process ID: 4445
+02/11/2022 10:25 AM - Bot started
+02/11/2022 10:25 AM - avi bot bac
+02/11/2022 10:29 AM - Process ID: 4559
+02/11/2022 10:29 AM - Bot started
+02/11/2022 10:29 AM - avi bot bac
+02/11/2022 10:29 AM - ] command used
+02/11/2022 10:30 AM - ] command used
+02/11/2022 10:30 AM - ] command used
+02/11/2022 10:30 AM - k.leave command used
+02/11/2022 10:30 AM - Command raised an exception: NotFound: 404 Not Found (error code: 10008): Unknown Message
+02/11/2022 10:32 AM - sussy reply
+02/11/2022 10:32 AM - k.on command used
+02/11/2022 10:34 AM - sussy reply
+02/11/2022 10:35 AM - sussy reply
+02/11/2022 10:35 AM - k.off command used
+02/11/2022 10:45 AM - Process ID: 4832
+02/11/2022 10:45 AM - Bot started
+02/11/2022 10:45 AM - avi bot bac
+02/11/2022 10:45 AM - Process ID: 4863
+02/11/2022 10:46 AM - Bot started
+02/11/2022 10:46 AM - avi bot bac
+02/11/2022 10:47 AM - sussy reply
+02/11/2022 10:47 AM - k.reload command used
+02/11/2022 10:47 AM - Command raised an exception: ClientException: Cog named 'Events' already loaded
+02/11/2022 10:50 AM - Process ID: 4960
+02/11/2022 10:50 AM - Bot started
+02/11/2022 10:50 AM - avi bot bac
+02/11/2022 10:50 AM - sussy reply
+02/11/2022 10:50 AM - sussy reply
+02/11/2022 10:51 AM - k.reload command used
+02/11/2022 10:51 AM - Command raised an exception: TypeError: object NoneType can't be used in 'await' expression
+02/11/2022 10:51 AM - Process ID: 5023
+02/11/2022 10:51 AM - Bot started
+02/11/2022 10:51 AM - avi bot bac
+02/11/2022 10:51 AM - sussy reply
+02/11/2022 10:51 AM - sussy reply
+02/11/2022 10:52 AM - k.reload command used
+02/11/2022 10:52 AM - sussy reply
+02/11/2022 10:52 AM - sussy reply
+02/11/2022 10:52 AM - k.reload command used
+02/11/2022 10:52 AM - sussy reply
+02/11/2022 10:52 AM - sussy reply
+02/11/2022 10:53 AM - k.reload command used
+02/11/2022 10:53 AM - sussy reply
+02/11/2022 10:54 AM - k.reload command used
+02/11/2022 10:54 AM - Command raised an exception: ExtensionNotLoaded: Extension 'modules.events' has not been loaded.
+02/11/2022 10:55 AM - k.reload command used
+02/11/2022 10:55 AM - sussy reply
+02/11/2022 11:22 AM - Process ID: 443
+02/11/2022 11:26 AM - Process ID: 469
+02/11/2022 11:26 AM - Bot started
+02/11/2022 11:26 AM - avi bot bac
+02/11/2022 11:27 AM - sussy reply
+02/11/2022 11:27 AM - k.reload command used
+02/11/2022 11:27 AM - sussy reply
+02/11/2022 11:28 AM - k.reload command used
+02/11/2022 11:28 AM - sussy reply
+02/11/2022 11:31 AM - Process ID: 513
+02/11/2022 11:31 AM - Bot started
+02/11/2022 11:31 AM - avi bot bac
+02/11/2022 11:31 AM - sussy reply
+02/11/2022 11:31 AM - k.reload command used
+02/11/2022 11:31 AM - Command raised an exception: TypeError: reload() argument must be a module
+02/11/2022 11:32 AM - Process ID: 554
+02/11/2022 11:32 AM - Bot started
+02/11/2022 11:32 AM - avi bot bac
+02/11/2022 11:32 AM - sussy reply
+02/11/2022 11:41 AM - Process ID: 622
+02/11/2022 11:41 AM - Bot started
+02/11/2022 11:41 AM - avi bot bac
+02/11/2022 11:41 AM - sussy reply
+02/11/2022 11:42 AM - k.reload command used
+02/11/2022 11:42 AM - sussy reply
+02/11/2022 11:45 AM - Process ID: 687
+02/11/2022 11:45 AM - Bot started
+02/11/2022 11:45 AM - avi bot bac
+02/11/2022 11:45 AM - sussy reply
+02/11/2022 11:46 AM - k.reload command used
+02/11/2022 11:48 AM - sussy reply
+02/11/2022 11:48 AM - k.reload command used
+02/11/2022 11:48 AM - sussy reply
+02/11/2022 11:49 AM - k.reload command used
+02/11/2022 11:49 AM - sussy reply
+02/11/2022 11:51 AM - sussy reply
+02/11/2022 11:52 AM - sussy reply
+02/11/2022 11:52 AM - k.reload command used
+02/11/2022 11:52 AM - sussy reply
+02/11/2022 11:58 AM - Process ID: 966
+02/11/2022 11:58 AM - Bot started
+02/11/2022 11:58 AM - avi bot bac
+02/11/2022 11:58 AM - Command "banana" is not found
+02/11/2022 12:03 PM - k.reload command used
+02/11/2022 12:03 PM - Command "banana" is not found
+02/11/2022 12:04 PM - k.reload command used
+02/11/2022 12:04 PM - Command "banana" is not found
+02/11/2022 12:30 PM - k.help command used
+02/11/2022 12:31 PM - k.checkhelp command used
+02/11/2022 12:31 PM - Command raised an exception: NameError: name 'hidden_commands' is not defined
+02/11/2022 12:37 PM - Process ID: 1277
+02/11/2022 12:37 PM - Bot started
+02/11/2022 12:37 PM - avi bot bac
+02/11/2022 12:37 PM - k.checkhelp command used
+02/11/2022 12:55 PM - k.reload command used
+02/11/2022 12:55 PM - Process ID: 1447
+02/11/2022 12:55 PM - Bot started
+02/11/2022 12:55 PM - avi bot bac
+02/11/2022 12:56 PM - Command "banana" is not found
+02/11/2022 12:57 PM - k.checkhelp command used
+02/11/2022 12:58 PM - Process ID: 1504
+02/11/2022 12:58 PM - Bot started
+02/11/2022 12:58 PM - avi bot bac
+02/11/2022 12:58 PM - k.checkhelp command used
+02/11/2022 01:00 PM - Process ID: 1571
+02/11/2022 01:00 PM - Bot started
+02/11/2022 01:00 PM - avi bot bac
+02/11/2022 01:01 PM - Process ID: 1614
+02/11/2022 01:01 PM - Bot started
+02/11/2022 01:01 PM - avi bot bac
+02/11/2022 01:01 PM - k.checkhelp command used
+02/11/2022 01:03 PM - k.help command used
+02/11/2022 01:06 PM - Process ID: 1663
+02/11/2022 01:06 PM - Bot started
+02/11/2022 01:06 PM - avi bot bac
+02/11/2022 01:07 PM - k.checkhelp command used
+02/11/2022 01:20 PM - Process ID: 1939
+02/11/2022 01:20 PM - Bot started
+02/11/2022 01:20 PM - avi bot bac
+02/11/2022 01:21 PM - number is a required argument that is missing.
+02/11/2022 01:21 PM - k.bulk command used
+02/11/2022 01:21 PM - k.on command used
+02/11/2022 01:21 PM - sussy reply
+02/11/2022 01:22 PM - k.off command used
+02/11/2022 01:25 PM - sussy reply
+02/11/2022 01:25 PM - sussy reply
+02/11/2022 01:25 PM - sussy reply
+02/11/2022 01:25 PM - sussy reply
+02/11/2022 01:25 PM - sussy reply
+02/11/2022 01:26 PM - sussy reply
+02/11/2022 01:30 PM - Process ID: 2049
+02/11/2022 01:30 PM - Bot started
+02/11/2022 01:30 PM - avi bot bac
+02/11/2022 01:31 PM - Command "when" is not found
+02/11/2022 01:31 PM - Command "when" is not found
+02/11/2022 01:36 PM - Process ID: 2184
+02/11/2022 01:37 PM - Bot started
+02/11/2022 01:37 PM - avi bot bac
+02/11/2022 01:37 PM - k.when command used
+02/11/2022 01:37 PM - k.when command used
+02/11/2022 01:37 PM - Command raised an exception: KeyError: 'actualEndTime'
+02/11/2022 01:41 PM - k.reload command used
+02/11/2022 01:41 PM - k.when command used
+02/11/2022 01:41 PM - Command raised an exception: ValueError: Unknown format code 'f' for object of type 'str'
+02/11/2022 01:43 PM - k.reload command used
+02/11/2022 01:43 PM - k.when command used
+02/11/2022 01:52 PM - Process ID: 2612
+02/11/2022 01:53 PM - Bot started
+02/11/2022 01:53 PM - avi bot bac
+02/11/2022 01:53 PM - k.checkhelp command used
+02/11/2022 01:53 PM - k.checkcomment command used
+02/11/2022 01:54 PM - k.when command used
+02/11/2022 01:57 PM - Process ID: 2708
+02/11/2022 01:58 PM - Bot started
+02/11/2022 01:58 PM - avi bot bac
+02/11/2022 01:58 PM - Command "flip" is not found
+02/11/2022 01:58 PM - Process ID: 2738
+02/11/2022 01:58 PM - Bot started
+02/11/2022 01:58 PM - avi bot bac
+02/11/2022 01:58 PM - Command "flip" is not found
+02/11/2022 01:59 PM - Command "coinflip" is not found
+02/11/2022 01:59 PM - Process ID: 2775
+02/11/2022 01:59 PM - Bot started
+02/11/2022 01:59 PM - avi bot bac
+02/11/2022 01:59 PM - k.flip command used
+02/11/2022 01:59 PM - k.flip command used
+02/11/2022 01:59 PM - k.flip command used
+02/11/2022 01:59 PM - k.flip command used
+02/11/2022 02:09 PM - k.lowqual command used

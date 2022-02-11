@@ -7,8 +7,15 @@ import requests
 import glob
 import json
 
+with open("modules/commands.json") as f:
+    data = json.load(f)
+    hidden_commands = data["hidden"]
+
 
 class Kur0only(commands.Cog):
+    def __init__(self, client):
+        self.client = client
+
     @commands.command()
     async def makeembed(self, ctx, title, description):
         if ctx.author.id == 396892407884546058:
@@ -263,6 +270,32 @@ class Kur0only(commands.Cog):
         else:
             print(ctx.author.id)
             await ctx.send("you found secret command. only kur0 can do this tho lel")
+
+    @commands.command()
+    @commands.is_owner()
+    async def checkhelp(self, ctx):
+        f = open("modules/commands.json")
+        data = json.load(f)
+        f.close()
+        comm_list = []
+        for i in data:
+            if i == "hidden":
+                pass
+            else:
+                comm_list += data[i]
+
+        public_commandss = [
+            c.name for c in self.client.commands if c.name not in hidden_commands
+        ]
+        diffcomms = [c for c in public_commandss if c not in comm_list]
+        diffcomms_joined = "\n".join(diffcomms)
+        await ctx.send(f"Commands missing in help command are:\n{diffcomms_joined}")
+        commands_with_help_msg = [
+            c.name for c in self.client.get_command("help").commands
+        ]
+        diffcomms2 = [c for c in comm_list if c not in commands_with_help_msg]
+        diffcomms2_joined = "\n".join(diffcomms2)
+        await ctx.send(f"Commands without help commands are:\n{diffcomms2_joined}")
 
 
 def setup(client):

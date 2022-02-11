@@ -15,7 +15,7 @@ class Clip(commands.Cog):
 
     @commands.command()
     async def fastclip(self, ctx, link, start, end, *, filename):
-        filename = filename.replace(' ','_')
+        filename = filename.replace(" ", "_")
         if (
             re.match("\d{2}:\d{2}:\d{2}", start) != None
             and re.match("\d{2}:\d{2}:\d{2}", end) != None

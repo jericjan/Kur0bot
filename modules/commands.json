@@ -75,5 +75,28 @@
   ],
   "TTS": [
     "just do ] while in VC (\"k.help tts\" for more info)"
+  ],
+  "hidden": [
+    "addoffline",
+    "makeembed",
+    "sched",
+    "tasks",
+    "removeoffline",
+    "idclip",
+    "id",
+    "stream",
+    "editembed",
+    "sticker",
+    "rolecheck",
+    "viewoffline",
+    "repost",
+    "fastclip3",
+    "fastclip2",
+    "speak",
+    "speak2",
+    "load",
+    "reload",
+    "unload",
+    "checkhelp"
   ]
 }

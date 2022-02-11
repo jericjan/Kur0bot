@@ -4,7 +4,7 @@ import asyncio
 import os
 import subprocess
 import re
-from tqdm import tqdm                   
+from tqdm import tqdm
 import io
 
 from datetime import datetime, timedelta
@@ -89,22 +89,22 @@ class lowQual(commands.Cog):
                     ) * 100
                     print(f"{percentage}% complete...")
                     pbar
-                    
-
-
 
                     output = io.StringIO()
-                    pbar = tqdm(total=100,file=output,ascii=False)
+                    pbar = tqdm(total=100, file=output, ascii=False)
                     pbar.update(float(f"{percentage:.3f}"))
-                    pbar.close()  
+                    pbar.close()
                     final = output.getvalue()
                     output.close()
                     final1 = final.splitlines()[-1]
                     print(final1)
-                    aaa= re.findall(r'(?<=\d\%)\|.+\| (?=\d+|\d+.\d+/\d+|\d+.\d+)',final1)[0]
-                    await message.edit(content=f"{round(percentage, 2)}% complete...\n`{aaa}`<a:ameroll:941314708022128640>")
-                    #await ctx.send(f"{round(percentage, 2)}% complete...\n`{aaa}`")
-
+                    aaa = re.findall(
+                        r"(?<=\d\%)\|.+\| (?=\d+|\d+.\d+/\d+|\d+.\d+)", final1
+                    )[0]
+                    await message.edit(
+                        content=f"{round(percentage, 2)}% complete...\n`{aaa}`<a:ameroll:941314708022128640>"
+                    )
+                    # await ctx.send(f"{round(percentage, 2)}% complete...\n`{aaa}`")
 
         await ctx.send(file=disnake.File(filename))
         await message.delete()

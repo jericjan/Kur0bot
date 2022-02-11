@@ -103,7 +103,7 @@ class Vc(commands.Cog):
                 "I'm not in a voice channel, use the join command to make me join",
                 delete_after=3.0,
             )
-        await ctx.message.delete()
+        # await ctx.message.delete()
 
     @commands.command()
     async def yodayo(self, ctx, loop=None):
