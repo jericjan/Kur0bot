@@ -1106,3 +1106,28 @@ In content: Must be 2000 or fewer in length.
 02/11/2022 01:59 PM - k.flip command used
 02/11/2022 01:59 PM - k.flip command used
 02/11/2022 02:09 PM - k.lowqual command used
+02/11/2022 02:19 PM - k.lowqual command used
+02/11/2022 02:19 PM - Command raised an exception: UnboundLocalError: local variable 'duration' referenced before assignment
+02/11/2022 02:27 PM - k.reload command used
+02/11/2022 02:27 PM - k.lowqual command used
+02/11/2022 02:27 PM - k.lowqual command used
+02/11/2022 02:28 PM - k.help command used
+02/11/2022 02:28 PM - k.lowqual command used
+02/11/2022 02:29 PM - k.reload command used
+02/11/2022 02:29 PM - k.lowqual command used
+02/11/2022 04:31 PM - sussy reply
+02/11/2022 06:09 PM - k.lowqual command used
+02/11/2022 06:12 PM - sussy reply
+02/11/2022 08:46 PM - sussy reply
+02/11/2022 08:46 PM - sussy reply
+02/11/2022 08:49 PM - twitter link!
+02/11/2022 08:57 PM - sussy reply
+02/11/2022 09:06 PM - Process ID: 427
+02/11/2022 09:06 PM - Bot started
+02/11/2022 09:06 PM - avi bot bac
+02/11/2022 09:13 PM - k.reload command used
+02/11/2022 09:14 PM - k.reload command used
+02/11/2022 09:15 PM - k.reload command used
+02/11/2022 09:24 PM - k.repost command used
+02/11/2022 09:39 PM - sussy reply
+02/11/2022 10:08 PM - k.repost command used

@@ -84,26 +84,30 @@ class lowQual(commands.Cog):
                         microseconds=strpcurr.microsecond,
                     )
                     # print(linedec)
-                    percentage = (
-                        currtime.total_seconds() / duration.total_seconds()
-                    ) * 100
-                    print(f"{percentage}% complete...")
-                    pbar
+                    try:
+                      percentage = (
+                          currtime.total_seconds() / duration.total_seconds()
+                      ) * 100
+                      print(f"{percentage}% complete...")
 
-                    output = io.StringIO()
-                    pbar = tqdm(total=100, file=output, ascii=False)
-                    pbar.update(float(f"{percentage:.3f}"))
-                    pbar.close()
-                    final = output.getvalue()
-                    output.close()
-                    final1 = final.splitlines()[-1]
-                    print(final1)
-                    aaa = re.findall(
-                        r"(?<=\d\%)\|.+\| (?=\d+|\d+.\d+/\d+|\d+.\d+)", final1
-                    )[0]
-                    await message.edit(
-                        content=f"{round(percentage, 2)}% complete...\n`{aaa}`<a:ameroll:941314708022128640>"
-                    )
+
+                      output = io.StringIO()
+                      pbar = tqdm(total=100, file=output, ascii=False)
+                      pbar.update(float(f"{percentage:.3f}"))
+                      pbar.close()
+                      final = output.getvalue()
+                      output.close()
+                      final1 = final.splitlines()[-1]
+                      print(final1)
+                      aaa = re.findall(
+                          r"(?<=\d\%)\|.+\| (?=\d+|\d+.\d+/\d+|\d+.\d+)", final1
+                      )[0]
+                      await message.edit(
+                          content=f"{round(percentage, 2)}% complete...\n`{aaa}`<a:ameroll:941314708022128640>"
+                      )
+                    except:
+                      await message.edit(
+                          content=f"This a photo? <:oka:930411779987734549>\nogei.")  
                     # await ctx.send(f"{round(percentage, 2)}% complete...\n`{aaa}`")
 
         await ctx.send(file=disnake.File(filename))

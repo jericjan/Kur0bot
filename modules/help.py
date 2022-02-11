@@ -501,11 +501,11 @@ class Help(commands.Cog):
     async def lowqual(self, ctx):
         em = disnake.Embed(
             title="Low quality-ify",
-            description="Aggressively downscales video to 36x20px :sunglasses:",
+            description="Aggressively downscales video or photo to 36x20px :sunglasses:",
         )
         em.add_field(
             name="**Syntax**",
-            value="k.lowqual <video_url>\nUpload video with k.lowqual\nReply to a video message with k.lowqual ",
+            value="k.lowqual <url>\nUpload video/photo with k.lowqual\nReply to a video/photo message with k.lowqual ",
         )
         em.add_field(name="**Aliases**", value=",".join(ctx.command.aliases))
         await ctx.send(embed=em)

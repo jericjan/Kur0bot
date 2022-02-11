@@ -8,7 +8,8 @@ import json
 import asyncio
 from gtts import gTTS
 import difflib
-
+from datetime import datetime, timedelta
+import pytz
 
 sus_words = [
     "amongus",
@@ -323,6 +324,15 @@ class Events(commands.Cog):
                     vc.play(disnake.FFmpegPCMAudio(source="sounds/tts.mp3"))
                 else:
                     voice.play(disnake.FFmpegPCMAudio(source="sounds/tts.mp3"))
+
+########################FRIDAY IN CALIFORNIA#########################
+        if "friday" in msg:
+          tz = pytz.timezone("America/Los_Angeles")
+          curr_time = datetime.now(tz)
+          day = curr_time.strftime("%A")
+          if day == "Friday":
+            print("It is Friday... in California. SHOOT!")
+            await message.channel.send(file=disnake.File('videos/friday.webm'))
 
     ################################ON_COMMAND_ERROR#############
     @commands.Cog.listener()
