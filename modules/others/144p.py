@@ -14,7 +14,7 @@ class lowQual(commands.Cog):
     def __init__(self, client):
         self.client = client
 
-    @commands.command(aliases=["144p", "pixelize"])
+    @commands.command(aliases=["shitify", "pixelize"])
     async def lowqual(self, ctx, link=None):
 
         if link == None:
@@ -102,7 +102,7 @@ class lowQual(commands.Cog):
                     final1 = final.splitlines()[-1]
                     print(final1)
                     aaa= re.findall(r'(?<=\d\%)\|.+\| (?=\d+|\d+.\d+/\d+|\d+.\d+)',final1)[0]
-                    await message.edit(content=f"{round(percentage, 2)}% complete...\n`{aaa}`")
+                    await message.edit(content=f"{round(percentage, 2)}% complete...\n`{aaa}`<a:ameroll:941314708022128640>")
                     #await ctx.send(f"{round(percentage, 2)}% complete...\n`{aaa}`")
 
 

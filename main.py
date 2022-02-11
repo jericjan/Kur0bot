@@ -113,6 +113,10 @@ hidden_commands = [
     "fastclip2",
     "speak",
     "speak2",
+    "load",
+    "reload",
+    "unload",
+    "checkhelp"
 ]
 
 pass_words = ["password", "pass word"]
@@ -532,7 +536,7 @@ async def when(ctx, link):
         publish_time = r["items"][0]["snippet"]["publishedAt"]
         epoch_time = dp.parse(publish_time).timestamp()
         await ctx.send(f"Video was published at <t:{epoch_time:.0f}:F>")
-        if r["items"][0]["liveStreamingDetails"]:
+        if "liveStreamingDetails" in r["items"][0].keys():
             stream_start = r["items"][0]["liveStreamingDetails"]["actualStartTime"]
             epoch_stream_start = dp.parse(stream_start).timestamp()
             stream_end = r["items"][0]["liveStreamingDetails"]["actualEndTime"]
@@ -545,6 +549,79 @@ async def when(ctx, link):
                 f"Stream started at <t:{epoch_stream_start:.0f}:F>\nStream ended at <t:{epoch_stream_end:.0f}:F>\nStream was schedule to start at <t:{epoch_stream_schedule:.0f}:F>"
             )
 
+@client.command()
+async def checkcomment(ctx, link):
+    comment_start_time = time.time()
+    comment_end_time = comment_start_time + (60 * 5)
+    
+    if re.search(r"https:\/\/www.youtube.com\/watch\?v=.+&lc=.+(\..+)?",link):
+        id = re.search(r"(?<=https:\/\/www.youtube.com\/watch\?v=.{11}&lc=).+(\..+)?",link).group(0)
+    else:
+        await ctx.send("Not a YT comment link!", delete_after=3.0)
+        return
+    print(id)
+
+    params = {
+        "part": "snippet",
+        "key": os.getenv("YT_API_KEY"),
+        "id": id,
+    }
+    url = "https://youtube.googleapis.com/youtube/v3/comments"
+    msg = await ctx.send("Searching...")
+    while time.time() < comment_end_time:
+      r = requests.get(url, headers=None, params=params) 
+      time_passed = time.time() - comment_start_time  
+      if r.status_code == 200:
+        try: 
+          name = r.json()['items'][0]['snippet']['authorDisplayName']#DON'T REMOVE
+          comment_content = r.json()['items'][0]['snippet']['textOriginal']#DON'T REMOVE
+        
+          await msg.edit(content=f'{time_passed:.2f}s: We\'re good! ({r.status_code})')
+        except:  
+          await msg.edit(content=f"{time_passed:.2f}s: FAIL! {ctx.author.mention}")
+          return
+      else:
+        await msg.edit(content=f"{time_passed:.2f}s: FAIL! ({r.status_code}) {ctx.author.mention}")
+        return
+      await asyncio.sleep(10)  
+    await msg.edit(content=f"{time_passed:.2f} seconds passed and it's still up!")
+
+@client.command(aliases=['refresh'])
+@commands.is_owner() 
+async def reload(ctx, name):
+  client.reload_extension(name)
+  await ctx.send(f"{name} reloaded!")
+
+@client.command()
+@commands.is_owner() 
+async def load(ctx, name):
+  client.load_extension(name)
+  await ctx.send(f"{name} loaded!")
+
+@client.command()
+@commands.is_owner() 
+async def unload(ctx, name):
+  client.unload_extension(name)
+  await ctx.send(f"{name} unloaded!")
+
+@client.command()
+@commands.is_owner() 
+async def checkhelp(ctx):
+  f = open('modules/commands.json')
+  data = json.load(f)
+  f.close()
+  comm_list = []
+  for i in data:
+    comm_list +=data[i]
+
+  public_commandss = [c.name for c in client.commands if c.name not in hidden_commands]
+  diffcomms = [c for c in public_commandss if c not in comm_list]
+  diffcomms_joined = '\n'.join(diffcomms)
+  await ctx.send(f"Commands missing in help command are:\n{diffcomms_joined}")
+  commands_with_help_msg = [c.name for c in client.get_command('help').commands]
+  diffcomms2 = [c for c in comm_list if c not in commands_with_help_msg]
+  diffcomms2_joined = '\n'.join(diffcomms2)
+  await ctx.send(f"Commands without help commands are:\n{diffcomms2_joined}")
 
 from disnake import Webhook
 

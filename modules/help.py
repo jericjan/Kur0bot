@@ -1,32 +1,45 @@
 from disnake.ext import commands
 import disnake
-
+import json
 
 class Help(commands.Cog):
+
+
     @commands.group(invoke_without_command=True)
     async def help(self, ctx):
         em = disnake.Embed(
             title="Commands",
             description="Here are my sussy commands!\nUse __**k.help <command>**__ for more info on that command.",
         )
-        em.add_field(
-            name="copypasta",
-            value="glasses\nnene\nnenelong\nstopamongus\nconfession\nwristworld\nmegasus",
-        )
-        em.add_field(name="sus", value="on\noff\nbulk")
-        em.add_field(name="ascii", value="fortnite")
-        em.add_field(
-            name="others",
-            value="emote\ngetemotes\nbadapple\nclip\nfastclip\nclipaudio\ndownload\nstream\npet\nsauce\nping\ncoinflip",
-        )
-        em.add_field(name="reactions", value="fmega\nkotowaru\nascend\njizz")
-        em.add_field(
-            name="vc",
-            value="join\nstop\nstoploop\nleave\nletsgo\nvtubus\nding\nyodayo\nyodazo\njonathan\njoseph\njotaro\njosuke\ngiorno\nkira\npillarmen\nbotansneeze\nboom\nogey\nrrat\nfart\nmogumogu\nbababooey\ndog\ntotsugeki\ntacobell\namongus\ndanganronpa\nwater\nnecoarc\nvsauce\ngigachad",
-        )
-        em.add_field(
-            name="TTS", value=' just do ] while in VC ("k.help tts" for more info)'
-        )
+        # em.add_field(
+        #     name="copypasta",
+        #     value="glasses\nnene\nnenelong\nstopamongus\nconfession\nwristworld\nmegasus",
+        # )
+        # em.add_field(name="sus", value="on\noff\nbulk")
+        # em.add_field(name="ascii", value="fortnite")
+        # em.add_field(
+        #     name="others",
+        #     value="emote\ngetemotes\nbadapple\nclip\nfastclip\nclipaudio\ndownload\nstream\npet\nsauce\nping\ncoinflip",
+        # )
+        # em.add_field(name="reactions", value="fmega\nkotowaru\nascend\njizz")
+        # em.add_field(
+        #     name="vc",
+        #     value="join\nstop\nstoploop\nleave\nletsgo\nvtubus\nding\nyodayo\nyodazo\njonathan\njoseph\njotaro\njosuke\ngiorno\nkira\npillarmen\nbotansneeze\nboom\nogey\nrrat\nfart\nmogumogu\nbababooey\ndog\ntotsugeki\ntacobell\namongus\ndanganronpa\nwater\nnecoarc\nvsauce\ngigachad",
+        # )
+        # em.add_field(
+        #     name="TTS", value=' just do ] while in VC ("k.help tts" for more info)'
+        # )
+
+        f = open('modules/commands.json')
+        data = json.load(f)
+        for i in data:
+          em.add_field(
+            name=i,
+            value='\n'.join(data[i]),
+          )
+
+        f.close()
+        
         await ctx.send(embed=em)
 
     @help.command()
@@ -108,7 +121,7 @@ class Help(commands.Cog):
             description="Sends an animated emote from any server that this bot is in.",
         )
         em.add_field(name="**Syntax**", value="k.emote <emotename>")
-        em.add_field(name="**Aliases**", value="e")
+        em.add_field(name="**Aliases**", value=','.join(ctx.command.aliases))
         await ctx.send(embed=em)
 
     @help.command(aliases=["ge"])
@@ -117,7 +130,7 @@ class Help(commands.Cog):
             title="Get Emotes!",
             description="Sends all emotes that this bot has. It has emotes for all servers it's in.",
         )
-        em.add_field(name="**Aliases**", value="ge")
+        em.add_field(name="**Aliases**", value=','.join(ctx.command.aliases))
         await ctx.send(embed=em)
 
     @help.command()
@@ -312,7 +325,7 @@ class Help(commands.Cog):
     @help.command(aliases=["ogei"])
     async def ogey(self, ctx):
         em = disnake.Embed(title="Ogey...", description="Plays Pekora's ogey in VC.")
-        em.add_field(name="**Aliases**", value="ogei")
+        em.add_field(name="**Aliases**", value=','.join(ctx.command.aliases))
         await ctx.send(embed=em)
 
     @help.command()
@@ -359,7 +372,7 @@ class Help(commands.Cog):
             title="Taco Bell bong sfx",
             description="Plays the funny taco bell sound effect in VC.",
         )
-        em.add_field(name="**Aliases**", value="bong")
+        em.add_field(name="**Aliases**", value=','.join(ctx.command.aliases))
         await ctx.send(embed=em)
 
     @help.command(aliases=["amogus"])
@@ -367,7 +380,7 @@ class Help(commands.Cog):
         em = disnake.Embed(
             title="AMONGUS!", description="Plays the guy yelling amongus in VC."
         )
-        em.add_field(name="**Aliases**", value="amogus")
+        em.add_field(name="**Aliases**", value=','.join(ctx.command.aliases))
         await ctx.send(embed=em)
 
     @help.command(aliases=["classtrial"])
@@ -376,7 +389,7 @@ class Help(commands.Cog):
             title="Class trial time!",
             description="Plays '議論 -HEAT UP-' from Danganronpa in VC.",
         )
-        em.add_field(name="**Aliases**", value="classtrial")
+        em.add_field(name="**Aliases**", value=','.join(ctx.command.aliases))
         await ctx.send(embed=em)
 
     @help.command()
@@ -465,7 +478,7 @@ class Help(commands.Cog):
             name="**Syntax**",
             value="k.sauce <url>\nUpload image with k.sauce\nReply to a message with k.sauce ",
         )
-        em.add_field(name="**Aliases**", value="findsauce,getsauce")
+        em.add_field(name="**Aliases**", value=','.join(ctx.command.aliases))
         await ctx.send(embed=em)
 
     @help.command()
@@ -499,9 +512,36 @@ class Help(commands.Cog):
             description="Flips a coin. That's it",
         )
         em.add_field(name="**Syntax**", value="k.coinflip  heads\nk.coinflip tails")
-        em.add_field(name="**Aliases**", value="flip")
+        em.add_field(name="**Aliases**", value=','.join(ctx.command.aliases))
         await ctx.send(embed=em)
 
+    @help.command(aliases=["shitify", "pixelize"])
+    async def lowqual(self, ctx):
+        em = disnake.Embed(
+            title="Low quality-ify",
+            description="Aggressively downscales video to 36x20px :sunglasses:",
+        )
+        em.add_field(name="**Syntax**", value="k.lowqual <video_url>\nUpload video with k.lowqual\nReply to a video message with k.lowqual ")
+        em.add_field(name="**Aliases**", value=','.join(ctx.command.aliases))
+        await ctx.send(embed=em)
+
+    @help.command()
+    async def when(self, ctx):
+        em = disnake.Embed(
+            title="When?",
+            description="Tells you exactly when a YT video has been uploaded, or when a stream has started and ended",
+        )
+        em.add_field(name="**Syntax**", value="k.when <yt_url>")
+        await ctx.send(embed=em)
+
+    @help.command()
+    async def checkcomment(self, ctx):
+        em = disnake.Embed(
+            title="YT Comment Checker",
+            description="Give it a YT comment link and it will keep checking if it exists for the next 5 minutes. If it doesn't exist before then, it will ping you.",
+        )
+        em.add_field(name="**Syntax**", value="k.checkcomment <yt_comment_url>")
+        await ctx.send(embed=em)
 
 def setup(client):
     client.add_cog(Help(client))

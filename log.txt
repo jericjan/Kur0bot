@@ -611,3 +611,289 @@ Exiting...
 02/09/2022 07:24 PM - avi bot bac
 02/09/2022 07:24 PM - k.lowqual command used
 02/09/2022 07:27 PM - k.lowqual command used
+02/09/2022 07:44 PM - k.download command used
+02/09/2022 07:44 PM - k.download command used
+02/09/2022 07:45 PM - k.download command used
+02/09/2022 08:01 PM - sussy reply
+02/09/2022 09:00 PM - sussy reply
+02/09/2022 09:19 PM - sussy reply
+02/09/2022 09:21 PM - sussy reply
+02/09/2022 09:55 PM - k.repost command used
+02/09/2022 10:42 PM - k.repost command used
+02/09/2022 10:44 PM - k.repost command used
+02/09/2022 11:15 PM - k.fastclip command used
+02/10/2022 12:37 AM - k.repost command used
+02/10/2022 05:05 AM - k.fastclip command used
+02/10/2022 05:08 AM - k.fastclip command used
+02/10/2022 05:31 AM - k.download command used
+02/10/2022 07:22 AM - Process ID: 396
+02/10/2022 07:22 AM - Bot started
+02/10/2022 07:22 AM - avi bot bac
+02/10/2022 07:27 AM - sussy reply
+02/10/2022 07:38 AM - twitter link!
+02/10/2022 07:41 AM - sussy reply
+02/10/2022 07:41 AM - sussy reply
+02/10/2022 07:41 AM - sussy reply
+02/10/2022 10:41 AM - Process ID: 429
+02/10/2022 10:41 AM - Bot started
+02/10/2022 10:41 AM - avi bot bac
+02/10/2022 12:51 PM - sussy reply
+02/10/2022 01:42 PM - twitter link!
+02/10/2022 01:42 PM - twitter video!
+02/10/2022 01:47 PM - k.lowqual command used
+02/10/2022 01:49 PM - k.lowqual command used
+02/10/2022 01:49 PM - Command raised an exception: FileNotFoundError: [Errno 2] No such file or directory: 'wcPZdxdy1jvo1g-O.mp4?tag=12'
+02/10/2022 02:22 PM - sussy reply
+02/10/2022 02:33 PM - Process ID: 1442
+02/10/2022 02:33 PM - Bot started
+02/10/2022 02:33 PM - avi bot bac
+02/10/2022 02:33 PM - k.checkcomment command used
+02/10/2022 02:33 PM - Command raised an exception: error: look-behind requires fixed-width pattern
+02/10/2022 02:36 PM - Process ID: 1487
+02/10/2022 02:36 PM - Bot started
+02/10/2022 02:36 PM - avi bot bac
+02/10/2022 02:38 PM - Process ID: 1524
+02/10/2022 02:38 PM - Bot started
+02/10/2022 02:38 PM - avi bot bac
+02/10/2022 02:38 PM - k.checkcomment command used
+02/10/2022 02:40 PM - Process ID: 1557
+02/10/2022 02:40 PM - Bot started
+02/10/2022 02:40 PM - avi bot bac
+02/10/2022 02:40 PM - k.checkcomment command used
+02/10/2022 02:45 PM - k.checkcomment command used
+02/10/2022 02:46 PM - sussy reply
+02/10/2022 02:53 PM - Process ID: 1624
+02/10/2022 02:53 PM - Bot started
+02/10/2022 02:53 PM - avi bot bac
+02/10/2022 02:53 PM - k.checkcomment command used
+02/10/2022 02:59 PM - Process ID: 1755
+02/10/2022 02:59 PM - Bot started
+02/10/2022 02:59 PM - avi bot bac
+02/10/2022 03:00 PM - k.checkcomment command used
+02/10/2022 03:00 PM - Command raised an exception: IndexError: list index out of range
+02/10/2022 03:01 PM - k.checkcomment command used
+02/10/2022 03:01 PM - Command raised an exception: IndexError: list index out of range
+02/10/2022 03:06 PM - Process ID: 1817
+02/10/2022 03:06 PM - Bot started
+02/10/2022 03:06 PM - avi bot bac
+02/10/2022 03:07 PM - k.checkcomment command used
+02/10/2022 03:11 PM - Process ID: 1865
+02/10/2022 03:11 PM - Bot started
+02/10/2022 03:11 PM - avi bot bac
+02/10/2022 03:11 PM - k.checkcomment command used
+02/10/2022 03:17 PM - k.checkcomment command used
+02/10/2022 03:18 PM - Process ID: 1916
+02/10/2022 03:18 PM - Bot started
+02/10/2022 03:18 PM - avi bot bac
+02/10/2022 03:18 PM - k.checkcomment command used
+02/10/2022 03:18 PM - Command raised an exception: IndexError: list index out of range
+02/10/2022 03:20 PM - k.checkcomment command used
+02/10/2022 03:20 PM - Command raised an exception: IndexError: list index out of range
+02/10/2022 03:29 PM - Process ID: 397
+02/10/2022 03:29 PM - Bot started
+02/10/2022 03:29 PM - avi bot bac
+02/10/2022 03:29 PM - k.checkcomment command used
+02/10/2022 03:29 PM - Command raised an exception: IndexError: list index out of range
+02/10/2022 03:38 PM - Process ID: 464
+02/10/2022 03:38 PM - Bot started
+02/10/2022 03:38 PM - avi bot bac
+02/10/2022 03:39 PM - k.checkcomment command used
+02/10/2022 03:39 PM - Command raised an exception: IndexError: list index out of range
+02/10/2022 03:41 PM - Process ID: 556
+02/10/2022 03:41 PM - Bot started
+02/10/2022 03:41 PM - avi bot bac
+02/10/2022 03:41 PM - k.checkcomment command used
+02/10/2022 03:42 PM - Process ID: 583
+02/10/2022 03:42 PM - Bot started
+02/10/2022 03:42 PM - avi bot bac
+02/10/2022 03:42 PM - k.checkcomment command used
+02/10/2022 03:42 PM - k.checkcomment command used
+02/10/2022 03:45 PM - Process ID: 648
+02/10/2022 03:45 PM - Bot started
+02/10/2022 03:45 PM - avi bot bac
+02/10/2022 03:45 PM - k.checkcomment command used
+02/10/2022 03:45 PM - Command raised an exception: AttributeError: 'Context' object has no attribute 'user'
+02/10/2022 03:48 PM - Process ID: 688
+02/10/2022 03:48 PM - Bot started
+02/10/2022 03:48 PM - avi bot bac
+02/10/2022 03:49 PM - k.checkcomment command used
+02/10/2022 03:49 PM - k.checkcomment command used
+02/10/2022 03:54 PM - k.checkcomment command used
+02/10/2022 03:54 PM - k.checkcomment command used
+02/10/2022 03:56 PM - Command "checkscoment" is not found
+02/10/2022 03:57 PM - k.help command used
+02/10/2022 04:33 PM - k.lowqual command used
+02/10/2022 04:39 PM - k.lowqual command used
+02/10/2022 04:39 PM - k.lowqual command used
+02/10/2022 04:43 PM - k.lowqual command used
+02/10/2022 04:52 PM - k.lowqual command used
+02/10/2022 04:52 PM - k.lowqual command used
+02/10/2022 04:52 PM - k.lowqual command used
+02/10/2022 04:52 PM - k.lowqual command used
+02/10/2022 04:54 PM - k.lowqual command used
+02/10/2022 04:54 PM - Command raised an exception: UnboundLocalError: local variable 'duration' referenced before assignment
+02/10/2022 04:56 PM - k.lowqual command used
+02/10/2022 04:56 PM - Command raised an exception: UnboundLocalError: local variable 'duration' referenced before assignment
+02/10/2022 04:59 PM - k.lowqual command used
+02/10/2022 05:07 PM - sussy reply
+02/10/2022 05:08 PM - sussy reply
+02/10/2022 05:32 PM - twitter link!
+02/10/2022 05:34 PM - sussy reply
+02/10/2022 05:36 PM - sussy reply
+02/10/2022 05:39 PM - sussy reply
+02/10/2022 05:41 PM - sussy reply
+02/10/2022 05:42 PM - sussy reply
+02/10/2022 05:46 PM - sussy reply
+02/10/2022 05:54 PM - sussy reply
+02/10/2022 05:54 PM - sussy reply
+02/10/2022 06:01 PM - sussy reply
+02/10/2022 07:47 PM - k.lowqual command used
+02/10/2022 08:04 PM - k.repost command used
+02/10/2022 08:08 PM - k.lowqual command used
+02/10/2022 08:12 PM - sussy reply
+02/10/2022 08:14 PM - sussy reply
+02/10/2022 08:14 PM - sussy reply
+02/10/2022 08:28 PM - Process ID: 1445
+02/10/2022 08:28 PM - Bot started
+02/10/2022 08:28 PM - avi bot bac
+02/10/2022 08:49 PM - k.e command used
+02/10/2022 08:51 PM - k.reload command used
+02/10/2022 08:52 PM - k.lowqual command used
+02/10/2022 08:53 PM - k.reload command used
+02/10/2022 08:53 PM - Command raised an exception: ExtensionNotLoaded: Extension 'modules.others.144' has not been loaded.
+02/10/2022 08:54 PM - k.lowqual command used
+02/10/2022 09:03 PM - Process ID: 2229
+02/10/2022 09:03 PM - Bot started
+02/10/2022 09:03 PM - avi bot bac
+02/10/2022 09:06 PM - k.lowqual command used
+02/10/2022 09:07 PM - k.lowqual command used
+02/10/2022 09:08 PM - k.lowqual command used
+02/10/2022 09:08 PM - k.help command used
+02/10/2022 09:09 PM - Command "cacobel" is not found
+02/10/2022 09:40 PM - sussy reply
+02/10/2022 09:42 PM - k.download command used
+02/10/2022 09:43 PM - k.megasus command used
+02/10/2022 09:43 PM - k.download command used
+02/10/2022 09:50 PM - k.reload command used
+02/10/2022 09:51 PM - Process ID: 2782
+02/10/2022 09:56 PM - Process ID: 472
+02/10/2022 09:56 PM - Bot started
+02/10/2022 09:56 PM - avi bot bac
+02/10/2022 09:57 PM - k.help command used
+02/10/2022 10:08 PM - Command "nencocarc" is not found
+02/10/2022 10:13 PM - Process ID: 790
+02/10/2022 10:13 PM - Bot started
+02/10/2022 10:13 PM - avi bot bac
+02/10/2022 10:14 PM - Process ID: 826
+02/10/2022 10:14 PM - Bot started
+02/10/2022 10:14 PM - avi bot bac
+02/10/2022 10:14 PM - k.checkhelp command used
+02/10/2022 10:14 PM - Process ID: 859
+02/10/2022 10:15 PM - Bot started
+02/10/2022 10:15 PM - avi bot bac
+02/10/2022 10:15 PM - k.lowqual command used
+02/10/2022 10:19 PM - sussy reply
+02/10/2022 10:23 PM - k.lowqual command used
+02/10/2022 10:24 PM - sussy reply
+02/10/2022 10:27 PM - k.lowqual command used
+02/10/2022 10:38 PM - k.reload command used
+02/10/2022 10:39 PM - k.flip command used
+02/10/2022 10:40 PM - k.reload command used
+02/10/2022 10:40 PM - k.checkhelp command used
+02/10/2022 10:42 PM - k.amogus command used
+02/10/2022 10:42 PM - sussy reply
+02/10/2022 10:42 PM - k.amongus command used
+02/10/2022 10:42 PM - sussy reply
+02/10/2022 10:51 PM - k.reload command used
+02/10/2022 10:51 PM - Command raised an exception: ExtensionFailed: Extension 'modules.help' raised an error: NameError: name 'self' is not defined
+02/10/2022 10:55 PM - Process ID: 1231
+02/10/2022 10:55 PM - Bot started
+02/10/2022 10:55 PM - avi bot bac
+02/10/2022 10:55 PM - k.help command used
+02/10/2022 10:56 PM - k.amongus command used
+02/10/2022 10:56 PM - sussy reply
+02/10/2022 10:56 PM - k.checkhelp command used
+02/10/2022 10:57 PM - k.sauce command used
+02/10/2022 10:58 PM - k.reload command used
+02/10/2022 10:58 PM - Command "check" is not found
+02/10/2022 10:58 PM - k.checkhelp command used
+02/10/2022 11:01 PM - k.checkhelp command used
+02/10/2022 11:05 PM - k.reload command used
+02/10/2022 11:05 PM - k.lowqual command used
+02/10/2022 11:05 PM - k.flip command used
+02/10/2022 11:05 PM - k.lowqual command used
+02/10/2022 11:05 PM - k.reload command used
+02/10/2022 11:05 PM - k.lowqual command used
+02/10/2022 11:06 PM - k.reload command used
+02/10/2022 11:06 PM - k.lowqual command used
+02/10/2022 11:08 PM - sussy reply
+02/10/2022 11:08 PM - sussy reply
+02/10/2022 11:14 PM - k.reload command used
+02/10/2022 11:14 PM - Command raised an exception: ExtensionFailed: Extension 'modules.help' raised an error: SyntaxError: EOL while scanning string literal (help.py, line 543)
+02/10/2022 11:15 PM - k.help command used
+02/10/2022 11:15 PM - k.reload command used
+02/10/2022 11:15 PM - k.lowqual command used
+02/10/2022 11:15 PM - k.when command used
+02/10/2022 11:15 PM - k.when command used
+02/10/2022 11:15 PM - Command raised an exception: KeyError: 'liveStreamingDetails'
+02/10/2022 11:16 PM - k.when command used
+02/10/2022 11:17 PM - k.when command used
+02/10/2022 11:18 PM - k.when command used
+02/10/2022 11:21 PM - k.when command used
+02/10/2022 11:21 PM - Command raised an exception: KeyError: 'liveStreamingDetails'
+02/10/2022 11:23 PM - Process ID: 1938
+02/10/2022 11:23 PM - Bot started
+02/10/2022 11:23 PM - avi bot bac
+02/10/2022 11:23 PM - k.when command used
+02/10/2022 11:24 PM - k.when command used
+02/10/2022 11:25 PM - k.help command used
+02/10/2022 11:26 PM - k.checkhelp command used
+02/11/2022 01:21 AM - k.download command used
+02/11/2022 02:14 AM - k.download command used
+02/11/2022 02:47 AM - sussy reply
+02/11/2022 03:00 AM - sussy reply
+02/11/2022 03:00 AM - sussy reply
+02/11/2022 03:00 AM - sussy reply
+02/11/2022 03:19 AM - sussy reply
+02/11/2022 05:32 AM - sussy reply
+02/11/2022 05:37 AM - sussy reply
+02/11/2022 08:25 AM - k.fastclip command used
+02/11/2022 08:29 AM - k.reload command used
+02/11/2022 08:29 AM - Command raised an exception: ExtensionNotLoaded: Extension 'modules.others.fastclip' has not been loaded.
+02/11/2022 08:30 AM - k.reload command used
+02/11/2022 08:30 AM - k.fastclip command used
+02/11/2022 08:30 AM - Command raised an exception: TypeError: replace expected at least 2 arguments, got 0
+02/11/2022 08:30 AM - k.fastclip command used
+02/11/2022 08:30 AM - Command raised an exception: TypeError: replace expected at least 2 arguments, got 0
+02/11/2022 08:31 AM - k.reload command used
+02/11/2022 08:31 AM - k.fastclip command used
+02/11/2022 08:32 AM - k.fastclip command used
+02/11/2022 08:51 AM - Process ID: 2330
+02/11/2022 08:51 AM - Bot started
+02/11/2022 08:51 AM - avi bot bac
+02/11/2022 08:51 AM - k.checkhelp command used
+02/11/2022 08:52 AM - Process ID: 2367
+02/11/2022 08:52 AM - Bot started
+02/11/2022 08:52 AM - avi bot bac
+02/11/2022 08:52 AM - k.checkhelp command used
+02/11/2022 08:52 AM - Command raised an exception: HTTPException: 400 Bad Request (error code: 50035): Invalid Form Body
+In content: Must be 2000 or fewer in length.
+02/11/2022 08:53 AM - Process ID: 2430
+02/11/2022 08:53 AM - Bot started
+02/11/2022 08:53 AM - avi bot bac
+02/11/2022 08:53 AM - k.checkhelp command used
+02/11/2022 08:54 AM - Process ID: 2483
+02/11/2022 08:54 AM - Bot started
+02/11/2022 08:54 AM - avi bot bac
+02/11/2022 08:54 AM - k.checkhelp command used
+02/11/2022 08:57 AM - Process ID: 2599
+02/11/2022 08:57 AM - Bot started
+02/11/2022 08:57 AM - avi bot bac
+02/11/2022 08:57 AM - k.checkhelp command used
+02/11/2022 09:12 AM - k.repost command used
+02/11/2022 09:13 AM - filename is a required argument that is missing.
+02/11/2022 09:13 AM - link is a required argument that is missing.
+02/11/2022 09:13 AM - k.fastclip command used
+02/11/2022 09:14 AM - k.fastclip command used
+02/11/2022 09:14 AM - k.fastclip command used
+02/11/2022 09:15 AM - k.fastclip command used

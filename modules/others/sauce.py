@@ -7,8 +7,8 @@ import re
 
 
 class Sauce(commands.Cog):
-    @commands.command(aliases=["findsauce", "sauce"])
-    async def getsauce(self, ctx, link=None):
+    @commands.command(aliases=["findsauce", "getsauce"])
+    async def sauce(self, ctx, link=None):
 
         if link == None:
             print(ctx.message.attachments)  # a list
