@@ -240,7 +240,11 @@ class Events(commands.Cog):
                 )
                 stdout_value = proc.stdout.read() + proc.stderr.read()
                 # print(stdout_value.decode("utf-8"))
-                json_list = json.loads(stdout_value)
+                try:
+                  json_list = json.loads(stdout_value)
+                except:
+                  print("Nothing to load as JSON.")  
+                  return
                 ext = json_list["ext"]
                 webpageurl = json_list["webpage_url"]
                 print(ext)
@@ -358,6 +362,9 @@ class Events(commands.Cog):
                 )
             else:
                 await ctx.send(f"bruh. there's no '{err[1]}' command.")
+        elif re.search(r'Payload Too Large',str(error)):
+          print('File too big!')        
+          await ctx.send("Your server isn't strong enough to handle the size of the file I'm sending <a:trollplant:934777423881445436>")
         else:
             print(error)
             print(dir(error))

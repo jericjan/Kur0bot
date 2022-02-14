@@ -38,7 +38,7 @@ def run():
     isRunning = False
     while isRunning == False:
         try:
-            app.run(host="0.0.0.0", port=8080)
+            app.run(host="0.0.0.0", port=8081)
             isRunning = True
         except OSError as e:
             if e == "[Errno 98] Address already in use":

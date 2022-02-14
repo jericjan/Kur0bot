@@ -528,6 +528,22 @@ class Help(commands.Cog):
         em.add_field(name="**Syntax**", value="k.checkcomment <yt_comment_url>")
         await ctx.send(embed=em)
 
+    @help.command(aliases=["akasupa", "supacha"])
+    async def superchat(self, ctx):
+        em = disnake.Embed(
+            title="Superchat!",
+            description="Sends an image of a superchat of your choosing.\nIt's real slow rn because it actually goes to a [site](https://ytsc.leko.moe/) that creates the image for you. ",
+        )
+        em.add_field(
+            name="**Syntax**",
+            value="k.superchat <amount with currency> <message>",
+        )
+        em.add_field(
+            name="**Example**",
+            value="k.superchat $100 poggers",
+        )
+        em.add_field(name="**Aliases**", value=",".join(ctx.command.aliases))
+        await ctx.send(embed=em)
 
 def setup(client):
     client.add_cog(Help(client))

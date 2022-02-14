@@ -31,7 +31,8 @@
     "coinflip",
     "lowqual",
     "when",
-    "checkcomment"
+    "checkcomment",
+    "superchat"
   ],
   "reactions": [
     "fmega",

@@ -1131,3 +1131,853 @@ In content: Must be 2000 or fewer in length.
 02/11/2022 09:24 PM - k.repost command used
 02/11/2022 09:39 PM - sussy reply
 02/11/2022 10:08 PM - k.repost command used
+02/11/2022 10:15 PM - k.megasus command used
+02/11/2022 10:15 PM - sussy reply
+02/11/2022 11:36 PM - k.lowqual command used
+02/11/2022 11:47 PM - k.reload command used
+02/11/2022 11:47 PM - k.lowqual command used
+02/11/2022 11:47 PM - k.lowqual command used
+02/11/2022 11:48 PM - k.lowqual command used
+02/11/2022 11:48 PM - k.lowqual command used
+02/11/2022 11:48 PM - Command raised an exception: FileNotFoundError: [Errno 2] No such file or directory: 'Screenshot_20220211-163744__01.png' -> '$&_01.png'
+02/11/2022 11:50 PM - k.reload command used
+02/11/2022 11:51 PM - k.lowqual command used
+02/11/2022 11:51 PM - Command raised an exception: FileNotFoundError: [Errno 2] No such file or directory: 'Screenshot_20220211-163744__01.png' -> '$&_01.png'
+02/11/2022 11:51 PM - k.reload command used
+02/11/2022 11:51 PM - k.lowqual command used
+02/11/2022 11:51 PM - Command raised an exception: FileNotFoundError: [Errno 2] No such file or directory: 'Screenshot_20220211-163744__01.png' -> '$&_01.png'
+02/11/2022 11:53 PM - k.reload command used
+02/11/2022 11:53 PM - k.lowqual command used
+02/11/2022 11:53 PM - Command raised an exception: FileNotFoundError: [Errno 2] No such file or directory: 'Screenshot_20220211-163744__01.png' -> '$&_01.png'
+02/11/2022 11:58 PM - k.reload command used
+02/11/2022 11:59 PM - k.lowqual command used
+02/11/2022 11:59 PM - Command raised an exception: FileNotFoundError: [Errno 2] No such file or directory: 'unknown.png' -> '\\&_01.png'
+02/12/2022 12:01 AM - k.reload command used
+02/12/2022 12:01 AM - k.lowqual command used
+02/12/2022 12:01 AM - Command raised an exception: error: invalid group reference 1 at position 1
+02/12/2022 12:04 AM - k.reload command used
+02/12/2022 12:04 AM - k.lowqual command used
+02/12/2022 12:05 AM - k.lowqual command used
+02/12/2022 12:06 AM - k.lowqual command used
+02/12/2022 12:06 AM - Command raised an exception: FileNotFoundError: [Errno 2] No such file or directory: 'unknown.png' -> 'unknown01.png'
+02/12/2022 12:08 AM - k.reload command used
+02/12/2022 12:08 AM - k.lowqual command used
+02/12/2022 12:08 AM - Command raised an exception: FileNotFoundError: [Errno 2] No such file or directory: 'unknown.png' -> 'unknown01.png'
+02/12/2022 12:10 AM - k.ping command used
+02/12/2022 12:11 AM - k.reload command used
+02/12/2022 12:11 AM - k.lowqual command used
+02/12/2022 12:11 AM - Command raised an exception: FileNotFoundError: [Errno 2] No such file or directory: 'unknown.png' -> 'unknown01.png'
+02/12/2022 12:22 AM - k.reload command used
+02/12/2022 12:22 AM - k.lowqual command used
+02/12/2022 12:22 AM - Command raised an exception: FileNotFoundError: [Errno 2] No such file or directory: 'unknown.png'
+02/12/2022 12:23 AM - k.reload command used
+02/12/2022 12:24 AM - k.lowqual command used
+02/12/2022 12:24 AM - k.lowqual command used
+02/12/2022 12:26 AM - k.reload command used
+02/12/2022 12:26 AM - k.lowqual command used
+02/12/2022 12:28 AM - k.lowqual command used
+02/12/2022 12:28 AM - Command raised an exception: FileNotFoundError: [Errno 2] No such file or directory: 'friday.webm'
+02/12/2022 12:28 AM - k.reload command used
+02/12/2022 12:28 AM - k.lowqual command used
+02/12/2022 12:30 AM - k.reload command used
+02/12/2022 12:30 AM - k.lowqual command used
+02/12/2022 12:30 AM - Command raised an exception: AttributeError: 'NoneType' object has no attribute 'split'
+02/12/2022 12:32 AM - k.reload command used
+02/12/2022 12:32 AM - k.reload command used
+02/12/2022 12:32 AM - k.lowqual command used
+02/12/2022 12:32 AM - k.lowqual command used
+02/12/2022 12:33 AM - k.lowqual command used
+02/12/2022 12:39 AM - k.lowqual command used
+02/12/2022 02:15 AM - k.lowqual command used
+02/12/2022 03:24 AM - twitter link!
+02/12/2022 03:36 AM - sussy reply
+02/12/2022 03:49 AM - twitter link!
+02/12/2022 03:49 AM - twitter video!
+02/12/2022 06:39 AM - sussy reply
+02/12/2022 06:47 AM - sussy reply
+02/12/2022 07:03 AM - k.ogey command used
+02/12/2022 08:23 AM - sussy reply
+02/12/2022 09:05 AM - sussy reply
+02/12/2022 09:53 AM - twitter link!
+02/12/2022 10:26 AM - twitter link!
+02/12/2022 10:26 AM - twitter video!
+02/12/2022 10:31 AM - k.download command used
+02/12/2022 10:32 AM - k.download command used
+02/12/2022 10:32 AM - k.download command used
+02/12/2022 10:32 AM - Command "dowload" is not found
+02/12/2022 10:33 AM - k.download command used
+02/12/2022 10:36 AM - k.download command used
+02/12/2022 10:46 AM - sussy reply
+02/12/2022 11:14 AM - sussy reply
+02/12/2022 12:01 PM - sussy reply
+02/12/2022 12:11 PM - sussy reply
+02/12/2022 12:35 PM - twitter link!
+02/12/2022 12:35 PM - twitter video!
+02/12/2022 02:02 PM - k.lowqual command used
+02/12/2022 07:50 PM - Process ID: 421
+02/12/2022 07:50 PM - Bot started
+02/12/2022 07:50 PM - avi bot bac
+02/12/2022 08:17 PM - k.repost command used
+02/12/2022 08:17 PM - k.lowqual command used
+02/12/2022 08:17 PM - sussy reply
+02/12/2022 08:31 PM - k.download command used
+02/12/2022 08:31 PM - k.reload command used
+02/12/2022 08:31 PM - k.lowqual command used
+02/12/2022 08:31 PM - Command raised an exception: FileNotFoundError: [Errno 2] No such file or directory: 'ERROR: Compressed file ended before the end-of-stream marker was reached'
+02/12/2022 08:43 PM - k.reload command used
+02/12/2022 08:43 PM - k.lowqual command used
+02/12/2022 08:44 PM - k.reload command used
+02/12/2022 08:44 PM - k.lowqual command used
+02/12/2022 08:49 PM - k.reload command used
+02/12/2022 08:50 PM - k.lowqual command used
+02/12/2022 08:51 PM - k.reload command used
+02/12/2022 08:51 PM - k.lowqual command used
+02/12/2022 08:51 PM - k.reload command used
+02/12/2022 08:51 PM - k.lowqual command used
+02/12/2022 08:56 PM - k.lowqual command used
+02/12/2022 08:59 PM - Command raised an exception: HTTPException: 413 Payload Too Large (error code: 40005): Request entity too large
+02/12/2022 09:01 PM - k.reload command used
+02/12/2022 09:01 PM - k.lowqual command used
+02/12/2022 09:04 PM - Command raised an exception: HTTPException: 413 Payload Too Large (error code: 40005): Request entity too large
+02/12/2022 09:09 PM - k.e command used
+02/12/2022 09:10 PM - k.reload command used
+02/12/2022 09:10 PM - k.lowqual command used
+02/12/2022 09:16 PM - k.reload command used
+02/12/2022 09:16 PM - sussy reply
+02/12/2022 09:16 PM - sussy reply
+02/12/2022 09:17 PM - k.reload command used
+02/12/2022 09:18 PM - k.lowqual command used
+02/12/2022 09:22 PM - twitter link!
+02/12/2022 09:22 PM - twitter video!
+02/12/2022 09:23 PM - Command raised an exception: HTTPException: 413 Payload Too Large (error code: 40005): Request entity too large
+02/12/2022 09:29 PM - sussy reply
+02/12/2022 09:32 PM - sussy reply
+02/13/2022 11:44 AM - Process ID: 3007
+02/13/2022 11:45 AM - Bot started
+02/13/2022 11:45 AM - avi bot bac
+02/13/2022 11:45 AM - k.superchat command used
+02/13/2022 11:45 AM - sussy reply
+02/13/2022 11:45 AM - Command raised an exception: TypeError: object of type 'WebElement' has no len()
+02/13/2022 11:45 AM - k.superchat command used
+02/13/2022 11:45 AM - sussy reply
+02/13/2022 11:45 AM - Command raised an exception: TypeError: object of type 'WebElement' has no len()
+02/13/2022 11:46 AM - k.reload command used
+02/13/2022 11:46 AM - k.superchat command used
+02/13/2022 11:46 AM - sussy reply
+02/13/2022 11:46 AM - Command raised an exception: ElementNotInteractableException: Message: element not interactable: Element is not currently visible and may not be manipulated
+  (Session info: chrome=91.0.4472.101)
+
+02/13/2022 11:47 AM - k.superchat command used
+02/13/2022 11:47 AM - sussy reply
+02/13/2022 11:47 AM - Command raised an exception: FileNotFoundError: [Errno 2] No such file or directory: 'superchat.png'
+02/13/2022 11:51 AM - k.reload command used
+02/13/2022 11:51 AM - Command raised an exception: ExtensionFailed: Extension 'modules.others.superchat' raised an error: IndentationError: expected an indented block (superchat.py, line 37)
+02/13/2022 11:52 AM - k.reload command used
+02/13/2022 11:52 AM - k.superchat command used
+02/13/2022 11:52 AM - sussy reply
+02/13/2022 11:54 AM - k.reload command used
+02/13/2022 11:54 AM - k.superchat command used
+02/13/2022 11:54 AM - sussy reply
+02/13/2022 11:54 AM - Command raised an exception: TypeError: object method can't be used in 'await' expression
+02/13/2022 11:56 AM - k.reload command used
+02/13/2022 11:56 AM - k.superchat command used
+02/13/2022 11:57 AM - sussy reply
+02/13/2022 11:57 AM - k.superchat command used
+02/13/2022 11:58 AM - k.reload command used
+02/13/2022 11:58 AM - k.superchat command used
+02/13/2022 11:59 AM - k.checkhelp command used
+02/13/2022 12:00 PM - sussy reply
+02/13/2022 12:00 PM - k.reload command used
+02/13/2022 12:01 PM - k.help command used
+02/13/2022 12:01 PM - k.superchat command used
+02/13/2022 12:01 PM - k.reload command used
+02/13/2022 12:01 PM - k.superchat command used
+02/13/2022 12:01 PM - k.supacha command used
+02/13/2022 12:02 PM - sussy reply
+02/13/2022 12:04 PM - k.reload command used
+02/13/2022 12:04 PM - k.superchat command used
+02/13/2022 12:04 PM - sussy reply
+02/13/2022 12:04 PM - k.reload command used
+02/13/2022 12:05 PM - k.superchat command used
+02/13/2022 12:06 PM - k.superchat command used
+02/13/2022 12:07 PM - k.superchat command used
+02/13/2022 12:08 PM - k.superchat command used
+02/13/2022 12:08 PM - sussy reply
+02/13/2022 12:09 PM - k.supacha command used
+02/13/2022 12:13 PM - k.reload command used
+02/13/2022 12:13 PM - k.superchat command used
+02/13/2022 12:13 PM - sussy reply
+02/13/2022 12:14 PM - k.reload command used
+02/13/2022 12:15 PM - k.supacha command used
+02/13/2022 12:15 PM - k.supacha command used
+02/13/2022 12:15 PM - k.supacha command used
+02/13/2022 12:15 PM - Command raised an exception: WebDriverException: Message: unknown error: session deleted because of page crash
+from unknown error: cannot determine loading status
+from tab crashed
+  (Session info: headless chrome=91.0.4472.101)
+
+02/13/2022 12:16 PM - sussy reply
+02/13/2022 12:16 PM - k.supacha command used
+02/13/2022 12:16 PM - k.help command used
+02/13/2022 12:16 PM - k.superchat command used
+02/13/2022 12:17 PM - k.akasupa command used
+02/13/2022 12:18 PM - Process ID: 9290
+02/13/2022 12:18 PM - Bot started
+02/13/2022 12:18 PM - avi bot bac
+02/13/2022 12:19 PM - Process ID: 9318
+02/13/2022 12:19 PM - Bot started
+02/13/2022 12:19 PM - avi bot bac
+02/13/2022 12:21 PM - k.akasupa command used
+02/13/2022 12:21 PM - k.akasupa command used
+02/13/2022 12:21 PM - k.akasupa command used
+02/13/2022 12:23 PM - sussy reply
+02/13/2022 12:23 PM - sussy reply
+02/13/2022 12:25 PM - k.akasupa command used
+02/13/2022 12:25 PM - k.akasupa command used
+02/13/2022 12:26 PM - k.nene command used
+02/13/2022 12:26 PM - k.superchat command used
+02/13/2022 12:27 PM - sussy reply
+02/13/2022 12:27 PM - k.akasupa command used
+02/13/2022 12:28 PM - sussy reply
+02/13/2022 12:28 PM - sussy reply
+02/13/2022 12:28 PM - sussy reply
+02/13/2022 12:28 PM - k.superchat command used
+02/13/2022 12:30 PM - k.reload command used
+02/13/2022 12:30 PM - k.superchat command used
+02/13/2022 12:36 PM - sussy reply
+02/13/2022 12:38 PM - k.akasupa command used
+02/13/2022 12:39 PM - k.akasupa command used
+02/13/2022 12:42 PM - Process ID: 10311
+02/13/2022 12:42 PM - Bot started
+02/13/2022 12:42 PM - avi bot bac
+02/13/2022 12:46 PM - Process ID: 10366
+02/13/2022 12:46 PM - Bot started
+02/13/2022 12:46 PM - avi bot bac
+02/13/2022 12:46 PM - k.ping command used
+02/13/2022 12:47 PM - k.akasupa command used
+02/13/2022 12:47 PM - Command raised an exception: WebDriverException: Message: unknown error: ChromeDriver only supports characters in the BMP
+  (Session info: headless chrome=91.0.4472.101)
+
+02/13/2022 12:49 PM - k.akasupa command used
+02/13/2022 12:54 PM - sussy reply
+02/13/2022 12:56 PM - sussy reply
+02/13/2022 12:59 PM - sussy reply
+02/13/2022 01:10 PM - k.akasupa command used
+02/13/2022 01:11 PM - k.akasupa command used
+02/13/2022 01:11 PM - k.akasupa command used
+02/13/2022 01:11 PM - k.akasupa command used
+02/13/2022 01:14 PM - k.akasupa command used
+02/13/2022 01:16 PM - Process ID: 11071
+02/13/2022 01:16 PM - Bot started
+02/13/2022 01:16 PM - avi bot bac
+02/13/2022 01:16 PM - k.akasupa command used
+02/13/2022 01:17 PM - k.akasupa command used
+02/13/2022 01:18 PM - k.reload command used
+02/13/2022 01:19 PM - Process ID: 11945
+02/13/2022 01:19 PM - Bot started
+02/13/2022 01:19 PM - avi bot bac
+02/13/2022 01:19 PM - k.akasupa command used
+02/13/2022 01:50 PM - Process ID: 12659
+02/13/2022 01:50 PM - Bot started
+02/13/2022 01:50 PM - avi bot bac
+02/13/2022 01:50 PM - k.akasupa2 command used
+02/13/2022 01:50 PM - Command raised an exception: UnknownArsenicError: ('invalid argument: unrecognized capability: chromeOptions', None, '#0 0x55d758405919 <unknown>\n')
+02/13/2022 01:52 PM - k.reload command used
+02/13/2022 01:52 PM - k.akasupa2 command used
+02/13/2022 01:52 PM - Command raised an exception: UnknownArsenicError: ('invalid argument: unrecognized capability: chromeOptions', None, '#0 0x55dff7605919 <unknown>\n')
+02/13/2022 01:52 PM - k.reload command used
+02/13/2022 01:52 PM - k.akasupa2 command used
+02/13/2022 01:52 PM - Command raised an exception: UnknownArsenicError: ('invalid argument: unrecognized capability: chromeOptions', None, '#0 0x562c68405919 <unknown>\n')
+02/13/2022 01:53 PM - k.reload command used
+02/13/2022 01:53 PM - k.akasupa2 command used
+02/13/2022 01:53 PM - Command raised an exception: UnknownError: unknown error: Chrome failed to start: crashed.
+  (unknown error: DevToolsActivePort file doesn't exist)
+  (The process started from chrome location /usr/bin/chromium-browser is no longer running, so ChromeDriver is assuming that Chrome has crashed.)
+02/13/2022 01:54 PM - k.reload command used
+02/13/2022 01:54 PM - k.akasupa2 command used
+02/13/2022 01:55 PM - k.reload command used
+02/13/2022 01:56 PM - k.akasupa2 command used
+02/13/2022 01:57 PM - k.akasupa2 command used
+02/13/2022 02:00 PM - k.reload command used
+02/13/2022 02:00 PM - k.akasupa2 command used
+02/13/2022 02:00 PM - Command raised an exception: NameError: name 'cur_uuid' is not defined
+02/13/2022 02:00 PM - k.reload command used
+02/13/2022 02:00 PM - k.akasupa2 command used
+02/13/2022 02:04 PM - k.reload command used
+02/13/2022 02:05 PM - k.akasupa2 command used
+02/13/2022 02:06 PM - k.akasupa2 command used
+02/13/2022 02:06 PM - k.reload command used
+02/13/2022 02:06 PM - k.akasupa2 command used
+02/13/2022 02:10 PM - k.reload command used
+02/13/2022 02:10 PM - k.akasupa2 command used
+02/13/2022 02:10 PM - sussy reply
+02/13/2022 02:13 PM - k.reload command used
+02/13/2022 02:13 PM - k.akasupa2 command used
+02/13/2022 02:13 PM - Command raised an exception: TypeError: send() got an unexpected keyword argument 'filename'
+02/13/2022 02:15 PM - k.reload command used
+02/13/2022 02:15 PM - k.akasupa2 command used
+02/13/2022 02:18 PM - k.reload command used
+02/13/2022 02:18 PM - k.akasupa2 command used
+02/13/2022 02:18 PM - k.nene command used
+02/13/2022 02:18 PM - k.akasupa command used
+02/13/2022 02:21 PM - Process ID: 16481
+02/13/2022 02:21 PM - Bot started
+02/13/2022 02:21 PM - avi bot bac
+02/13/2022 02:21 PM - k.akasupa2 command used
+02/13/2022 02:27 PM - k.reload command used
+02/13/2022 02:27 PM - k.akasupa2 command used
+02/13/2022 02:29 PM - Process ID: 17157
+02/13/2022 02:29 PM - Bot started
+02/13/2022 02:29 PM - avi bot bac
+02/13/2022 02:29 PM - k.akasupa2 command used
+02/13/2022 02:31 PM - k.reload command used
+02/13/2022 02:31 PM - k.akasupa command used
+02/13/2022 02:31 PM - sussy reply
+02/13/2022 02:31 PM - sussy reply
+02/13/2022 02:31 PM - k.akasupa command used
+02/13/2022 02:32 PM - k.superchat command used
+02/13/2022 02:32 PM - k.checkhelp command used
+02/13/2022 02:33 PM - k.akasupa command used
+02/13/2022 02:33 PM - k.akasupa command used
+02/13/2022 02:33 PM - k.akasupa command used
+02/13/2022 02:35 PM - k.reload command used
+02/13/2022 02:35 PM - k.akasupa command used
+02/13/2022 02:35 PM - message is a required argument that is missing.
+02/13/2022 02:36 PM - k.akasupa command used
+02/13/2022 02:36 PM - k.akasupa command used
+02/13/2022 02:36 PM - sussy reply
+02/13/2022 02:37 PM - k.akasupa command used
+02/13/2022 02:37 PM - Command raised an exception: UnknownError: unknown error: ChromeDriver only supports characters in the BMP
+  (Session info: chrome=91.0.4472.101)
+02/13/2022 02:45 PM - k.reload command used
+02/13/2022 02:45 PM - sussy reply
+02/13/2022 02:45 PM - message is a required argument that is missing.
+02/13/2022 02:45 PM - k.akasupa command used
+02/13/2022 02:45 PM - sussy reply
+02/13/2022 02:45 PM - Command raised an exception: TypeError: sub() missing 1 required positional argument: 'string'
+02/13/2022 02:45 PM - k.reload command used
+02/13/2022 02:46 PM - k.akasupa command used
+02/13/2022 02:46 PM - sussy reply
+02/13/2022 02:51 PM - k.botansneeze command used
+02/13/2022 02:53 PM - k.akasupa command used
+02/13/2022 02:58 PM - sussy reply
+02/13/2022 03:01 PM - k.reload command used
+02/13/2022 03:02 PM - k.ping command used
+02/13/2022 03:02 PM - Process ID: 23208
+02/13/2022 03:02 PM - Bot started
+02/13/2022 03:02 PM - avi bot bac
+02/13/2022 03:02 PM - k.akasupa command used
+02/13/2022 03:02 PM - Command raised an exception: TypeError: Object of type Element is not JSON serializable
+02/13/2022 03:13 PM - k.akasupa command used
+02/13/2022 03:13 PM - Command raised an exception: TypeError: Object of type Element is not JSON serializable
+02/13/2022 03:13 PM - k.reload command used
+02/13/2022 03:13 PM - k.akasupa command used
+02/13/2022 03:15 PM - k.reload command used
+02/13/2022 03:15 PM - k.akasupa command used
+02/13/2022 03:15 PM - Command raised an exception: UnknownArsenicError: ('invalid argument: missing command parameters', None, '#0 0x55e3adc05919 <unknown>\n')
+02/13/2022 03:18 PM - k.reload command used
+02/13/2022 03:18 PM - k.akasupa command used
+02/13/2022 03:18 PM - sussy reply
+02/13/2022 03:18 PM - Command raised an exception: UnknownArsenicError: ('invalid argument: missing command parameters', None, '#0 0x557ebfa05919 <unknown>\n')
+02/13/2022 03:20 PM - k.reload command used
+02/13/2022 03:20 PM - k.akasupa command used
+02/13/2022 03:20 PM - sussy reply
+02/13/2022 03:25 PM - k.reload command used
+02/13/2022 03:25 PM - k.akasupa command used
+02/13/2022 03:25 PM - Command raised an exception: TypeError: can only concatenate str (not "bytes") to str
+02/13/2022 03:25 PM - k.reload command used
+02/13/2022 03:25 PM - k.akasupa command used
+02/13/2022 03:26 PM - k.reload command used
+02/13/2022 03:26 PM - k.akasupa command used
+02/13/2022 03:26 PM - Command raised an exception: UnknownError: unknown error: ChromeDriver only supports characters in the BMP
+  (Session info: chrome=91.0.4472.101)
+02/13/2022 03:26 PM - k.reload command used
+02/13/2022 03:26 PM - k.reload command used
+02/13/2022 03:32 PM - sussy reply
+02/13/2022 03:35 PM - k.reload command used
+02/13/2022 03:35 PM - k.akasupa command used
+02/13/2022 03:35 PM - Command raised an exception: UnknownArsenicError: ('Unrecognised option moz:firefoxOptions ', None, '')
+02/13/2022 03:36 PM - k.reload command used
+02/13/2022 03:36 PM - Command raised an exception: ExtensionFailed: Extension 'modules.others.superchat' raised an error: SyntaxError: invalid syntax (superchat.py, line 110)
+02/13/2022 03:36 PM - k.reload command used
+02/13/2022 03:36 PM - Command raised an exception: ExtensionFailed: Extension 'modules.others.superchat' raised an error: SyntaxError: invalid syntax (superchat.py, line 110)
+02/13/2022 03:37 PM - sussy reply
+02/13/2022 03:37 PM - k.reload command used
+02/13/2022 03:37 PM - k.akasupa command used
+02/13/2022 03:37 PM - Command raised an exception: UnknownArsenicError: ('firefoxOptions is not the name of a known capability or extension capability', None, '')
+02/13/2022 03:39 PM - k.reload command used
+02/13/2022 03:39 PM - Command raised an exception: ExtensionFailed: Extension 'modules.others.superchat' raised an error: SyntaxError: closing parenthesis ')' does not match opening parenthesis '{' on line 110 (superchat.py, line 112)
+02/13/2022 03:39 PM - k.reload command used
+02/13/2022 03:39 PM - k.akasupa command used
+02/13/2022 03:41 PM - Process ID: 26604
+02/13/2022 03:41 PM - Bot started
+02/13/2022 03:41 PM - avi bot bac
+02/13/2022 03:41 PM - k.akasupa command used
+02/13/2022 03:47 PM - Process ID: 27062
+02/13/2022 03:47 PM - Bot started
+02/13/2022 03:47 PM - avi bot bac
+02/13/2022 03:47 PM - k.akasupa command used
+02/13/2022 03:52 PM - Process ID: 27490
+02/13/2022 03:52 PM - Bot started
+02/13/2022 03:52 PM - avi bot bac
+02/13/2022 03:52 PM - k.akasupa command used
+02/13/2022 03:57 PM - Process ID: 27986
+02/13/2022 03:57 PM - Bot started
+02/13/2022 03:57 PM - avi bot bac
+02/13/2022 03:57 PM - k.akasupa command used
+02/13/2022 04:03 PM - Process ID: 28470
+02/13/2022 04:03 PM - Bot started
+02/13/2022 04:03 PM - avi bot bac
+02/13/2022 04:03 PM - k.reload command used
+02/13/2022 04:03 PM - k.akasupa command used
+02/13/2022 04:04 PM - Process ID: 28912
+02/13/2022 04:04 PM - Bot started
+02/13/2022 04:04 PM - avi bot bac
+02/13/2022 04:05 PM - k.akasupa command used
+02/13/2022 04:05 PM - Process ID: 29325
+02/13/2022 04:05 PM - Bot started
+02/13/2022 04:05 PM - avi bot bac
+02/13/2022 04:05 PM - k.akasupa command used
+02/13/2022 04:10 PM - k.reload command used
+02/13/2022 04:10 PM - k.akasupa command used
+02/13/2022 04:14 PM - k.reload command used
+02/13/2022 04:14 PM - k.akasupa command used
+02/13/2022 04:16 PM - k.reload command used
+02/13/2022 04:16 PM - k.akasupa command used
+02/13/2022 04:18 PM - Command raised an exception: Timeout: Connection refused (os error 111)
+02/13/2022 04:18 PM - k.akasupa command used
+02/13/2022 04:19 PM - Command raised an exception: ArsenicError: not starting?
+02/13/2022 04:19 PM - Process ID: 30447
+02/13/2022 04:19 PM - Bot started
+02/13/2022 04:19 PM - avi bot bac
+02/13/2022 04:19 PM - k.akasupa command used
+02/13/2022 04:20 PM - Command raised an exception: UnknownArsenicError: ('Tried to run command without establishing a connection', None, '')
+02/13/2022 04:21 PM - k.reload command used
+02/13/2022 04:21 PM - k.akasupa command used
+02/13/2022 04:21 PM - sussy reply
+02/13/2022 04:21 PM - Command raised an exception: UnknownArsenicError: ('Tried to run command without establishing a connection', None, '')
+02/13/2022 04:27 PM - k.ping command used
+02/13/2022 04:28 PM - sussy reply
+02/13/2022 04:33 PM - Process ID: 31399
+02/13/2022 04:33 PM - Bot started
+02/13/2022 04:33 PM - avi bot bac
+02/13/2022 04:34 PM - k.akasupa command used
+02/13/2022 04:35 PM - k.nene command used
+02/13/2022 04:35 PM - k.akasupa command used
+02/13/2022 04:39 PM - k.akasupa command used
+02/13/2022 04:39 PM - sussy reply
+02/13/2022 04:39 PM - message is a required argument that is missing.
+02/13/2022 04:39 PM - k.akasupa command used
+02/13/2022 04:39 PM - sussy reply
+02/13/2022 04:52 PM - k.akasupa command used
+02/13/2022 04:52 PM - Process ID: 33120
+02/13/2022 04:52 PM - Bot started
+02/13/2022 04:52 PM - avi bot bac
+02/13/2022 04:52 PM - k.akasupa command used
+02/13/2022 05:01 PM - sussy reply
+02/13/2022 05:02 PM - Process ID: 33670
+02/13/2022 05:02 PM - Bot started
+02/13/2022 05:02 PM - avi bot bac
+02/13/2022 05:02 PM - k.akasupa command used
+02/13/2022 05:10 PM - k.reload command used
+02/13/2022 05:10 PM - k.akasupa command used
+02/13/2022 05:11 PM - k.akasupa command used
+02/13/2022 05:14 PM - k.reload command used
+02/13/2022 05:14 PM - k.akasupa command used
+02/13/2022 05:39 PM - k.reload command used
+02/13/2022 05:39 PM - k.akasupa command used
+02/13/2022 07:01 PM - k.superchat command used
+02/13/2022 07:05 PM - Process ID: 35411
+02/13/2022 07:05 PM - Bot started
+02/13/2022 07:05 PM - avi bot bac
+02/13/2022 07:07 PM - Process ID: 35459
+02/13/2022 07:07 PM - Bot started
+02/13/2022 07:07 PM - avi bot bac
+02/13/2022 07:07 PM - k.superchat command used
+02/13/2022 07:07 PM - sussy reply
+02/13/2022 07:08 PM - k.reload command used
+02/13/2022 07:09 PM - sussy reply
+02/13/2022 07:11 PM - k.superchat command used
+02/13/2022 07:39 PM - sussy reply
+02/13/2022 07:39 PM - k.download command used
+02/13/2022 07:56 PM - sussy reply
+02/13/2022 08:05 PM - Process ID: 479
+02/13/2022 08:05 PM - Bot started
+02/13/2022 08:05 PM - avi bot bac
+02/13/2022 08:11 PM - k.reload command used
+02/13/2022 08:11 PM - k.supacha2 command used
+02/13/2022 08:11 PM - Command raised an exception: ValueError: unknown file extension: 
+02/13/2022 08:24 PM - sussy reply
+02/13/2022 08:45 PM - k.reload command used
+02/13/2022 08:45 PM - k.supacha2 command used
+02/13/2022 08:45 PM - k.reload command used
+02/13/2022 08:46 PM - k.supacha2 command used
+02/13/2022 08:46 PM - Command raised an exception: ValueError: I/O operation on closed file.
+02/13/2022 08:46 PM - k.reload command used
+02/13/2022 08:46 PM - k.supacha2 command used
+02/13/2022 08:46 PM - Command raised an exception: TypeError: object NoneType can't be used in 'await' expression
+02/13/2022 08:51 PM - k.reload command used
+02/13/2022 08:51 PM - k.supacha2 command used
+02/13/2022 08:51 PM - k.reload command used
+02/13/2022 08:51 PM - k.supacha2 command used
+02/13/2022 08:53 PM - k.reload command used
+02/13/2022 08:53 PM - k.supacha2 command used
+02/13/2022 08:54 PM - k.reload command used
+02/13/2022 08:54 PM - k.supacha2 command used
+02/13/2022 08:57 PM - sussy reply
+02/13/2022 09:00 PM - k.reload command used
+02/13/2022 09:00 PM - k.supacha2 command used
+02/13/2022 09:19 PM - Process ID: 480
+02/13/2022 09:19 PM - Bot started
+02/13/2022 09:19 PM - avi bot bac
+02/13/2022 09:25 PM - sussy reply
+02/13/2022 09:40 PM - sussy reply
+02/13/2022 09:44 PM - sussy reply
+02/13/2022 10:53 PM - twitter link!
+02/13/2022 10:53 PM - twitter video!
+02/13/2022 11:11 PM - k.download command used
+02/13/2022 11:11 PM - k.download command used
+02/14/2022 01:09 AM - sussy reply
+02/14/2022 01:17 AM - sussy reply
+02/14/2022 01:18 AM - sussy reply
+02/14/2022 03:05 AM - sussy reply
+02/14/2022 04:06 AM - sussy reply
+02/14/2022 04:57 AM - k.sauce command used
+02/14/2022 05:09 AM - sussy reply
+02/14/2022 06:29 AM - sussy reply
+02/14/2022 06:29 AM - sussy reply
+02/14/2022 06:30 AM - sussy reply
+02/14/2022 06:51 AM - sussy reply
+02/14/2022 07:23 AM - k.supacha2 command used
+02/14/2022 07:34 AM - twitter link!
+02/14/2022 07:38 AM - twitter link!
+02/14/2022 07:38 AM - twitter video!
+02/14/2022 07:39 AM - twitter link!
+02/14/2022 07:45 AM - k.reload command used
+02/14/2022 07:45 AM - k.supacha2 command used
+02/14/2022 07:46 AM - k.reload command used
+02/14/2022 07:46 AM - k.supacha2 command used
+02/14/2022 07:46 AM - k.reload command used
+02/14/2022 07:46 AM - k.supacha2 command used
+02/14/2022 07:47 AM - k.reload command used
+02/14/2022 07:47 AM - k.supacha2 command used
+02/14/2022 07:56 AM - sussy reply
+02/14/2022 07:56 AM - sussy reply
+02/14/2022 07:57 AM - sussy reply
+02/14/2022 07:58 AM - sussy reply
+02/14/2022 07:58 AM - sussy reply
+02/14/2022 07:58 AM - sussy reply
+02/14/2022 07:58 AM - sussy reply
+02/14/2022 08:03 AM - k.reload command used
+02/14/2022 08:03 AM - Command raised an exception: ExtensionFailed: Extension 'modules.others.superchat' raised an error: SyntaxError: invalid syntax (superchat.py, line 162)
+02/14/2022 08:04 AM - k.reload command used
+02/14/2022 08:04 AM - k.supacha2 command used
+02/14/2022 08:04 AM - Command raised an exception: OSError: cannot open resource
+02/14/2022 08:04 AM - k.supacha2 command used
+02/14/2022 08:04 AM - Command raised an exception: OSError: cannot open resource
+02/14/2022 08:04 AM - k.reload command used
+02/14/2022 08:04 AM - k.supacha2 command used
+02/14/2022 08:04 AM - Command raised an exception: TypeError: integer argument expected, got float
+02/14/2022 08:05 AM - k.reload command used
+02/14/2022 08:05 AM - k.supacha2 command used
+02/14/2022 08:06 AM - k.reload command used
+02/14/2022 08:06 AM - k.supacha2 command used
+02/14/2022 08:07 AM - k.reload command used
+02/14/2022 08:07 AM - k.supacha2 command used
+02/14/2022 08:10 AM - k.reload command used
+02/14/2022 08:10 AM - k.supacha2 command used
+02/14/2022 08:12 AM - k.reload command used
+02/14/2022 08:12 AM - k.supacha2 command used
+02/14/2022 08:13 AM - k.reload command used
+02/14/2022 08:13 AM - k.supacha2 command used
+02/14/2022 08:14 AM - k.reload command used
+02/14/2022 08:14 AM - k.supacha2 command used
+02/14/2022 08:17 AM - k.reload command used
+02/14/2022 08:17 AM - k.supacha2 command used
+02/14/2022 08:18 AM - k.reload command used
+02/14/2022 08:18 AM - k.supacha2 command used
+02/14/2022 08:19 AM - k.reload command used
+02/14/2022 08:19 AM - k.supacha2 command used
+02/14/2022 08:21 AM - k.reload command used
+02/14/2022 08:21 AM - k.supacha2 command used
+02/14/2022 08:24 AM - k.reload command used
+02/14/2022 08:24 AM - k.supacha2 command used
+02/14/2022 08:25 AM - k.reload command used
+02/14/2022 08:25 AM - k.supacha2 command used
+02/14/2022 08:25 AM - k.reload command used
+02/14/2022 08:26 AM - k.supacha2 command used
+02/14/2022 08:27 AM - k.reload command used
+02/14/2022 08:27 AM - k.supacha2 command used
+02/14/2022 08:31 AM - k.reload command used
+02/14/2022 08:31 AM - k.reload command used
+02/14/2022 08:31 AM - k.supacha2 command used
+02/14/2022 08:33 AM - k.reload command used
+02/14/2022 08:34 AM - k.supacha2 command used
+02/14/2022 08:34 AM - sussy reply
+02/14/2022 08:35 AM - k.reload command used
+02/14/2022 08:35 AM - k.supacha2 command used
+02/14/2022 08:35 AM - sussy reply
+02/14/2022 08:35 AM - k.reload command used
+02/14/2022 08:36 AM - k.supacha2 command used
+02/14/2022 08:36 AM - sussy reply
+02/14/2022 08:47 AM - k.reload command used
+02/14/2022 08:47 AM - k.supacha2 command used
+02/14/2022 08:47 AM - sussy reply
+02/14/2022 08:47 AM - Command raised an exception: FileNotFoundError: [Errno 2] No such file or directory: 'https://cdn.discordapp.com/avatars/396892407884546058/fb5b6bbcac15d3282a849ccfd7b3d5b2.png?size=1024'
+02/14/2022 08:48 AM - k.reload command used
+02/14/2022 08:48 AM - k.supacha2 command used
+02/14/2022 08:48 AM - sussy reply
+02/14/2022 08:48 AM - Command raised an exception: UnidentifiedImageError: cannot identify image file <_io.BytesIO object at 0x7ff64920e220>
+02/14/2022 08:50 AM - k.reload command used
+02/14/2022 08:50 AM - k.supacha2 command used
+02/14/2022 08:50 AM - sussy reply
+02/14/2022 08:50 AM - Command raised an exception: UnidentifiedImageError: cannot identify image file <_io.BytesIO object at 0x7ff641b10ef0>
+02/14/2022 08:53 AM - k.reload command used
+02/14/2022 08:53 AM - k.supacha2 command used
+02/14/2022 08:53 AM - sussy reply
+02/14/2022 08:53 AM - Command raised an exception: TypeError: a bytes-like object is required, not 'str'
+02/14/2022 08:55 AM - k.reload command used
+02/14/2022 08:55 AM - k.supacha2 command used
+02/14/2022 08:55 AM - sussy reply
+02/14/2022 08:57 AM - k.reload command used
+02/14/2022 08:57 AM - k.supacha2 command used
+02/14/2022 08:57 AM - sussy reply
+02/14/2022 08:57 AM - Command raised an exception: NameError: name 'blank2' is not defined
+02/14/2022 08:57 AM - k.reload command used
+02/14/2022 08:57 AM - k.supacha2 command used
+02/14/2022 08:57 AM - sussy reply
+02/14/2022 08:57 AM - Command raised an exception: NameError: name 'blank2' is not defined
+02/14/2022 08:57 AM - k.reload command used
+02/14/2022 08:57 AM - k.supacha2 command used
+02/14/2022 08:57 AM - sussy reply
+02/14/2022 08:59 AM - k.reload command used
+02/14/2022 08:59 AM - k.supacha2 command used
+02/14/2022 08:59 AM - sussy reply
+02/14/2022 09:00 AM - k.reload command used
+02/14/2022 09:00 AM - k.supacha2 command used
+02/14/2022 09:00 AM - sussy reply
+02/14/2022 09:01 AM - k.supacha2 command used
+02/14/2022 09:01 AM - sussy reply
+02/14/2022 09:08 AM - k.reload command used
+02/14/2022 09:08 AM - k.supacha2 command used
+02/14/2022 09:08 AM - sussy reply
+02/14/2022 09:08 AM - Command raised an exception: ValueError: I/O operation on closed file.
+02/14/2022 09:09 AM - k.reload command used
+02/14/2022 09:09 AM - k.supacha2 command used
+02/14/2022 09:09 AM - sussy reply
+02/14/2022 09:11 AM - k.reload command used
+02/14/2022 09:11 AM - k.supacha2 command used
+02/14/2022 09:11 AM - sussy reply
+02/14/2022 09:12 AM - k.reload command used
+02/14/2022 09:12 AM - k.supacha2 command used
+02/14/2022 09:12 AM - sussy reply
+02/14/2022 09:13 AM - link is a required argument that is missing.
+02/14/2022 09:13 AM - k.reload command used
+02/14/2022 09:13 AM - k.supacha2 command used
+02/14/2022 09:13 AM - sussy reply
+02/14/2022 09:14 AM - link is a required argument that is missing.
+02/14/2022 09:17 AM - k.reload command used
+02/14/2022 09:17 AM - k.supacha2 command used
+02/14/2022 09:17 AM - sussy reply
+02/14/2022 09:18 AM - k.reload command used
+02/14/2022 09:18 AM - k.supacha2 command used
+02/14/2022 09:18 AM - sussy reply
+02/14/2022 09:19 AM - k.reload command used
+02/14/2022 09:19 AM - k.supacha2 command used
+02/14/2022 09:19 AM - sussy reply
+02/14/2022 09:22 AM - k.reload command used
+02/14/2022 09:22 AM - k.supacha2 command used
+02/14/2022 09:22 AM - sussy reply
+02/14/2022 09:22 AM - k.reload command used
+02/14/2022 09:22 AM - k.supacha2 command used
+02/14/2022 09:22 AM - sussy reply
+02/14/2022 09:24 AM - k.supacha2 command used
+02/14/2022 09:24 AM - k.supacha2 command used
+02/14/2022 09:25 AM - k.supacha2 command used
+02/14/2022 09:36 AM - Process ID: 531
+02/14/2022 09:37 AM - Bot started
+02/14/2022 09:37 AM - avi bot bac
+02/14/2022 09:42 AM - sussy reply
+02/14/2022 09:53 AM - k.download command used
+02/14/2022 10:16 AM - k.reload command used
+02/14/2022 10:17 AM - k.supacha2 command used
+02/14/2022 10:17 AM - k.supacha2 command used
+02/14/2022 10:17 AM - k.supacha2 command used
+02/14/2022 10:17 AM - sussy reply
+02/14/2022 10:19 AM - k.reload command used
+02/14/2022 10:19 AM - k.supacha2 command used
+02/14/2022 10:20 AM - k.supacha2 command used
+02/14/2022 10:20 AM - sussy reply
+02/14/2022 10:21 AM - k.reload command used
+02/14/2022 10:21 AM - k.supacha2 command used
+02/14/2022 10:21 AM - k.supacha2 command used
+02/14/2022 10:22 AM - k.supacha2 command used
+02/14/2022 10:22 AM - sussy reply
+02/14/2022 10:22 AM - k.supacha2 command used
+02/14/2022 10:22 AM - sussy reply
+02/14/2022 10:23 AM - k.supacha2 command used
+02/14/2022 10:24 AM - k.supacha2 command used
+02/14/2022 10:25 AM - k.nene command used
+02/14/2022 10:25 AM - k.supacha2 command used
+02/14/2022 10:25 AM - k.supacha command used
+02/14/2022 10:25 AM - sussy reply
+02/14/2022 10:26 AM - k.supacha2 command used
+02/14/2022 10:26 AM - k.supacha command used
+02/14/2022 10:27 AM - sussy reply
+02/14/2022 10:30 AM - k.reload command used
+02/14/2022 10:31 AM - k.supacha2 command used
+02/14/2022 10:31 AM - Command raised an exception: AttributeError: 'Pilmoji' object has no attribute 'multiline_text'
+02/14/2022 10:32 AM - k.reload command used
+02/14/2022 10:32 AM - k.supacha2 command used
+02/14/2022 10:33 AM - k.supacha2 command used
+02/14/2022 10:33 AM - sussy reply
+02/14/2022 10:54 AM - k.reload command used
+02/14/2022 10:54 AM - k.supacha2 command used
+02/14/2022 11:14 AM - sussy reply
+02/14/2022 11:14 AM - sussy reply
+02/14/2022 11:14 AM - sussy reply
+02/14/2022 11:14 AM - sussy reply
+02/14/2022 11:16 AM - k.reload command used
+02/14/2022 11:16 AM - k.supacha2 command used
+02/14/2022 11:16 AM - k.reload command used
+02/14/2022 11:16 AM - k.supacha2 command used
+02/14/2022 11:17 AM - k.reload command used
+02/14/2022 11:17 AM - k.supacha2 command used
+02/14/2022 11:17 AM - sussy reply
+02/14/2022 11:18 AM - k.reload command used
+02/14/2022 11:18 AM - k.supacha2 command used
+02/14/2022 11:19 AM - k.reload command used
+02/14/2022 11:19 AM - k.supacha2 command used
+02/14/2022 11:20 AM - k.reload command used
+02/14/2022 11:20 AM - k.supacha2 command used
+02/14/2022 11:20 AM - k.reload command used
+02/14/2022 11:21 AM - k.supacha2 command used
+02/14/2022 11:21 AM - k.reload command used
+02/14/2022 11:21 AM - k.supacha2 command used
+02/14/2022 11:24 AM - k.reload command used
+02/14/2022 11:24 AM - k.supacha2 command used
+02/14/2022 11:25 AM - k.reload command used
+02/14/2022 11:25 AM - k.supacha2 command used
+02/14/2022 11:27 AM - k.supacha2 command used
+02/14/2022 11:27 AM - sussy reply
+02/14/2022 11:28 AM - k.reload command used
+02/14/2022 11:28 AM - k.supacha2 command used
+02/14/2022 11:33 AM - sussy reply
+02/14/2022 11:52 AM - sussy reply
+02/14/2022 12:02 PM - sussy reply
+02/14/2022 12:04 PM - sussy reply
+02/14/2022 12:04 PM - sussy reply
+02/14/2022 12:05 PM - sussy reply
+02/14/2022 12:06 PM - sussy reply
+02/14/2022 12:21 PM - k.reload command used
+02/14/2022 12:21 PM - Command raised an exception: ExtensionFailed: Extension 'modules.others.superchat' raised an error: SyntaxError: invalid syntax (superchat.py, line 199)
+02/14/2022 12:28 PM - k.reload command used
+02/14/2022 12:28 PM - Command raised an exception: ExtensionFailed: Extension 'modules.others.superchat' raised an error: SyntaxError: invalid syntax (superchat.py, line 209)
+02/14/2022 12:29 PM - k.reload command used
+02/14/2022 12:29 PM - k.supacha2 command used
+02/14/2022 12:29 PM - k.supacha2 command used
+02/14/2022 12:30 PM - k.nenelong command used
+02/14/2022 12:30 PM - k.supacha2 command used
+02/14/2022 12:31 PM - k.reload command used
+02/14/2022 12:31 PM - k.supacha2 command used
+02/14/2022 12:31 PM - k.reload command used
+02/14/2022 12:31 PM - k.supacha2 command used
+02/14/2022 12:31 PM - k.reload command used
+02/14/2022 12:32 PM - k.supacha2 command used
+02/14/2022 12:32 PM - k.reload command used
+02/14/2022 12:32 PM - k.supacha2 command used
+02/14/2022 12:34 PM - k.reload command used
+02/14/2022 12:34 PM - k.supacha2 command used
+02/14/2022 12:37 PM - k.supacha2 command used
+02/14/2022 12:37 PM - sussy reply
+02/14/2022 12:38 PM - k.supacha command used
+02/14/2022 12:38 PM - sussy reply
+02/14/2022 12:43 PM - k.supacha2 command used
+02/14/2022 12:44 PM - k.supacha2 command used
+02/14/2022 12:44 PM - k.supacha2 command used
+02/14/2022 12:44 PM - sussy reply
+02/14/2022 12:45 PM - k.supacha2 command used
+02/14/2022 12:46 PM - sussy reply
+02/14/2022 12:46 PM - k.supacha2 command used
+02/14/2022 12:46 PM - sussy reply
+02/14/2022 12:47 PM - k.lowqual command used
+02/14/2022 01:18 PM - k.reload command used
+02/14/2022 01:18 PM - k.nene command used
+02/14/2022 01:18 PM - k.supacha2 command used
+02/14/2022 01:20 PM - k.reload command used
+02/14/2022 01:20 PM - k.supacha2 command used
+02/14/2022 01:20 PM - k.reload command used
+02/14/2022 01:20 PM - k.supacha2 command used
+02/14/2022 01:26 PM - k.reload command used
+02/14/2022 01:26 PM - k.supacha2 command used
+02/14/2022 01:26 PM - Command raised an exception: TypeError: expected string or bytes-like object
+02/14/2022 01:27 PM - k.reload command used
+02/14/2022 01:27 PM - k.supacha2 command used
+02/14/2022 01:27 PM - Command raised an exception: AttributeError: 'NoneType' object has no attribute 'group'
+02/14/2022 01:27 PM - k.reload command used
+02/14/2022 01:27 PM - k.supacha2 command used
+02/14/2022 01:27 PM - Command raised an exception: TypeError: an integer is required (got type str)
+02/14/2022 01:27 PM - k.reload command used
+02/14/2022 01:27 PM - k.supacha2 command used
+02/14/2022 01:28 PM - k.reload command used
+02/14/2022 01:28 PM - k.supacha2 command used
+02/14/2022 01:28 PM - k.reload command used
+02/14/2022 01:28 PM - k.supacha2 command used
+02/14/2022 01:29 PM - k.supacha2 command used
+02/14/2022 01:30 PM - k.supacha2 command used
+02/14/2022 01:30 PM - k.reload command used
+02/14/2022 01:30 PM - k.supacha2 command used
+02/14/2022 01:31 PM - k.reload command used
+02/14/2022 01:31 PM - k.supacha2 command used
+02/14/2022 01:31 PM - k.supacha2 command used
+02/14/2022 01:32 PM - k.nenelong command used
+02/14/2022 01:32 PM - k.supacha2 command used
+02/14/2022 01:33 PM - k.supacha2 command used
+02/14/2022 01:33 PM - k.reload command used
+02/14/2022 01:33 PM - k.supacha2 command used
+02/14/2022 01:37 PM - k.supacha2 command used
+02/14/2022 01:38 PM - k.supacha command used
+02/14/2022 01:39 PM - k.necoarc command used
+02/14/2022 01:39 PM - k.necoarc command used
+02/14/2022 01:39 PM - Command raised an exception: ClientException: Already playing audio.
+02/14/2022 01:39 PM - k.necoarc command used
+02/14/2022 01:44 PM - k.reload command used
+02/14/2022 01:44 PM - k.akasupa2 command used
+02/14/2022 01:47 PM - sussy reply
+02/14/2022 01:47 PM - k.reload command used
+02/14/2022 01:48 PM - k.akasupa2 command used
+02/14/2022 01:53 PM - k.reload command used
+02/14/2022 01:53 PM - k.akasupa2 command used
+02/14/2022 01:53 PM - Command raised an exception: AttributeError: rectangle
+02/14/2022 01:54 PM - k.reload command used
+02/14/2022 01:54 PM - k.akasupa2 command used
+02/14/2022 01:59 PM - k.reload command used
+02/14/2022 02:00 PM - k.akasupa2 command used
+02/14/2022 02:00 PM - Command raised an exception: TypeError: unsupported operand type(s) for +: 'int' and 'str'
+02/14/2022 02:01 PM - k.reload command used
+02/14/2022 02:01 PM - k.akasupa2 command used
+02/14/2022 02:02 PM - k.nene command used
+02/14/2022 02:02 PM - k.akasupa command used
+02/14/2022 02:02 PM - k.akasupa2 command used
+02/14/2022 02:04 PM - k.nenelong command used
+02/14/2022 02:05 PM - k.akasupa command used
+02/14/2022 02:05 PM - k.akasupa2 command used
+02/14/2022 02:06 PM - k.lowqual command used
+02/14/2022 02:06 PM - sussy reply
+02/14/2022 02:06 PM - sussy reply
+02/14/2022 02:07 PM - Command "downscale" is not found
+02/14/2022 02:07 PM - k.lowqual command used
+02/14/2022 02:08 PM - k.lowqual command used
+02/14/2022 02:08 PM - k.reload command used
+02/14/2022 02:08 PM - k.akasupa2 command used
+02/14/2022 02:09 PM - sussy reply
+02/14/2022 02:12 PM - k.reload command used
+02/14/2022 02:12 PM - k.akasupa2 command used
+02/14/2022 02:13 PM - k.nene command used
+02/14/2022 02:13 PM - k.akasupa command used
+02/14/2022 02:13 PM - k.akasupa2 command used
+02/14/2022 02:50 PM - sussy reply
+02/14/2022 02:52 PM - k.e command used
+02/14/2022 02:55 PM - k.e command used
+02/14/2022 03:01 PM - sussy reply
+02/14/2022 03:19 PM - sussy reply
