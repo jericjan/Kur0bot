@@ -427,14 +427,17 @@ proc_id = os.getpid()
 print(f"{(time.time() - start_time):.2f}s - Process ID: {proc_id}")
 asyncio.run(log(f"Process ID: {proc_id}", False))
 check(start_time, proc_id)
-
+loop = client.loop
 while isDiscordrunning is False:
     try:
         print(f"{(time.time() - start_time):.2f}s - Connecting to bot...")
-
-        client.run(os.getenv("TOKEN"))
+        loop.run_until_complete(client.start(os.getenv("TOKEN")))
+        print("Setting isDiscordrunning to True")
         isDiscordrunning = True
-    except Exception as e:
+    except KeyboardInterrupt:
+        loop.run_until_complete(client.close())
+        # cancel all tasks lingering
+    except disnake.HTTPException as e:
         print("nope. not working")
 
         r = requests.head(url="https://discord.com/api/v1")
@@ -453,6 +456,10 @@ while isDiscordrunning is False:
             print("No rate limit")
             print("Trying again in 5 seconds")
             time.sleep(5)
+    except:
+        asyncio.run(log("Something went wrong. Exiting..."))
+    finally:
+        loop.close()
 
 
 # if __name__ == '__main__':
