@@ -33,3 +33,4 @@ environment variables:
 -  "FB_ACCESS_TOKEN": 
 -  "ENCRYPTPASSPHRASE": 
 -  "SAUCENAO_KEY": 
+- "RSA_KEY":
