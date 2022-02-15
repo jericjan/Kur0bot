@@ -18,6 +18,17 @@ yarl = ">=1.0,<2.0"
 speedups = ["aiodns", "brotlipy", "cchardet"]
 
 [[package]]
+name = "aiolimiter"
+version = "1.0.0"
+description = "asyncio rate limiter, a leaky bucket implementation"
+category = "main"
+optional = false
+python-versions = ">=3.6.1,<4.0.0"
+
+[package.extras]
+docs = ["aiohttp-theme (>=0.1.6,<0.2.0)", "sphinx (>=2.2.1,<5.0.0)", "sphinx-autodoc-typehints (>=1.10.3,<2.0.0)", "sphinxcontrib-spelling (>=4.3,<8.0)", "toml (>=0.10.0,<0.11.0)"]
+
+[[package]]
 name = "arsenic"
 version = "21.8"
 description = "Asynchronous WebDriver client"
@@ -733,7 +744,7 @@ websockets = "*"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "de2a6f50084b5de53abf75f0d364a5124838e5bdb106249e5ca65a6f67d0687b"
+content-hash = "303965fa52c1eed7d6604f00dd29edbcee641b41b28daeddc81e627d198e6584"
 
 [metadata.files]
 aiohttp = [
@@ -774,6 +785,10 @@ aiohttp = [
     {file = "aiohttp-3.7.4.post0-cp39-cp39-win32.whl", hash = "sha256:932bb1ea39a54e9ea27fc9232163059a0b8855256f4052e776357ad9add6f1c9"},
     {file = "aiohttp-3.7.4.post0-cp39-cp39-win_amd64.whl", hash = "sha256:02f46fc0e3c5ac58b80d4d56eb0a7c7d97fcef69ace9326289fb9f1955e65cfe"},
     {file = "aiohttp-3.7.4.post0.tar.gz", hash = "sha256:493d3299ebe5f5a7c66b9819eacdcfbbaaf1a8e84911ddffcdc48888497afecf"},
+]
+aiolimiter = [
+    {file = "aiolimiter-1.0.0-py3-none-any.whl", hash = "sha256:f1c5ba2a2861cd4a126c1294f5282208383e67d5b128a4f32def0c702cae8039"},
+    {file = "aiolimiter-1.0.0.tar.gz", hash = "sha256:9d40767e4476048145dfa9f61948445168d6e63cf42c95785a20b9aaff2e4564"},
 ]
 arsenic = [
     {file = "arsenic-21.8-py3-none-any.whl", hash = "sha256:9be9d9eeeac519d45bf8ebe6d03c24eb6ae4dc7672b1f6c8f870f63f5997642b"},

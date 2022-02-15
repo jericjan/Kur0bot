@@ -1981,3 +1981,332 @@ from tab crashed
 02/14/2022 02:55 PM - k.e command used
 02/14/2022 03:01 PM - sussy reply
 02/14/2022 03:19 PM - sussy reply
+02/14/2022 03:33 PM - k.reload command used
+02/14/2022 03:33 PM - k.akasupa2 command used
+02/14/2022 03:33 PM - sussy reply
+02/14/2022 03:34 PM - k.akasupa2 command used
+02/14/2022 03:35 PM - k.reload command used
+02/14/2022 03:35 PM - k.akasupa2 command used
+02/14/2022 03:35 PM - k.akasupa2 command used
+02/14/2022 03:35 PM - sussy reply
+02/14/2022 03:51 PM - sussy reply
+02/14/2022 04:13 PM - sussy reply
+02/14/2022 04:17 PM - k.reload command used
+02/14/2022 04:17 PM - k.akasupa2 command used
+02/14/2022 04:17 PM - k.reload command used
+02/14/2022 04:17 PM - k.akasupa2 command used
+02/14/2022 04:18 PM - k.reload command used
+02/14/2022 04:18 PM - k.akasupa2 command used
+02/14/2022 04:18 PM - sussy reply
+02/14/2022 04:19 PM - k.reload command used
+02/14/2022 04:19 PM - k.akasupa2 command used
+02/14/2022 04:20 PM - k.reload command used
+02/14/2022 04:20 PM - k.akasupa2 command used
+02/14/2022 04:21 PM - k.reload command used
+02/14/2022 04:21 PM - k.akasupa2 command used
+02/14/2022 04:25 PM - k.reload command used
+02/14/2022 04:25 PM - k.akasupa2 command used
+02/14/2022 04:27 PM - k.reload command used
+02/14/2022 04:28 PM - k.akasupa2 command used
+02/14/2022 05:10 PM - k.reload command used
+02/14/2022 05:10 PM - k.akasupa2 command used
+02/14/2022 05:10 PM - Command raised an exception: TypeError: list indices must be integers or slices, not str
+02/14/2022 05:11 PM - k.reload command used
+02/14/2022 05:11 PM - k.akasupa2 command used
+02/14/2022 05:12 PM - Process ID: 4688
+02/14/2022 05:12 PM - sussy reply
+02/14/2022 05:12 PM - Bot started
+02/14/2022 05:12 PM - avi bot bac
+02/14/2022 05:13 PM - k.akasupa2 command used
+02/14/2022 05:13 PM - Process ID: 4745
+02/14/2022 05:13 PM - Bot started
+02/14/2022 05:13 PM - avi bot bac
+02/14/2022 05:13 PM - k.akasupa2 command used
+02/14/2022 05:14 PM - Process ID: 4778
+02/14/2022 05:14 PM - Bot started
+02/14/2022 05:14 PM - avi bot bac
+02/14/2022 05:14 PM - k.akasupa2 command used
+02/14/2022 05:16 PM - Process ID: 4837
+02/14/2022 05:16 PM - Bot started
+02/14/2022 05:16 PM - avi bot bac
+02/14/2022 05:18 PM - Process ID: 4878
+02/14/2022 05:18 PM - Bot started
+02/14/2022 05:18 PM - avi bot bac
+02/14/2022 05:18 PM - k.akasupa2 command used
+02/14/2022 05:22 PM - Process ID: 4931
+02/14/2022 05:22 PM - Bot started
+02/14/2022 05:22 PM - avi bot bac
+02/14/2022 05:23 PM - k.reload command used
+02/14/2022 05:23 PM - k.akasupa2 command used
+02/14/2022 05:25 PM - Process ID: 4977
+02/14/2022 05:25 PM - Bot started
+02/14/2022 05:25 PM - avi bot bac
+02/14/2022 05:25 PM - k.akasupa2 command used
+02/14/2022 05:26 PM - k.reload command used
+02/14/2022 05:26 PM - k.akasupa2 command used
+02/14/2022 05:28 PM - k.akasupa2 command used
+02/14/2022 05:29 PM - k.reload command used
+02/14/2022 05:29 PM - k.akasupa2 command used
+02/14/2022 05:29 PM - k.akasupa2 command used
+02/14/2022 05:31 PM - Bot started
+02/14/2022 05:31 PM - avi bot bac
+02/14/2022 05:32 PM - k.reload command used
+02/14/2022 05:32 PM - k.akasupa2 command used
+02/14/2022 05:34 PM - k.akasupa2 command used
+02/14/2022 05:36 PM - k.reload command used
+02/14/2022 05:36 PM - k.akasupa2 command used
+02/14/2022 05:37 PM - k.reload command used
+02/14/2022 05:37 PM - k.akasupa2 command used
+02/14/2022 05:40 PM - k.supacha2 command used
+02/14/2022 05:41 PM - k.supacha2 command used
+02/14/2022 05:41 PM - k.reload command used
+02/14/2022 05:42 PM - k.reload command used
+02/14/2022 05:43 PM - k.akasupa2 command used
+02/14/2022 05:43 PM - k.supacha2 command used
+02/14/2022 05:46 PM - k.reload command used
+02/14/2022 05:47 PM - k.akasupa2 command used
+02/14/2022 05:48 PM - k.reload command used
+02/14/2022 05:48 PM - k.supacha2 command used
+02/14/2022 05:48 PM - sussy reply
+02/14/2022 05:49 PM - k.supacha2 command used
+02/14/2022 05:51 PM - k.reload command used
+02/14/2022 05:51 PM - k.akasupa2 command used
+02/14/2022 05:52 PM - k.reload command used
+02/14/2022 05:53 PM - k.reload command used
+02/14/2022 05:53 PM - k.akasupa2 command used
+02/14/2022 05:54 PM - k.reload command used
+02/14/2022 05:55 PM - k.reload command used
+02/14/2022 05:55 PM - k.akasupa2 command used
+02/14/2022 05:55 PM - k.nenelong command used
+02/14/2022 05:57 PM - k.akasupa2 command used
+02/14/2022 06:02 PM - k.reload command used
+02/14/2022 06:02 PM - k.akasupa2 command used
+02/14/2022 06:02 PM - Command raised an exception: AttributeError: 'str' object has no attribute 'edit'
+02/14/2022 06:02 PM - k.reload command used
+02/14/2022 06:02 PM - k.akasupa2 command used
+02/14/2022 06:03 PM - k.reload command used
+02/14/2022 06:03 PM - k.akasupa2 command used
+02/14/2022 06:04 PM - k.akasupa2 command used
+02/14/2022 06:25 PM - k.reload command used
+02/14/2022 06:25 PM - k.akasupa2 command used
+02/14/2022 06:26 PM - k.reload command used
+02/14/2022 06:26 PM - k.akasupa2 command used
+02/14/2022 06:29 PM - k.reload command used
+02/14/2022 06:29 PM - k.akasupa2 command used
+02/14/2022 06:31 PM - k.reload command used
+02/14/2022 06:31 PM - k.akasupa2 command used
+02/14/2022 06:32 PM - k.reload command used
+02/14/2022 06:32 PM - k.akasupa2 command used
+02/14/2022 06:45 PM - k.botansneeze command used
+02/14/2022 06:48 PM - k.reload command used
+02/14/2022 06:48 PM - k.akasupa2 command used
+02/14/2022 06:48 PM - Command raised an exception: TimeoutError: 
+02/14/2022 06:49 PM - k.reload command used
+02/14/2022 06:49 PM - k.akasupa2 command used
+02/14/2022 06:49 PM - k.akasupa2 command used
+02/14/2022 06:50 PM - k.reload command used
+02/14/2022 06:50 PM - k.akasupa2 command used
+02/14/2022 07:02 PM - k.reload command used
+02/14/2022 07:02 PM - k.akasupa2 command used
+02/14/2022 07:03 PM - k.ping command used
+02/14/2022 07:04 PM - k.reload command used
+02/14/2022 07:04 PM - k.akasupa2 command used
+02/14/2022 07:06 PM - k.akasupa2 command used
+02/14/2022 07:08 PM - k.reload command used
+02/14/2022 07:08 PM - k.akasupa2 command used
+02/14/2022 07:34 PM - k.reload command used
+02/14/2022 07:34 PM - k.akasupa2 command used
+02/14/2022 07:38 PM - k.reload command used
+02/14/2022 07:39 PM - k.akasupa2 command used
+02/14/2022 07:40 PM - k.akasupa2 command used
+02/14/2022 07:43 PM - k.reload command used
+02/14/2022 07:43 PM - k.akasupa2 command used
+02/14/2022 07:44 PM - k.reload command used
+02/14/2022 07:44 PM - k.akasupa2 command used
+02/14/2022 07:46 PM - k.reload command used
+02/14/2022 07:46 PM - k.akasupa2 command used
+02/14/2022 08:12 PM - k.reload command used
+02/14/2022 08:12 PM - k.akasupa2 command used
+02/14/2022 08:19 PM - k.reload command used
+02/14/2022 08:21 PM - k.akasupa2 command used
+02/14/2022 08:26 PM - k.reload command used
+02/14/2022 08:26 PM - k.akasupa2 command used
+02/14/2022 08:27 PM - k.reload command used
+02/14/2022 08:28 PM - k.akasupa2 command used
+02/14/2022 08:29 PM - k.akasupa2 command used
+02/14/2022 08:31 PM - k.akasupa2 command used
+02/14/2022 08:34 PM - k.reload command used
+02/14/2022 08:36 PM - k.akasupa2 command used
+02/14/2022 08:42 PM - k.reload command used
+02/14/2022 08:43 PM - k.akasupa2 command used
+02/14/2022 08:44 PM - k.reload command used
+02/14/2022 08:44 PM - k.akasupa2 command used
+02/14/2022 09:11 PM - Process ID: 493
+02/14/2022 09:11 PM - Bot started
+02/14/2022 09:11 PM - avi bot bac
+02/14/2022 09:11 PM - k.lowqual command used
+02/14/2022 09:18 PM - Process ID: 492
+02/14/2022 09:18 PM - Bot started
+02/14/2022 09:18 PM - avi bot bac
+02/14/2022 09:18 PM - k.akasupa2 command used
+02/14/2022 09:19 PM - k.reload command used
+02/14/2022 09:19 PM - k.akasupa2 command used
+02/14/2022 09:24 PM - sussy reply
+02/14/2022 09:24 PM - k.lowqual command used
+02/14/2022 09:27 PM - k.reload command used
+02/14/2022 09:28 PM - k.akasupa2 command used
+02/14/2022 09:37 PM - k.reload command used
+02/14/2022 09:38 PM - sussy reply
+02/14/2022 09:40 PM - sussy reply
+02/14/2022 09:42 PM - k.akasupa2 command used
+02/14/2022 09:42 PM - k.nenelong command used
+02/14/2022 09:42 PM - k.supacha2 command used
+02/14/2022 09:44 PM - k.supacha2 command used
+02/14/2022 09:45 PM - k.supacha2 command used
+02/14/2022 09:50 PM - k.reload command used
+02/14/2022 09:50 PM - k.supacha2 command used
+02/14/2022 09:54 PM - k.reload command used
+02/14/2022 09:54 PM - k.supacha2 command used
+02/14/2022 10:03 PM - Process ID: 532
+02/14/2022 10:03 PM - Bot started
+02/14/2022 10:03 PM - avi bot bac
+02/14/2022 10:03 PM - k.nene command used
+02/14/2022 10:04 PM - k.supacha2 command used
+02/14/2022 10:04 PM - k.supacha2 command used
+02/14/2022 10:07 PM - k.supacha2 command used
+02/14/2022 10:12 PM - k.reload command used
+02/14/2022 10:12 PM - k.supacha2 command used
+02/14/2022 10:16 PM - k.reload command used
+02/14/2022 10:16 PM - k.supacha2 command used
+02/14/2022 10:18 PM - k.supacha2 command used
+02/14/2022 10:19 PM - k.supacha2 command used
+02/14/2022 10:19 PM - sussy reply
+02/14/2022 10:19 PM - k.supacha2 command used
+02/14/2022 10:22 PM - k.reload command used
+02/14/2022 10:23 PM - k.supacha2 command used
+02/14/2022 10:23 PM - k.reload command used
+02/14/2022 10:23 PM - k.supacha2 command used
+02/14/2022 10:24 PM - k.reload command used
+02/14/2022 10:25 PM - k.supacha2 command used
+02/14/2022 10:30 PM - sussy reply
+02/14/2022 10:30 PM - sussy reply
+02/14/2022 10:31 PM - k.supacha2 command used
+02/14/2022 10:31 PM - sussy reply
+02/14/2022 10:31 PM - sussy reply
+02/14/2022 10:31 PM - sussy reply
+02/14/2022 10:31 PM - sussy reply
+02/14/2022 10:31 PM - sussy reply
+02/14/2022 10:31 PM - sussy reply
+02/14/2022 10:31 PM - sussy reply
+02/14/2022 10:32 PM - sussy reply
+02/14/2022 10:32 PM - sussy reply
+02/14/2022 10:32 PM - sussy reply
+02/14/2022 10:32 PM - sussy reply
+02/14/2022 10:33 PM - k.reload command used
+02/14/2022 10:35 PM - k.supacha2 command used
+02/14/2022 10:40 PM - k.giorno command used
+02/14/2022 10:40 PM - k.supacha2 command used
+02/14/2022 10:40 PM - k.supacha2 command used
+02/14/2022 10:41 PM - k.supacha command used
+02/14/2022 10:41 PM - k.jizz command used
+02/14/2022 10:42 PM - k.supacha2 command used
+02/14/2022 10:42 PM - k.jizz command used
+02/14/2022 10:42 PM - k.ascend command used
+02/14/2022 10:42 PM - sussy reply
+02/14/2022 10:42 PM - Command raised an exception: NotFound: 404 Not Found (error code: 10015): Unknown Webhook
+02/14/2022 10:42 PM - k.supacha command used
+02/14/2022 10:43 PM - k.jizz command used
+02/14/2022 10:49 PM - k.supacha2 command used
+02/14/2022 10:50 PM - k.jizz command used
+02/14/2022 10:50 PM - sussy reply
+02/14/2022 10:50 PM - sussy reply
+02/14/2022 10:50 PM - sussy reply
+02/14/2022 10:50 PM - sussy reply
+02/14/2022 10:50 PM - Command "kjizz" is not found
+02/14/2022 11:00 PM - k.lowqual command used
+02/14/2022 11:43 PM - k.ping command used
+02/14/2022 11:57 PM - k.reload command used
+02/14/2022 11:57 PM - k.nene command used
+02/14/2022 11:57 PM - k.supacha2 command used
+02/14/2022 11:57 PM - Command raised an exception: TypeError: foo() takes 5 positional arguments but 6 were given
+02/14/2022 11:59 PM - k.reload command used
+02/14/2022 11:59 PM - k.supacha2 command used
+02/14/2022 11:59 PM - Command raised an exception: TypeError: legacy_blocking_function() takes 5 positional arguments but 6 were given
+02/15/2022 12:00 AM - k.reload command used
+02/15/2022 12:00 AM - k.supacha2 command used
+02/15/2022 12:00 AM - k.nenelong command used
+02/15/2022 12:00 AM - k.supacha2 command used
+02/15/2022 12:01 AM - sussy reply
+02/15/2022 12:01 AM - sussy reply
+02/15/2022 12:01 AM - k.jizz command used
+02/15/2022 12:01 AM - sussy reply
+02/15/2022 12:03 AM - k.reload command used
+02/15/2022 12:03 AM - k.supacha2 command used
+02/15/2022 12:04 AM - sussy reply
+02/15/2022 12:06 AM - k.reload command used
+02/15/2022 12:06 AM - k.supacha2 command used
+02/15/2022 12:06 AM - k.nene command used
+02/15/2022 12:06 AM - k.supacha2 command used
+02/15/2022 12:06 AM - k.nenelong command used
+02/15/2022 12:07 AM - k.supacha2 command used
+02/15/2022 12:07 AM - k.supacha2 command used
+02/15/2022 12:07 AM - sussy reply
+02/15/2022 12:07 AM - k.supacha2 command used
+02/15/2022 12:07 AM - sussy reply
+02/15/2022 12:07 AM - k.supacha2 command used
+02/15/2022 12:07 AM - sussy reply
+02/15/2022 12:08 AM - k.supacha2 command used
+02/15/2022 12:08 AM - k.supacha2 command used
+02/15/2022 12:08 AM - k.supacha2 command used
+02/15/2022 12:08 AM - k.supacha2 command used
+02/15/2022 12:08 AM - k.supacha2 command used
+02/15/2022 12:09 AM - k.supacha2 command used
+02/15/2022 12:09 AM - sussy reply
+02/15/2022 12:09 AM - sussy reply
+02/15/2022 12:09 AM - sussy reply
+02/15/2022 12:12 AM - k.reload command used
+02/15/2022 12:13 AM - k.supacha2 command used
+02/15/2022 12:14 AM - sussy reply
+02/15/2022 12:14 AM - k.reload command used
+02/15/2022 12:14 AM - k.akasupa2 command used
+02/15/2022 12:21 AM - k.reload command used
+02/15/2022 12:21 AM - k.akasupa2 command used
+02/15/2022 12:26 AM - k.reload command used
+02/15/2022 12:26 AM - k.akasupa2 command used
+02/15/2022 12:26 AM - k.reload command used
+02/15/2022 12:27 AM - k.akasupa2 command used
+02/15/2022 12:29 AM - k.reload command used
+02/15/2022 12:29 AM - Command raised an exception: ExtensionFailed: Extension 'modules.others.superchat' raised an error: SyntaxError: 'await' outside async function (superchat.py, line 457)
+02/15/2022 12:31 AM - k.reload command used
+02/15/2022 12:31 AM - k.supacha2 command used
+02/15/2022 12:32 AM - k.reload command used
+02/15/2022 12:32 AM - k.akasupa2 command used
+02/15/2022 02:51 AM - twitter link!
+02/15/2022 02:53 AM - twitter link!
+02/15/2022 03:04 AM - twitter link!
+02/15/2022 06:24 AM - sussy reply
+02/15/2022 07:07 AM - twitter link!
+02/15/2022 07:07 AM - twitter video!
+02/15/2022 07:55 AM - sussy reply
+02/15/2022 07:56 AM - sussy reply
+02/15/2022 07:59 AM - sussy reply
+02/15/2022 08:08 AM - sussy reply
+02/15/2022 08:12 AM - sussy reply
+02/15/2022 08:17 AM - twitter link!
+02/15/2022 08:17 AM - twitter video!
+02/15/2022 08:18 AM - twitter link!
+02/15/2022 08:18 AM - twitter video!
+02/15/2022 08:24 AM - k.lowqual command used
+02/15/2022 08:25 AM - k.download command used
+02/15/2022 08:26 AM - Command raised an exception: HTTPException: 400 Bad Request (error code: 50035): Invalid Form Body
+In content: Must be 4000 or fewer in length.
+02/15/2022 08:47 AM - sussy reply
+02/15/2022 09:20 AM - k.reload command used
+02/15/2022 09:20 AM - k.nenelong command used
+02/15/2022 09:20 AM - k.supacha2 command used
+02/15/2022 09:25 AM - k.reload command used
+02/15/2022 09:25 AM - k.supacha command used
+02/15/2022 09:26 AM - k.reload command used
+02/15/2022 09:26 AM - k.supacha2 command used
+02/15/2022 09:30 AM - k.reload command used
+02/15/2022 09:31 AM - k.supacha2 command used

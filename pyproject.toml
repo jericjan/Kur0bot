@@ -28,6 +28,7 @@ selenium = "<4.1.0"
 arsenic = "^21.8"
 Pillow = "^9.0.1"
 pilmoji = "^2.0.1"
+aiolimiter = "^1.0.0"
 
 [tool.poetry.dev-dependencies]
 
