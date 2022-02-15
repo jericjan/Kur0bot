@@ -125,7 +125,7 @@ print(f"{(time.time() - start_time):.2f}s - Done!")
 
 @client.before_invoke
 async def common(ctx):
-    text = f"k.{ctx.invoked_with} command used"
+    text = f'k.{ctx.invoked_with} | {ctx.author.name}#{ctx.author.discriminator} | "{ctx.guild.name}" - "{ctx.channel.name}"'
     # print = True
     await log(str(text))
 

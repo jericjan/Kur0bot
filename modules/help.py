@@ -562,5 +562,6 @@ class Help(commands.Cog):
         em.add_field(name="**Aliases**", value=",".join(ctx.command.aliases))
         await ctx.send(embed=em)
 
+
 def setup(client):
     client.add_cog(Help(client))

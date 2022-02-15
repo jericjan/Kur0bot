@@ -1,3 +1,5 @@
 /ffmpeg-git/
 /rclone/
 __pycache__/
+console_log.txt
+log.txt

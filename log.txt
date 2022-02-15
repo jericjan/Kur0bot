@@ -2527,3 +2527,226 @@ In content: Must be 4000 or fewer in length.
 02/15/2022 12:55 PM - k.superchat command used
 02/15/2022 12:55 PM - Command raised an exception: NotFound: 404 Not Found (error code: 10008): Unknown Message
 02/15/2022 01:04 PM - k.supacha command used
+02/15/2022 01:21 PM - k.reload command used
+02/15/2022 01:22 PM - k.reload command used
+02/15/2022 01:22 PM - k.lowqual command used
+02/15/2022 01:24 PM - Command raised an exception: HTTPException: 413 Payload Too Large (error code: 40005): Request entity too large
+02/15/2022 01:28 PM - message is a required argument that is missing.
+02/15/2022 01:28 PM - k.superchat command used
+02/15/2022 01:28 PM - Command raised an exception: NotFound: 404 Not Found (error code: 10008): Unknown Message
+02/15/2022 01:28 PM - k.superchat command used
+02/15/2022 01:29 PM - message is a required argument that is missing.
+02/15/2022 01:29 PM - k.superchat command used
+02/15/2022 01:29 PM - k.superchat command used
+02/15/2022 01:29 PM - k.superchat command used
+02/15/2022 01:29 PM - k.superchat command used
+02/15/2022 01:30 PM - message is a required argument that is missing.
+02/15/2022 01:30 PM - k.superchat command used
+02/15/2022 01:31 PM - k.superchat command used
+02/15/2022 01:31 PM - k.supacha command used
+02/15/2022 01:31 PM - sussy reply
+02/15/2022 01:31 PM - k.supacha command used
+02/15/2022 01:31 PM - message is a required argument that is missing.
+02/15/2022 01:31 PM - k.supacha command used
+02/15/2022 01:31 PM - k.superchat command used
+02/15/2022 01:32 PM - k.superchat command used
+02/15/2022 01:32 PM - Command raised an exception: NotFound: 404 Not Found (error code: 10008): Unknown Message
+02/15/2022 01:34 PM - message is a required argument that is missing.
+02/15/2022 01:35 PM - k.superchat command used
+02/15/2022 01:36 PM - k.lowqual command used
+02/15/2022 01:37 PM - k.reload command used
+02/15/2022 01:39 PM - k.supacha command used
+02/15/2022 01:40 PM - k.supacha command used
+02/15/2022 01:43 PM - k.supacha command used
+02/15/2022 01:43 PM - k.lowqual command used
+02/15/2022 01:43 PM - k.lowqual command used
+02/15/2022 01:44 PM - k.lowqual command used
+02/15/2022 01:44 PM - k.supacha command used
+02/15/2022 01:47 PM - k.supacha command used
+02/15/2022 01:47 PM - k.supacha command used
+02/15/2022 01:47 PM - k.superchat command used
+02/15/2022 01:47 PM - Command raised an exception: NotFound: 404 Not Found (error code: 10008): Unknown Message
+02/15/2022 01:48 PM - k.superchat command used
+02/15/2022 01:49 PM - k.superchat command used
+02/15/2022 01:49 PM - k.superchat command used
+02/15/2022 01:51 PM - Command raised an exception: FileNotFoundError: [Errno 2] No such file or directory: 'lv_0_20211214142112.mp4'
+02/15/2022 01:53 PM - k.supacha command used
+02/15/2022 01:53 PM - k.lowqual command used
+02/15/2022 01:54 PM - k.lowqual command used
+02/15/2022 01:54 PM - k.supacha command used
+02/15/2022 01:54 PM - k.supacha command used
+02/15/2022 01:55 PM - k.superchat command used
+02/15/2022 01:55 PM - k.lowqual command used
+02/15/2022 01:58 PM - k.lowqual command used
+02/15/2022 01:59 PM - amount is a required argument that is missing.
+02/15/2022 02:00 PM - k.superchat command used
+02/15/2022 02:00 PM - message is a required argument that is missing.
+02/15/2022 02:00 PM - k.superchat command used
+02/15/2022 02:00 PM - k.superchat command used
+02/15/2022 02:01 PM - k.lowqual command used
+02/15/2022 02:01 PM - k.superchat command used
+02/15/2022 02:05 PM - k.superchat command used
+02/15/2022 02:05 PM - k.lowqual command used
+02/15/2022 02:06 PM - k.lowqual command used
+02/15/2022 02:08 PM - k.lowqual command used
+02/15/2022 02:10 PM - k.badapple command used
+02/15/2022 02:16 PM - sussy reply
+02/15/2022 02:35 PM - k.reload command used
+02/15/2022 02:36 PM - k.superchat command used
+02/15/2022 02:36 PM - Command raised an exception: TypeError: help() got an unexpected keyword argument 'query'
+02/15/2022 02:36 PM - k.reload command used
+02/15/2022 02:36 PM - k.superchat command used
+02/15/2022 02:36 PM - Command raised an exception: TypeError: help() got an unexpected keyword argument 'query'
+02/15/2022 02:42 PM - k.reload command used
+02/15/2022 02:43 PM - k.reload command used
+02/15/2022 02:43 PM - k.superchat command used
+02/15/2022 02:51 PM - k.reload command used
+02/15/2022 02:51 PM - k.superchat command used
+02/15/2022 02:51 PM - k.superchat command used
+02/15/2022 02:52 PM - k.superchat command used
+02/15/2022 02:52 PM - k.superchat command used
+02/15/2022 02:55 PM - k.reload command used
+02/15/2022 02:55 PM - k.superchat command used
+02/15/2022 02:55 PM - Command raised an exception: TypeError: argument of type 'NoneType' is not iterable
+02/15/2022 03:02 PM - k.reload command used
+02/15/2022 03:02 PM - k.superchat command used
+02/15/2022 03:02 PM - Command raised an exception: AttributeError: 'list' object has no attribute 'split'
+02/15/2022 03:04 PM - sussy reply
+02/15/2022 03:04 PM - sussy reply
+02/15/2022 03:05 PM - sussy reply
+02/15/2022 03:31 PM - k.lowqual command used
+02/15/2022 04:03 PM - k.reload command used
+02/15/2022 04:03 PM - k.superchat command used
+02/15/2022 04:03 PM - Command raised an exception: AttributeError: 'bytes' object has no attribute 'read'
+02/15/2022 04:04 PM - k.reload command used
+02/15/2022 04:04 PM - k.superchat command used
+02/15/2022 04:05 PM - k.superchat command used
+02/15/2022 04:10 PM - k.superchat command used
+02/15/2022 04:10 PM - k.superchat command used
+02/15/2022 04:11 PM - link is a required argument that is missing.
+02/15/2022 04:14 PM - k.reload command used
+02/15/2022 04:14 PM - k.clip command used
+02/15/2022 04:14 PM - link is a required argument that is missing.
+02/15/2022 04:16 PM - k.reload command used
+02/15/2022 04:16 PM - link is a required argument that is missing.
+02/15/2022 04:16 PM - link is a required argument that is missing.
+02/15/2022 04:17 PM - k.reload command used
+02/15/2022 04:19 PM - k.reload command used
+02/15/2022 04:19 PM - link is a required argument that is missing.
+02/15/2022 04:20 PM - k.reload command used
+02/15/2022 04:20 PM - link is a required argument that is missing.
+02/15/2022 04:20 PM - k.reload command used
+02/15/2022 04:20 PM - link is a required argument that is missing.
+02/15/2022 04:22 PM - k.reload command used
+02/15/2022 04:22 PM - link is a required argument that is missing.
+02/15/2022 04:24 PM - k.reload command used
+02/15/2022 04:24 PM - k.clip command used
+02/15/2022 04:24 PM - link is a required argument that is missing.
+02/15/2022 04:24 PM - k.clip command used
+02/15/2022 04:24 PM - k.superchat command used
+02/15/2022 04:24 PM - k.superchat command used
+02/15/2022 04:25 PM - k.clip command used
+02/15/2022 04:25 PM - link is a required argument that is missing.
+02/15/2022 04:25 PM - k.help command used
+02/15/2022 04:25 PM - k.e command used
+02/15/2022 04:25 PM - Command raised an exception: UnboundLocalError: local variable 'emoji' referenced before assignment
+02/15/2022 04:25 PM - k.emote command used
+02/15/2022 04:25 PM - Command raised an exception: UnboundLocalError: local variable 'emoji' referenced before assignment
+02/15/2022 04:25 PM - k.emote command used
+02/15/2022 04:26 PM - k.e command used
+02/15/2022 04:26 PM - Command raised an exception: UnboundLocalError: local variable 'emoji' referenced before assignment
+02/15/2022 04:27 PM - k.reload command used
+02/15/2022 04:27 PM - k.e command used
+02/15/2022 04:27 PM - Command raised an exception: UnboundLocalError: local variable 'emoji' referenced before assignment
+02/15/2022 04:28 PM - k.e command used
+02/15/2022 04:31 PM - k.e command used
+02/15/2022 04:31 PM - sussy reply
+02/15/2022 04:31 PM - k.e command used
+02/15/2022 04:31 PM - Command "he" is not found
+02/15/2022 04:31 PM - k.ge command used
+02/15/2022 04:33 PM - k.e command used
+02/15/2022 04:39 PM - Process ID: 9764
+02/15/2022 04:39 PM - Bot started
+02/15/2022 04:39 PM - avi bot bac
+02/15/2022 04:39 PM - k.ge command used by Kur0 in thebots channel of the Kur0's server
+02/15/2022 04:42 PM - Process ID: 9847
+02/15/2022 04:42 PM - Bot started
+02/15/2022 04:42 PM - avi bot bac
+02/15/2022 04:42 PM - k.jizz command used by Kur0#5384 in the "bots" channel of the "Kur0's server" server.
+02/15/2022 04:42 PM - k.superchat command used by pro gemer musician#8717 in the "bots" channel of the "Avilon's Pacifamily" server.
+02/15/2022 05:00 PM - Process ID: 10471
+02/15/2022 05:00 PM - Bot started
+02/15/2022 05:00 PM - avi bot bac
+02/15/2022 05:16 PM - Process ID: 10756
+02/15/2022 05:16 PM - Bot started
+02/15/2022 05:16 PM - avi bot bac
+02/15/2022 05:16 PM - k.jizz | Kur0#5384 | "Kur0's server"" - "bots"
+02/15/2022 05:16 PM - Process ID: 10780
+02/15/2022 05:16 PM - Bot started
+02/15/2022 05:16 PM - avi bot bac
+02/15/2022 05:17 PM - k.jizz | Kur0#5384 | "Kur0's server" - "bots"
+02/15/2022 05:23 PM - sussy reply
+02/15/2022 05:27 PM - k.checkhelp | Kur0#5384 | "Kur0's server" - "bots"
+02/15/2022 05:30 PM - sussy reply
+02/15/2022 05:31 PM - k.superchat | Kur0#5384 | "Kur0's server" - "bots"
+02/15/2022 05:31 PM - sussy reply
+02/15/2022 05:31 PM - k.nene | Kur0#5384 | "Kur0's server" - "bots"
+02/15/2022 05:31 PM - k.supacha | Kur0#5384 | "Kur0's server" - "bots"
+02/15/2022 05:33 PM - k.reload | Kur0#5384 | "Kur0's server" - "bots"
+02/15/2022 05:33 PM - Command raised an exception: ExtensionFailed: Extension 'modules.others.superchat' raised an error: IndentationError: expected an indented block (superchat.py, line 410)
+02/15/2022 05:34 PM - k.reload | Kur0#5384 | "Kur0's server" - "bots"
+02/15/2022 05:34 PM - Command raised an exception: ExtensionFailed: Extension 'modules.others.superchat' raised an error: IndentationError: expected an indented block (superchat.py, line 410)
+02/15/2022 05:34 PM - k.reload | Kur0#5384 | "Kur0's server" - "bots"
+02/15/2022 05:34 PM - k.supacha | Kur0#5384 | "Kur0's server" - "bots"
+02/15/2022 05:35 PM - k.reload | Kur0#5384 | "Kur0's server" - "bots"
+02/15/2022 05:35 PM - k.supacha | Kur0#5384 | "Kur0's server" - "bots"
+02/15/2022 05:35 PM - k.reload | Kur0#5384 | "Kur0's server" - "bots"
+02/15/2022 05:36 PM - k.lowqual | Kur0#5384 | "Kur0's server" - "bots"
+02/15/2022 05:37 PM - k.reload | Kur0#5384 | "Kur0's server" - "bots"
+02/15/2022 05:37 PM - k.lowqual | Kur0#5384 | "Kur0's server" - "bots"
+02/15/2022 05:37 PM - k.reload | Kur0#5384 | "Kur0's server" - "bots"
+02/15/2022 05:37 PM - k.lowqual | Kur0#5384 | "Kur0's server" - "bots"
+02/15/2022 05:53 PM - k.glasses | pro gemer musician#8717 | "Avilon's Pacifamily" - "bots"
+02/15/2022 05:53 PM - sussy reply
+02/15/2022 05:53 PM - Command "supperchat" is not found
+02/15/2022 05:54 PM - k.superchat | pro gemer musician#8717 | "Avilon's Pacifamily" - "bots"
+02/15/2022 05:54 PM - sussy reply
+02/15/2022 06:11 PM - description is a required argument that is missing.
+02/15/2022 06:11 PM - Command "editembed" is not found
+02/15/2022 06:12 PM - k.makeembed | Kur0#5384 | "Kur0's server" - "bots"
+02/15/2022 06:12 PM - sussy reply
+02/15/2022 06:13 PM - k.editembed | Kur0#5384 | "Kur0's server" - "bots"
+02/15/2022 06:13 PM - k.editembed | Kur0#5384 | "Kur0's server" - "bots"
+02/15/2022 06:13 PM - Command raised an exception: NotFound: 404 Not Found (error code: 10008): Unknown Message
+02/15/2022 06:29 PM - k.reload | Kur0#5384 | "Kur0's server" - "bots"
+02/15/2022 06:29 PM - k.editembed | Kur0#5384 | "Kur0's server" - "bots"
+02/15/2022 06:29 PM - Command raised an exception: NotFound: 404 Not Found (error code: 10008): Unknown Message
+02/15/2022 06:30 PM - k.reload | Kur0#5384 | "Kur0's server" - "bots"
+02/15/2022 06:30 PM - k.editembed | Kur0#5384 | "Kur0's server" - "bots"
+02/15/2022 06:30 PM - Command raised an exception: NotFound: 404 Not Found (error code: 10008): Unknown Message
+02/15/2022 06:46 PM - k.reload | Kur0#5384 | "Kur0's server" - "bots"
+02/15/2022 06:46 PM - k.editembed | Kur0#5384 | "Kur0's server" - "bots"
+02/15/2022 06:51 PM - k.editembed | Kur0#5384 | "Kur0's server" - "bots"
+02/15/2022 06:57 PM - k.e | Kur0#5384 | "Kur0's server" - "bots"
+02/15/2022 06:58 PM - Command raised an exception: UnboundLocalError: local variable 'emoji' referenced before assignment
+02/15/2022 06:58 PM - k.reload | Kur0#5384 | "Kur0's server" - "bots"
+02/15/2022 06:58 PM - k.e | Kur0#5384 | "Kur0's server" - "bots"
+02/15/2022 06:58 PM - Command raised an exception: UnboundLocalError: local variable 'emoji' referenced before assignment
+02/15/2022 07:01 PM - k.help | Kur0#5384 | "Kur0's server" - "bots"
+02/15/2022 07:01 PM - k.pet | Kur0#5384 | "Kur0's server" - "bots"
+02/15/2022 07:02 PM - sussy reply
+02/15/2022 07:02 PM - k.pet | Kur0#5384 | "Kur0's server" - "bots"
+02/15/2022 07:02 PM - k.pet | Kur0#5384 | "Kur0's server" - "bots"
+02/15/2022 07:03 PM - k.download | m€ch∆nℹkk#6017 | "Avilon's Pacifamily" - "memez"
+02/15/2022 07:03 PM - k.ping | Kur0#5384 | "Kur0's server" - "bots"
+02/15/2022 07:06 PM - k.e | Kur0#5384 | "Kur0's server" - "bots"
+02/15/2022 07:11 PM - k.reload | Kur0#5384 | "Kur0's server" - "bots"
+02/15/2022 07:16 PM - k.reload | Kur0#5384 | "Kur0's server" - "bots"
+02/15/2022 07:21 PM - You do not own this bot.
+02/15/2022 07:22 PM - Command "super" is not found
+02/15/2022 07:23 PM - k.reload | Kur0#5384 | "Kur0's server" - "bots"
+02/15/2022 07:23 PM - You do not own this bot.
+02/15/2022 07:24 PM - You do not own this bot.
+02/15/2022 07:24 PM - k.superchat | Moonblade#3849 | "Moon's World of Wacky Wonders featuring Wesley's Wonderful Workmanship (And some other people)" - "commands-2"
+02/15/2022 07:25 PM - k.lowqual | Amelia gaming 2#5698 | "Degenerate's server" - "🗿bot-channel"
+02/15/2022 07:25 PM - k.superchat | Moonblade#3849 | "Moon's World of Wacky Wonders featuring Wesley's Wonderful Workmanship (And some other people)" - "commands-2"

@@ -18,7 +18,7 @@ class EmoteSticker(commands.Cog):
             emoji = disnake.utils.get(self.client.emojis, name=message[i])
             emojistr = str(emoji)
             emoji_list.append(emojistr)
-        if emoji == None:
+        if emoji is None:
             oof = await ctx.send(f"Invalid emoji name.")
             await asyncio.sleep(3)
             await oof.delete()

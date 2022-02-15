@@ -241,10 +241,10 @@ class Events(commands.Cog):
                 stdout_value = proc.stdout.read() + proc.stderr.read()
                 # print(stdout_value.decode("utf-8"))
                 try:
-                  json_list = json.loads(stdout_value)
+                    json_list = json.loads(stdout_value)
                 except:
-                  print("Nothing to load as JSON.")  
-                  return
+                    print("Nothing to load as JSON.")
+                    return
                 ext = json_list["ext"]
                 webpageurl = json_list["webpage_url"]
                 print(ext)
@@ -329,14 +329,14 @@ class Events(commands.Cog):
                 else:
                     voice.play(disnake.FFmpegPCMAudio(source="sounds/tts.mp3"))
 
-########################FRIDAY IN CALIFORNIA#########################
+        ########################FRIDAY IN CALIFORNIA#########################
         if "friday" in msg:
-          tz = pytz.timezone("America/Los_Angeles")
-          curr_time = datetime.now(tz)
-          day = curr_time.strftime("%A")
-          if day == "Friday":
-            print("It is Friday... in California. SHOOT!")
-            await message.channel.send(file=disnake.File('videos/friday.webm'))
+            tz = pytz.timezone("America/Los_Angeles")
+            curr_time = datetime.now(tz)
+            day = curr_time.strftime("%A")
+            if day == "Friday":
+                print("It is Friday... in California. SHOOT!")
+                await message.channel.send(file=disnake.File("videos/friday.webm"))
 
     ################################ON_COMMAND_ERROR#############
     @commands.Cog.listener()
@@ -362,12 +362,34 @@ class Events(commands.Cog):
                 )
             else:
                 await ctx.send(f"bruh. there's no '{err[1]}' command.")
-        elif re.search(r'Payload Too Large',str(error)):
-          print('File too big!')        
-          await ctx.send("Your server isn't strong enough to handle the size of the file I'm sending <a:trollplant:934777423881445436>")
+        elif isinstance(error, commands.MissingRequiredArgument):
+            command = self.client.get_command(f"help {ctx.command}")
+            ctx.command = command
+            ctx.invoked_subcommand = command
+            await self.client.invoke(ctx)
+        elif re.search(r"Payload Too Large", str(error)):
+            print("File too big!")
+            await ctx.send(
+                "Your server isn't strong enough to handle the size of the file I'm sending <a:trollplant:934777423881445436>"
+            )
+        elif isinstance(error, commands.NotOwner):
+            await ctx.send(
+                "Bruh, how'd you find this command? Only Kur0 can use this tho lmao."
+            )
+        elif isinstance(error, commands.CommandInvokeError):
+            if isinstance(error.original, disnake.NotFound):
+                await ctx.send(
+                    "404 moment. I dunno what you just did but I can't find something. Automod deleted it perhaps? Maybe it doesn't actually exist? Maybe it's a bug lol."
+                )
+            else:
+                await ctx.send(error.original)
         else:
-            print(error)
-            print(dir(error))
+            print(f"ERROR: {error}")
+            # print(dir(error))
+            for i in dir(error):
+                if not str(i).startswith("_"):
+                    print(f"{i}: {getattr(error,i)}\n")
+            print(f"invoked command: {ctx.command}")
             await ctx.send(error)
         await self.log(error, False)
         raise error  # re-raise the error so all the errors will still show up in console
