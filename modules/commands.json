@@ -32,7 +32,8 @@
     "lowqual",
     "when",
     "checkcomment",
-    "superchat"
+    "superchat",
+    "oldsuperchat"
   ],
   "reactions": [
     "fmega",

@@ -2310,3 +2310,220 @@ In content: Must be 4000 or fewer in length.
 02/15/2022 09:26 AM - k.supacha2 command used
 02/15/2022 09:30 AM - k.reload command used
 02/15/2022 09:31 AM - k.supacha2 command used
+02/15/2022 09:47 AM - k.lowqual command used
+02/15/2022 10:09 AM - k.reload command used
+02/15/2022 10:09 AM - k.supacha2 command used
+02/15/2022 10:10 AM - k.nene command used
+02/15/2022 10:10 AM - k.reload command used
+02/15/2022 10:10 AM - k.supacha2 command used
+02/15/2022 10:10 AM - k.reload command used
+02/15/2022 10:10 AM - k.supacha2 command used
+02/15/2022 10:12 AM - k.reload command used
+02/15/2022 10:12 AM - k.nenelong command used
+02/15/2022 10:12 AM - k.supacha2 command used
+02/15/2022 10:14 AM - k.reload command used
+02/15/2022 10:14 AM - k.supacha2 command used
+02/15/2022 10:16 AM - k.reload command used
+02/15/2022 10:16 AM - k.supacha2 command used
+02/15/2022 10:21 AM - k.reload command used
+02/15/2022 10:21 AM - k.supacha2 command used
+02/15/2022 10:22 AM - k.reload command used
+02/15/2022 10:22 AM - k.supacha2 command used
+02/15/2022 10:24 AM - k.reload command used
+02/15/2022 10:25 AM - k.supacha2 command used
+02/15/2022 10:26 AM - k.supacha2 command used
+02/15/2022 10:27 AM - k.akasupa2 command used
+02/15/2022 10:27 AM - k.akasupa command used
+02/15/2022 10:28 AM - k.akasupa2 command used
+02/15/2022 10:28 AM - k.akasupa2 command used
+02/15/2022 10:30 AM - k.reload command used
+02/15/2022 10:30 AM - k.akasupa2 command used
+02/15/2022 10:30 AM - k.reload command used
+02/15/2022 10:30 AM - k.akasupa2 command used
+02/15/2022 10:31 AM - k.nenelong command used
+02/15/2022 10:31 AM - Command "akasup2" is not found
+02/15/2022 10:31 AM - k.akasupa2 command used
+02/15/2022 10:32 AM - k.reload command used
+02/15/2022 10:32 AM - k.akasupa2 command used
+02/15/2022 10:33 AM - k.reload command used
+02/15/2022 10:34 AM - k.akasupa2 command used
+02/15/2022 10:34 AM - k.akasupa2 command used
+02/15/2022 10:35 AM - k.reload command used
+02/15/2022 10:36 AM - k.reload command used
+02/15/2022 10:36 AM - k.akasupa2 command used
+02/15/2022 10:39 AM - k.reload command used
+02/15/2022 10:39 AM - Command raised an exception: ExtensionFailed: Extension 'modules.others.superchat' raised an error: IndentationError: expected an indented block (superchat.py, line 399)
+02/15/2022 10:40 AM - k.reload command used
+02/15/2022 10:40 AM - k.akasupa2 command used
+02/15/2022 10:42 AM - k.akasupa2 command used
+02/15/2022 10:45 AM - k.reload command used
+02/15/2022 10:45 AM - k.akasupa2 command used
+02/15/2022 10:48 AM - k.akasupa2 command used
+02/15/2022 10:48 AM - sussy reply
+02/15/2022 10:55 AM - k.reload command used
+02/15/2022 10:55 AM - k.akasupa2 command used
+02/15/2022 10:59 AM - k.reload command used
+02/15/2022 10:59 AM - k.akasupa2 command used
+02/15/2022 11:00 AM - k.reload command used
+02/15/2022 11:00 AM - k.akasupa2 command used
+02/15/2022 11:00 AM - k.ping command used
+02/15/2022 11:01 AM - k.reload command used
+02/15/2022 11:02 AM - Process ID: 4868
+02/15/2022 11:02 AM - Bot started
+02/15/2022 11:02 AM - avi bot bac
+02/15/2022 11:02 AM - k.akasupa2 command used
+02/15/2022 11:12 AM - k.reload command used
+02/15/2022 11:12 AM - k.akasupa2 command used
+02/15/2022 11:15 AM - k.reload command used
+02/15/2022 11:17 AM - sussy reply
+02/15/2022 11:17 AM - sussy reply
+02/15/2022 11:17 AM - sussy reply
+02/15/2022 11:17 AM - k.ping command used
+02/15/2022 11:18 AM - Process ID: 4934
+02/15/2022 11:18 AM - Bot started
+02/15/2022 11:18 AM - avi bot bac
+02/15/2022 11:18 AM - k.akasupa2 command used
+02/15/2022 11:18 AM - Process ID: 4956
+02/15/2022 11:18 AM - Bot started
+02/15/2022 11:18 AM - avi bot bac
+02/15/2022 11:26 AM - k.reload command used
+02/15/2022 11:28 AM - k.akasupa2 command used
+02/15/2022 11:28 AM - k.reload command used
+02/15/2022 11:28 AM - k.akasupa2 command used
+02/15/2022 11:29 AM - k.akasupa2 command used
+02/15/2022 11:30 AM - k.reload command used
+02/15/2022 11:30 AM - k.akasupa2 command used
+02/15/2022 11:32 AM - k.reload command used
+02/15/2022 11:33 AM - Process ID: 5044
+02/15/2022 11:33 AM - Bot started
+02/15/2022 11:33 AM - avi bot bac
+02/15/2022 11:33 AM - k.akasupa2 command used
+02/15/2022 11:38 AM - Process ID: 5083
+02/15/2022 11:38 AM - Bot started
+02/15/2022 11:38 AM - avi bot bac
+02/15/2022 11:38 AM - k.akasupa2 command used
+02/15/2022 11:41 AM - Process ID: 5128
+02/15/2022 11:41 AM - Bot started
+02/15/2022 11:41 AM - avi bot bac
+02/15/2022 11:41 AM - k.akasupa2 command used
+02/15/2022 11:43 AM - k.reload command used
+02/15/2022 11:44 AM - k.akasupa2 command used
+02/15/2022 11:44 AM - k.help command used
+02/15/2022 11:44 AM - k.ascend command used
+02/15/2022 11:45 AM - k.superchat command used
+02/15/2022 11:45 AM - k.superchat command used
+02/15/2022 11:46 AM - k.when command used
+02/15/2022 11:46 AM - k.bulk command used
+02/15/2022 11:46 AM - k.bulk command used
+02/15/2022 11:47 AM - k.on command used
+02/15/2022 11:48 AM - input is a required argument that is missing.
+02/15/2022 11:49 AM - k.superchat command used
+02/15/2022 11:49 AM - sussy reply
+02/15/2022 11:49 AM - k.akasupa2 command used
+02/15/2022 11:50 AM - k.akasupa2 command used
+02/15/2022 11:50 AM - k.akasupa2 command used
+02/15/2022 11:51 AM - k.reload command used
+02/15/2022 11:51 AM - k.akasupa2 command used
+02/15/2022 11:52 AM - k.reload command used
+02/15/2022 11:52 AM - k.akasupa2 command used
+02/15/2022 11:53 AM - k.akasupa2 command used
+02/15/2022 11:53 AM - k.akasupa2 command used
+02/15/2022 11:53 AM - k.akasupa2 command used
+02/15/2022 11:55 AM - k.reload command used
+02/15/2022 11:56 AM - k.akasupa2 command used
+02/15/2022 11:56 AM - k.nenelong command used
+02/15/2022 11:56 AM - k.supacha2 command used
+02/15/2022 11:57 AM - k.supacha2 command used
+02/15/2022 12:03 PM - k.reload command used
+02/15/2022 12:03 PM - k.supacha2 command used
+02/15/2022 12:05 PM - k.reload command used
+02/15/2022 12:05 PM - k.ping command used
+02/15/2022 12:05 PM - sussy reply
+02/15/2022 12:05 PM - k.supacha2 command used
+02/15/2022 12:07 PM - k.reload command used
+02/15/2022 12:07 PM - k.akasupa2 command used
+02/15/2022 12:10 PM - k.reload command used
+02/15/2022 12:10 PM - k.reload command used
+02/15/2022 12:10 PM - k.reload command used
+02/15/2022 12:11 PM - k.akasupa2 command used
+02/15/2022 12:11 PM - k.akasupa2 command used
+02/15/2022 12:12 PM - k.akasupa2 command used
+02/15/2022 12:12 PM - k.akasupa2 command used
+02/15/2022 12:12 PM - k.akasupa2 command used
+02/15/2022 12:12 PM - k.akasupa2 command used
+02/15/2022 12:13 PM - sussy reply
+02/15/2022 12:14 PM - Command "k.reload" is not found
+02/15/2022 12:14 PM - k.reload command used
+02/15/2022 12:14 PM - k.supacha command used
+02/15/2022 12:14 PM - sussy reply
+02/15/2022 12:15 PM - k.reload command used
+02/15/2022 12:15 PM - k.akasupa command used
+02/15/2022 12:15 PM - sussy reply
+02/15/2022 12:16 PM - k.reload command used
+02/15/2022 12:16 PM - k.reload command used
+02/15/2022 12:16 PM - k.reload command used
+02/15/2022 12:16 PM - k.reload command used
+02/15/2022 12:16 PM - k.reload command used
+02/15/2022 12:16 PM - k.reload command used
+02/15/2022 12:17 PM - k.reload command used
+02/15/2022 12:17 PM - k.akasupa command used
+02/15/2022 12:17 PM - k.akasupa command used
+02/15/2022 12:17 PM - k.checkhelp command used
+02/15/2022 12:17 PM - k.superchat command used
+02/15/2022 12:18 PM - k.help command used
+02/15/2022 12:18 PM - sussy reply
+02/15/2022 12:20 PM - k.reload command used
+02/15/2022 12:20 PM - k.help command used
+02/15/2022 12:20 PM - k.checkhelp command used
+02/15/2022 12:20 PM - k.supacha command used
+02/15/2022 12:20 PM - k.oldsupacha command used
+02/15/2022 12:21 PM - k.reload command used
+02/15/2022 12:21 PM - k.reload command used
+02/15/2022 12:21 PM - k.supacha command used
+02/15/2022 12:21 PM - k.supacha command used
+02/15/2022 12:25 PM - sussy reply
+02/15/2022 12:25 PM - k.help command used
+02/15/2022 12:25 PM - k.checkcomment command used
+02/15/2022 12:26 PM - k.when command used
+02/15/2022 12:26 PM - k.repost command used
+02/15/2022 12:29 PM - k.reload command used
+02/15/2022 12:29 PM - k.repost command used
+02/15/2022 12:32 PM - k.repost command used
+02/15/2022 12:33 PM - Process ID: 7256
+02/15/2022 12:33 PM - Bot started
+02/15/2022 12:33 PM - avi bot bac
+02/15/2022 12:34 PM - k.repost command used
+02/15/2022 12:35 PM - amount is a required argument that is missing.
+02/15/2022 12:36 PM - k.superchat command used
+02/15/2022 12:36 PM - k.superchat command used
+02/15/2022 12:36 PM - k.help command used
+02/15/2022 12:37 PM - k.ping command used
+02/15/2022 12:37 PM - k.jizz command used
+02/15/2022 12:37 PM - k.nene command used
+02/15/2022 12:37 PM - k.nenelong command used
+02/15/2022 12:38 PM - k.superchat command used
+02/15/2022 12:42 PM - k.amogus command used
+02/15/2022 12:42 PM - sussy reply
+02/15/2022 12:42 PM - Command raised an exception: AttributeError: 'NoneType' object has no attribute 'channel'
+02/15/2022 12:43 PM - sussy reply
+02/15/2022 12:43 PM - Command "sus" is not found
+02/15/2022 12:43 PM - k.megasus command used
+02/15/2022 12:43 PM - sussy reply
+02/15/2022 12:47 PM - message is a required argument that is missing.
+02/15/2022 12:48 PM - message is a required argument that is missing.
+02/15/2022 12:48 PM - message is a required argument that is missing.
+02/15/2022 12:53 PM - k.superchat command used
+02/15/2022 12:53 PM - k.superchat command used
+02/15/2022 12:53 PM - Command raised an exception: NotFound: 404 Not Found (error code: 10008): Unknown Message
+02/15/2022 12:53 PM - k.superchat command used
+02/15/2022 12:54 PM - k.superchat command used
+02/15/2022 12:54 PM - k.superchat command used
+02/15/2022 12:54 PM - k.superchat command used
+02/15/2022 12:55 PM - k.superchat command used
+02/15/2022 12:55 PM - Command raised an exception: NotFound: 404 Not Found (error code: 10008): Unknown Message
+02/15/2022 12:55 PM - k.superchat command used
+02/15/2022 12:55 PM - k.superchat command used
+02/15/2022 12:55 PM - message is a required argument that is missing.
+02/15/2022 12:55 PM - k.superchat command used
+02/15/2022 12:55 PM - Command raised an exception: NotFound: 404 Not Found (error code: 10008): Unknown Message
+02/15/2022 01:04 PM - k.supacha command used

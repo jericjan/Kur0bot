@@ -238,6 +238,7 @@ class Kur0only(commands.Cog):
 
             if flag.status_code != 200:
                 print(flagg)
+                await ctx.send(flagg)
 
             else:
                 print("We gucci, my dude.")

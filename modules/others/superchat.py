@@ -1,8 +1,8 @@
 from disnake.ext import commands
 import disnake
-from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.support.ui import Select
+# from selenium import webdriver
+# from selenium.webdriver.chrome.options import Options
+# from selenium.webdriver.support.ui import Select
 import os
 import uuid
 import asyncio
@@ -12,17 +12,20 @@ from PIL import Image, ImageDraw, ImageFont, ImageOps
 import io
 import requests
 from pilmoji import Pilmoji
-import textwrap
+
 from tqdm import tqdm
-from aiolimiter import AsyncLimiter
 import functools
+from aiolimiter import AsyncLimiter
 
-
+limiter = AsyncLimiter(1,1)
 
 class Superchat(commands.Cog):
     def __init__(self, client):
         self.client = client
-        self.limiter = AsyncLimiter(1, 1)
+        self.pbar_list = []
+        
+
+
     ##################OLD SELENIUM VER########################
     # @commands.command(aliases=["akasupa", "supacha"])
     # async def superchat(self, ctx, amount, *, message):
@@ -111,8 +114,8 @@ class Superchat(commands.Cog):
     #     os.remove(f'supers/{cur_uuid}/superchat.png')
     #     os.rmdir(f'supers/{cur_uuid}/')
 
-    @commands.command(aliases=["akasupa", "supacha"])
-    async def superchat(self, ctx, amount, *, message):    
+    @commands.command(aliases=["oldakasupa", "oldsupacha"])
+    async def oldsuperchat(self, ctx, amount, *, message):    
       await ctx.message.delete()
       cur_uuid  = uuid.uuid4()
       bgnMessage = await ctx.send(f"{ctx.author.name} is sending a superchat... <a:ameroll:941314708022128640>")
@@ -387,13 +390,21 @@ class Superchat(commands.Cog):
     #   await ctx.send(file=disnake.File(byteio,filename='superchat.png'))      
     #   byteio.close()
     #   await bgnMessage.delete()
-    async def updatebar(self,msg,content):
+    async def updatebar(self,msg):
+      print("Updating bar...")
       try:
-        await asyncio.wait_for(msg.edit(
-            content=f"{msg.content}\n{content}"
-        ), timeout=0.2)
+          
+       async with limiter:
+            await asyncio.wait_for(msg.edit(
+              content=self.pbar_list[-1]
+            ), timeout=1)
+            print("\033[92m SUCCESS! \033[0m")
       except Exception as e:
-        print(f"timeout!\n{e}")  
+        if str(e).startswith('404 Not Found'):
+          pass
+        else:  
+          print(f"\033[91m timeout!\n{e} \033[0m")  
+        pass
 
     def legacy_blocking_function(self, user, amount, msg,pfp,bgnMessage): 
       ###TOP BAR
@@ -423,7 +434,10 @@ class Superchat(commands.Cog):
       blank3 = Image.new("RGBA", (1760, 240), (255, 255, 255, 0))
       blank3.paste(imgoutput, (64, 33))
       out = Image.alpha_composite(out, blank3)
-
+      img0 = Image.new('RGBA', (1760, 152), color = (230,33,23,255))
+      draw0 = ImageDraw.Draw(img0)
+      fnt0 = ImageFont.truetype("fonts/merged.ttf", 60)
+      return draw0,fnt0,out
       # byteio = io.BytesIO()
       # byteio.seek(0)
       # out.save(byteio,format='PNG')
@@ -431,57 +445,29 @@ class Superchat(commands.Cog):
       # await ctx.send(file=disnake.File(byteio,filename='superchat.png'))
       # byteio.close()
       ###BOTTOM BAR
-      msg_words = msg.split(" ")
-      msg_split = ''
-      img0 = Image.new('RGBA', (1760, 152), color = (230,33,23,255))
-      draw0 = ImageDraw.Draw(img0)
-      fnt0 = ImageFont.truetype("fonts/merged.ttf", 60)
-      output = io.StringIO()
-      pbar = tqdm(total=len(msg_words), file=output, ascii=False)
-      
-      for index,i in enumerate(msg_words):
-        percentage = (index/len(msg_words))*100
-        pbar.update(1)
-        final = output.getvalue()
+    def legacy_blocking_function2(self, index,msg_words,temp_str,draw0,fnt0,user, amount, msg,pfp,bgnMessage):       
 
-        final1 = final.splitlines()[-1]
-        print(final1)
-        aaa = re.findall(
-            r"(?<=\d\%)\|.+\| (?=\d+|\d+.\d+/\d+|\d+.\d+)", final1
-        )[0]
         
         # await bgnMessage.edit(
         #     content=f"{ctx.author.name} is sending a superchat...\n{round(percentage, 2)}% complete...\n`{aaa}`<a:ameroll:941314708022128640>"
         # )
-        try:
-            asyncio.ensure_future(self.updatebar(bgnMessage,f"{user} is sending a superchat...\n{round(percentage, 2)}% complete...\n`{aaa}`<a:ameroll:941314708022128640>"))
-            # await bgnMessage.edit(content=f"{ctx.author.name} is sending a superchat...\n{round(percentage, 2)}% complete...\n`{aaa}`<a:ameroll:941314708022128640>")
-        except:
-          pass  
-        if index == 0:
-          temp_str = i
-        else:  
-          temp_str = f"{msg_split} {i}"
 
+        temp_str = temp_str.split('\n')[-1]
         #draw.text((64, 40),message,font=fnt, fill=(255, 255, 255, 255))
         text_size = draw0.textsize(temp_str, font=fnt0,spacing=28)
         # await ctx.send(f"Text size is: {type(text_size)}")
         txt_width = int(text_size[0])     
         # print(f"width is: {txt_width}")   
-        if int(txt_width) <= 1632:
-          if index == 0:
-            msg_split += i
-          else:  
-            msg_split += f" {i}"
-        else:
-          msg_split += f"\n{i}"
+        return txt_width
 
-      pbar.close()
-      output.close()
+
+
+
       #await ctx.send(msg_split)
       #await ctx.send(f"Splti msgs is: {msg_split}")
 
       # img = Image.new('RGBA', (1760, 152), color = (230,33,23,255))
+    def legacy_blocking_function3(self,msg_split,out):        
       img = Image.new('RGBA', (1760, 152), color = (230,33,23,255))
       draw = ImageDraw.Draw(img)
       fnt = ImageFont.truetype("fonts/merged.ttf", 60)
@@ -489,7 +475,7 @@ class Superchat(commands.Cog):
       text_size = draw.textsize(msg_split, font=fnt,spacing=28)
       #await ctx.send(f"Text size is: {text_size}")
       txt_height = int(re.search(r'(?<=, )\d+',str(text_size)).group())
-      txt_width = int(re.search(r'\d+(?=, \d+\))',str(text_size)).group())
+     # txt_width = int(re.search(r'\d+(?=, \d+\))',str(text_size)).group())
       print(f"text heigh: {txt_height}")      
       if len(msg_split.split('\n')) == 1:
         print("one line")
@@ -532,20 +518,67 @@ class Superchat(commands.Cog):
 
     @run_in_executor
     def foo(self, user, amount, msg,pfp,bgnMessage):  # Your wrapper for async use
-        resp = self.legacy_blocking_function(user, amount, msg,pfp,bgnMessage)
-        return resp
+        draw0,fnt0,out = self.legacy_blocking_function(user, amount, msg,pfp,bgnMessage)
+        return draw0,fnt0,out
 
+    @run_in_executor
+    def foo2(self, index,msg_words,temp_str,draw0,fnt0,user, amount, msg,pfp,bgnMessage):  # Your wrapper for async use
+        txt_width = self.legacy_blocking_function2(index,msg_words,temp_str,draw0,fnt0,user, amount, msg,pfp,bgnMessage)
+        return txt_width
 
+    @run_in_executor
+    def foo3(self,msg_split,out):
+      byteio = self.legacy_blocking_function3(msg_split,out)
+      return byteio
 
-    @commands.command(aliases=["akasupa2", "supacha2"])
-    async def superchat2(self, ctx, amount, *, message):  
+    @commands.command(aliases=["akasupa", "supacha"])
+    async def superchat(self, ctx, amount, *, message):  
       await ctx.message.delete()
       bgnMessage = await ctx.send(f"{ctx.author.name} is sending a superchat...")
-      bruh = await self.foo(ctx.author.name,amount,message,ctx.message.author.display_avatar.url,bgnMessage)
+      draw0,fnt0,out = await self.foo(ctx.author.name,amount,message,ctx.message.author.display_avatar.url,bgnMessage)
+      msg_words = message.split(" ")
+      msg_split = ''
+      output = io.StringIO()
+      pbar = tqdm(total=len(msg_words), file=output, ascii=False)
+      for index,i in enumerate(msg_words):
+
+        if index == 0:
+          temp_str = i
+        else:  
+          temp_str = f"{msg_split} {i}"
+        txt_width = await self.foo2(index,msg_words,temp_str,draw0,fnt0,ctx.author.name, amount, message,ctx.message.author.display_avatar.url,bgnMessage)
+        if int(txt_width) <= 1632:
+          if index == 0:
+            msg_split += i
+          else:  
+            msg_split += f" {i}"
+        else:
+          msg_split += f"\n{i}"
+        percentage = (index/len(msg_words))*100
+        pbar.update(1)
+        final = output.getvalue()
+
+        final1 = final.splitlines()[-1]
+        print(final1)
+        aaa = re.findall(
+            r"(?<=\d\%)\|.+\| (?=\d+|\d+.\d+/\d+|\d+.\d+)", final1
+        )[0]
+        try:
+            self.pbar_list.append(f"{ctx.author.name} is sending a superchat...\n{round(percentage, 2)}% complete...\n`{aaa}`<a:ameroll:941314708022128640>")
+            asyncio.ensure_future(self.updatebar(bgnMessage))
+
+
+
+            # await bgnMessage.edit(content=f"{ctx.author.name} is sending a superchat...\n{round(percentage, 2)}% complete...\n`{aaa}`<a:ameroll:941314708022128640>")
+        except:
+          pass    
+      pbar.close()
+      output.close()
+      bruh = await self.foo3(msg_split,out)
       bruh.seek(0)
       await ctx.send(file=disnake.File(bruh,filename='superchat.png'))      
       bruh.close()
-     # await bgnMessage.delete()
+      await bgnMessage.delete()
 
 def setup(client):
     client.add_cog(Superchat(client))

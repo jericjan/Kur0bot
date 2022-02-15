@@ -532,7 +532,7 @@ class Help(commands.Cog):
     async def superchat(self, ctx):
         em = disnake.Embed(
             title="Superchat!",
-            description="Sends an image of a superchat of your choosing.\nIt's real slow rn because it actually goes to a [site](https://ytsc.leko.moe/) that creates the image for you. ",
+            description="Sends an image of a superchat of your choosing.",
         )
         em.add_field(
             name="**Syntax**",
@@ -541,6 +541,23 @@ class Help(commands.Cog):
         em.add_field(
             name="**Example**",
             value="k.superchat $100 poggers",
+        )
+        em.add_field(name="**Aliases**", value=",".join(ctx.command.aliases))
+        await ctx.send(embed=em)
+
+    @help.command(aliases=["oldakasupa", "oldsupacha"])
+    async def oldsuperchat(self, ctx):
+        em = disnake.Embed(
+            title="Superchat! (OLD)",
+            description="Old ver. of k.superchat. It just goes to a [site](https://ytsc.leko.moe/) that creates the image for you. ",
+        )
+        em.add_field(
+            name="**Syntax**",
+            value="k.oldsuperchat <amount with currency> <message>",
+        )
+        em.add_field(
+            name="**Example**",
+            value="k.oldsuperchat $100 poggers",
         )
         em.add_field(name="**Aliases**", value=",".join(ctx.command.aliases))
         await ctx.send(embed=em)
