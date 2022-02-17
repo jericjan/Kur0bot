@@ -17,6 +17,8 @@ To do list:
 - k.id command compresss feature
 - vid to gif command
 - make k.download faster
+- vc commands send audio if user not in vc
+
 Notes:
 
 - in root folder, there is folder `ffmpeg-git` that contains latest release of git master from https://johnvansickle.com/ffmpeg/
