@@ -8,8 +8,9 @@ import json
 import asyncio
 from gtts import gTTS
 import difflib
-from datetime import datetime, timedelta
+from datetime import datetime
 import pytz
+import os
 
 sus_words = [
     "amongus",
@@ -230,7 +231,7 @@ class Events(commands.Cog):
             for i in links:
                 print("twitter link!")
                 await self.log("twitter link!", False)
-                args = ["youtube-dl", "-j", i]
+                args = ["yt-dlp", "-j", i]
                 print(args)
                 proc = subprocess.Popen(
                     args,
@@ -381,6 +382,12 @@ class Events(commands.Cog):
                 await ctx.send(
                     "404 moment. I dunno what you just did but I can't find something. Automod deleted it perhaps? Maybe it doesn't actually exist? Maybe it's a bug lol."
                 )
+            elif isinstance(error.original, disnake.HTTPException):    
+              print("HTTPException!")
+              if error.original.status == 429:
+                print("Rate limited lmao")
+                os.system("busybox reboot")
+              await self.log(error.original, False)
             else:
                 await ctx.send(error.original)
         else:

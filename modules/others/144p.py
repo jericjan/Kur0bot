@@ -66,8 +66,8 @@ class lowQual(commands.Cog):
                 "scale=-2:20:flags=neighbor",
                 "-b:v",
                 "15000",
-                "-c:a",
-                "copy",
+                "-b:a",
+                "10000",
                 "-y",
                 tempname,
             ]
@@ -236,7 +236,8 @@ class lowQual(commands.Cog):
                             await message.edit(
                                 content=f"Uh, I couldn't find the duration of vod. idk man."
                             )
-
+            os.remove(tempname)
+            
         elif re.search(r".+\.jpg|.+\.jpeg|.+\.png", filename) is not None:
             tempname = re.sub(r"(.+(?=\..+))", r"\g<1>01", filename)
             coms = [

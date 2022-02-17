@@ -69,7 +69,7 @@ class Help(commands.Cog):
 
     @help.command()
     async def bulk(self, ctx):
-        em = disnake.Embed(title="Bulk", description="Sends sus messages in bulk.")
+        em = disnake.Embed(title="Bulk", description="Sends sus messages in bulk.\nOnly usable in channels named `sus-town` <:sus:850628234746920971>")
         em.add_field(name="**Syntax**", value="k.bulk <number>")
         await ctx.send(embed=em)
 

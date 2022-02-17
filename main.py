@@ -15,7 +15,7 @@ import os
 
 
 from keep_alive import keep_alive
-import random
+
 import asyncio
 import aiohttp
 

@@ -339,7 +339,10 @@ class Download(commands.Cog):
                     filename = thing.decode("utf-8").split("\n")[0]
                     await message.edit(content="Sending video...")
                     try:
-                        await ctx.send(file=disnake.File(filename))
+                        if filename.endswith(".flv"):
+                          await ctx.send(file=disnake.File(filename,filename=f'{filename}.mp4'))
+                        else:  
+                             await ctx.send(file=disnake.File(filename))
                     except Exception as e:
                         await ctx.send(e)
                 except disnake.HTTPException:

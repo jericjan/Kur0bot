@@ -10,12 +10,12 @@ class Sus(commands.Cog):
     @commands.command()
     async def bulk(self, ctx, number):
         print(ctx.channel.id)
-        if ctx.channel.id == 850380119646142504:
+        if ctx.channel.name == 'sus-town':
             for x in range(int(number)):
                 await ctx.send(random.choice(sus_replies))
         else:
             await ctx.send(
-                "Only usable in <#850380119646142504> <:sus:850628234746920971>"
+                "Only usable in channels named `sus-town` <:sus:850628234746920971>"
             )
 
     @commands.command()
