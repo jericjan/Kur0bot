@@ -562,6 +562,17 @@ class Help(commands.Cog):
         em.add_field(name="**Aliases**", value=",".join(ctx.command.aliases))
         await ctx.send(embed=em)
 
-
+    @help.command(aliases=['vid2gif','gifify'])
+    async def gif(self, ctx):
+        em = disnake.Embed(
+            title="Video to Gif",
+            description="Converts a video to GIF. Doesn't work with YouTube URLs yet.",
+        )
+        em.add_field(
+            name="**Syntax**",
+            value="k.gif <video_url>\nUpload video with k.gif\nReply to a video with k.gif ",
+        )
+        em.add_field(name="**Aliases**", value=",".join(ctx.command.aliases))
+        await ctx.send(embed=em)
 def setup(client):
     client.add_cog(Help(client))
