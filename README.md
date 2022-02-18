@@ -15,11 +15,10 @@ To do list:
 - new help menu with discord select menus
 - continue splitting file into modules
 - k.id command compresss feature
-- vid to gif command
-- make k.download faster
-- vc commands send audio if user not in vc
 - k.supacha colers
-- k.lowqual compress gif
+- k.addaudio
+- k.demotivate
+
 Notes:
 
 - in root folder, there is folder `ffmpeg-git` that contains latest release of git master from https://johnvansickle.com/ffmpeg/

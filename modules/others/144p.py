@@ -8,6 +8,7 @@ from tqdm import tqdm
 import io
 from aiolimiter import AsyncLimiter
 from datetime import datetime, timedelta
+import json
 
 limiter = AsyncLimiter(1, 1)
 
@@ -55,8 +56,21 @@ class lowQual(commands.Cog):
             return
 
         # print(f"link is {link}")
-        filename = link.split("/")[-1]
-        if re.search(r".+\.mp4|.+\.mkv|.+\.mov|.+\.webm", filename) is not None:
+        if "tenor.com" in link:
+
+          if ctx.message.embeds:  
+            vid_url = ctx.message.embeds[0].video.url
+          else:
+            await ctx.send('Hmm... Can\'t find the gif. An embed fail perhaps? <a:trollplant:934777423881445436>')  
+            return
+
+          filename = link.split("/")[-1]
+          filename  = f"{''.join(filename)}.gif"
+         # await ctx.send(f"filename is {filename}")
+          link = vid_url
+        else:    
+          filename = link.split("/")[-1]
+        if re.search(r".+\.mp4|.+\.mkv|.+\.mov|.+\.webm|.+\.gif", filename) is not None:
             tempname = re.sub(r"(.+(?=\..+))", r"\g<1>01", filename)
             coms = [
                 "ffmpeg",
@@ -145,6 +159,7 @@ class lowQual(commands.Cog):
                             )
                             asyncio.ensure_future(self.updatebar(message))
                         except:
+                          if not filename.endswith('gif'):
                             await message.edit(
                                 content=f"Uh, I couldn't find the duration of vod. idk man."
                             )
@@ -233,6 +248,7 @@ class lowQual(commands.Cog):
                             )
                             asyncio.ensure_future(self.updatebar(message))
                         except:
+                          if not filename.endswith('gif'):
                             await message.edit(
                                 content=f"Uh, I couldn't find the duration of vod. idk man."
                             )

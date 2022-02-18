@@ -4,14 +4,31 @@ import asyncio
 import os
 from shlex import join as shjoin
 import subprocess
-
+from aiolimiter import AsyncLimiter
+import json
 # import codecs
+limiter = AsyncLimiter(1, 1)
 
 
 class Download(commands.Cog):
-    # def __init__(self, client):
-    #     self.client = client
+    def __init__(self, client):
+        self.client = client
+        self.pbar_list = []
+    async def updatebar(self, msg):
+        # print("Updating bar...")
+        try:
 
+            async with limiter:
+                await msg.edit(content=self.pbar_list[-1])
+                # print("\033[92m SUCCESS! \033[0m")
+        except Exception as e:
+            if str(e).startswith("404 Not Found"):
+                pass
+            else:
+                # print(f"\033[91m timeout!\n{e} \033[0m")
+                pass
+            pass
+            
     @commands.command()
     async def download(self, ctx, link):  # reddit, facebook, instagram, tiktok, yt
 
@@ -55,9 +72,10 @@ class Download(commands.Cog):
                 line = await proc.stdout.readline()
                 if not line:
                     break
-                await message.edit(content=line.decode("utf-8"))
-                # await ctx.send(line.decode('utf-8'))
+                self.pbar_list.append(line.decode("utf-8"))    
+                asyncio.ensure_future(self.updatebar(message))
                 await asyncio.sleep(1)
+                # await ctx.send(line.decode('utf-8'))
             if proc.returncode != 0:
                 await ctx.send("return code is not 0. trying something else")
                 coms = [
@@ -76,9 +94,10 @@ class Download(commands.Cog):
                     line = await proc.stdout.readline()
                     if not line:
                         break
-                    await message.edit(content=line.decode("utf-8"))
-                    # await ctx.send(line.decode('utf-8'))
+                    self.pbar_list.append(line.decode("utf-8"))    
+                    asyncio.ensure_future(self.updatebar(message))
                     await asyncio.sleep(1)
+                    # await ctx.send(line.decode('utf-8'))
                 if proc.returncode != 0:
                     await ctx.send("return code is not 0. i give up")
                     return
@@ -155,7 +174,8 @@ class Download(commands.Cog):
                 line = await proc.stdout.readline()
                 if not line:
                     break
-                await message.edit(content=line.decode("utf-8"))
+                self.pbar_list.append(line.decode("utf-8"))    
+                asyncio.ensure_future(self.updatebar(message))
                 await asyncio.sleep(1)
             await message.edit(content="Almost there...")
             out2 = await asyncio.create_subprocess_exec(
@@ -232,7 +252,8 @@ class Download(commands.Cog):
                 line = await proc.stdout.readline()
                 if not line:
                     break
-                await message.edit(content=line.decode("utf-8"))
+                self.pbar_list.append(line.decode("utf-8"))    
+                asyncio.ensure_future(self.updatebar(message))
                 await asyncio.sleep(1)
             await message.edit(content="Almost there...")
             out2 = await asyncio.create_subprocess_exec(
@@ -284,7 +305,8 @@ class Download(commands.Cog):
                 line = await proc.stdout.readline()
                 if not line:
                     break
-                await message.edit(content=line.decode("utf-8"))
+                self.pbar_list.append(line.decode("utf-8"))    
+                asyncio.ensure_future(self.updatebar(message))
                 await asyncio.sleep(1)
             await message.edit(content="Almost there...")
             out2 = await asyncio.create_subprocess_exec(
@@ -309,7 +331,42 @@ class Download(commands.Cog):
                     await message.edit(content=e)
             os.remove(filename)
             await message.delete()
+        elif "bilibili.com" in link:
+            message = await ctx.send("Bilibili? <:oka:944181217467723826>\n Let me do something different here. Give me a moment...")
+            coms = ["yt-dlp", "--get-url", "-j", "--no-warnings", link]
+            
+            print(shjoin(coms))
+            proc = await asyncio.create_subprocess_exec(
+                *coms, stdout=subprocess.PIPE, stderr=subprocess.STDOUT
+            )
+            stdout, stderr = await proc.communicate()
+            url = stdout.splitlines()[0]
+            json_str = stdout.splitlines()[1]
+            json_dict = json.loads(json_str)
+            bilibili_id = json_dict['webpage_url_basename']
+            filename = f"bilibili_{bilibili_id}.mp4"
+            coms2 = ["ffmpeg",'-i',url, '-c','copy','-y',filename]
+            out2 = await asyncio.create_subprocess_exec(
+                *coms2, stdout=subprocess.PIPE, stderr=subprocess.STDOUT
+            )
+            while out2.returncode is None:
+                await message.edit(content="Downloading...")
+            else:
+                try:
 
+                    await message.edit(content="Sending video...")
+                    try:
+                             await ctx.send(file=disnake.File(filename))
+                    except Exception as e:
+                        await ctx.send(e)
+                except disnake.HTTPException:
+                    await ctx.send(
+                        "File too large, broski <:towashrug:853606191711649812>"
+                    )
+                except Exception as e:
+                    await message.edit(content=e)
+            os.remove(filename)
+            await message.delete()
         # yt links usually
         else:
             message = await ctx.send("Downloading...")
@@ -325,7 +382,8 @@ class Download(commands.Cog):
                 line = await proc.stdout.readline()
                 if not line:
                     break
-                await message.edit(content=line.decode("utf-8"))
+                self.pbar_list.append(line.decode("utf-8"))    
+                asyncio.ensure_future(self.updatebar(message))
                 await asyncio.sleep(1)
             await message.edit(content="Almost there...")
             out2 = await asyncio.create_subprocess_exec(
@@ -339,9 +397,6 @@ class Download(commands.Cog):
                     filename = thing.decode("utf-8").split("\n")[0]
                     await message.edit(content="Sending video...")
                     try:
-                        if filename.endswith(".flv"):
-                          await ctx.send(file=disnake.File(filename,filename=f'{filename}.mp4'))
-                        else:  
                              await ctx.send(file=disnake.File(filename))
                     except Exception as e:
                         await ctx.send(e)
