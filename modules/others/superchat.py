@@ -489,13 +489,15 @@ class Superchat(commands.Cog):
 
     # img = Image.new('RGBA', (1760, 152), color = (230,33,23,255))
     def legacy_blocking_function3(self, msg_split, out):
+        spacing = 30
         img = Image.new("RGBA", (1760, 152), color=(230, 33, 23, 255))
-        draw = ImageDraw.Draw(img)
+        #draw = ImageDraw.Draw(img)
         fnt = ImageFont.truetype("fonts/merged.ttf", 60)
         # draw.text((64, 40),message,font=fnt, fill=(255, 255, 255, 255))
-        text_size = draw.textsize(msg_split, font=fnt, spacing=28)
+        with Pilmoji(img) as pilmoji:
+          text_size = pilmoji.getsize(text=msg_split, font=fnt, spacing=spacing)
         # await ctx.send(f"Text size is: {text_size}")
-        txt_height = int(re.search(r"(?<=, )\d+", str(text_size)).group())
+        txt_height = int(text_size[1])
         # txt_width = int(re.search(r'\d+(?=, \d+\))',str(text_size)).group())
         # print(f"text heigh: {txt_height}")
         if len(msg_split.split("\n")) == 1:
@@ -503,7 +505,7 @@ class Superchat(commands.Cog):
             pass
         else:
             # print("more than one line")
-            img = img.resize((1760, txt_height + 62))
+            img = img.resize((1760, txt_height + 92))
 
         ###rectangle
         # draw = ImageDraw.Draw(img)
@@ -513,7 +515,7 @@ class Superchat(commands.Cog):
 
         with Pilmoji(img) as pilmoji:
             pilmoji.text(
-                (64, 31), msg_split, fill=(255, 255, 255, 255), font=fnt, spacing=28
+                (64, 31), msg_split, fill=(255, 255, 255, 255), font=fnt, spacing=spacing
             )
 
         # byteio = io.BytesIO()

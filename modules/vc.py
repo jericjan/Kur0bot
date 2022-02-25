@@ -219,6 +219,9 @@ class Vc(commands.Cog):
     async def gigachad(self, ctx, loop=None):
         await self.vcplay(ctx, "sounds/gigachad.mp3", loop)
 
-
+    @commands.command()
+    async def bruh(self, ctx, loop=None):
+        await self.vcplay(ctx, "sounds/rushiabruh.mp3", loop)
+      
 def setup(client):
     client.add_cog(Vc(client))

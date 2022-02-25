@@ -441,6 +441,14 @@ class Help(commands.Cog):
         await ctx.send(embed=em)
 
     @help.command()
+    async def bruh(self, ctx):
+        em = disnake.Embed(
+            title="Rushia Bruh SFX",
+            description="Plays Rushia saying bruh in VC.",
+        )
+        await ctx.send(embed=em)  
+  
+    @help.command()
     async def pet(self, ctx):
         em = disnake.Embed(
             title="Pet user",

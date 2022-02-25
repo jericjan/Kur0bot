@@ -57,8 +57,9 @@ class lowQual(commands.Cog):
 
         # print(f"link is {link}")
         if "tenor.com" in link:
-
-          if ctx.message.embeds:  
+          if ctx.message.reference is not None:# message is replying
+             vid_url = msg.embeds[0].video.url
+          elif ctx.message.embeds:  
             vid_url = ctx.message.embeds[0].video.url
           else:
             await ctx.send('Hmm... Can\'t find the gif. An embed fail perhaps? <a:trollplant:934777423881445436>')  
