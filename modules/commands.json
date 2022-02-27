@@ -103,6 +103,7 @@
     "load",
     "reload",
     "unload",
-    "checkhelp"
+    "checkhelp",
+    "ytbypass"
   ]
 }

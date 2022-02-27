@@ -6,6 +6,8 @@ import os
 import requests
 import glob
 import json
+from lorem.text import TextLorem
+
 
 with open("modules/commands.json") as f:
     data = json.load(f)
@@ -279,6 +281,17 @@ class Kur0only(commands.Cog):
         diffcomms2 = [c for c in comm_list if c not in commands_with_help_msg]
         diffcomms2_joined = "\n".join(diffcomms2)
         await ctx.send(f"Commands without help commands are:\n{diffcomms2_joined}")
+
+    @commands.command()
+    @commands.is_owner()
+    async def ytbypass(self, ctx, text):
+        letters = [char for char in text]
+        count = len(letters)
+        lorem = TextLorem(wsep=" ", srange=(count, count))
+        lorem_list = lorem.sentence().split(" ")
+        lorem_list = [f"{x} ({letters[i]})" for i, x in enumerate(lorem_list)]
+        lorem_list = " ".join(lorem_list)
+        await ctx.send(lorem_list)
 
 
 def setup(client):

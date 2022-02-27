@@ -276,7 +276,8 @@ class Help(commands.Cog):
             description="clips a YouTube video given the start and end times (HH:MM:SS)\n**FASTER** than `clip` but will start at the nearest keyframe, so it'll start a couple seconds earlier than the given timestamp",
         )
         em.add_field(
-            name="**Syntax**", value="k.fastclip <url> <start time> <end time> <filename>"
+            name="**Syntax**",
+            value="k.fastclip <url> <start time> <end time> <filename>",
         )
         em.add_field(
             name="**Example**",
@@ -291,14 +292,15 @@ class Help(commands.Cog):
             description="Like fastclip but also burns fancy subs into the vod",
         )
         em.add_field(
-            name="**Syntax**", value="k.fastclipsub <url> <start time> <end time> <filename>"
+            name="**Syntax**",
+            value="k.fastclipsub <url> <start time> <end time> <filename>",
         )
         em.add_field(
             name="**Example**",
             value="k.fastclipsub https://www.youtube.com/watch?v=dQw4w9WgXcQ 00:00:52 00:01:05 filename",
         )
         await ctx.send(embed=em)
-  
+
     @help.command()
     async def download(self, ctx):
         em = disnake.Embed(
@@ -613,6 +615,7 @@ class Help(commands.Cog):
         )
         em.add_field(name="**Aliases**", value=",".join(ctx.command.aliases))
         await ctx.send(embed=em)
+
 
 def setup(client):
     client.add_cog(Help(client))
