@@ -276,7 +276,7 @@ class Help(commands.Cog):
             description="clips a YouTube video given the start and end times (HH:MM:SS)\n**FASTER** than `clip` but will start at the nearest keyframe, so it'll start a couple seconds earlier than the given timestamp",
         )
         em.add_field(
-            name="**Syntax**", value="k.clip <url> <start time> <end time> <filename>"
+            name="**Syntax**", value="k.fastclip <url> <start time> <end time> <filename>"
         )
         em.add_field(
             name="**Example**",
@@ -284,6 +284,21 @@ class Help(commands.Cog):
         )
         await ctx.send(embed=em)
 
+    @help.command()
+    async def fastclipsub(self, ctx):
+        em = disnake.Embed(
+            title="Quickly clip a YT Video w/ fancy subs",
+            description="Like fastclip but also burns fancy subs into the vod",
+        )
+        em.add_field(
+            name="**Syntax**", value="k.fastclipsub <url> <start time> <end time> <filename>"
+        )
+        em.add_field(
+            name="**Example**",
+            value="k.fastclipsub https://www.youtube.com/watch?v=dQw4w9WgXcQ 00:00:52 00:01:05 filename",
+        )
+        await ctx.send(embed=em)
+  
     @help.command()
     async def download(self, ctx):
         em = disnake.Embed(
@@ -586,6 +601,18 @@ class Help(commands.Cog):
         em.add_field(name="**Aliases**", value=",".join(ctx.command.aliases))
         await ctx.send(embed=em)
 
+    @help.command(aliases=["vid2gif2", "gifify2"])
+    async def gif2(self, ctx):
+        em = disnake.Embed(
+            title="Video to Gif 2",
+            description="k.gif but higher quality and slower",
+        )
+        em.add_field(
+            name="**Syntax**",
+            value="k.gif2 <video_url>\nUpload video with k.gif2\nReply to a video with k.gif2 ",
+        )
+        em.add_field(name="**Aliases**", value=",".join(ctx.command.aliases))
+        await ctx.send(embed=em)
 
 def setup(client):
     client.add_cog(Help(client))

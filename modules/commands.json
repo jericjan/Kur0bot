@@ -22,6 +22,7 @@
     "badapple",
     "clip",
     "fastclip",
+    "fastclipsub",
     "clipaudio",
     "download",
     "stream",
@@ -34,7 +35,8 @@
     "checkcomment",
     "superchat",
     "oldsuperchat",
-    "gif"
+    "gif",
+    "gif2"
   ],
   "reactions": [
     "fmega",
