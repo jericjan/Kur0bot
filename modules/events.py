@@ -368,11 +368,6 @@ class Events(commands.Cog):
             ctx.command = command
             ctx.invoked_subcommand = command
             await self.client.invoke(ctx)
-        elif re.search(r"Payload Too Large", str(error)):
-            print("File too big!")
-            await ctx.send(
-                "Your server isn't strong enough to handle the size of the file I'm sending <a:trollplant:934777423881445436>"
-            )
         elif isinstance(error, commands.NotOwner):
             await ctx.send(
                 "Bruh, how'd you find this command? Only Kur0 can use this tho lmao."
@@ -382,12 +377,17 @@ class Events(commands.Cog):
                 await ctx.send(
                     "404 moment. I dunno what you just did but I can't find something. Automod deleted it perhaps? Maybe it doesn't actually exist? Maybe it's a bug lol."
                 )
-            elif isinstance(error.original, disnake.HTTPException):    
-              print("HTTPException!")
-              if error.original.status == 429:
-                print("Rate limited lmao")
-                os.system("busybox reboot")
-              await self.log(error.original, False)
+            elif isinstance(error.original, disnake.HTTPException):
+                print("HTTPException!")
+                if error.original.status == 429:
+                    print("Rate limited lmao")
+                    os.system("busybox reboot")
+                elif error.original.status == 413:
+                    print("File too big!")
+                    await ctx.send(
+                        "Your server isn't strong enough to handle the size of the file I'm sending <a:trollplant:934777423881445436>"
+                    )
+                await self.log(error.original, False)
             else:
                 await ctx.send(error.original)
         else:

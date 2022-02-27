@@ -10,7 +10,7 @@ class Sus(commands.Cog):
     @commands.command()
     async def bulk(self, ctx, number):
         print(ctx.channel.id)
-        if ctx.channel.name == 'sus-town':
+        if ctx.channel.name == "sus-town":
             for x in range(int(number)):
                 await ctx.send(random.choice(sus_replies))
         else:

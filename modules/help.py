@@ -69,7 +69,10 @@ class Help(commands.Cog):
 
     @help.command()
     async def bulk(self, ctx):
-        em = disnake.Embed(title="Bulk", description="Sends sus messages in bulk.\nOnly usable in channels named `sus-town` <:sus:850628234746920971>")
+        em = disnake.Embed(
+            title="Bulk",
+            description="Sends sus messages in bulk.\nOnly usable in channels named `sus-town` <:sus:850628234746920971>",
+        )
         em.add_field(name="**Syntax**", value="k.bulk <number>")
         await ctx.send(embed=em)
 
@@ -446,8 +449,8 @@ class Help(commands.Cog):
             title="Rushia Bruh SFX",
             description="Plays Rushia saying bruh in VC.",
         )
-        await ctx.send(embed=em)  
-  
+        await ctx.send(embed=em)
+
     @help.command()
     async def pet(self, ctx):
         em = disnake.Embed(
@@ -570,7 +573,7 @@ class Help(commands.Cog):
         em.add_field(name="**Aliases**", value=",".join(ctx.command.aliases))
         await ctx.send(embed=em)
 
-    @help.command(aliases=['vid2gif','gifify'])
+    @help.command(aliases=["vid2gif", "gifify"])
     async def gif(self, ctx):
         em = disnake.Embed(
             title="Video to Gif",
@@ -582,5 +585,7 @@ class Help(commands.Cog):
         )
         em.add_field(name="**Aliases**", value=",".join(ctx.command.aliases))
         await ctx.send(embed=em)
+
+
 def setup(client):
     client.add_cog(Help(client))

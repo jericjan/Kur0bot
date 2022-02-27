@@ -15,7 +15,7 @@ class Vc(commands.Cog):
     async def vcplay(self, ctx, a, loop=None):
         voicestate = ctx.author.voice
         if voicestate:
-           voice_channel = ctx.author.voice.channel
+            voice_channel = ctx.author.voice.channel
 
         voice = disnake.utils.get(self.client.voice_clients, guild=ctx.guild)
         if voicestate != None:
@@ -44,9 +44,12 @@ class Vc(commands.Cog):
                 else:
                     voice.play(disnake.FFmpegPCMAudio(source=a))
         else:
-            #await ctx.send(f"{ctx.author.name} is not in a channel.")
-            await ctx.send(f"{ctx.author.name} is not in a VC. Sending file instead...",delete_after=3)
-            await ctx.send(file=disnake.File(a,filename=a.split('/')[-1]))
+            # await ctx.send(f"{ctx.author.name} is not in a channel.")
+            await ctx.send(
+                f"{ctx.author.name} is not in a VC. Sending file instead...",
+                delete_after=3,
+            )
+            await ctx.send(file=disnake.File(a, filename=a.split("/")[-1]))
         # Delete command after the audio is done playing.
         await ctx.message.delete()
 
@@ -222,6 +225,7 @@ class Vc(commands.Cog):
     @commands.command()
     async def bruh(self, ctx, loop=None):
         await self.vcplay(ctx, "sounds/rushiabruh.mp3", loop)
-      
+
+
 def setup(client):
     client.add_cog(Vc(client))

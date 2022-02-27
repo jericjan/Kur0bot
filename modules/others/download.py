@@ -6,6 +6,7 @@ from shlex import join as shjoin
 import subprocess
 from aiolimiter import AsyncLimiter
 import json
+
 # import codecs
 limiter = AsyncLimiter(1, 1)
 
@@ -14,6 +15,7 @@ class Download(commands.Cog):
     def __init__(self, client):
         self.client = client
         self.pbar_list = []
+
     async def updatebar(self, msg):
         # print("Updating bar...")
         try:
@@ -28,7 +30,7 @@ class Download(commands.Cog):
                 # print(f"\033[91m timeout!\n{e} \033[0m")
                 pass
             pass
-            
+
     @commands.command()
     async def download(self, ctx, link):  # reddit, facebook, instagram, tiktok, yt
 
@@ -72,7 +74,7 @@ class Download(commands.Cog):
                 line = await proc.stdout.readline()
                 if not line:
                     break
-                self.pbar_list.append(line.decode("utf-8"))    
+                self.pbar_list.append(line.decode("utf-8"))
                 asyncio.ensure_future(self.updatebar(message))
                 await asyncio.sleep(1)
                 # await ctx.send(line.decode('utf-8'))
@@ -94,7 +96,7 @@ class Download(commands.Cog):
                     line = await proc.stdout.readline()
                     if not line:
                         break
-                    self.pbar_list.append(line.decode("utf-8"))    
+                    self.pbar_list.append(line.decode("utf-8"))
                     asyncio.ensure_future(self.updatebar(message))
                     await asyncio.sleep(1)
                     # await ctx.send(line.decode('utf-8'))
@@ -174,7 +176,7 @@ class Download(commands.Cog):
                 line = await proc.stdout.readline()
                 if not line:
                     break
-                self.pbar_list.append(line.decode("utf-8"))    
+                self.pbar_list.append(line.decode("utf-8"))
                 asyncio.ensure_future(self.updatebar(message))
                 await asyncio.sleep(1)
             await message.edit(content="Almost there...")
@@ -252,7 +254,7 @@ class Download(commands.Cog):
                 line = await proc.stdout.readline()
                 if not line:
                     break
-                self.pbar_list.append(line.decode("utf-8"))    
+                self.pbar_list.append(line.decode("utf-8"))
                 asyncio.ensure_future(self.updatebar(message))
                 await asyncio.sleep(1)
             await message.edit(content="Almost there...")
@@ -305,7 +307,7 @@ class Download(commands.Cog):
                 line = await proc.stdout.readline()
                 if not line:
                     break
-                self.pbar_list.append(line.decode("utf-8"))    
+                self.pbar_list.append(line.decode("utf-8"))
                 asyncio.ensure_future(self.updatebar(message))
                 await asyncio.sleep(1)
             await message.edit(content="Almost there...")
@@ -332,9 +334,11 @@ class Download(commands.Cog):
             os.remove(filename)
             await message.delete()
         elif "bilibili.com" in link:
-            message = await ctx.send("Bilibili? <:oka:944181217467723826>\n Let me do something different here. Give me a moment...")
+            message = await ctx.send(
+                "Bilibili? <:oka:944181217467723826>\n Let me do something different here. Give me a moment..."
+            )
             coms = ["yt-dlp", "--get-url", "-j", "--no-warnings", link]
-            
+
             print(shjoin(coms))
             proc = await asyncio.create_subprocess_exec(
                 *coms, stdout=subprocess.PIPE, stderr=subprocess.STDOUT
@@ -343,9 +347,9 @@ class Download(commands.Cog):
             url = stdout.splitlines()[0]
             json_str = stdout.splitlines()[1]
             json_dict = json.loads(json_str)
-            bilibili_id = json_dict['webpage_url_basename']
+            bilibili_id = json_dict["webpage_url_basename"]
             filename = f"bilibili_{bilibili_id}.mp4"
-            coms2 = ["ffmpeg",'-i',url, '-c','copy','-y',filename]
+            coms2 = ["ffmpeg", "-i", url, "-c", "copy", "-y", filename]
             out2 = await asyncio.create_subprocess_exec(
                 *coms2, stdout=subprocess.PIPE, stderr=subprocess.STDOUT
             )
@@ -356,7 +360,7 @@ class Download(commands.Cog):
 
                     await message.edit(content="Sending video...")
                     try:
-                             await ctx.send(file=disnake.File(filename))
+                        await ctx.send(file=disnake.File(filename))
                     except Exception as e:
                         await ctx.send(e)
                 except disnake.HTTPException:
@@ -382,7 +386,7 @@ class Download(commands.Cog):
                 line = await proc.stdout.readline()
                 if not line:
                     break
-                self.pbar_list.append(line.decode("utf-8"))    
+                self.pbar_list.append(line.decode("utf-8"))
                 asyncio.ensure_future(self.updatebar(message))
                 await asyncio.sleep(1)
             await message.edit(content="Almost there...")
@@ -397,7 +401,7 @@ class Download(commands.Cog):
                     filename = thing.decode("utf-8").split("\n")[0]
                     await message.edit(content="Sending video...")
                     try:
-                             await ctx.send(file=disnake.File(filename))
+                        await ctx.send(file=disnake.File(filename))
                     except Exception as e:
                         await ctx.send(e)
                 except disnake.HTTPException:

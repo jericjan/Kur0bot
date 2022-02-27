@@ -491,11 +491,11 @@ class Superchat(commands.Cog):
     def legacy_blocking_function3(self, msg_split, out):
         spacing = 30
         img = Image.new("RGBA", (1760, 152), color=(230, 33, 23, 255))
-        #draw = ImageDraw.Draw(img)
+        # draw = ImageDraw.Draw(img)
         fnt = ImageFont.truetype("fonts/merged.ttf", 60)
         # draw.text((64, 40),message,font=fnt, fill=(255, 255, 255, 255))
         with Pilmoji(img) as pilmoji:
-          text_size = pilmoji.getsize(text=msg_split, font=fnt, spacing=spacing)
+            text_size = pilmoji.getsize(text=msg_split, font=fnt, spacing=spacing)
         # await ctx.send(f"Text size is: {text_size}")
         txt_height = int(text_size[1])
         # txt_width = int(re.search(r'\d+(?=, \d+\))',str(text_size)).group())
@@ -515,7 +515,11 @@ class Superchat(commands.Cog):
 
         with Pilmoji(img) as pilmoji:
             pilmoji.text(
-                (64, 31), msg_split, fill=(255, 255, 255, 255), font=fnt, spacing=spacing
+                (64, 31),
+                msg_split,
+                fill=(255, 255, 255, 255),
+                font=fnt,
+                spacing=spacing,
             )
 
         # byteio = io.BytesIO()

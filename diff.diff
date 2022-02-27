@@ -1,0 +1,850 @@
+diff --git a/.gitignore b/.gitignore
+index bff214f..46c0592 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -4,3 +4,4 @@ __pycache__/
+ console_log.txt
+ log.txt
+ /.ssh/
++/ytsubconverter/
+\ No newline at end of file
+diff --git a/README.md b/README.md
+index a9f97b2..29c2a68 100644
+--- a/README.md
++++ b/README.md
+@@ -13,7 +13,6 @@ It *might* require more permissions than the one above, and it won't tell you th
+ 
+ To do list:
+ - new help menu with discord select menus
+-- continue splitting file into modules
+ - k.id command compresss feature
+ - k.supacha colers
+ - k.addaudio
+diff --git a/chips.gif b/chips.gif
+new file mode 100644
+index 0000000..1de3ba2
+Binary files /dev/null and b/chips.gif differ
+diff --git a/diff.py b/diff.py
+index 2c5a44e..e27f7cf 100644
+--- a/diff.py
++++ b/diff.py
+@@ -1,4 +1,7 @@
+ import os
+-os.system('git add .')
+-os.system('git diff --ignore-space-at-eol -b -w --ignore-blank-lines master > diff.diff')
+-print('done')
+\ No newline at end of file
++
++os.system("git add .")
++os.system(
++    "git diff --ignore-space-at-eol -b -w --ignore-blank-lines master > diff.diff"
++)
++print("done")
+diff --git a/gifski_/gifski b/gifski_/gifski
+new file mode 100644
+index 0000000..dd8861f
+Binary files /dev/null and b/gifski_/gifski differ
+diff --git a/make_ssh.py b/make_ssh.py
+index 3666478..e19a94c 100644
+--- a/make_ssh.py
++++ b/make_ssh.py
+@@ -1,12 +1,13 @@
+ import os
+-rsa_key = os.getenv('RSA_KEY')
++
++rsa_key = os.getenv("RSA_KEY")
+ print(rsa_key)
+ print("wget")
+-os.system(f'wget {rsa_key} -O /home/runner/Kur0bot/id_rsa')
++os.system(f"wget {rsa_key} -O /home/runner/Kur0bot/id_rsa")
+ print("chmod")
+ os.system("chmod 400 /home/runner/Kur0bot/id_rsa")
+ try:
+-  os.mkdir('/home/runner/.ssh/')  
++    os.mkdir("/home/runner/.ssh/")
+ except:
+     pass
+ print("moving")
+diff --git a/modules/events.py b/modules/events.py
+index 6854540..1d80db0 100644
+--- a/modules/events.py
++++ b/modules/events.py
+@@ -368,11 +368,6 @@ class Events(commands.Cog):
+             ctx.command = command
+             ctx.invoked_subcommand = command
+             await self.client.invoke(ctx)
+-        elif re.search(r"Payload Too Large", str(error)):
+-            print("File too big!")
+-            await ctx.send(
+-                "Your server isn't strong enough to handle the size of the file I'm sending <a:trollplant:934777423881445436>"
+-            )
+         elif isinstance(error, commands.NotOwner):
+             await ctx.send(
+                 "Bruh, how'd you find this command? Only Kur0 can use this tho lmao."
+@@ -387,6 +382,11 @@ class Events(commands.Cog):
+                 if error.original.status == 429:
+                     print("Rate limited lmao")
+                     os.system("busybox reboot")
++                elif error.original.status == 413:
++                    print("File too big!")
++                    await ctx.send(
++                        "Your server isn't strong enough to handle the size of the file I'm sending <a:trollplant:934777423881445436>"
++                    )
+                 await self.log(error.original, False)
+             else:
+                 await ctx.send(error.original)
+diff --git a/modules/help.py b/modules/help.py
+index a6c41af..fb565ed 100644
+--- a/modules/help.py
++++ b/modules/help.py
+@@ -69,7 +69,10 @@ class Help(commands.Cog):
+ 
+     @help.command()
+     async def bulk(self, ctx):
+-        em = disnake.Embed(title="Bulk", description="Sends sus messages in bulk.\nOnly usable in channels named `sus-town` <:sus:850628234746920971>")
++        em = disnake.Embed(
++            title="Bulk",
++            description="Sends sus messages in bulk.\nOnly usable in channels named `sus-town` <:sus:850628234746920971>",
++        )
+         em.add_field(name="**Syntax**", value="k.bulk <number>")
+         await ctx.send(embed=em)
+ 
+@@ -570,7 +573,7 @@ class Help(commands.Cog):
+         em.add_field(name="**Aliases**", value=",".join(ctx.command.aliases))
+         await ctx.send(embed=em)
+ 
+-    @help.command(aliases=['vid2gif','gifify'])
++    @help.command(aliases=["vid2gif", "gifify"])
+     async def gif(self, ctx):
+         em = disnake.Embed(
+             title="Video to Gif",
+diff --git a/modules/others/144p.py b/modules/others/144p.py
+index 052e2ab..f68a142 100644
+--- a/modules/others/144p.py
++++ b/modules/others/144p.py
+@@ -8,7 +8,7 @@ from tqdm import tqdm
+ import io
+ from aiolimiter import AsyncLimiter
+ from datetime import datetime, timedelta
+-import json
++
+ 
+ limiter = AsyncLimiter(1, 1)
+ 
+@@ -62,7 +62,9 @@ class lowQual(commands.Cog):
+             elif ctx.message.embeds:
+                 vid_url = ctx.message.embeds[0].video.url
+             else:
+-            await ctx.send('Hmm... Can\'t find the gif. An embed fail perhaps? <a:trollplant:934777423881445436>')  
++                await ctx.send(
++                    "Hmm... Can't find the gif. An embed fail perhaps? <a:trollplant:934777423881445436>"
++                )
+                 return
+ 
+             filename = link.split("/")[-1]
+@@ -160,7 +162,7 @@ class lowQual(commands.Cog):
+                             )
+                             asyncio.ensure_future(self.updatebar(message))
+                         except:
+-                          if not filename.endswith('gif'):
++                            if not filename.endswith("gif"):
+                                 await message.edit(
+                                     content=f"Uh, I couldn't find the duration of vod. idk man."
+                                 )
+@@ -249,7 +251,7 @@ class lowQual(commands.Cog):
+                             )
+                             asyncio.ensure_future(self.updatebar(message))
+                         except:
+-                          if not filename.endswith('gif'):
++                            if not filename.endswith("gif"):
+                                 await message.edit(
+                                     content=f"Uh, I couldn't find the duration of vod. idk man."
+                                 )
+diff --git a/modules/others/clip.py b/modules/others/clip.py
+index 0532908..9f99452 100644
+--- a/modules/others/clip.py
++++ b/modules/others/clip.py
+@@ -84,6 +84,7 @@ class Clip(commands.Cog):
+                 "copy",
+                 "-c:a",
+                 "copy",
++                "-y",
+                 f"{filename}_temp0.mp4",
+             ]
+         else:
+@@ -100,6 +101,7 @@ class Clip(commands.Cog):
+                 "copy",
+                 "-c:a",
+                 "copy",
++                "-y",
+                 f"{filename}_temp0.mp4",
+             ]
+         print(shjoin(coms))
+@@ -345,6 +347,415 @@ class Clip(commands.Cog):
+         os.remove(f"{filename}_temp.mp4")
+         await message.delete()
+ 
++    ############################################################################
++    @commands.command()
++    async def fastclipsub(self, ctx, link, start, end, *, filename):
++        filename = filename.replace(" ", "_")
++        if (
++            re.match("\d{2}:\d{2}:\d{2}", start) != None
++            and re.match("\d{2}:\d{2}:\d{2}", end) != None
++        ):
++            print("good timestamps!")
++        else:
++            print("bad timestamps!")
++            await ctx.send("Timestamps are wrong. Please provide it in HH:MM:SS")
++            return
++
++        message = await ctx.send("Fetching url...")
++        coms = ["yt-dlp", "-g", "-f", "best", "--youtube-skip-dash-manifest", link]
++        print(shjoin(coms))
++        startsplit = start.split(":")
++        shour = startsplit[0]
++        sminute = startsplit[1]
++        ssecond = startsplit[2]
++        date_time = datetime.strptime(start, "%H:%M:%S")
++        a_timedelta = date_time - datetime(1900, 1, 1)
++        seconds = a_timedelta.total_seconds()
++        print(seconds)
++        if seconds < 30:
++            print("less than 30 seconds!")
++            result1 = timedelta(
++                hours=int(shour), minutes=int(sminute), seconds=int(ssecond)
++            )
++        else:
++            print("it is at least 30 seconds.")
++            result1 = timedelta(
++                hours=int(shour), minutes=int(sminute), seconds=int(ssecond)
++            ) - timedelta(seconds=30)
++
++        endsplit = end.split(":")
++        ehour = endsplit[0]
++        eminute = endsplit[1]
++        esecond = endsplit[2]
++        if seconds < 30:
++            result2 = timedelta(
++                hours=int(ehour), minutes=int(eminute), seconds=int(esecond)
++            )
++        else:
++            result2 = (
++                timedelta(hours=int(ehour), minutes=int(eminute), seconds=int(esecond))
++                - timedelta(
++                    hours=int(shour), minutes=int(sminute), seconds=int(ssecond)
++                )
++                + timedelta(seconds=30)
++            )
++        out = await asyncio.create_subprocess_exec(
++            *coms, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE
++        )
++        stdout, stderr = await out.communicate()
++        print(stdout)
++        print(stderr)
++        dirlinks = stdout.decode("utf-8").split("\n")
++        vid = dirlinks[0]
++        # aud = dirlinks[1]
++
++        if seconds < 30:
++            coms = [
++                "ffmpeg",
++                "-i",
++                vid,
++                "-t",
++                str(result2),
++                "-c:v",
++                "copy",
++                "-c:a",
++                "copy",
++                "-y",
++                f"{filename}_temp0.mp4",
++            ]
++        else:
++            coms = [
++                "ffmpeg",
++                "-noaccurate_seek",
++                "-ss",
++                str(result1),
++                "-i",
++                vid,
++                "-t",
++                str(result2),
++                "-c:v",
++                "copy",
++                "-c:a",
++                "copy",
++                "-y",
++                f"{filename}_temp0.mp4",
++            ]
++        print(shjoin(coms))
++        await message.edit(content="Downloading... This will take a while...")
++        process = await asyncio.create_subprocess_exec(
++            *coms, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE
++        )
++
++        # while process.returncode is None:
++        #     line = await process.stdout.readline()
++        #     if not line:
++        #             break
++        #     await ctx.send(line.decode('utf-8'))
++
++        stdout, stderr = await process.communicate()
++        print(stdout)
++        print(stderr.decode("utf-8"))
++        # os.rename(filename+".mkv",filename+".mp4")
++
++        def max_le(seq, val):
++            """
++            Same as max_lt(), but items in seq equal to val apply as well.
++
++            >>> max_le([2, 3, 7, 11], 10)
++            7
++            >>> max_le((1, 3, 6, 11), 6)
++            6
++            """
++
++            idx = len(seq) - 1
++            while idx >= 0:
++                if seq[idx] <= val:
++                    return seq[idx]
++                idx -= 1
++
++            return None
++
++        def min_gt(seq, val):
++            """
++            Return smallest item in seq for which item > val applies.
++            None is returned if seq was empty or all items in seq were <= val.
++
++            >>> min_gt([1, 3, 6, 7], 4)
++            6
++            >>> min_gt([2, 4, 7, 11], 5)
++            7
++            """
++
++            for v in seq:
++                if v > val:
++                    return v
++            return None
++
++        def round_down(n, decimals=0):
++            multiplier = 10 ** decimals
++            return math.floor(n * multiplier) / multiplier
++
++        coms = [
++            "ffprobe",
++            "-v",
++            "error",
++            "-skip_frame",
++            "nokey",
++            "-show_entries",
++            "frame=pkt_pts_time",
++            "-select_streams",
++            "v",
++            "-of",
++            "csv=p=0",
++            f"{filename}_temp0.mp4",
++        ]
++        process = await asyncio.create_subprocess_exec(
++            *coms, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE
++        )
++        stdout, stderr = await process.communicate()
++        print(stderr)
++        print(stdout.decode("utf-8"))
++        timelist_str = stdout.decode("utf-8").strip().split("\n")
++        print(timelist_str)
++        timelist_float = [float(i) for i in timelist_str]
++        timelist_float.sort()
++        print(timelist_float)
++
++        # remuxes so keyframes work, magic.
++        coms = [
++            "ffmpeg-git/ffmpeg",
++            "-i",
++            f"{filename}_temp0.mp4",
++            "-c:v",
++            "copy",
++            "-c:a",
++            "copy",
++            f"{filename}_temp.mp4",
++        ]
++        process = await asyncio.create_subprocess_exec(
++            *coms, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE
++        )
++        stdout, stderr = await process.communicate()
++        print(stdout.decode("utf-8"))
++
++        round_number = 1
++        round_frames = False
++
++        if seconds < 30:
++            if round_frames == True:
++                keyframe = round_down(max_le(timelist_float, seconds), round_number)
++            else:
++                prev_keyframe = max_le(timelist_float, seconds)
++                if prev_keyframe == timelist_float[-1]:  # if prev_keyframe is last
++                    coms = [
++                        "ffprobe",
++                        "-v",
++                        "error",
++                        "-show_entries",
++                        "format=duration",
++                        "-of",
++                        "default=noprint_wrappers=1:nokey=1",
++                        f"{filename}_temp0.mp4",
++                    ]  # get duration
++                    process = await asyncio.create_subprocess_exec(
++                        *coms,
++                        stdout=asyncio.subprocess.PIPE,
++                        stderr=asyncio.subprocess.PIPE,
++                    )
++                    stdout, stderr = await process.communicate()
++                    print(stderr)
++                    next_keyframe = float(stdout.decode("utf-8"))
++                else:
++                    next_keyframe = min_gt(timelist_float, seconds)
++                print(f"after {prev_keyframe}")
++                print(f"before {next_keyframe}")
++                if next_keyframe == None:
++                    print("no next keyframe!(0)")
++                    keyframe = prev_keyframe
++                else:
++                    keyframe = (prev_keyframe + next_keyframe) / 2
++            print(f"keyframe is {keyframe:.6f}")
++            if round_down(seconds - prev_keyframe, round_number) == 0:
++                await ctx.send(
++                    "<:callipog:850365252637032479> Poggers. No need to clip to nearest keyframe."
++                )
++            else:
++                seconds_earlier = seconds - prev_keyframe
++                await ctx.send(
++                    f"Clipping {round_down(seconds_earlier, round_number)} seconds earlier to nearest keyframe..."
++                )
++
++        else:
++            if round_frames == True:
++                keyframe = round_down(max_le(timelist_float, 30), round_number)
++            else:
++                prev_keyframe = max_le(timelist_float, 30)
++                if prev_keyframe == timelist_float[-1]:  # if prev_keyframe is last
++                    coms = [
++                        "ffprobe",
++                        "-v",
++                        "error",
++                        "-show_entries",
++                        "format=duration",
++                        "-of",
++                        "default=noprint_wrappers=1:nokey=1",
++                        f"{filename}_temp0.mp4",
++                    ]  # get duration
++                    process = await asyncio.create_subprocess_exec(
++                        *coms,
++                        stdout=asyncio.subprocess.PIPE,
++                        stderr=asyncio.subprocess.PIPE,
++                    )
++                    stdout, stderr = await process.communicate()
++                    print(stderr)
++                    next_keyframe = float(stdout.decode("utf-8"))
++                else:
++                    next_keyframe = min_gt(timelist_float, 30)
++                print(f"after {prev_keyframe}")
++                print(f"before {next_keyframe}")
++                if next_keyframe == None:
++                    print("no next keyframe!(1)")
++                    keyframe = prev_keyframe
++                else:
++                    keyframe = (prev_keyframe + next_keyframe) / 2
++            print(f"keyframe is {keyframe}")
++            if round_down(30 - prev_keyframe, round_number) == 0:
++                await ctx.send(
++                    "<:callipog:850365252637032479> Poggers. No need to clip to nearest keyframe."
++                )
++            else:
++                seconds_earlier = 30 - prev_keyframe
++                await ctx.send(
++                    f"Clipping {round_down(seconds_earlier, round_number)} seconds earlier to nearest keyframe..."
++                )
++
++        coms = [
++            "ffmpeg",
++            "-noaccurate_seek",
++            "-ss",
++            f"{keyframe:.6f}",
++            "-i",
++            f"{filename}_temp.mp4",
++            "-c:v",
++            "copy",
++            "-c:a",
++            "copy",
++            "-avoid_negative_ts",
++            "make_zero",
++            f"{filename}_nosub.mp4",
++        ]
++        print(shjoin(coms))
++        process = await asyncio.create_subprocess_exec(
++            *coms, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE
++        )
++        stdout, stderr = await process.communicate()
++        print(stdout)
++        print(stderr.decode("utf-8"))
++
++        coms = [
++            "ffprobe",
++            "-v",
++            "error",
++            "-skip_frame",
++            "nokey",
++            "-show_entries",
++            "frame=pkt_pts_time",
++            "-select_streams",
++            "v",
++            "-of",
++            "csv=p=0",
++            f"{filename}_nosub.mp4",
++        ]
++        process = await asyncio.create_subprocess_exec(
++            *coms, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE
++        )
++        stdout, stderr = await process.communicate()
++        print(stderr)
++        print("final keyframes:")
++        print(stdout.decode("utf-8"))
++        await message.edit(content="Getting fancy subs... (en, srv3)")
++        coms = [
++            "yt-dlp",
++            "--sub-lang",
++            "en",
++            "--sub-format",
++            "srv3",
++            "--write-sub",
++            "--skip-download",
++            link,
++        ]
++        process = await asyncio.create_subprocess_exec(
++            *coms, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE
++        )
++        stdout, stderr = await process.communicate()
++        sub_name = re.findall(
++            r"(?<=Writing video subtitles to: ).+", stdout.decode("utf-8")
++        )[0]
++        await message.edit(content="Converting subs...")
++        coms = ["mono", "ytsubconverter/YTSubConverter.exe", sub_name]
++        process = await asyncio.create_subprocess_exec(
++            *coms, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE
++        )
++        stdout, stderr = await process.communicate()
++
++        sub_name_ass = ".".join(sub_name.split(".")[:-1]) + ".ass"
++        sub_name_ass2 = ".".join(sub_name.split(".")[:-2]) + "_2.en.ass"
++        print(sub_name_ass)
++
++        sub_delay = timedelta(
++            hours=int(shour), minutes=int(sminute), seconds=int(ssecond)
++        ) - timedelta(seconds=seconds_earlier)
++        await message.edit(content="Trimming subs...")
++        coms = [
++            "ffmpeg",
++            "-i",
++            sub_name_ass,
++            "-ss",
++            str(sub_delay),
++            "-to",
++            end,
++            "-y",
++            sub_name_ass2,
++        ]
++        process = await asyncio.create_subprocess_exec(
++            *coms, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE
++        )
++        stdout, stderr = await process.communicate()
++
++        await message.edit(content="Burning subs into video...")
++        coms = [
++            "ffmpeg",
++            "-i",
++            f"{filename}_nosub.mp4",
++            "-vf",
++            f"subtitles='{sub_name_ass2}'",
++            "-y",
++            f"{filename}.mp4",
++        ]
++        process = await asyncio.create_subprocess_exec(
++            *coms, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE
++        )
++        stdout, stderr = await process.communicate()
++        print(stdout.decode("utf-8"))
++        print(stderr.decode("utf-8"))
++        try:
++
++            await ctx.send(file=disnake.File(f"{filename}.mp4"))
++        except Exception:
++            await message.edit(content="I failed.")
++        await ctx.send(ctx.message.author.mention)
++        os.remove(sub_name)
++        os.remove(sub_name_ass)
++        os.remove(sub_name_ass2)
++        os.remove(f"{filename}.mp4")
++        os.remove(
++            f"{filename}_nosub.mp4",
++        )
++        os.remove(f"{filename}_temp0.mp4")
++        os.remove(f"{filename}_temp.mp4")
++
++        await message.delete()
++
+     @commands.command()
+     async def idclip(self, ctx, link, start, end, filename, id, id2):
+ 
+diff --git a/modules/others/download.py b/modules/others/download.py
+index 7015168..6db2dcc 100644
+--- a/modules/others/download.py
++++ b/modules/others/download.py
+@@ -332,7 +334,9 @@ class Download(commands.Cog):
+             os.remove(filename)
+             await message.delete()
+         elif "bilibili.com" in link:
+-            message = await ctx.send("Bilibili? <:oka:944181217467723826>\n Let me do something different here. Give me a moment...")
++            message = await ctx.send(
++                "Bilibili? <:oka:944181217467723826>\n Let me do something different here. Give me a moment..."
++            )
+             coms = ["yt-dlp", "--get-url", "-j", "--no-warnings", link]
+ 
+             print(shjoin(coms))
+@@ -343,9 +347,9 @@ class Download(commands.Cog):
+             url = stdout.splitlines()[0]
+             json_str = stdout.splitlines()[1]
+             json_dict = json.loads(json_str)
+-            bilibili_id = json_dict['webpage_url_basename']
++            bilibili_id = json_dict["webpage_url_basename"]
+             filename = f"bilibili_{bilibili_id}.mp4"
+-            coms2 = ["ffmpeg",'-i',url, '-c','copy','-y',filename]
++            coms2 = ["ffmpeg", "-i", url, "-c", "copy", "-y", filename]
+             out2 = await asyncio.create_subprocess_exec(
+                 *coms2, stdout=subprocess.PIPE, stderr=subprocess.STDOUT
+             )
+diff --git a/modules/others/gif.py b/modules/others/gif.py
+index 9beebf1..55e870e 100644
+--- a/modules/others/gif.py
++++ b/modules/others/gif.py
+@@ -8,6 +8,9 @@ from datetime import datetime, timedelta
+ import io
+ import os
+ import disnake
++import functools
++import requests
++
+ limiter = AsyncLimiter(1, 1)
+ 
+ 
+@@ -31,7 +34,7 @@ class Gif(commands.Cog):
+                 pass
+             pass
+ 
+-    @commands.command(aliases=['vid2gif','gifify'])
++    @commands.command(aliases=["vid2gif", "gifify"])
+     async def gif(self, ctx, link=None):
+         if link == None:
+             print(ctx.message.attachments)  # a list
+@@ -53,7 +56,7 @@ class Gif(commands.Cog):
+             return
+ 
+         filename = link.split("/")[-1]
+-        new_filename = ''.join(filename.split('.')[:-1])+".gif"
++        new_filename = "".join(filename.split(".")[:-1]) + ".gif"
+         if re.search(r".+\.mp4|.+\.mkv|.+\.mov|.+\.webm", filename) is not None:
+             coms = [
+                 "ffmpeg",
+@@ -136,7 +139,7 @@ class Gif(commands.Cog):
+                             )
+                             asyncio.ensure_future(self.updatebar(message))
+                         except:
+-                                  if not filename.endswith('gif'):
++                            if not filename.endswith("gif"):
+                                 await message.edit(
+                                     content=f"Uh, I couldn't find the duration of vod. idk man."
+                                 )
+@@ -148,5 +151,135 @@ class Gif(commands.Cog):
+         await message.delete()
+         os.remove(new_filename)
+ 
++    # MOVED TO VID2GIF REPO
++    # @commands.command(aliases=['vid2gif2','gifify2'])
++    # async def gif2(self, ctx, link=None):
++    #     uuid_id = uuid.uuid4()
++    #     if link == None:
++    #         print(ctx.message.attachments)  # a list
++    #         print(ctx.message.reference)
++    #         if ctx.message.attachments:  # message has images
++    #             print("is attachment")
++    #             link = ctx.message.attachments[0].url
++    #         elif ctx.message.reference is not None:  # message is replying
++    #             print("is reply")
++    #             id = ctx.message.reference.message_id
++    #             msg = await ctx.channel.fetch_message(id)
++    #             if msg.attachments:  # if replied has image
++    #                 link = msg.attachments[0].url
++    #             elif msg.embeds:  # if replied has link
++    #                 link = msg.embeds[0].url
++
++    #     if link == None:  # check again
++    #         await ctx.send("Bruh, there's nothing there. what am i supposed to do?")
++    #         return
++
++    #     filename = link.split("/")[-1]
++    #     new_filename = ''.join(filename.split('.')[:-1])+".gif"
++    #     if re.search(r".+\.mp4|.+\.mkv|.+\.mov|.+\.webm", filename) is not None:
++    #                 # r = requests.get(link)
++    #                 # vid = io.BytesIO(r.content)
++    #                 # vid.seek(0)
++    #                 frames_folder = f"frames_{uuid_id}"
++    #                 os.mkdir(f"{frames_folder}/")
++    #                 frames_path = f"{frames_folder}/frame%04d.png"
++
++    #                 coms = [
++    #                     "ffmpeg",
++    #                     "-i",
++    #                     link,
++    #                     frames_path
++    #                 ]
++    #                 message = await ctx.send("Extracting frames...")
++    #                 process = await asyncio.create_subprocess_exec(
++    #                     *coms, stdout=subprocess.PIPE, stderr=subprocess.STDOUT
++    #                 )
++    #                 stdout, stderr = await process.communicate()
++    #                 print("FFMPEGGGG")
++    #                 print(stdout.decode("utf-8"))
++    #                 if stderr is not None:
++    #                   await ctx.send(stderr.decode('utf-8'))
++    #                 gif_ski_frames_path = f"{frames_folder}/frame*.png"
++    #                 gif_ski_frames_path = glob.glob(gif_ski_frames_path)
++    #                # gif_ski_frames_path = ' '.join(gif_ski_frames_path)
++    #                 await message.edit(content="Making gif...")
++    #                 coms = [
++    #                     "gifski_/gifski",
++    #                     "--output",
++    #                     new_filename
++    #                 ]
++    #                 coms = coms + gif_ski_frames_path
++    #                 #print(shlex.join(coms))
++    #                 process = await asyncio.create_subprocess_exec(
++    #                     *coms,stdout=subprocess.PIPE,                                           stderr=subprocess.STDOUT
++    #                 )
++    #                 stdout, stderr = await process.communicate()
++    #                 print("GIFSKI")
++    #                 print(stdout.decode("utf-8"))
++    #                 if stderr is not None:
++    #                   await ctx.send(stderr.decode('utf-8'))
++    #                 # vid.close()
++    #                 await message.edit(content="Sending...")
++    #                 try:
++    #                   await ctx.send(file=disnake.File(new_filename))
++    #                 except disnake.HTTPException as e:
++    #                   if e.status == 413:
++    #                     await ctx.send("Too large for server. Sending somewhere else..")
++    #                     coms = ['curl','--upload-file',new_filename,f"https://transfer.sh/{new_filename}"]
++    #                     process = await asyncio.create_subprocess_exec(
++    #                         *coms,stdout=subprocess.PIPE,                                                        stderr=subprocess.STDOUT)
++    #                     stdout, stderr = await process.communicate()
++    #                     link = stdout.decode('utf-8').splitlines()[-1]
++    #                     await ctx.send(link)
++    #                 os.remove(new_filename)
++    #                 shutil.rmtree(f"{frames_folder}/")
++
++    def run_in_executor(f):
++        @functools.wraps(f)
++        async def inner(*args, **kwargs):
++            loop = asyncio.get_running_loop()
++            return await loop.run_in_executor(None, lambda: f(*args, **kwargs))
++
++        return inner
++
++    def legacy_blocking_function(self, url, channel_id, msg_id):
++        requests.get(
++            f"https://vid2gif.jericjanjan.repl.co/gif?url={url}&channel_id={channel_id}&msg_id={msg_id}"
++        )
++
++    @run_in_executor
++    def foo(self, url, channel_id, msg_id):  # Your wrapper for async use
++        self.legacy_blocking_function(url, channel_id, msg_id)
++        return
++
++    @commands.command(aliases=["vid2gif2", "gifify2"])
++    async def gif2(self, ctx, link=None):
++
++        if link == None:
++            print(ctx.message.attachments)  # a list
++            print(ctx.message.reference)
++            if ctx.message.attachments:  # message has images
++                print("is attachment")
++                link = ctx.message.attachments[0].url
++            elif ctx.message.reference is not None:  # message is replying
++                print("is reply")
++                id = ctx.message.reference.message_id
++                msg = await ctx.channel.fetch_message(id)
++                if msg.attachments:  # if replied has image
++                    link = msg.attachments[0].url
++                elif msg.embeds:  # if replied has link
++                    link = msg.embeds[0].url
++
++        if link == None:  # check again
++            await ctx.send("Bruh, there's nothing there. what am i supposed to do?")
++            return
++        channel_id = ctx.channel.id
++
++        message = await ctx.send("Extracting frames...")
++        msg_id = message.id
++        await self.foo(link, channel_id, msg_id)
++        await ctx.send("DONE!")
++
++
+ def setup(client):
+     client.add_cog(Gif(client))
+diff --git a/modules/others/superchat.py b/modules/others/superchat.py
+index 87b0a87..6903dd4 100644
+--- a/modules/others/superchat.py
++++ b/modules/others/superchat.py
+@@ -515,7 +515,11 @@ class Superchat(commands.Cog):
+ 
+         with Pilmoji(img) as pilmoji:
+             pilmoji.text(
+-                (64, 31), msg_split, fill=(255, 255, 255, 255), font=fnt, spacing=spacing
++                (64, 31),
++                msg_split,
++                fill=(255, 255, 255, 255),
++                font=fnt,
++                spacing=spacing,
+             )
+ 
+         # byteio = io.BytesIO()
+diff --git a/modules/sus.py b/modules/sus.py
+index d16e605..8d81826 100644
+--- a/modules/sus.py
++++ b/modules/sus.py
+@@ -10,7 +10,7 @@ class Sus(commands.Cog):
+     @commands.command()
+     async def bulk(self, ctx, number):
+         print(ctx.channel.id)
+-        if ctx.channel.name == 'sus-town':
++        if ctx.channel.name == "sus-town":
+             for x in range(int(number)):
+                 await ctx.send(random.choice(sus_replies))
+         else:
+diff --git a/modules/vc.py b/modules/vc.py
+index ec3aa26..c391b1e 100644
+--- a/modules/vc.py
++++ b/modules/vc.py
+@@ -45,8 +45,11 @@ class Vc(commands.Cog):
+                     voice.play(disnake.FFmpegPCMAudio(source=a))
+         else:
+             # await ctx.send(f"{ctx.author.name} is not in a channel.")
+-            await ctx.send(f"{ctx.author.name} is not in a VC. Sending file instead...",delete_after=3)
+-            await ctx.send(file=disnake.File(a,filename=a.split('/')[-1]))
++            await ctx.send(
++                f"{ctx.author.name} is not in a VC. Sending file instead...",
++                delete_after=3,
++            )
++            await ctx.send(file=disnake.File(a, filename=a.split("/")[-1]))
+         # Delete command after the audio is done playing.
+         await ctx.message.delete()
+ 

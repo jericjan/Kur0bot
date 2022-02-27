@@ -8,7 +8,7 @@ from tqdm import tqdm
 import io
 from aiolimiter import AsyncLimiter
 from datetime import datetime, timedelta
-import json
+
 
 limiter = AsyncLimiter(1, 1)
 
@@ -57,20 +57,22 @@ class lowQual(commands.Cog):
 
         # print(f"link is {link}")
         if "tenor.com" in link:
-          if ctx.message.reference is not None:# message is replying
-             vid_url = msg.embeds[0].video.url
-          elif ctx.message.embeds:  
-            vid_url = ctx.message.embeds[0].video.url
-          else:
-            await ctx.send('Hmm... Can\'t find the gif. An embed fail perhaps? <a:trollplant:934777423881445436>')  
-            return
+            if ctx.message.reference is not None:  # message is replying
+                vid_url = msg.embeds[0].video.url
+            elif ctx.message.embeds:
+                vid_url = ctx.message.embeds[0].video.url
+            else:
+                await ctx.send(
+                    "Hmm... Can't find the gif. An embed fail perhaps? <a:trollplant:934777423881445436>"
+                )
+                return
 
-          filename = link.split("/")[-1]
-          filename  = f"{''.join(filename)}.gif"
-         # await ctx.send(f"filename is {filename}")
-          link = vid_url
-        else:    
-          filename = link.split("/")[-1]
+            filename = link.split("/")[-1]
+            filename = f"{''.join(filename)}.gif"
+            # await ctx.send(f"filename is {filename}")
+            link = vid_url
+        else:
+            filename = link.split("/")[-1]
         if re.search(r".+\.mp4|.+\.mkv|.+\.mov|.+\.webm|.+\.gif", filename) is not None:
             tempname = re.sub(r"(.+(?=\..+))", r"\g<1>01", filename)
             coms = [
@@ -160,10 +162,10 @@ class lowQual(commands.Cog):
                             )
                             asyncio.ensure_future(self.updatebar(message))
                         except:
-                          if not filename.endswith('gif'):
-                            await message.edit(
-                                content=f"Uh, I couldn't find the duration of vod. idk man."
-                            )
+                            if not filename.endswith("gif"):
+                                await message.edit(
+                                    content=f"Uh, I couldn't find the duration of vod. idk man."
+                                )
 
             coms = [
                 "ffmpeg",
@@ -249,12 +251,12 @@ class lowQual(commands.Cog):
                             )
                             asyncio.ensure_future(self.updatebar(message))
                         except:
-                          if not filename.endswith('gif'):
-                            await message.edit(
-                                content=f"Uh, I couldn't find the duration of vod. idk man."
-                            )
+                            if not filename.endswith("gif"):
+                                await message.edit(
+                                    content=f"Uh, I couldn't find the duration of vod. idk man."
+                                )
             os.remove(tempname)
-            
+
         elif re.search(r".+\.jpg|.+\.jpeg|.+\.png", filename) is not None:
             tempname = re.sub(r"(.+(?=\..+))", r"\g<1>01", filename)
             coms = [

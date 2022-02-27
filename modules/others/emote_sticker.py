@@ -11,8 +11,8 @@ class EmoteSticker(commands.Cog):
     @commands.command(aliases=["e"])
     async def emote(self, ctx, *message):
         if len(message) == 0:
-          await ctx.send("Give an emoji name.")
-          return
+            await ctx.send("Give an emoji name.")
+            return
         emoji_list = []
         webhook = await ctx.channel.create_webhook(name=ctx.message.author.name)
         print(type(message))
