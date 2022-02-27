@@ -530,6 +530,7 @@ class Clip(commands.Cog):
             "copy",
             "-c:a",
             "copy",
+            "-y",
             f"{filename}_temp.mp4",
         ]
         process = await asyncio.create_subprocess_exec(
@@ -540,7 +541,8 @@ class Clip(commands.Cog):
 
         round_number = 1
         round_frames = False
-
+        seconds_earlier = 0
+      
         if seconds < 30:
             if round_frames == True:
                 keyframe = round_down(max_le(timelist_float, seconds), round_number)
@@ -642,6 +644,7 @@ class Clip(commands.Cog):
             "copy",
             "-avoid_negative_ts",
             "make_zero",
+            "-y",
             f"{filename}_nosub.mp4",
         ]
         print(shjoin(coms))
@@ -688,9 +691,32 @@ class Clip(commands.Cog):
             *coms, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE
         )
         stdout, stderr = await process.communicate()
-        sub_name = re.findall(
-            r"(?<=Writing video subtitles to: ).+", stdout.decode("utf-8")
-        )[0]
+        try:
+          sub_name = re.findall(
+              r"(?<=Writing video subtitles to: ).+", stdout.decode("utf-8")
+          )[0]
+        except:
+          coms = [
+              "yt-dlp",
+              "--sub-lang",
+              "en-US",
+              "--sub-format",
+              "srv3",
+              "--write-sub",
+              "--skip-download",
+              link,
+          ]
+          process = await asyncio.create_subprocess_exec(
+              *coms, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE
+          )
+          stdout, stderr = await process.communicate()          
+          try:
+            sub_name = re.findall(
+                r"(?<=Writing video subtitles to: ).+", stdout.decode("utf-8")
+            )[0]     
+          except:
+            await message.edit(content="I give up. I dunno man...")
+            return
         await message.edit(content="Converting subs...")
         coms = ["mono", "ytsubconverter/YTSubConverter.exe", sub_name]
         process = await asyncio.create_subprocess_exec(
