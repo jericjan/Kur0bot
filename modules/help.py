@@ -469,6 +469,14 @@ class Help(commands.Cog):
         await ctx.send(embed=em)
 
     @help.command()
+    async def believeit(self, ctx):
+        em = disnake.Embed(
+            title="Naruto - Believe it!",
+            description="Plays Naruto saying \"Believe it!\" in VC. 82 variations.",
+        )
+        await ctx.send(embed=em)
+  
+    @help.command()
     async def pet(self, ctx):
         em = disnake.Embed(
             title="Pet user",
