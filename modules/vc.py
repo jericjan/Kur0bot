@@ -50,8 +50,11 @@ class Vc(commands.Cog):
                 f"{ctx.author.name} is not in a VC. Sending file instead...",
                 delete_after=3,
             )
+
+            if isRandom == True:
+              a = random.choice(a)         
             print(f"playing {a}")
-            print(f"filename is: {a.split('/')[-1]}")
+            print(f"filename is: {a.split('/')[-1]}")              
             await ctx.send(file=disnake.File(a, filename=a.split("/")[-1]))
         # Delete command after the audio is done playing.
         await ctx.message.delete()
