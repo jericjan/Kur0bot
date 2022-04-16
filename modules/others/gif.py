@@ -8,9 +8,9 @@ from datetime import datetime, timedelta
 import io
 import os
 import disnake
-import functools
-import requests
-
+import uuid
+import glob
+import shutil
 limiter = AsyncLimiter(1, 1)
 
 
@@ -141,7 +141,7 @@ class Gif(commands.Cog):
                         except:
                             if not filename.endswith("gif"):
                                 await message.edit(
-                                    content=f"Uh, I couldn't find the duration of vod. idk man."
+                                    content="Uh, I couldn't find the duration of vod. idk man."
                                 )
         else:
             await ctx.send(
@@ -151,110 +151,9 @@ class Gif(commands.Cog):
         await message.delete()
         os.remove(new_filename)
 
-    # MOVED TO VID2GIF REPO
-    # @commands.command(aliases=['vid2gif2','gifify2'])
-    # async def gif2(self, ctx, link=None):
-    #     uuid_id = uuid.uuid4()
-    #     if link == None:
-    #         print(ctx.message.attachments)  # a list
-    #         print(ctx.message.reference)
-    #         if ctx.message.attachments:  # message has images
-    #             print("is attachment")
-    #             link = ctx.message.attachments[0].url
-    #         elif ctx.message.reference is not None:  # message is replying
-    #             print("is reply")
-    #             id = ctx.message.reference.message_id
-    #             msg = await ctx.channel.fetch_message(id)
-    #             if msg.attachments:  # if replied has image
-    #                 link = msg.attachments[0].url
-    #             elif msg.embeds:  # if replied has link
-    #                 link = msg.embeds[0].url
-
-    #     if link == None:  # check again
-    #         await ctx.send("Bruh, there's nothing there. what am i supposed to do?")
-    #         return
-
-    #     filename = link.split("/")[-1]
-    #     new_filename = ''.join(filename.split('.')[:-1])+".gif"
-    #     if re.search(r".+\.mp4|.+\.mkv|.+\.mov|.+\.webm", filename) is not None:
-    #                 # r = requests.get(link)
-    #                 # vid = io.BytesIO(r.content)
-    #                 # vid.seek(0)
-    #                 frames_folder = f"frames_{uuid_id}"
-    #                 os.mkdir(f"{frames_folder}/")
-    #                 frames_path = f"{frames_folder}/frame%04d.png"
-
-    #                 coms = [
-    #                     "ffmpeg",
-    #                     "-i",
-    #                     link,
-    #                     frames_path
-    #                 ]
-    #                 message = await ctx.send("Extracting frames...")
-    #                 process = await asyncio.create_subprocess_exec(
-    #                     *coms, stdout=subprocess.PIPE, stderr=subprocess.STDOUT
-    #                 )
-    #                 stdout, stderr = await process.communicate()
-    #                 print("FFMPEGGGG")
-    #                 print(stdout.decode("utf-8"))
-    #                 if stderr is not None:
-    #                   await ctx.send(stderr.decode('utf-8'))
-    #                 gif_ski_frames_path = f"{frames_folder}/frame*.png"
-    #                 gif_ski_frames_path = glob.glob(gif_ski_frames_path)
-    #                # gif_ski_frames_path = ' '.join(gif_ski_frames_path)
-    #                 await message.edit(content="Making gif...")
-    #                 coms = [
-    #                     "gifski_/gifski",
-    #                     "--output",
-    #                     new_filename
-    #                 ]
-    #                 coms = coms + gif_ski_frames_path
-    #                 #print(shlex.join(coms))
-    #                 process = await asyncio.create_subprocess_exec(
-    #                     *coms,stdout=subprocess.PIPE,                                           stderr=subprocess.STDOUT
-    #                 )
-    #                 stdout, stderr = await process.communicate()
-    #                 print("GIFSKI")
-    #                 print(stdout.decode("utf-8"))
-    #                 if stderr is not None:
-    #                   await ctx.send(stderr.decode('utf-8'))
-    #                 # vid.close()
-    #                 await message.edit(content="Sending...")
-    #                 try:
-    #                   await ctx.send(file=disnake.File(new_filename))
-    #                 except disnake.HTTPException as e:
-    #                   if e.status == 413:
-    #                     await ctx.send("Too large for server. Sending somewhere else..")
-    #                     coms = ['curl','--upload-file',new_filename,f"https://transfer.sh/{new_filename}"]
-    #                     process = await asyncio.create_subprocess_exec(
-    #                         *coms,stdout=subprocess.PIPE,                                                        stderr=subprocess.STDOUT)
-    #                     stdout, stderr = await process.communicate()
-    #                     link = stdout.decode('utf-8').splitlines()[-1]
-    #                     await ctx.send(link)
-    #                 os.remove(new_filename)
-    #                 shutil.rmtree(f"{frames_folder}/")
-
-    def run_in_executor(f):
-        @functools.wraps(f)
-        async def inner(*args, **kwargs):
-            loop = asyncio.get_running_loop()
-            return await loop.run_in_executor(None, lambda: f(*args, **kwargs))
-
-        return inner
-
-    def legacy_blocking_function(self, url, channel_id, msg_id):
-        requests.get(
-            f"https://vid2gif.jericjanjan.repl.co/gif?url={url}&channel_id={channel_id}&msg_id={msg_id}"
-        )
-
-    @run_in_executor
-    def foo(self, url, channel_id, msg_id):  # Your wrapper for async use
-        self.legacy_blocking_function(url, channel_id, msg_id)
-        return
-
-    @commands.command(aliases=["vid2gif2", "gifify2"])
+    @commands.command(aliases=['vid2gif2','gifify2'])
     async def gif2(self, ctx, link=None):
-
+        uuid_id = uuid.uuid4()
         if link == None:
             print(ctx.message.attachments)  # a list
             print(ctx.message.reference)
@@ -273,12 +172,69 @@ class Gif(commands.Cog):
         if link == None:  # check again
             await ctx.send("Bruh, there's nothing there. what am i supposed to do?")
             return
-        channel_id = ctx.channel.id
 
-        message = await ctx.send("Extracting frames...")
-        msg_id = message.id
-        await self.foo(link, channel_id, msg_id)
-        await ctx.send("DONE!")
+        filename = link.split("/")[-1]
+        new_filename = ''.join(filename.split('.')[:-1])+".gif"
+        if re.search(r".+\.mp4|.+\.mkv|.+\.mov|.+\.webm", filename) is not None:
+                    # r = requests.get(link)
+                    # vid = io.BytesIO(r.content)
+                    # vid.seek(0)
+                    frames_folder = f"frames_{uuid_id}"
+                    os.mkdir(f"{frames_folder}/")
+                    frames_path = f"{frames_folder}/frame%04d.png"
+
+                    coms = [
+                        "ffmpeg",
+                        "-i",
+                        link,
+                        frames_path
+                    ]
+                    message = await ctx.send("Extracting frames...")
+                    process = await asyncio.create_subprocess_exec(
+                        *coms, stdout=subprocess.PIPE, stderr=subprocess.STDOUT
+                    )
+                    stdout, stderr = await process.communicate()
+                    print("FFMPEGGGG")
+                    print(stdout.decode("utf-8"))
+                    if stderr is not None:
+                      await ctx.send(stderr.decode('utf-8'))
+                    gif_ski_frames_path = f"{frames_folder}/frame*.png"
+                    gif_ski_frames_path = glob.glob(gif_ski_frames_path)
+                   # gif_ski_frames_path = ' '.join(gif_ski_frames_path)
+                    await message.edit(content="Making gif...")
+                    coms = [
+                        "gifski_/gifski",
+                        "--output",
+                        new_filename
+                    ]
+                    coms = coms + gif_ski_frames_path
+                    #print(shlex.join(coms))
+                    process = await asyncio.create_subprocess_exec(
+                        *coms,stdout=subprocess.PIPE,stderr=subprocess.STDOUT
+                    )
+                    stdout, stderr = await process.communicate()
+                    print("GIFSKI")
+                    print(stdout.decode("utf-8"))
+                    if stderr is not None:
+                      await ctx.send(stderr.decode('utf-8'))
+                    # vid.close()
+                    await message.edit(content="Sending...")
+                    try:
+                      await ctx.send(file=disnake.File(new_filename))
+                    except disnake.HTTPException as e:
+                      if e.status == 413:
+                        await ctx.send("Too large for server. Sending somewhere else..")
+                        coms = ['curl','--upload-file',new_filename,f"https://transfer.sh/{new_filename}"]
+                        process = await asyncio.create_subprocess_exec(
+                            *coms,stdout=subprocess.PIPE,stderr=subprocess.STDOUT)
+                        stdout, stderr = await process.communicate()
+                        link = stdout.decode('utf-8').splitlines()[-1]
+                        await ctx.send(link)
+                    os.remove(new_filename)
+                    shutil.rmtree(f"{frames_folder}/")
+
+
+        
 
 
 def setup(client):

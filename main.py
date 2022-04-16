@@ -33,6 +33,9 @@ import signal
 
 import importlib
 
+from dotenv import load_dotenv
+load_dotenv()
+
 
 def goodbye(a=None, b=None):
     print("Exiting...")

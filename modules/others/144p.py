@@ -270,7 +270,7 @@ class lowQual(commands.Cog):
                         except:
                             if not filename.endswith("gif"):
                                 await message.edit(
-                                    content=f"Uh, I couldn't find the duration of vod. idk man."
+                                    content="Uh, I couldn't find the duration of vod. idk man."
                                 )
             os.remove(tempname)
 

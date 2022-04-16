@@ -398,7 +398,7 @@ class Download(commands.Cog):
                 response = await proc.stdout.read()
                 response = response.decode("utf-8")
                 await message.edit(content=response)
-                await ctx.send(f"epic fail <a:trollplane:934777423881445436>")
+                await ctx.send("epic fail <a:trollplane:934777423881445436>")
                 return
             await message.edit(content="Almost there...")
             out2 = await asyncio.create_subprocess_exec(

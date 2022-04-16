@@ -21,7 +21,7 @@ class EmoteSticker(commands.Cog):
             emojistr = str(emoji)
             emoji_list.append(emojistr)
         if emoji is None:
-            oof = await ctx.send(f"Invalid emoji name.")
+            oof = await ctx.send("Invalid emoji name.")
             await asyncio.sleep(3)
             await oof.delete()
             await ctx.message.delete()

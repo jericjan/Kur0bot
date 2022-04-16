@@ -5,3 +5,4 @@ console_log.txt
 log.txt
 /.ssh/
 /ytsubconverter/
+.env

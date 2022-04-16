@@ -20,7 +20,7 @@ class Pet(commands.Cog):
                 dest.seek(0)
                 webhook = await ctx.channel.create_webhook(name=ctx.message.author.name)
                 await webhook.send(
-                    file=disnake.File(dest, filename=f"petpet.gif"),
+                    file=disnake.File(dest, filename="petpet.gif"),
                     username=ctx.message.author.name,
                     avatar_url=ctx.message.author.display_avatar.url,
                 )
@@ -39,7 +39,7 @@ class Pet(commands.Cog):
             dest.seek(0)
             webhook = await ctx.channel.create_webhook(name=ctx.message.author.name)
             await webhook.send(
-                file=disnake.File(dest, filename=f"petpet.gif"),
+                file=disnake.File(dest, filename="petpet.gif"),
                 username=ctx.message.author.name,
                 avatar_url=ctx.message.author.display_avatar.url,
             )

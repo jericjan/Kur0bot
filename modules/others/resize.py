@@ -4,20 +4,18 @@ import disnake
 # from selenium import webdriver
 # from selenium.webdriver.chrome.options import Options
 # from selenium.webdriver.support.ui import Select
-import os
-import uuid
+
 import asyncio
-from arsenic import get_session, keys, browsers, services
-import re
-from PIL import Image, ImageDraw, ImageFont, ImageOps
+
+from PIL import Image
 import io
 import requests
-from pilmoji import Pilmoji
 
-from tqdm import tqdm
+
+
 import functools
 from aiolimiter import AsyncLimiter
-import shlex
+
 
 limiter = AsyncLimiter(1, 1)
 
@@ -86,6 +84,7 @@ class Resize(commands.Cog):
         await ctx.send(file=disnake.File(bruh, filename=filename))
         bruh.close()
         await message.delete()
+        await ctx.message.delete()
 
     @commands.command()
     async def rs(self, ctx, link=None):
@@ -121,6 +120,7 @@ class Resize(commands.Cog):
         await ctx.send(file=disnake.File(bruh, filename=filename))
         bruh.close()
         await message.delete()
+        await ctx.message.delete()
 
 def setup(client):
     client.add_cog(Resize(client))
