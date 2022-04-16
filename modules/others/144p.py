@@ -74,11 +74,28 @@ class lowQual(commands.Cog):
         else:
             filename = link.split("/")[-1]
         if re.search(r".+\.mp4|.+\.mkv|.+\.mov|.+\.webm|.+\.gif", filename) is not None:
+            # remuxes so it works with troll long videos, magic.
+            muxname = re.sub(r"(.+(?=\..+))", r"\g<1>_mux", filename)
+            coms = [
+                "ffmpeg-git/ffmpeg",
+                "-i",
+                link,
+                "-c:v",
+                "copy",
+                "-c:a",
+                "copy",
+                muxname,
+            ]
+            process = await asyncio.create_subprocess_exec(
+                *coms, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE
+            )
+            stdout, stderr = await process.communicate()
+
             tempname = re.sub(r"(.+(?=\..+))", r"\g<1>01", filename)
             coms = [
                 "ffmpeg",
                 "-i",
-                link,
+                muxname,
                 "-vf",
                 "scale=-2:20:flags=neighbor",
                 "-b:v",
@@ -105,11 +122,11 @@ class lowQual(commands.Cog):
                 full_line += linedec
                 # print(linedec)
                 if (
-                    re.search(r"(?<=Duration: )\d{2}:\d{2}:\d{2}.\d{2}", full_line)
+                    re.search(r"(?<=Duration: )\d{2,}:\d{2}:\d{2}.\d{2}", full_line)
                     is not None
                 ):
                     duration_str = re.findall(
-                        r"(?<=Duration: )\d{2}:\d{2}:\d{2}.\d{2}", full_line
+                        r"(?<=Duration: )\d{2,}:\d{2}:\d{2}.\d{2}", full_line
                     )[-1]
                     # print(f"Duration is {duration_str}")
                     strpcurr = datetime.strptime(duration_str, "%H:%M:%S.%f")
@@ -120,16 +137,16 @@ class lowQual(commands.Cog):
                         microseconds=strpcurr.microsecond,
                     )
                 if (
-                    re.search(r"(?<=time=)\d{2}:\d{2}:\d{2}.\d{2}", full_line)
+                    re.search(r"(?<=time=)\d{2,}:\d{2}:\d{2}.\d{2}", full_line)
                     is not None
                 ):
                     # print(linedec)
                     if (
-                        re.findall(r"(?<=time=)\d{2}:\d{2}:\d{2}.\d{2}", full_line)[-1]
+                        re.findall(r"(?<=time=)\d{2,}:\d{2}:\d{2}.\d{2}", full_line)[-1]
                         != "00:00:00.00"
                     ):
                         currtime_str = re.findall(
-                            r"(?<=time=)\d{2}:\d{2}:\d{2}.\d{2}", full_line
+                            r"(?<=time=)\d{2,}:\d{2}:\d{2}.\d{2}", full_line
                         )[-1]
                         # print(f"Current time is {currtime_str}")
                         strpcurr = datetime.strptime(currtime_str, "%H:%M:%S.%f")
@@ -161,12 +178,12 @@ class lowQual(commands.Cog):
                                 f"Downscaling...\n{round(percentage, 2)}% complete...\n`{aaa}`<a:ameroll:941314708022128640>"
                             )
                             asyncio.ensure_future(self.updatebar(message))
-                        except:
+                        except Exception as e:
                             if not filename.endswith("gif"):
                                 await message.edit(
-                                    content=f"Uh, I couldn't find the duration of vod. idk man."
+                                    content=f"Uh, I couldn't find the duration of vod. idk man.\nException: {e}"
                                 )
-
+            os.remove(muxname)
             coms = [
                 "ffmpeg",
                 "-i",
@@ -194,11 +211,11 @@ class lowQual(commands.Cog):
                 full_line += linedec
                 # print(linedec)
                 if (
-                    re.search(r"(?<=Duration: )\d{2}:\d{2}:\d{2}.\d{2}", full_line)
+                    re.search(r"(?<=Duration: )\d{2,}:\d{2}:\d{2}.\d{2}", full_line)
                     is not None
                 ):
                     duration_str = re.findall(
-                        r"(?<=Duration: )\d{2}:\d{2}:\d{2}.\d{2}", full_line
+                        r"(?<=Duration: )\d{2,}:\d{2}:\d{2}.\d{2}", full_line
                     )[-1]
                     # print(f"Duration is {duration_str}")
                     strpcurr = datetime.strptime(duration_str, "%H:%M:%S.%f")
@@ -209,16 +226,16 @@ class lowQual(commands.Cog):
                         microseconds=strpcurr.microsecond,
                     )
                 if (
-                    re.search(r"(?<=time=)\d{2}:\d{2}:\d{2}.\d{2}", full_line)
+                    re.search(r"(?<=time=)\d{2,}:\d{2}:\d{2}.\d{2}", full_line)
                     is not None
                 ):
                     # print(linedec)
                     if (
-                        re.findall(r"(?<=time=)\d{2}:\d{2}:\d{2}.\d{2}", full_line)[-1]
+                        re.findall(r"(?<=time=)\d{2,}:\d{2}:\d{2}.\d{2}", full_line)[-1]
                         != "00:00:00.00"
                     ):
                         currtime_str = re.findall(
-                            r"(?<=time=)\d{2}:\d{2}:\d{2}.\d{2}", full_line
+                            r"(?<=time=)\d{2,}:\d{2}:\d{2}.\d{2}", full_line
                         )[-1]
                         # print(f"Current time is {currtime_str}")
                         strpcurr = datetime.strptime(currtime_str, "%H:%M:%S.%f")
@@ -257,7 +274,8 @@ class lowQual(commands.Cog):
                                 )
             os.remove(tempname)
 
-        elif re.search(r".+\.jpg|.+\.jpeg|.+\.png", filename) is not None:
+        elif re.search(r".+\.jpg|.+\.jpeg|.+\.png|.+\.webp", filename) is not None:
+            filename = filename.split("?")[0]
             tempname = re.sub(r"(.+(?=\..+))", r"\g<1>01", filename)
             coms = [
                 "ffmpeg",
@@ -294,6 +312,7 @@ class lowQual(commands.Cog):
             await ctx.send(
                 "I don't support this filetype yet ig. Ping kur0 or smth. <:towashrug:853606191711649812> "
             )
+            return
         await ctx.send(file=disnake.File(filename))
         await message.delete()
         os.remove(filename)

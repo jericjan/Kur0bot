@@ -472,10 +472,36 @@ class Help(commands.Cog):
     async def believeit(self, ctx):
         em = disnake.Embed(
             title="Naruto - Believe it!",
-            description="Plays Naruto saying \"Believe it!\" in VC. 82 variations.",
+            description='Plays Naruto saying "Believe it!" in VC. 82 variations.',
         )
         await ctx.send(embed=em)
-  
+
+    @help.command()
+    async def pikamee(self, ctx):
+        em = disnake.Embed(
+            title="pikamee is insane",
+            description='Plays a clip of Pikamee saying "Pikamee, how are you doing? I feel awesome. I killed everyone but I feel awesome."',
+        )
+        await ctx.send(embed=em)
+
+    @help.command(aliases=["hellskitchen", "violin"])
+    async def waterphone(self, ctx):
+        em = disnake.Embed(
+            title="Hell's Kitchen SFX",
+            description="Plays the Hell's Kitchen sound effect.",
+        )
+        em.add_field(name="**Aliases**", value=",".join(ctx.command.aliases))
+        await ctx.send(embed=em)
+
+    @help.command(aliases=["boo-womp"])
+    async def boowomp(self, ctx):
+        em = disnake.Embed(
+            title="Boo-womp!",
+            description="Plays the boo-womp sound effect that they play on Spongebob when something sad happens.",
+        )
+        em.add_field(name="**Aliases**", value=",".join(ctx.command.aliases))
+        await ctx.send(embed=em)
+
     @help.command()
     async def pet(self, ctx):
         em = disnake.Embed(
@@ -622,6 +648,18 @@ class Help(commands.Cog):
             value="k.gif2 <video_url>\nUpload video with k.gif2\nReply to a video with k.gif2 ",
         )
         em.add_field(name="**Aliases**", value=",".join(ctx.command.aliases))
+        await ctx.send(embed=em)
+
+    @help.command()
+    async def resize(self, ctx):
+        em = disnake.Embed(
+            title="Resize image",
+            description="Resizes an image to a given resolution",
+        )
+        em.add_field(
+            name="**Syntax**",
+            value="k.resize <width> <height> <link>\nYou can also leave <link> blank and just upload or reply to an image.",
+        )
         await ctx.send(embed=em)
 
 

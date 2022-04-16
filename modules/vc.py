@@ -14,7 +14,7 @@ class Vc(commands.Cog):
         self.client = client
 
     async def vcplay(self, ctx, a, loop=None, isRandom=None):
-   
+
         voicestate = ctx.author.voice
         if voicestate:
             voice_channel = ctx.author.voice.channel
@@ -26,22 +26,22 @@ class Vc(commands.Cog):
                 voice = await voice_channel.connect()
             if loop == "loop":
 
-                    def loop():
-                      if isRandom == True:
-                        b = random.choice(a)  
+                def loop():
+                    if isRandom == True:
+                        b = random.choice(a)
                         voice.play(
                             disnake.FFmpegPCMAudio(source=b), after=lambda e: loop()
-                        )                        
-                      else:
-                        
+                        )
+                    else:
+
                         voice.play(
                             disnake.FFmpegPCMAudio(source=a), after=lambda e: loop()
                         )
 
-                    loop()
+                loop()
             else:
                 if isRandom == True:
-                  a = random.choice(a)                  
+                    a = random.choice(a)
                 voice.play(disnake.FFmpegPCMAudio(source=a))
 
         else:
@@ -52,9 +52,9 @@ class Vc(commands.Cog):
             )
 
             if isRandom == True:
-              a = random.choice(a)         
+                a = random.choice(a)
             print(f"playing {a}")
-            print(f"filename is: {a.split('/')[-1]}")              
+            print(f"filename is: {a.split('/')[-1]}")
             await ctx.send(file=disnake.File(a, filename=a.split("/")[-1]))
         # Delete command after the audio is done playing.
         await ctx.message.delete()
@@ -194,7 +194,7 @@ class Vc(commands.Cog):
 
     @commands.command()
     async def totsugeki(self, ctx, loop=None):
-        await self.vcplay(ctx, may_sounds, loop, True)      
+        await self.vcplay(ctx, may_sounds, loop, True)
 
     @commands.command(aliases=["bong"])
     async def tacobell(self, ctx, loop=None):
@@ -234,8 +234,22 @@ class Vc(commands.Cog):
 
     @commands.command()
     async def believeit(self, ctx, loop=None):
-        believeit_files = os.listdir('sounds/believeit/')
+        believeit_files = os.listdir("sounds/believeit/")
         believeit_files = [f"sounds/believeit/{x}" for x in believeit_files]
         await self.vcplay(ctx, believeit_files, loop, True)
+
+    @commands.command()
+    async def pikamee(self, ctx, loop=None):
+        await self.vcplay(ctx, "sounds/pikamee.mp3", loop)
+
+    @commands.command(aliases=["hellskitchen", "violin"])
+    async def waterphone(self, ctx, loop=None):
+        await self.vcplay(ctx, "sounds/waterphone.mp3", loop)
+
+    @commands.command(aliases=["boo-womp"])
+    async def boowomp(self, ctx, loop=None):
+        await self.vcplay(ctx, "sounds/boowomp.mp3", loop)
+
+
 def setup(client):
     client.add_cog(Vc(client))

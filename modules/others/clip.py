@@ -101,7 +101,7 @@ class Clip(commands.Cog):
                 "copy",
                 "-c:a",
                 "copy",
-                "-y",
+                "-movflags faststart" "-y",
                 f"{filename}_temp0.mp4",
             ]
         print(shjoin(coms))
@@ -542,7 +542,7 @@ class Clip(commands.Cog):
         round_number = 1
         round_frames = False
         seconds_earlier = 0
-      
+
         if seconds < 30:
             if round_frames == True:
                 keyframe = round_down(max_le(timelist_float, seconds), round_number)
@@ -692,31 +692,31 @@ class Clip(commands.Cog):
         )
         stdout, stderr = await process.communicate()
         try:
-          sub_name = re.findall(
-              r"(?<=Writing video subtitles to: ).+", stdout.decode("utf-8")
-          )[0]
-        except:
-          coms = [
-              "yt-dlp",
-              "--sub-lang",
-              "en-US",
-              "--sub-format",
-              "srv3",
-              "--write-sub",
-              "--skip-download",
-              link,
-          ]
-          process = await asyncio.create_subprocess_exec(
-              *coms, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE
-          )
-          stdout, stderr = await process.communicate()          
-          try:
             sub_name = re.findall(
                 r"(?<=Writing video subtitles to: ).+", stdout.decode("utf-8")
-            )[0]     
-          except:
-            await message.edit(content="I give up. I dunno man...")
-            return
+            )[0]
+        except:
+            coms = [
+                "yt-dlp",
+                "--sub-lang",
+                "en-US",
+                "--sub-format",
+                "srv3",
+                "--write-sub",
+                "--skip-download",
+                link,
+            ]
+            process = await asyncio.create_subprocess_exec(
+                *coms, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE
+            )
+            stdout, stderr = await process.communicate()
+            try:
+                sub_name = re.findall(
+                    r"(?<=Writing video subtitles to: ).+", stdout.decode("utf-8")
+                )[0]
+            except:
+                await message.edit(content="I give up. I dunno man...")
+                return
         await message.edit(content="Converting subs...")
         coms = ["mono", "ytsubconverter/YTSubConverter.exe", sub_name]
         process = await asyncio.create_subprocess_exec(
@@ -1199,7 +1199,15 @@ class Clip(commands.Cog):
         if os.path.isfile(f"{filename}.mp4"):
             os.remove(f"{filename}.mp4")
         message = await ctx.send("Fetching url...")
-        coms = ["yt-dlp", "-g", "-f", "best", "--youtube-skip-dash-manifest", link]
+        coms = [
+            "yt-dlp",
+            "-g",
+            "-f",
+            "best",
+            "--no-warnings",
+            "--youtube-skip-dash-manifest",
+            link,
+        ]
         print(shjoin(coms))
         startsplit = start.split(":")
         shour = startsplit[0]

@@ -116,7 +116,12 @@ class Download(commands.Cog):
                     filename = thing.decode("utf-8").split("\n")[0]
                     await message.edit(content="Sending video...")
                     try:
-                        await ctx.send(file=disnake.File(filename))
+                        if filename.endswith(".mp4"):
+                            await ctx.send(file=disnake.File(filename))
+                        else:
+                            await ctx.send(
+                                file=disnake.File(filename, f"{filename}.mp4")
+                            )
                     except Exception as e:
                         await ctx.send(e)
                         await ctx.send(type(e).__name__)
@@ -389,6 +394,12 @@ class Download(commands.Cog):
                 self.pbar_list.append(line.decode("utf-8"))
                 asyncio.ensure_future(self.updatebar(message))
                 await asyncio.sleep(1)
+            if proc.returncode != 0:
+                response = await proc.stdout.read()
+                response = response.decode("utf-8")
+                await message.edit(content=response)
+                await ctx.send(f"epic fail <a:trollplane:934777423881445436>")
+                return
             await message.edit(content="Almost there...")
             out2 = await asyncio.create_subprocess_exec(
                 *coms2, stdout=subprocess.PIPE, stderr=subprocess.STDOUT

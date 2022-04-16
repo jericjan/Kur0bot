@@ -36,7 +36,8 @@
     "superchat",
     "oldsuperchat",
     "gif",
-    "gif2"
+    "gif2",
+    "resize"
   ],
   "reactions": [
     "fmega",
@@ -78,7 +79,10 @@
     "vsauce",
     "gigachad",
     "bruh",
-    "believeit"
+    "believeit",
+    "pikamee",
+    "waterphone",
+    "boowomp"
   ],
   "TTS": [
     "just do ] while in VC (\"k.help tts\" for more info)"
