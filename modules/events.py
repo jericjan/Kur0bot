@@ -44,6 +44,8 @@ sugoma_replies = ["sugoma balls!! hahahaaaaa", "sugoma.... sugoma balls!!!!!!!"]
 
 custom_words = ["amgus", "amogus", "sushi", "pog"]
 
+deez_replies = ["can i put my balls in yo jaws", "ong fr?","ligma","updog","my name jef"]
+
 # hidden_commands = [
 #     "addoffline",
 #     "makeembed",
@@ -339,6 +341,10 @@ class Events(commands.Cog):
                 print("It is Friday... in California. SHOOT!")
                 await message.channel.send(file=disnake.File("videos/friday.webm"))
 
+        if any(word in msg for word in ['deez','deez nuts']):
+                await message.channel.send(
+                    random.choice(deez_replies), delete_after=3.0
+                )            
     ################################ON_COMMAND_ERROR#############
     @commands.Cog.listener()
     async def on_command_error(self, ctx, error):

@@ -69,7 +69,7 @@ class Kur0only(commands.Cog):
             "wget",
             os.getenv("RCLONE_CONFIG_URL"),
             "-O",
-            "/config/rclone/rclone.conf",
+            "/home/kur0/.config/rclone/rclone.conf",
         ]
         out = await asyncio.create_subprocess_exec(
             *coms, stdout=subprocess.PIPE, stderr=subprocess.STDOUT
