@@ -101,7 +101,9 @@ class Clip(commands.Cog):
                 "copy",
                 "-c:a",
                 "copy",
-                "-movflags faststart" "-y",
+                "-movflags",
+                "faststart",
+                "-y",
                 f"{filename}_temp0.mp4",
             ]
         print(shjoin(coms))

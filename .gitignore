@@ -6,3 +6,4 @@ log.txt
 /.ssh/
 /ytsubconverter/
 .env
+nohup.out
