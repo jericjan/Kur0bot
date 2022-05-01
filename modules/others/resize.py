@@ -12,7 +12,6 @@ import io
 import requests
 
 
-
 import functools
 from aiolimiter import AsyncLimiter
 
@@ -121,6 +120,7 @@ class Resize(commands.Cog):
         bruh.close()
         await message.delete()
         await ctx.message.delete()
+
 
 def setup(client):
     client.add_cog(Resize(client))

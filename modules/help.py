@@ -645,7 +645,7 @@ class Help(commands.Cog):
         )
         em.add_field(
             name="**Syntax**",
-            value="k.gif2 <video_url>\nUpload video with k.gif2\nReply to a video with k.gif2 ",
+            value="k.gif2 <video_url>\nUpload video with k.gif2\nReply to a video with k.gif2 \n\nOptional: you can add include quality (1-100) at the end of the command. Default: 70",
         )
         em.add_field(name="**Aliases**", value=",".join(ctx.command.aliases))
         await ctx.send(embed=em)
