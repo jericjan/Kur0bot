@@ -114,14 +114,13 @@ class Download(commands.Cog):
                 try:
                     thing = await out2.stdout.read()
                     filename = thing.decode("utf-8").split("\n")[0]
+                    clean_name = filename.replace(",","")
                     await message.edit(content="Sending video...")
                     try:
                         if filename.endswith(".mp4"):
-                            await ctx.send(file=disnake.File(filename))
+                            await ctx.send(file=disnake.File(filename,filename=clean_name))
                         else:
-                            await ctx.send(
-                                file=disnake.File(filename, f"{filename}.mp4")
-                            )
+                            await ctx.send(file=disnake.File(filename,filename=f"{clean_name}.mp4"))
                     except Exception as e:
                         await ctx.send(e)
                         await ctx.send(type(e).__name__)
@@ -195,10 +194,11 @@ class Download(commands.Cog):
                 try:
                     thing = await out2.stdout.read()
                     filename = thing.decode("utf-8").split("\n")[-2]
+                    clean_name = filename.replace(",","")
                     print(thing.decode("utf-8"))
                     await message.edit(content="Sending video...")
                     try:
-                        await ctx.send(file=disnake.File(filename))
+                        await ctx.send(file=disnake.File(filename,filename=clean_name))
                     except Exception as e:
                         await ctx.send(e)
                 except disnake.HTTPException:
@@ -244,9 +244,10 @@ class Download(commands.Cog):
                 try:
                     thing = await out2.stdout.read()
                     filename = thing.decode("utf-8").split("\n")[0]
+                    clean_name = filename.replace(",","")
                     await message.edit(content="Sending video...")
                     try:
-                        await ctx.send(file=disnake.File(filename))
+                        await ctx.send(file=disnake.File(filename,filename=clean_name))
                     except Exception as e:
                         await ctx.send(e)
                 except disnake.HTTPException:
@@ -273,6 +274,7 @@ class Download(commands.Cog):
             json_dict = json.loads(json_str)
             bilibili_id = json_dict["webpage_url_basename"]
             filename = f"bilibili_{bilibili_id}.mp4"
+            clean_name = filename.replace(",","")
             coms2 = ["ffmpeg", "-i", url, "-c", "copy", "-y", filename]
             out2 = await asyncio.create_subprocess_exec(
                 *coms2, stdout=subprocess.PIPE, stderr=subprocess.STDOUT
@@ -284,7 +286,7 @@ class Download(commands.Cog):
 
                     await message.edit(content="Sending video...")
                     try:
-                        await ctx.send(file=disnake.File(filename))
+                        await ctx.send(file=disnake.File(filename,filename=clean_name))
                     except Exception as e:
                         await ctx.send(e)
                 except disnake.HTTPException:
@@ -323,23 +325,21 @@ class Download(commands.Cog):
             out2 = await asyncio.create_subprocess_exec(
                 *coms2, stdout=subprocess.PIPE, stderr=subprocess.STDOUT
             )
-            while out2.returncode is None:
-                await message.edit(content="A little more...")
-            else:
+            try:
+                stdout, stderr = await out2.communicate()
+                filename = stdout.decode("utf-8").split("\n")[0]
+                clean_name = filename.replace(",","")
+                await message.edit(content="Sending video...")
                 try:
-                    thing = await out2.stdout.read()
-                    filename = thing.decode("utf-8").split("\n")[0]
-                    await message.edit(content="Sending video...")
-                    try:
-                        await ctx.send(file=disnake.File(filename))
-                    except Exception as e:
-                        await ctx.send(e)
-                except disnake.HTTPException:
-                    await ctx.send(
-                        "File too large, broski <:towashrug:853606191711649812>"
-                    )
+                    await ctx.send(file=disnake.File(filename,filename=clean_name))
                 except Exception as e:
-                    await message.edit(content=e)
+                    await ctx.send(e)
+            except disnake.HTTPException:
+                await ctx.send(
+                    "File too large, broski <:towashrug:853606191711649812>"
+                )
+            except Exception as e:
+                await message.edit(content=e)
             os.remove(filename)
             await message.delete()
 
