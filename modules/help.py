@@ -1,7 +1,7 @@
 from disnake.ext import commands
 import disnake
 import json
-
+import os
 
 class Help(commands.Cog):
     @commands.group(invoke_without_command=True)
@@ -662,6 +662,44 @@ class Help(commands.Cog):
         )
         await ctx.send(embed=em)
 
+    def paginate(self, lines, chars=2000):
+        size = 0
+        message = []
+        for line in lines:
+            if len(line) + size > chars:
+                yield message
+                message = []
+                size = 0
+            message.append(line)
+            size += len(line)
+        yield message
 
+    @help.command()
+    async def mgr(self, ctx):
+        em = disnake.Embed(
+            title="Metal Gear Rising: Revengeance Soundboard",
+            description="Plays any MGR quote that I have. (no loop support)",
+        )
+        em.add_field(
+            name="**Syntax**",
+            value="k.mgr <sound_name>",
+        )
+        await ctx.send(embed=em)
+        
+        mgr_list = ""
+        for root, dirs, files in os.walk("sounds/mgr/", topdown=False):
+            for name in dirs:
+                mgr_list += f"**{name}:**\n"
+                mgr_list += '\n'.join([x.split(".")[0] for x in os.listdir(f"sounds/mgr/{name}")])
+                mgr_list += '\n\n'   
+        embed = disnake.Embed()
+        for index, message in enumerate(self.paginate(mgr_list)):
+            if index == 0:
+                embed.title = "Sounds (you can enter a part of the name)"
+            else:
+                embed.title = ""
+            embed.description = "".join(message)
+            await ctx.send(embed=embed)        
+        
 def setup(client):
     client.add_cog(Help(client))

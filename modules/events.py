@@ -398,7 +398,14 @@ class Events(commands.Cog):
                     await ctx.send(
                         "Your server isn't strong enough to handle the size of the file I'm sending <a:trollplant:934777423881445436>"
                     )
+                else:
+                    await ctx.send(error.original)
                 await self.log(error.original, False)
+            elif isinstance(error.original, disnake.ClientException):   
+                if str(error.original) == "Already playing audio.":
+                    await ctx.send("I'm still playing smth rn bruh. Hold on.",delete_after=3)
+                else:
+                    await ctx.send(error.original)                    
             else:
                 await ctx.send(error.original)
         else:

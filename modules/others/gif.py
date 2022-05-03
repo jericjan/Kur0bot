@@ -12,6 +12,7 @@ import uuid
 import glob
 import shutil
 import time
+import shlex 
 
 limiter = AsyncLimiter(1, 1)
 
@@ -156,11 +157,12 @@ class Gif(commands.Cog):
     @commands.command(aliases=["vid2gif2", "gifify2"])
     async def gif2(self, ctx, link=None, quality=None):
         uuid_id = uuid.uuid4()
-        if (
-            re.search(r"\d{1,3}", link) is not None
-        ):  # if link is digits 0-999. usually for when replying to message or sending vid directly.
-            quality = link
-        if quality == None:
+        if link.isdigit():  # if link is digits 1-100. usually for when replying to message or sending vid directly.
+            if int(link) in range(1,101):
+                quality = link
+            else:
+                await ctx.send("If you were trying to specify a quality. It's not valid.")
+        elif link != None and quality == None:
             quality = 70
         if link == None:
             print(ctx.message.attachments)  # a list
@@ -183,6 +185,8 @@ class Gif(commands.Cog):
 
         filename = link.split("/")[-1]
         new_filename = "".join(filename.split(".")[:-1]) + ".gif"
+        if new_filename.startswith("-"):
+            new_filename = new_filename[1:]
         if re.search(r".+\.mp4|.+\.mkv|.+\.mov|.+\.webm", filename) is not None:
             # r = requests.get(link)
             # vid = io.BytesIO(r.content)
@@ -230,14 +234,16 @@ class Gif(commands.Cog):
                 "--fps",
                 str(fps),
                 "--quality",
-                quality,
+                str(quality),
                 "--width",
                 "640",
                 "--output",
                 new_filename,
             ]
+            
             coms = coms + gif_ski_frames_path
             # print(shlex.join(coms))
+            print(shlex.join(coms))
             process = await asyncio.create_subprocess_exec(
                 *coms, stdout=subprocess.PIPE, stderr=subprocess.STDOUT
             )
@@ -248,6 +254,7 @@ class Gif(commands.Cog):
                 if not line:
                     break
                 linedec = line.decode("utf-8")
+                print(linedec)
                 full_line += linedec
                 split_full_line = full_line.split("\r")
                 time_since_edit = time.time() - edit_start
@@ -257,11 +264,11 @@ class Gif(commands.Cog):
                 else:
                     pass
 
-            stdout, stderr = await process.communicate()
+            # stdout, stderr = await process.communicate()
             print("GIFSKI")
-            print(stdout.decode("utf-8"))
-            if stderr is not None:
-                await ctx.send(stderr.decode("utf-8"))
+            # print(stdout.decode("utf-8"))
+            # if stderr is not None:
+                # await ctx.send(stderr.decode("utf-8"))
             # vid.close()
             await message.edit(content="Sending...")
             try:

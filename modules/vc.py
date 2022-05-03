@@ -5,6 +5,7 @@ from disnake.ext import commands
 import disnake
 import random
 import os
+import asyncio
 
 may_sounds = ["sounds/totsugeki_7UWR0L4.mp3", "sounds/totsugeki-may-2.mp3"]
 
@@ -249,6 +250,47 @@ class Vc(commands.Cog):
     @commands.command(aliases=["boo-womp"])
     async def boowomp(self, ctx, loop=None):
         await self.vcplay(ctx, "sounds/boowomp.mp3", loop)
+
+
+
+    @commands.command()
+    async def mgr(self, ctx, *, name):
+        loop = None
+        matches = []
+        for root, dirs, files in os.walk("sounds/mgr/", topdown=False):
+            for x in files:    
+                if any(word in x for word in [name]):    
+                    matches.append(os.path.join(root,x))                
+        
+       
+        #matches = difflib.get_close_matches(name, mgr_files,cutoff=0.5)
+        if matches:
+            numbered_mgr_files = [f"{index} - {item.split('/')[-2]}: {item.split('/')[-1].split('.')[0]}" for index, item in enumerate(matches, 1)]
+            if len(matches) == 1:
+                await self.vcplay(ctx, matches[0], loop)
+            else:
+                nl = '\n'
+                msg = await ctx.send(f"{len(matches)} matches. Pick a number. YOU HAVE 10 SECONDS!!!\n`{nl.join(numbered_mgr_files)}`")
+                def check(m):
+                    return m.author == ctx.author and m.channel == ctx.channel                
+                try:
+                    await_msg = await self.client.wait_for("message", check=check, timeout=10)
+                    if int(await_msg.content) in list(range(1,len(matches)+1)):
+                        index = int(await_msg.content)-1
+                        await self.vcplay(ctx, matches[index], loop)
+                    else:
+                        await ctx.send("Invalid number!",delete_after=3)
+                        await ctx.message.delete()
+                    await await_msg.delete()    
+                except asyncio.TimeoutError:
+                    await ctx.send("Too slow lmao!",delete_after=3)
+                    await ctx.message.delete()
+                await msg.delete()    
+                # 
+        else:
+            await ctx.send("No matches lol.",delete_after=3)
+        
+        
 
 
 def setup(client):
