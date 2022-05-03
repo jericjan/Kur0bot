@@ -8,6 +8,8 @@ import glob
 import json
 from lorem.text import TextLorem
 
+from dotenv import load_dotenv
+
 
 with open("modules/commands.json") as f:
     data = json.load(f)
@@ -292,6 +294,12 @@ class Kur0only(commands.Cog):
         lorem_list = [f"{x} ({letters[i]})" for i, x in enumerate(lorem_list)]
         lorem_list = " ".join(lorem_list)
         await ctx.send(lorem_list)
+
+    @commands.command()
+    @commands.is_owner()
+    async def dotenv(self, ctx):
+        load_dotenv(override=True)
+        await ctx.send("env variables reloaded!")
 
 
 def setup(client):
