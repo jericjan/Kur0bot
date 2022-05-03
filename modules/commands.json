@@ -111,6 +111,7 @@
     "unload",
     "checkhelp",
     "ytbypass",
-    "rs"
+    "rs",
+	"dotenv"
   ]
 }
