@@ -56,7 +56,8 @@ class Vc(commands.Cog):
             if isRandom == True:
                 a = random.choice(a)
             print(f"playing {a}")
-            print(f"filename is: {a.split('/')[-1]}")
+            filename = a.split('/')[-1]
+            print(f"filename is: {filename}")
             if a.split('/')[-3] == "mgr":
                 speaker = a.split('/')[-2]
                 with open("modules/mgr_users.json") as f:
@@ -65,15 +66,23 @@ class Vc(commands.Cog):
                 
                     webhook = await ctx.channel.create_webhook(name=mgr_json[speaker]["name"])
                     await webhook.send(
-                        file=disnake.File(a, filename=a.split("/")[-1]),
+                        file=disnake.File(a, filename=filename),
                         username=mgr_json[speaker]["name"],
                         avatar_url=mgr_json[speaker]["pfp"],
                     )
-                    await webhook.delete()                            
+                    await webhook.delete()            
+                elif filename in mgr_json:
+                    webhook = await ctx.channel.create_webhook(name=mgr_json[filename]["name"])
+                    await webhook.send(
+                        file=disnake.File(a, filename=filename),
+                        username=mgr_json[filename]["name"],
+                        avatar_url=mgr_json[filename]["pfp"],
+                    )
+                    await webhook.delete()                           
                 else:
-                    await ctx.send(file=disnake.File(a, filename=a.split("/")[-1]))                                  
+                    await ctx.send(file=disnake.File(a, filename=filename))                                  
             else:
-                await ctx.send(file=disnake.File(a, filename=a.split("/")[-1]))
+                await ctx.send(file=disnake.File(a, filename=filename))
         # Delete command after the audio is done playing.
         await ctx.message.delete()
 

@@ -17,6 +17,7 @@ To do list:
 - k.supacha colers
 - k.addaudio
 - k.demotivate
+- k.mgr replace audio with videos
 
 Notes:
 
