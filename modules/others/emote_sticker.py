@@ -32,9 +32,7 @@ class EmoteSticker(commands.Cog):
             avatar_url=ctx.message.author.display_avatar.url,
         )
 
-        webhooks = await ctx.channel.webhooks()
-        for webhook in webhooks:
-            await webhook.delete()
+        await webhook.delete()
         await ctx.message.delete()
 
     @commands.command(aliases=["s"])

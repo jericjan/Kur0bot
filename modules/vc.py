@@ -6,6 +6,7 @@ import disnake
 import random
 import os
 import asyncio
+import json
 
 may_sounds = ["sounds/totsugeki_7UWR0L4.mp3", "sounds/totsugeki-may-2.mp3"]
 
@@ -56,7 +57,23 @@ class Vc(commands.Cog):
                 a = random.choice(a)
             print(f"playing {a}")
             print(f"filename is: {a.split('/')[-1]}")
-            await ctx.send(file=disnake.File(a, filename=a.split("/")[-1]))
+            if a.split('/')[-3] == "mgr":
+                speaker = a.split('/')[-2]
+                with open("modules/mgr_users.json") as f:
+                    mgr_json = json.load(f)
+                if speaker in mgr_json:
+                
+                    webhook = await ctx.channel.create_webhook(name=mgr_json[speaker]["name"])
+                    await webhook.send(
+                        file=disnake.File(a, filename=a.split("/")[-1]),
+                        username=mgr_json[speaker]["name"],
+                        avatar_url=mgr_json[speaker]["pfp"],
+                    )
+                    await webhook.delete()                            
+                else:
+                    await ctx.send(file=disnake.File(a, filename=a.split("/")[-1]))                                  
+            else:
+                await ctx.send(file=disnake.File(a, filename=a.split("/")[-1]))
         # Delete command after the audio is done playing.
         await ctx.message.delete()
 
