@@ -264,12 +264,8 @@ class Gif(commands.Cog):
                 else:
                     pass
 
-            # stdout, stderr = await process.communicate()
             print("GIFSKI")
-            # print(stdout.decode("utf-8"))
-            # if stderr is not None:
-                # await ctx.send(stderr.decode("utf-8"))
-            # vid.close()
+
             await message.edit(content="Sending...")
             try:
                 await ctx.send(file=disnake.File(new_filename))
@@ -290,7 +286,86 @@ class Gif(commands.Cog):
                     await ctx.send(link)
             os.remove(new_filename)
             shutil.rmtree(f"{frames_folder}/")
+        elif re.search(r".+\.jpg|.+\.png|.+\.webp", filename) is not None:         
+            pre_message = await ctx.send("You... want to turn an image into a gif? Uh ok then.")
+            frames_folder = f"frames_{uuid_id}"
+            os.mkdir(f"{frames_folder}/")
+            frames_path1 = f"{frames_folder}/frame1.png"
+            frames_path2 = f"{frames_folder}/frame2.png"
 
+            coms = ["ffmpeg", "-i", link, frames_path1]
+            coms2 = ["ffmpeg", "-i", link, frames_path2]
+            process = await asyncio.create_subprocess_exec(
+                *coms, stdout=subprocess.PIPE, stderr=subprocess.STDOUT
+            )
+            stdout, stderr = await process.communicate()
+            process = await asyncio.create_subprocess_exec(
+                *coms2, stdout=subprocess.PIPE, stderr=subprocess.STDOUT
+            )
+            stdout, stderr = await process.communicate()            
+            print("FFMPEGGGG")
+            print(stdout.decode("utf-8"))
+            if stderr is not None:
+                await ctx.send(stderr.decode("utf-8"))
+            gif_ski_frames_path = f"{frames_folder}/frame*.png"
+            gif_ski_frames_path = glob.glob(gif_ski_frames_path)
+            # gif_ski_frames_path = ' '.join(gif_ski_frames_path)
+            coms = [
+                "ffprobe",
+                "-v",
+                "error",
+                "-select_streams",
+                "v",
+                "-of",
+                "default=noprint_wrappers=1:nokey=1",
+                "-show_entries",
+                "stream=r_frame_rate",
+                link,
+            ]
+            message = await ctx.send("Making gif...")
+            coms = [
+                "gifski_/gifski",
+                "--output",
+                new_filename,
+            ]
+            
+            coms = coms + gif_ski_frames_path
+            # print(shlex.join(coms))
+            print(shlex.join(coms))
+            process = await asyncio.create_subprocess_exec(
+                *coms, stdout=subprocess.PIPE, stderr=subprocess.STDOUT
+            )
+            
+
+            print("GIFSKI")
+            stdout, stderr = await process.communicate()
+            print(stdout.decode('utf-8'))
+            await message.edit(content="Sending...")
+            try:
+                await ctx.send(file=disnake.File(new_filename))
+            except disnake.HTTPException as e:
+                if e.status == 413:
+                    await ctx.send("Too large for server. Sending somewhere else..")
+                    coms = [
+                        "curl",
+                        "--upload-file",
+                        new_filename,
+                        f"https://transfer.sh/{new_filename}",
+                    ]
+                    process = await asyncio.create_subprocess_exec(
+                        *coms, stdout=subprocess.PIPE, stderr=subprocess.STDOUT
+                    )
+                    stdout, stderr = await process.communicate()
+                    link = stdout.decode("utf-8").splitlines()[-1]
+                    await ctx.send(link)
+            os.remove(new_filename)
+            shutil.rmtree(f"{frames_folder}/")       
+            await message.delete()
+            await pre_message.delete()
+        else:
+            await ctx.send(
+                "I don't support this filetype yet ig. Ping kur0 or smth. <:towashrug:853606191711649812> "
+            )
 
 def setup(client):
     client.add_cog(Gif(client))
