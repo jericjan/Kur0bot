@@ -14,7 +14,10 @@ class EmoteSticker(commands.Cog):
             await ctx.send("Give an emoji name.")
             return
         emoji_list = []
-        webhook = await ctx.channel.create_webhook(name=ctx.message.author.name)
+        if isinstance(ctx.channel, disnake.TextChannel):        
+            webhook = await ctx.channel.create_webhook(name=ctx.message.author.name)
+        elif isinstance(ctx.channel, disnake.Thread):      
+            webhook = await ctx.channel.parent.create_webhook(name=ctx.message.author.name)        
         print(type(message))
         for i in range(len(message)):
             emoji = disnake.utils.get(self.client.emojis, name=message[i])
@@ -26,12 +29,18 @@ class EmoteSticker(commands.Cog):
             await oof.delete()
             await ctx.message.delete()
             return
-        await webhook.send(
-            "".join(emoji_list),
-            username=ctx.message.author.name,
-            avatar_url=ctx.message.author.display_avatar.url,
-        )
-
+        if isinstance(ctx.channel, disnake.TextChannel):               
+            await webhook.send(
+                "".join(emoji_list),
+                username=ctx.message.author.name,
+                avatar_url=ctx.message.author.display_avatar.url,
+            )
+        elif isinstance(ctx.channel, disnake.Thread):     
+            await webhook.send(
+                "".join(emoji_list),
+                username=ctx.message.author.name,
+                avatar_url=ctx.message.author.display_avatar.url,thread=ctx.channel
+            )        
         await webhook.delete()
         await ctx.message.delete()
 

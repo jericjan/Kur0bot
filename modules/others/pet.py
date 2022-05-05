@@ -18,16 +18,23 @@ class Pet(commands.Cog):
                 dest = BytesIO()  # container to store the petpet gif in memory
                 petpet.make(source, dest)
                 dest.seek(0)
-                webhook = await ctx.channel.create_webhook(name=ctx.message.author.name)
-                await webhook.send(
-                    file=disnake.File(dest, filename="petpet.gif"),
-                    username=ctx.message.author.name,
-                    avatar_url=ctx.message.author.display_avatar.url,
-                )
+                if isinstance(ctx.channel, disnake.TextChannel):
+                    webhook = await ctx.channel.create_webhook(name=ctx.message.author.name)
+                    await webhook.send(
+                        file=disnake.File(dest, filename="petpet.gif"),
+                        username=ctx.message.author.name,
+                        avatar_url=ctx.message.author.display_avatar.url,
+                    )
+                elif isinstance(ctx.channel, disnake.Thread):         
+                    webhook = await ctx.channel.parent.create_webhook(name=ctx.message.author.name)
+                    await webhook.send(
+                        file=disnake.File(dest, filename="petpet.gif"),
+                        username=ctx.message.author.name,
+                        avatar_url=ctx.message.author.display_avatar.url,thread=ctx.channel
+                    )
+                    
 
-                webhooks = await ctx.channel.webhooks()
-                for webhook in webhooks:
-                    await webhook.delete()
+                await webhook.delete()
         elif url.startswith("http"):
             pfp = requests.get(url)
             source = BytesIO(
@@ -37,16 +44,23 @@ class Pet(commands.Cog):
             dest = BytesIO()  # container to store the petpet gif in memory
             petpet.make(source, dest)
             dest.seek(0)
-            webhook = await ctx.channel.create_webhook(name=ctx.message.author.name)
-            await webhook.send(
-                file=disnake.File(dest, filename="petpet.gif"),
-                username=ctx.message.author.name,
-                avatar_url=ctx.message.author.display_avatar.url,
-            )
+            if isinstance(ctx.channel, disnake.TextChannel):
+                webhook = await ctx.channel.create_webhook(name=ctx.message.author.name)
+                await webhook.send(
+                    file=disnake.File(dest, filename="petpet.gif"),
+                    username=ctx.message.author.name,
+                    avatar_url=ctx.message.author.display_avatar.url,
+                )
+            elif isinstance(ctx.channel, disnake.Thread):         
+                webhook = await ctx.channel.parent.create_webhook(name=ctx.message.author.name)
+                await webhook.send(
+                    file=disnake.File(dest, filename="petpet.gif"),
+                    username=ctx.message.author.name,
+                    avatar_url=ctx.message.author.display_avatar.url,thread=ctx.channel
+                )            
 
-            webhooks = await ctx.channel.webhooks()
-            for webhook in webhooks:
-                await webhook.delete()
+
+            await webhook.delete()
 
 
 def setup(client):

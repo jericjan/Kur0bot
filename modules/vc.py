@@ -63,22 +63,39 @@ class Vc(commands.Cog):
                 with open("modules/mgr_users.json") as f:
                     mgr_json = json.load(f)
                 if speaker in mgr_json:
-                
-                    webhook = await ctx.channel.create_webhook(name=mgr_json[speaker]["name"])
-                    await webhook.send(
-                        file=disnake.File(a, filename=filename),
-                        username=mgr_json[speaker]["name"],
-                        avatar_url=mgr_json[speaker]["pfp"],
-                    )
-                    await webhook.delete()            
+                    if isinstance(ctx.channel, disnake.TextChannel):
+                        webhook = await ctx.channel.create_webhook(name=mgr_json[speaker]["name"])
+                        await webhook.send(
+                            file=disnake.File(a, filename=filename),
+                            username=mgr_json[speaker]["name"],
+                            avatar_url=mgr_json[speaker]["pfp"],
+                        )
+                        await webhook.delete()            
+                    elif isinstance(ctx.channel, disnake.Thread):             
+                        webhook = await ctx.channel.parent.create_webhook(name=mgr_json[speaker]["name"])
+                        await webhook.send(
+                            file=disnake.File(a, filename=filename),
+                            username=mgr_json[speaker]["name"],
+                            avatar_url=mgr_json[speaker]["pfp"],thread=ctx.channel
+                        )
+                        await webhook.delete()                         
                 elif filename in mgr_json:
-                    webhook = await ctx.channel.create_webhook(name=mgr_json[filename]["name"])
-                    await webhook.send(
-                        file=disnake.File(a, filename=filename),
-                        username=mgr_json[filename]["name"],
-                        avatar_url=mgr_json[filename]["pfp"],
-                    )
-                    await webhook.delete()                           
+                    if isinstance(ctx.channel, disnake.TextChannel):
+                        webhook = await ctx.channel.create_webhook(name=mgr_json[filename]["name"])
+                        await webhook.send(
+                            file=disnake.File(a, filename=filename),
+                            username=mgr_json[filename]["name"],
+                            avatar_url=mgr_json[filename]["pfp"],
+                        )
+                        await webhook.delete()              
+                    elif isinstance(ctx.channel, disnake.Thread):
+                        webhook = await ctx.channel.parent.create_webhook(name=mgr_json[filename]["name"])
+                        await webhook.send(
+                            file=disnake.File(a, filename=filename),
+                            username=mgr_json[filename]["name"],
+                            avatar_url=mgr_json[filename]["pfp"],thread=ctx.channel
+                        )
+                        await webhook.delete()                                      
                 else:
                     await ctx.send(file=disnake.File(a, filename=filename))                                  
             else:
