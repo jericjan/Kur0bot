@@ -1,5 +1,5 @@
 from disnake.ext import commands
-
+import disnake
 
 class Reactions(commands.Cog):
     def __init__(self, client):
