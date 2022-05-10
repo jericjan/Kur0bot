@@ -157,12 +157,15 @@ class Gif(commands.Cog):
     @commands.command(aliases=["vid2gif2", "gifify2"])
     async def gif2(self, ctx, link=None, quality=None):
         uuid_id = uuid.uuid4()
-        if link.isdigit():  # if link is digits 1-100. usually for when replying to message or sending vid directly.
-            if int(link) in range(1,101):
-                quality = link
-            else:
-                await ctx.send("If you were trying to specify a quality. It's not valid.")
-        elif link != None and quality == None:
+        if link:
+            if link.isdigit():  # if link is digits 1-100. usually for when replying to message or sending vid directly.
+                if int(link) in range(1,101):
+                    quality = link
+                else:
+                    await ctx.send("If you were trying to specify a quality. It's not valid.")
+            elif quality == None:
+                quality = 70
+        else:
             quality = 70
         if link == None:
             print(ctx.message.attachments)  # a list
