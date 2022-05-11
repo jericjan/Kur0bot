@@ -6,7 +6,8 @@ from shlex import join as shjoin
 import subprocess
 from aiolimiter import AsyncLimiter
 import json
-
+import re
+from urllib.parse import unquote
 # import codecs
 limiter = AsyncLimiter(1, 1)
 
@@ -56,16 +57,8 @@ class Download(commands.Cog):
                 "--no-warnings",
                 link,
             ]
-            coms2 = [
-                "yt-dlp",
-                "--get-filename",
-                "--cookies",
-                "cookies (17).txt",
-                "--no-warnings",
-                link,
-            ]
+
             print(shjoin(coms))
-            print(shjoin(coms2))
             proc = await asyncio.create_subprocess_exec(
                 *coms, stdout=subprocess.PIPE, stderr=subprocess.STDOUT
             )
@@ -77,13 +70,13 @@ class Download(commands.Cog):
                 self.pbar_list.append(line.decode("utf-8"))
                 asyncio.ensure_future(self.updatebar(message))
                 await asyncio.sleep(1)
+                print(f"\033[32m{line.decode('utf-8')}\033[0m")
                 # await ctx.send(line.decode('utf-8'))
             if proc.returncode != 0:
+                success = False
                 await ctx.send("return code is not 0. trying something else")
                 coms = [
                     "yt-dlp",
-                    "--cookies",
-                    "cookies (17).txt",
                     "--no-warnings",
                     link,
                 ]
@@ -99,16 +92,37 @@ class Download(commands.Cog):
                     self.pbar_list.append(line.decode("utf-8"))
                     asyncio.ensure_future(self.updatebar(message))
                     await asyncio.sleep(1)
+                    print(f"\033[32m[{line.decode('utf-8')}\033[0m")
+                    linedec = line.decode('utf-8')
+                    if re.search(r"Following redirect to ",linedec):
+                        success = True
+                        print("match!")
+                        if re.search(r"https:\/\/www.reddit.com\/over18.+",linedec):
+                            link = unquote(re.findall(r"https%3A%2F%2Fwww.reddit.com.+",linedec)[0])
+                        else:
+                            link = re.findall(r'https://.+',linedec)[0]
+                        print(f"match is: {link}")    
                     # await ctx.send(line.decode('utf-8'))
-                if proc.returncode != 0:
+                if proc.returncode != 0 and success == False:
                     await ctx.send("return code is not 0. i give up")
                     return
-            await message.edit(content="Almost there...")
+            print("almost there")
+            await message.edit(content="Almost there...")            
+            coms2 = [
+                "yt-dlp",
+                "--get-filename",
+                "--cookies",
+                "cookies (17).txt",
+                "--no-warnings",
+                link,
+            ]            
+            print(shjoin(coms2))
             out2 = await asyncio.create_subprocess_exec(
                 *coms2, stdout=subprocess.PIPE, stderr=subprocess.STDOUT
             )
             try:
                 stdout, stderr = await out2.communicate()
+                print(f"\033[32m{stdout.decode('utf-8')}\033[0m")
                 filename = stdout.decode("utf-8").split("\n")[0]
                 clean_name = filename.replace(",","")
                 await message.edit(content="Sending video...")
