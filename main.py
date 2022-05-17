@@ -125,6 +125,7 @@ client.load_extension("modules.others.resize")
 client.load_extension("modules.pacifam_only")
 client.load_extension("modules.kur0_only")
 client.load_extension("modules.sus")
+client.load_extension("modules.tasks")
 
 print(f"{(time.time() - start_time):.2f}s - Done!")
 

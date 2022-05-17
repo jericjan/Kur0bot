@@ -7,7 +7,9 @@ import subprocess
 from aiolimiter import AsyncLimiter
 import json
 import re
-from urllib.parse import unquote
+from urllib.parse import unquote, quote
+import humanize
+import requests
 # import codecs
 limiter = AsyncLimiter(1, 1)
 
@@ -317,6 +319,7 @@ class Download(commands.Cog):
                 line = await proc.stdout.readline()
                 if not line:
                     break
+                print(line.decode("utf-8"))
                 self.pbar_list.append(line.decode("utf-8"))
                 asyncio.ensure_future(self.updatebar(message))
                 await asyncio.sleep(1)
@@ -334,18 +337,43 @@ class Download(commands.Cog):
                 stdout, stderr = await out2.communicate()
                 filename = stdout.decode("utf-8").split("\n")[0]
                 clean_name = filename.replace(",","")
-                await message.edit(content="Sending video...")
-                try:
-                    await ctx.send(file=disnake.File(filename,filename=clean_name))
-                except Exception as e:
-                    await ctx.send(e)
-            except disnake.HTTPException:
-                await ctx.send(
-                    "File too large, broski <:towashrug:853606191711649812>"
-                )
+                boost_size_limits = [8388608,8388608,52428800,104857600]
+                if ctx.guild is not None:
+                    boosts = ctx.guild.premium_tier
+                    try:
+                        limit = boost_size_limits[boosts]
+                    except:
+                        print("Couldn't find boosts")
+                        limit = 8388608
+                else:
+                    limit = 8388608
+                filesize = os.path.getsize(filename)
+                if filesize <= limit:                                    
+                    await message.edit(content="Sending video...")
+                    try:
+                        await ctx.send(file=disnake.File(filename,filename=clean_name))
+                    # except disnake.HTTPException:
+                        # await ctx.send(
+                            # f"File too large, broski <:towashrug:853606191711649812>\nThe file: {humanize.naturalsize(filesize, binary=True)} Server upload limit: {humanize.naturalsize(limit, binary=True)}"
+                        # )    
+                    except Exception as e:
+                        await ctx.send(e)
+                    os.remove(filename)
+                else:
+                    os.rename(filename,f"temp/{filename}")
+                    url_enc_filename = quote(filename)
+                    ip = requests.get('https://checkip.amazonaws.com').text.strip()
+                    msg = "File too large, broski <:towashrug:853606191711649812>\n" \
+                    f"The file: {humanize.naturalsize(filesize, binary=True)}\n" \
+                    f"Server upload limit: {humanize.naturalsize(limit, binary=True)}\n" \
+                    f"You can access the file here but it will only be up for 12 hours:\n" \
+                    f"http://{ip}:{os.getenv('PORT')}/temp/{url_enc_filename}"
+                    await ctx.send(msg)                           
+                    
+                    
             except Exception as e:
-                await message.edit(content=e)
-            os.remove(filename)
+                await ctx.send(e)
+            
             await message.delete()
 
 
