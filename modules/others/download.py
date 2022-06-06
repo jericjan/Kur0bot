@@ -307,8 +307,8 @@ class Download(commands.Cog):
         # yt links usually
         else:
             message = await ctx.send("Downloading...")
-            coms = ["yt-dlp", "-f", "best", "--no-warnings", link]
-            coms2 = ["yt-dlp", "-f", "best", "--get-filename", "--no-warnings", link]
+            coms = ["yt-dlp", "-f", "b", "--no-warnings", link]
+            coms2 = ["yt-dlp", "-f", "b", "--get-filename", "--no-warnings", link]
             print(shjoin(coms))
             print(shjoin(coms2))
             proc = await asyncio.create_subprocess_exec(
