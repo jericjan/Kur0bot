@@ -662,7 +662,7 @@ class Help(commands.Cog):
         )
         await ctx.send(embed=em)
 
-    def paginate(self, lines, chars=2000):
+    def paginate(self, lines, chars=4096):
         size = 0
         message = []
         for line in lines:
@@ -690,7 +690,7 @@ class Help(commands.Cog):
         for root, dirs, files in os.walk("sounds/mgr/", topdown=False):
             for name in dirs:
                 mgr_list += f"**{name}:**\n"
-                mgr_list += '\n'.join([x.split(".")[0] for x in os.listdir(f"sounds/mgr/{name}")])
+                mgr_list += '\n'.join([f"- {x.split('.')[0]}" for x in os.listdir(f"sounds/mgr/{name}")])
                 mgr_list += '\n\n'   
         embed = disnake.Embed()
         for index, message in enumerate(self.paginate(mgr_list)):
