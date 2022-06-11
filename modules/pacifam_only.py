@@ -4,7 +4,7 @@ from ftplib import FTP
 import os
 import json
 import io
-
+import re
 # from aiomcrcon import Client as mcrconClient
 from mcrcon import MCRcon
 
@@ -31,7 +31,7 @@ class PacifamOnly(commands.Cog):
         ):
             await ctx.send(f"Adding {username} to list of offline users...")
 
-            ftp = FTP(host="us01.pebblehost.com")
+            ftp = FTP(host="us28.pebblehost.com")
             ftp.login(user=os.getenv("PEBBLE_EMAIL"), passwd=os.getenv("PEBBLE_PASS"))
             # ftp.cwd('mods')
             # ftp.cwd('EasyAuth')
@@ -87,7 +87,7 @@ class PacifamOnly(commands.Cog):
             or ctx.author.id == 216830153441935360
         ):
 
-            ftp = FTP(host="us01.pebblehost.com")
+            ftp = FTP(host="us28.pebblehost.com")
             ftp.login(user=os.getenv("PEBBLE_EMAIL"), passwd=os.getenv("PEBBLE_PASS"))
             r = io.BytesIO()
             ftp.retrbinary("RETR /mods/EasyAuth/config.json", r.write)
@@ -115,7 +115,7 @@ class PacifamOnly(commands.Cog):
         ):
             await ctx.send(f"Removing {username} from list of offline users...")
 
-            ftp = FTP(host="us01.pebblehost.com")
+            ftp = FTP(host="us28.pebblehost.com")
             ftp.login(user=os.getenv("PEBBLE_EMAIL"), passwd=os.getenv("PEBBLE_PASS"))
             # ftp.cwd('mods')
             # ftp.cwd('EasyAuth')
@@ -155,6 +155,28 @@ class PacifamOnly(commands.Cog):
             # print(response)
         else:
             await ctx.send("Only Avi/Admins/Mods can use this command")
+
+    @commands.command()
+    async def viewmods(self, ctx):
+        if ctx.guild.id == 603147860225032192:
+            ftp = FTP(host="us28.pebblehost.com")
+            ftp.login(user=os.getenv("PEBBLE_EMAIL"), passwd=os.getenv("PEBBLE_PASS"))
+            # r = io.BytesIO()
+            # ftp.retrbinary("RETR /mods/EasyAuth/config.json", r.write)
+            # config = json.loads(r.getvalue())
+            modlist = list(ftp.mlsd("/mods/"))
+            clean_modlist = []
+            for i in modlist:
+                filename = i[0]
+                if filename.endswith(".jar"):
+                    modname = re.findall(r"[\w-]+(?=-)(?=\d)?|[\w-]+(?=\.)",filename)[0]
+                    clean_modlist.append(modname)
+            await ctx.send('\n'.join(clean_modlist))
+            # for i in self.paginate(list(modlist)):
+                # await ctx.send(i)
+        else:
+            await ctx.send("Only usable in the pacifam server")
+
 
 
 def setup(client):
