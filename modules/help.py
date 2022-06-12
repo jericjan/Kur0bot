@@ -700,6 +700,34 @@ class Help(commands.Cog):
                 embed.title = ""
             embed.description = "".join(message)
             await ctx.send(embed=embed)        
+
+    @help.command(aliases=["us"])
+    async def uploadsticker(self, ctx):
+        em = disnake.Embed(
+            title="Upload sticker",
+            description="Uploads an image as a sticker.",
+        )
+        em.add_field(name="**Syntax**", value="k.uploadsticker <name> <emoji as text> <url>\nUpload image with k.uploadsticker <name> <emoji as text>\nReply to a message with k.uploadsticker <name> <emoji as text>",inline=False)
+        em.add_field(name="**Aliases**", value=",".join(ctx.command.aliases))
+        em.add_field(
+            name="**Example**",
+            value="k.uploadsticker agony cry https://cdn.discordapp.com/attachments/812666551051747369/983132328945680434/IMG_1963.jpg",
+        )        
+        await ctx.send(embed=em)
+
+    @help.command(aliases=["uploademoji","ue"])
+    async def uploademote(self, ctx):
+        em = disnake.Embed(
+            title="Upload emote",
+            description="Uploads an image as an emote.",
+        )
+        em.add_field(name="**Syntax**", value="k.uploademote <name> <url\emote ID>\nUpload image with k.uploademote <name>\nReply to a message with k.uploademote <name>",inline=False)
+        em.add_field(name="**Aliases**", value=",".join(ctx.command.aliases))
+        em.add_field(
+            name="**Example**",
+            value="k.uploademote stuff https://cdn.discordapp.com/attachments/809247468084133898/985504342461280306/stuff.png",
+        )        
+        await ctx.send(embed=em)
         
 def setup(client):
     client.add_cog(Help(client))

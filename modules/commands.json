@@ -37,7 +37,9 @@
     "oldsuperchat",
     "gif",
     "gif2",
-    "resize"
+    "resize",
+	"uploademote",
+	"uploadsticker"
   ],
   "reactions": [
     "fmega",
@@ -101,6 +103,7 @@
     "sticker",
     "rolecheck",
     "viewoffline",
+	"viewmods",
     "repost",
     "fastclip3",
     "fastclip2",

@@ -2,7 +2,11 @@ from disnake.ext import commands
 import disnake
 import asyncio
 import aiohttp
-
+import functools
+import requests 
+import io
+import re
+from PIL import Image
 
 class EmoteSticker(commands.Cog):
     def __init__(self, client):
@@ -82,24 +86,189 @@ class EmoteSticker(commands.Cog):
             else:
                 print("bad apple server")
 
-    @commands.command()
-    async def id(self, ctx, title, *, message=None):  # upload emoji from emoji url
-        if "cdn.discordapp.com" in message:
-            async with aiohttp.ClientSession() as session:
-                async with session.get(
-                    f"https://cdn.discordapp.com/emojis/{message.split('/')[4].split('.')[0]}"
-                ) as response:
-                    img = await response.read()
+    def run_in_executor(f):
+        @functools.wraps(f)
+        async def inner(*args, **kwargs):
+            loop = asyncio.get_running_loop()
+            return await loop.run_in_executor(None, lambda: f(*args, **kwargs))
+        return inner
+
+    @run_in_executor
+    def emote_resize(self, link):  # Your wrapper for async use      
+        byteio = io.BytesIO(link)
+        im = Image.open(byteio)
+        width, height = im.size
+        new_width  = 128
+        new_height = new_width * height / width            
+        newsize = (int(new_width), int(new_height))
+        im = im.resize(newsize)
+        byteio.close()
+        byteio2 = io.BytesIO()
+        byteio2.seek(0)
+        im.save(byteio2, format="PNG")
+        byteio2.seek(0)
+        return byteio2, new_width, new_height
+      
+    @commands.command(aliases=["uploademoji","ue"])
+    async def uploademote(self, ctx, title, *, link=None):  # upload emoji from emoji url
+        limit = ctx.guild.emoji_limit
+        emoji_list = ctx.guild.emojis
+        normal_count = 0
+        animated_count = 0
+        for i in emoji_list:
+            if i.animated:  
+                animated_count += 1
+            else:
+                normal_count += 1
+        normal_free_slots = limit - normal_count
+        animated_free_slots = limit - animated_count
+        if normal_free_slots == 0:
+            await ctx.send("No more free normal slots :(")
+        else:    
+            await ctx.send(f"{normal_free_slots} normal slots left :)")
+        if animated_free_slots == 0:
+            await ctx.send("No more free animated slots :(")
+        else:    
+            await ctx.send(f"{animated_free_slots} animated slots left :)")            
+        avi_guild = self.client.get_guild(603147860225032192)
+        while avi_guild == None:
+            pass
+        admin = disnake.utils.get(avi_guild.roles, name="Admin")
+        moderator = disnake.utils.get(avi_guild.roles, name="Moderator")
+        avilon = disnake.utils.get(avi_guild.roles, name="Avilon")
+        roles = [admin, moderator, avilon]
+        if (
+            any(role in roles for role in ctx.author.roles)
+        ):            
+            if link == None:
+                print(ctx.message.attachments)  # a list
+                print(ctx.message.reference)
+                if ctx.message.attachments:  # message has images
+                    print("is attachment")
+                    link = ctx.message.attachments[0].url
+                elif ctx.message.reference is not None:  # message is replying
+                    print("is reply")
+                    id = ctx.message.reference.message_id
+                    msg = await ctx.channel.fetch_message(id)
+                    if msg.attachments:  # if replied has image
+                        link = msg.attachments[0].url
+                    elif msg.embeds:  # if replied has link
+                        link = msg.embeds[0].url
+
+                    # print("embmeds: {0}".format(msg.embeds))
+                    # if re.search(r'http.*\bpng\b|http.*\bjpg\b|http.*\bjpeg\b',msg.content):
+                    #   link = re.search(r'http.*\bpng\b|http.*\bjpg\b|http.*\bjpeg\b',msg.content)[0]
+                    # link= msg.attachments[0].url
+                    else:
+                        await ctx.send("the message you replied to has no image, baka!")
+                else:
+                    await ctx.send("you did something wrong. brug. try again.")
+                    return
+                print(link)               
+            if re.match(r"https:\/\/cdn.discordapp.com\/emojis\/\d+",link):
+                async with aiohttp.ClientSession() as session:
+                    async with session.get(
+                        re.findall(r"https:\/\/cdn.discordapp.com\/emojis\/\d+",link)[0]
+                    ) as response:
+                        img = await response.read()
+            elif re.match(r"\d+",link):
+                async with aiohttp.ClientSession() as session:
+                    async with session.get(
+                        f"https://cdn.discordapp.com/emojis/{link}"
+                    ) as response:
+                        img = await response.read()            
+            elif link.startswith("http"):
+                async with aiohttp.ClientSession() as session:
+                    async with session.get(link) as response:
+                        img = await response.read()     
+            else:
+                await ctx.send("Invalid link.")
+                return
+            # now img contains the bytes of the image, let's create the emoji
+            file, width, height = await self.emote_resize(img)
+            await ctx.send(f"New image size is: {width}x{height}",delete_after=3.0)
+            try:
+                await ctx.guild.create_custom_emoji(name=title, image=img)
+                await ctx.send("Emoji uploaded!",delete_after=3.0)
+                emoji = disnake.utils.get(self.client.emojis, name=title)
+                await ctx.send(str(emoji))
+            except:
+                await ctx.send("Something failed. Oof.")
         else:
-            async with aiohttp.ClientSession() as session:
-                async with session.get(
-                    f"https://cdn.discordapp.com/emojis/{message}"
-                ) as response:
-                    img = await response.read()
-        # now img contains the bytes of the image, let's create the emoji
-        await ctx.guild.create_custom_emoji(name=title, image=img)
-        await ctx.send("Emoji uploaded!")
+            await ctx.send("Only Avi/Admins/Mods can use this command")     
 
 
+    @run_in_executor
+    def sticker_resize(self, link):  # Your wrapper for async use
+        response = requests.get(link)
+        byteio = io.BytesIO(response.content)
+        im = Image.open(byteio)
+        width, height = im.size
+        new_width  = 320
+        new_height = new_width * height / width            
+        newsize = (int(new_width), int(new_height))
+        im = im.resize(newsize)
+        byteio.close()
+        byteio2 = io.BytesIO()
+        byteio2.seek(0)
+        im.save(byteio2, format="PNG")
+        byteio2.seek(0)
+        return byteio2, new_width, new_height
+
+    @commands.command(aliases=["us"])
+    async def uploadsticker(self, ctx, name, emoji, link=None):  # upload emoji from emoji url
+        limit = ctx.guild.sticker_limit
+        sticker_count = len(ctx.guild.stickers)
+        free_slots = limit - sticker_count
+        if free_slots == 0:
+            await ctx.send("No more free slots :(")
+        else:    
+            await ctx.send(f"{free_slots} slots left :)")
+            avi_guild = self.client.get_guild(603147860225032192)
+            while avi_guild == None:
+                pass
+            else:
+                admin = disnake.utils.get(avi_guild.roles, name="Admin")
+                moderator = disnake.utils.get(avi_guild.roles, name="Moderator")
+                avilon = disnake.utils.get(avi_guild.roles, name="Avilon")
+            roles = [admin, moderator, avilon]
+            if (
+                any(role in roles for role in ctx.author.roles)
+            ):    
+            
+                if link == None:
+                    print(ctx.message.attachments)  # a list
+                    print(ctx.message.reference)
+                    if ctx.message.attachments:  # message has images
+                        print("is attachment")
+                        link = ctx.message.attachments[0].url
+                    elif ctx.message.reference is not None:  # message is replying
+                        print("is reply")
+                        id = ctx.message.reference.message_id
+                        msg = await ctx.channel.fetch_message(id)
+                        if msg.attachments:  # if replied has image
+                            link = msg.attachments[0].url
+                        elif msg.embeds:  # if replied has link
+                            link = msg.embeds[0].url
+
+                        # print("embmeds: {0}".format(msg.embeds))
+                        # if re.search(r'http.*\bpng\b|http.*\bjpg\b|http.*\bjpeg\b',msg.content):
+                        #   link = re.search(r'http.*\bpng\b|http.*\bjpg\b|http.*\bjpeg\b',msg.content)[0]
+                        # link= msg.attachments[0].url
+                        else:
+                            await ctx.send("the message you replied to has no image, baka!")
+                    else:
+                        await ctx.send("you did something wrong. brug. try again.")
+                        return
+                    print(link)             
+                file, width, height = await self.sticker_resize(link)
+                file.seek(0)       
+                await ctx.send(f"New image size is: {width}x{height}",delete_after=3.0)
+                sticker = await ctx.guild.create_sticker(name=name, emoji=emoji,file=disnake.File(file))
+                await ctx.send("Sticker uploaded!",delete_after=3.0)
+                await ctx.send(stickers=[sticker])
+            else:
+                await ctx.send("Only Avi/Admins/Mods can use this command")            
+            
 def setup(client):
     client.add_cog(EmoteSticker(client))
