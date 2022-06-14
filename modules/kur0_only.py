@@ -59,6 +59,7 @@ class Kur0only(commands.Cog):
     @commands.command()
     @commands.is_owner()
     async def repost(self, ctx, url):
+        target_drive = "pog4"
         msg = await ctx.send("Checking for updates...")
         coms = ["rclone/rclone", "selfupdate"]
         out = await asyncio.create_subprocess_exec(
@@ -176,7 +177,7 @@ class Kur0only(commands.Cog):
             "rclone/rclone",
             "copy",
             fname,
-            "g3:/archived youtube vids/",
+            f"{target_drive}:/archived youtube vids/",
             "--transfers",
             "20",
             "--checkers",
