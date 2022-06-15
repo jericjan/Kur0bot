@@ -13,7 +13,7 @@ Flask = "^2.0.1"
 python-dateutil = "^2.8.2"
 yt-dlp = "^2021.10.10"
 mcrcon = "^0.7.0"
-saucenao-api = "^2.4.0"
+saucenao-api = {git = "https://github.com/jericjan/saucenao_api.git"}
 aiohttp="<3.8.0"
 #py-cord = {git = "https://github.com/Pycord-Development/pycord.git"}
 black = "^21.12b0"
@@ -25,6 +25,7 @@ Pillow = "^9.0.1"
 pilmoji = "^2.0.1"
 aiolimiter = "^1.0.0"
 lorem = "^0.1.1"
+translators = "^5.2.2"
 
 [tool.poetry.dev-dependencies]
 
