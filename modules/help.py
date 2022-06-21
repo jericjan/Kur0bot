@@ -729,5 +729,45 @@ class Help(commands.Cog):
         )        
         await ctx.send(embed=em)
         
+    @help.command(aliases=["japanese"])
+    async def nihongo(self, ctx):
+        em = disnake.Embed(
+            title="Translate to Japanese",
+            description="Translate given text to Japanese. Uses Google Translate because I can't get access to the DeepL API because I'm filipino :(",
+        )
+        em.add_field(name="**Syntax**", value="k.nihongo <sentence>",inline=False)
+        em.add_field(name="**Aliases**", value=",".join(ctx.command.aliases))
+        em.add_field(
+            name="**Example**",
+            value="k.uploademote hello",
+        )        
+        await ctx.send(embed=em)        
+        
+    @help.command(aliases=["english"])
+    async def eigo(self, ctx):
+        em = disnake.Embed(
+            title="Translate to English",
+            description="Translate given text to English. Uses Google Translate because I can't get access to the DeepL API because I'm filipino :(",
+        )
+        em.add_field(name="**Syntax**", value="k.eigo <sentence>",inline=False)
+        em.add_field(name="**Aliases**", value=",".join(ctx.command.aliases))
+        em.add_field(
+            name="**Example**",
+            value="k.eigo 草",
+        )        
+        await ctx.send(embed=em)         
+
+    @help.command(aliases=["addqueue","insertqueue","removequeue","clearqueue"])
+    async def queue(self, ctx):
+        em = disnake.Embed(
+            title="Queue",
+            description="The server's queue. This was originally made for Karaoke in the pacifam server to keep track of queues but it can be used for anything. For now, the queues are unique to each server and anybody can modify them."
+        )
+        em.add_field(name="**Commands**", value="__k.queue__ - shows the server's queue\n\n" \
+                                                "__k.addqueue <things separated w/ spaces>__ - adds things to queue\n\n" \
+                                                "__k.insertqueue <name of thing to insert new thing after> <new thing>__ - insert new thing right after an existing thing\n\n" \
+                                                "__k.removequeue <thing>__ - removes thing from queue\n\n" \
+                                                "__k.clearqueue__ - clears the queue",inline=False)  
+        await ctx.send(embed=em)          
 def setup(client):
     client.add_cog(Help(client))

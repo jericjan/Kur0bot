@@ -65,9 +65,7 @@ else:
 
 
 # client = discord.Client()
-intents = disnake.Intents().default()
-intents.presences = True
-intents.members = True
+intents = disnake.Intents().all()
 
 # global client
 game = disnake.Activity(name="sus gaming | k.help", type=disnake.ActivityType.playing)
@@ -123,6 +121,7 @@ client.load_extension("modules.others.superchat")
 client.load_extension("modules.others.gif")
 client.load_extension("modules.others.resize")
 client.load_extension("modules.others.deepl")
+client.load_extension("modules.others.karaoke")
 client.load_extension("modules.pacifam_only")
 client.load_extension("modules.kur0_only")
 client.load_extension("modules.sus")

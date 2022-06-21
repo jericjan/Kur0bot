@@ -161,6 +161,17 @@ class Gif(commands.Cog):
             if link.isdigit():  # if link is digits 1-100. usually for when replying to message or sending vid directly.
                 if int(link) in range(1,101):
                     quality = link
+                    if ctx.message.attachments:  # message has images
+                        print("is attachment")
+                        link = ctx.message.attachments[0].url
+                    elif ctx.message.reference is not None:  # message is replying
+                        print("is reply")
+                        id = ctx.message.reference.message_id
+                        msg = await ctx.channel.fetch_message(id)
+                        if msg.attachments:  # if replied has image
+                            link = msg.attachments[0].url
+                        elif msg.embeds:  # if replied has link
+                            link = msg.embeds[0].url                    
                 else:
                     await ctx.send("If you were trying to specify a quality. It's not valid.")
             elif quality == None:
@@ -190,6 +201,7 @@ class Gif(commands.Cog):
         new_filename = "".join(filename.split(".")[:-1]) + ".gif"
         if new_filename.startswith("-"):
             new_filename = new_filename[1:]
+        print(f"filename is: {filename}, quality is: {quality}")
         if re.search(r".+\.mp4|.+\.mkv|.+\.mov|.+\.webm", filename) is not None:
             # r = requests.get(link)
             # vid = io.BytesIO(r.content)

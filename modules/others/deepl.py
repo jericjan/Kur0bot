@@ -6,7 +6,7 @@ class DeepL_commands(commands.Cog):
     def __init__(self, client):
         self.client = client
 
-    @commands.command()
+    @commands.command(aliases=["japanese"])
     async def nihongo(self, ctx, *, text=None):
         if text == None:
             if ctx.message.reference is not None:  # message is replying
@@ -19,7 +19,7 @@ class DeepL_commands(commands.Cog):
                 return
         result = ts.google(text,to_language='ja')
         await ctx.send(result)
-    @commands.command()
+    @commands.command(aliases=["english"])
     async def eigo(self, ctx, *, text=None):
         if text == None:
             if ctx.message.reference is not None:  # message is replying

@@ -11,9 +11,7 @@ from lorem.text import TextLorem
 from dotenv import load_dotenv
 
 
-with open("modules/commands.json") as f:
-    data = json.load(f)
-    hidden_commands = data["hidden"]
+
 
 
 class Kur0only(commands.Cog):
@@ -265,6 +263,7 @@ class Kur0only(commands.Cog):
         f = open("modules/commands.json")
         data = json.load(f)
         f.close()
+        hidden_commands = data["hidden"]
         comm_list = []
         for i in data:
             if i == "hidden":
@@ -281,7 +280,11 @@ class Kur0only(commands.Cog):
         commands_with_help_msg = [
             c.name for c in self.client.get_command("help").commands
         ]
-        diffcomms2 = [c for c in comm_list if c not in commands_with_help_msg]
+        aliases = [
+            a for c in self.client.get_command("help").commands if c.aliases for a in c.aliases
+        ]
+        print(aliases)
+        diffcomms2 = [c for c in comm_list if c not in commands_with_help_msg and c not in aliases]
         diffcomms2_joined = "\n".join(diffcomms2)
         await ctx.send(f"Commands without help commands are:\n{diffcomms2_joined}")
 

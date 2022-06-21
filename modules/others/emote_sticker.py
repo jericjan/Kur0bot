@@ -6,7 +6,7 @@ import functools
 import requests 
 import io
 import re
-from PIL import Image
+from PIL import Image, ImageFile
 
 class EmoteSticker(commands.Cog):
     def __init__(self, client):
@@ -185,15 +185,18 @@ class EmoteSticker(commands.Cog):
                 await ctx.send("Invalid link.")
                 return
             # now img contains the bytes of the image, let's create the emoji
-            file, width, height = await self.emote_resize(img)
-            await ctx.send(f"New image size is: {width}x{height}",delete_after=3.0)
+            if link.endswith("gif"):
+                file = img
+            else:    
+                file, width, height = await self.emote_resize(img)
+                await ctx.send(f"New image size is: {width}x{height}",delete_after=3.0)
             try:
-                await ctx.guild.create_custom_emoji(name=title, image=img)
+                await ctx.guild.create_custom_emoji(name=title, image=file)
                 await ctx.send("Emoji uploaded!",delete_after=3.0)
                 emoji = disnake.utils.get(self.client.emojis, name=title)
                 await ctx.send(str(emoji))
-            except:
-                await ctx.send("Something failed. Oof.")
+            except Exception as e:
+                await ctx.send(f"Something failed. Oof.\n{e}")
         else:
             await ctx.send("Only Avi/Admins/Mods can use this command")     
 
