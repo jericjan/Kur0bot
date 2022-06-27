@@ -339,10 +339,10 @@ class Clip(commands.Cog):
         print(stdout.decode("utf-8"))
 
         try:
-
+            await ctx.send(f"Sending {filename}.mp4...")
             await ctx.send(file=disnake.File(f"{filename}.mp4"))
-        except Exception:
-            await message.edit(content="I failed.")
+        except Exception as e:
+            await ctx.send(content=f"I failed.\n{e}")
         await ctx.send(ctx.message.author.mention)
         os.remove(f"{filename}.mp4")
         os.remove(f"{filename}_temp0.mp4")
@@ -1034,7 +1034,7 @@ class Clip(commands.Cog):
         print(stdout.decode("utf-8"))
 
         try:
-
+            await ctx.send(f"Sending {filename}.mp4...")
             await ctx.send(file=disnake.File(f"{filename}.mp4"))
         except Exception as e:
             await message.edit(content="I failed.")

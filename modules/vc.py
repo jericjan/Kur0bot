@@ -58,7 +58,7 @@ class Vc(commands.Cog):
             print(f"playing {a}")
             filename = a.split('/')[-1]
             print(f"filename is: {filename}")
-            if a.split('/')[-3] == "mgr":
+            if a.split('/')[1] == "mgr":
                 speaker = a.split('/')[-2]
                 with open("modules/mgr_users.json") as f:
                     mgr_json = json.load(f)

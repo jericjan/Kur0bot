@@ -166,7 +166,62 @@ class Events(commands.Cog):
                 )
                 # await msg.edit(content="AviBot is online. (ignore this)")
                 await vc.edit(name="AviBot: alive")
-
+    
+    @commands.Cog.listener()
+    async def on_presence_update(self, before, after):
+        #old_user_activities = before.activities
+        new_user_activities = after.activities
+        id_list = []
+        game_names = []
+        game_names.append("Mobile Legends: Bang Bang")
+        id_list.append(588739191433723914) #mobile_legends
+        game_names.append("League of Legends")
+        id_list.append(401518684763586560) #league
+        game_names.append("Honkai Impact 3rd")
+        game_names.append("honka donka badonkers")
+        id_list.append(604089691519713300) #honkai 3rd
+        game_names.append("Honkai Impact 3")
+        id_list.append(614393437030187008) #honkai 3
+        game_names.append("Genshin Impact")
+        id_list.append(762434991303950386) #genshin        
+        if new_user_activities:
+            for activity in new_user_activities:
+                if str(activity.type) == "ActivityType.playing" and after.bot == False:
+                    try:
+                        game_id = activity.application_id
+                    except:
+                        game_id = "UNKNOWN"       
+                    with open(f"activities.txt", 'a') as f:
+                        f.write(f"({game_id}) [{after.guild}] {after.name}: started playing {activity.name}") 
+                    if game_id in id_list or activity.name in game_names:    
+                        hall_of_shame_json = json.load(open("modules/others/hall_of_shame_ids.json"))
+                        try:
+                            hall_of_shame_channel_id = hall_of_shame_json[str(after.guild.id)]['channel-id']
+                            hall_of_shame_embed_id = hall_of_shame_json[str(after.guild.id)]['embed-id']
+                            hall_of_shame_channel = await self.client.fetch_channel(hall_of_shame_channel_id) 
+                            hall_of_shame = await hall_of_shame_channel.fetch_message(hall_of_shame_embed_id)
+                            if after.guild == hall_of_shame.guild:
+                                #await hall_of_shame.send(f"{after.name} started playing {activity.name}")
+                                em = hall_of_shame.embeds[0]                                      
+                                name_list = [i.name for i in em.fields]   
+                                try:
+                                    start_time = f"<t:{round(activity.start.timestamp())}:R>"   
+                                except:
+                                    start_time = "at an unknown time"
+                                value = f"{after.mention} opened **{activity.name}** {start_time}"            
+                                name = after.name
+                                if name in name_list:
+                                    index = name_list.index(name)
+                                    em.remove_field(index)                                                                   
+                                em.add_field(name=name, value=value,inline=False)  
+                                while len(name_list) > 10:
+                                    em.remove_field(0)   
+                                    name_list = [i.name for i in em.fields]   
+                                await hall_of_shame.edit(embed=em)  
+                        except Exception as e:
+                            print(f"UNSET: ({game_id}) [{after.guild}] {after.name}: started playing {activity.name}\n{e}")
+                        # user = await self.client.fetch_user(396892407884546058)
+                        # await user.send(f"({game_id}) [{after.guild}] {after.name}: started playing {activity.name}")    
     @commands.Cog.listener()
     async def on_message(self, message):
         if message.author == self.client.user:

@@ -39,7 +39,8 @@
     "gif2",
     "resize",
 	"uploademote",
-	"uploadsticker"
+	"uploadsticker",
+	"hallofshame"
   ],
   "reactions": [
     "fmega",
@@ -97,6 +98,10 @@
   "insertqueue",
   "removequeue",
   "clearqueue"
+  ],
+  "greenscreen": [
+	"vergil",
+	"smallvergil"
   ],
   "TTS": [
     "just do ] while in VC (\"k.help tts\" for more info)"

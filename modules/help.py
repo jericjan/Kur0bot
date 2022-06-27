@@ -768,6 +768,31 @@ class Help(commands.Cog):
                                                 "__k.insertqueue <name of thing to insert new thing after> <new thing>__ - insert new thing right after an existing thing\n\n" \
                                                 "__k.removequeue <thing>__ - removes thing from queue\n\n" \
                                                 "__k.clearqueue__ - clears the queue",inline=False)  
-        await ctx.send(embed=em)          
+        await ctx.send(embed=em)         
+        
+    @help.command(aliases=["smallvergil"])
+    async def vergil(self, ctx):
+        em = disnake.Embed(
+            title="Vergil Cut Green Screen",
+            description="Give it an image and Vergil will cut through it with his unending\n**ＭＯＴＩＶＡＴＩＯＮ**."
+        )
+        em.add_field(name="**Commands**", value="__k.vergil <image>__ - normal version\n\n" \
+                                                "__k.smallvergil <image>__ -  compressed version, takes longer but produces a smaller file size",inline=False)  
+        await ctx.send(embed=em)      
+        
+    @help.command()
+    async def hallofshame(self, ctx):
+        em = disnake.Embed(
+            title="Hall Of Shame",
+            description="The hall of shame where people who commit cringe will be posted on."
+        )
+        em.add_field(name="**Syntax**", value="k.hallofshame <mention_channel>",inline=False)  
+        em.add_field(name="**Cringe Requirements:**", value="You will be cringe when you play any of these games: \n" \
+                                                            "⦁ Mobile Legends: Bang Bang\n" \
+                                                            "⦁ League of Legends\n" \
+                                                            "⦁ Honkai Impact 3\n" \
+                                                            "⦁ Genshin Impact\n" \
+                                                            "(and no, these cannot be customized <a:trollplant:934777423881445436>)",inline=False)                                                               
+        await ctx.send(embed=em)           
 def setup(client):
     client.add_cog(Help(client))

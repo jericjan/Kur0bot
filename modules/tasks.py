@@ -74,7 +74,7 @@ class myTasks(commands.Cog):
         stdout, stderr = await out.communicate()    
         channel = self.client.get_channel(976064150935576596)
         nl = '\n'    
-        drives = ["pog4:","pog5:","pog6:"]        
+        drives = ["pog4:","pog6:","pog7:","pog8:"]        
         coms_list = {}
         for idx, val in enumerate(drives):
             pre_coms = ["rclone/rclone", "lsd"]        

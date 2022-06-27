@@ -122,6 +122,8 @@ client.load_extension("modules.others.gif")
 client.load_extension("modules.others.resize")
 client.load_extension("modules.others.deepl")
 client.load_extension("modules.others.karaoke")
+client.load_extension("modules.others.hall_of_shame")
+client.load_extension("modules.others.vergil")
 client.load_extension("modules.pacifam_only")
 client.load_extension("modules.kur0_only")
 client.load_extension("modules.sus")
@@ -141,8 +143,11 @@ async def common(ctx):
 @commands.is_owner()
 async def reload(ctx, name):
     if name == "events":
-        client.get_cog("Events").cog_unload()
-        client.remove_cog("Events")
+        try:
+            client.get_cog("Events").cog_unload()
+            client.remove_cog("Events")
+        except:
+            print("epic failure")
         importlib.reload(modules.events)
         client.add_cog(modules.events.Events(client, start_time, log))
     else:
