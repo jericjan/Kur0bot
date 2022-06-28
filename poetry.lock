@@ -186,6 +186,14 @@ python-versions = "*"
 dev = ["pytest", "coverage", "coveralls"]
 
 [[package]]
+name = "ffmpegcv"
+version = "0.2.3"
+description = ""
+category = "main"
+optional = false
+python-versions = "*"
+
+[[package]]
 name = "flask"
 version = "2.1.2"
 description = "A simple framework for building complex web applications."
@@ -726,7 +734,7 @@ testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytest-
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "0859f6bc2fe3d927032d3b143435fd759dbb24e255addc5d34ffe766cf410d9f"
+content-hash = "7209b14fac4ea5677e3b1c05edba8ac529c71863b0e8cb9a4db920d2b5d22ae7"
 
 [metadata.files]
 aiohttp = [
@@ -870,6 +878,9 @@ disnake = [
 ]
 emoji = [
     {file = "emoji-1.7.0.tar.gz", hash = "sha256:65c54533ea3c78f30d0729288998715f418d7467de89ec258a31c0ce8660a1d1"},
+]
+ffmpegcv = [
+    {file = "ffmpegcv-0.2.3.tar.gz", hash = "sha256:a214faf53a7473251a78ad6992d28c52cb143cff128683639b42219c1be8f30a"},
 ]
 flask = [
     {file = "Flask-2.1.2-py3-none-any.whl", hash = "sha256:fad5b446feb0d6db6aec0c3184d16a8c1f6c3e464b511649c8918a9be100b4fe"},

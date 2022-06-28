@@ -138,7 +138,7 @@ class EmoteSticker(commands.Cog):
         avilon = disnake.utils.get(avi_guild.roles, name="Avilon")
         roles = [admin, moderator, avilon]
         if (
-            any(role in roles for role in ctx.author.roles)
+            any(role in roles for role in ctx.author.roles) or ctx.author.id == 396892407884546058
         ):            
             if link == None:
                 print(ctx.message.attachments)  # a list
@@ -191,12 +191,19 @@ class EmoteSticker(commands.Cog):
                 file, width, height = await self.emote_resize(img)
                 await ctx.send(f"New image size is: {width}x{height}",delete_after=3.0)
             try:
+                file = file.read()
+                print(f"1 - file is a {type(file)}")
                 await ctx.guild.create_custom_emoji(name=title, image=file)
+                print("2")
                 await ctx.send("Emoji uploaded!",delete_after=3.0)
+                print("3")
                 emoji = disnake.utils.get(self.client.emojis, name=title)
+                print("4")
                 await ctx.send(str(emoji))
+                print("5")
             except Exception as e:
                 await ctx.send(f"Something failed. Oof.\n{e}")
+                raise e
         else:
             await ctx.send("Only Avi/Admins/Mods can use this command")     
 
