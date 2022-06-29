@@ -26,4 +26,4 @@ async def grab_link(ctx, link):
             else:
                 # await ctx.send("you did something wrong. brug. try again.")
                 raise Exception("you did something wrong. brug. try again.")
-            return link
+        return link

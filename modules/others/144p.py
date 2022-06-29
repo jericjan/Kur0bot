@@ -9,7 +9,7 @@ import io
 from aiolimiter import AsyncLimiter
 from datetime import datetime, timedelta
 import myfunctions.msg_link_grabber as msg_link_grabber
-
+from shlex import join as shjoin
 limiter = AsyncLimiter(1, 1)
 
 
@@ -35,14 +35,16 @@ class lowQual(commands.Cog):
 
     @commands.command(aliases=["shitify", "pixelize"])
     async def lowqual(self, ctx, link=None):
-
         link = await msg_link_grabber.grab_link(ctx,link)
         print(link)
 
         # print(f"link is {link}")
+        is_tenor = False
         if "tenor.com" in link:
+            is_tenor = True
             if ctx.message.reference is not None:  # message is replying
-                vid_url = msg.embeds[0].video.url
+                vid_url = ctx.message.reference.resolved.embeds[0].video.url
+                print(vid_url)
             elif ctx.message.embeds:
                 vid_url = ctx.message.embeds[0].video.url
             else:
@@ -60,21 +62,31 @@ class lowQual(commands.Cog):
         if re.search(r".+\.mp4|.+\.mkv|.+\.mov|.+\.webm|.+\.gif", filename) is not None:
             # remuxes so it works with troll long videos, magic.
             muxname = re.sub(r"(.+(?=\..+))", r"\g<1>_mux", filename)
-            coms = [
-                "ffmpeg-git/ffmpeg",
-                "-i",
-                link,
-                "-c:v",
-                "copy",
-                "-c:a",
-                "copy",
-                muxname,
-            ]
+            if is_tenor:
+                coms = [
+                    "ffmpeg-git/ffmpeg",
+                    "-i",
+                    link,
+                    muxname,
+                ]            
+            else:
+                coms = [
+                    "ffmpeg-git/ffmpeg",
+                    "-i",
+                    link,
+                    "-c:v",
+                    "copy",
+                    "-c:a",
+                    "copy",
+                    muxname,
+                ]
+            print(shjoin(coms))
             process = await asyncio.create_subprocess_exec(
                 *coms, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE
             )
             stdout, stderr = await process.communicate()
-
+            print(f"stdout:\n\033[;32m{stdout.decode('utf-8')}\033[0m")
+            print(f"stderr:\n\033[;31m{stderr.decode('utf-8')}\033[0m")
             tempname = re.sub(r"(.+(?=\..+))", r"\g<1>01", filename)
             coms = [
                 "ffmpeg",
@@ -89,6 +101,7 @@ class lowQual(commands.Cog):
                 "-y",
                 tempname,
             ]
+            print(shjoin(coms))
             message = await ctx.send("Downscaling...")
             process = await asyncio.create_subprocess_exec(
                 *coms, stdout=subprocess.PIPE, stderr=subprocess.STDOUT
@@ -167,6 +180,8 @@ class lowQual(commands.Cog):
                                 await message.edit(
                                     content=f"Uh, I couldn't find the duration of vod. idk man.\nException: {e}"
                                 )
+            all_lines = await process.stdout.read()
+            print(f"output:\n\033[;32m{all_lines.decode('utf-8')}\033[0m")                    
             os.remove(muxname)
             coms = [
                 "ffmpeg",
@@ -179,6 +194,7 @@ class lowQual(commands.Cog):
                 "-y",
                 filename,
             ]
+            print(shjoin(coms))
             await message.edit(content="Upscaling...")
             process = await asyncio.create_subprocess_exec(
                 *coms, stdout=subprocess.PIPE, stderr=subprocess.STDOUT
@@ -256,6 +272,8 @@ class lowQual(commands.Cog):
                                 await message.edit(
                                     content="Uh, I couldn't find the duration of vod. idk man."
                                 )
+            all_lines = await process.stdout.read()
+            print(f"output:\n\033[;32m{all_lines.decode('utf-8')}\033[0m")                     
             os.remove(tempname)
 
         elif re.search(r".+\.jpg|.+\.jpeg|.+\.png|.+\.webp", filename) is not None:

@@ -5,16 +5,10 @@ from saucenao_api import SauceNao
 import os
 import re
 import myfunctions.msg_link_grabber as msg_link_grabber
-import importlib
 
 class Sauce(commands.Cog):
 
-    @commands.command()
-    async def saucetest(self, ctx, link=None):    
-        importlib.reload(msg_link_grabber)
-        link = await msg_link_grabber.grab_link(ctx,link)
-        await ctx.send("pogers")
-        await ctx.send(link)        
+  
         
     @commands.command(aliases=["findsauce", "getsauce"])
     async def sauce(self, ctx, link=None):

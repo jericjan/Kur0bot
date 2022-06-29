@@ -2,11 +2,14 @@ from disnake.ext import commands
 import os
 import requests
 import dateutil.parser as dp
+import myfunctions.msg_link_grabber as msg_link_grabber
 
 
 class When(commands.Cog):
     @commands.command()
-    async def when(self, ctx, link):
+    async def when(self, ctx, link=None):
+        link = await msg_link_grabber.grab_link(ctx,link)
+        print(link)    
         if link.startswith("https://youtu.be"):
             idd = link.split("/")[-1].split("?")[0]
             wrong = False
