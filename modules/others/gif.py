@@ -13,6 +13,7 @@ import glob
 import shutil
 import time
 import shlex 
+import myfunctions.msg_link_grabber as msg_link_grabber
 
 limiter = AsyncLimiter(1, 1)
 
@@ -39,24 +40,8 @@ class Gif(commands.Cog):
 
     @commands.command(aliases=["vid2gif", "gifify"])
     async def gif(self, ctx, link=None):
-        if link == None:
-            print(ctx.message.attachments)  # a list
-            print(ctx.message.reference)
-            if ctx.message.attachments:  # message has images
-                print("is attachment")
-                link = ctx.message.attachments[0].url
-            elif ctx.message.reference is not None:  # message is replying
-                print("is reply")
-                id = ctx.message.reference.message_id
-                msg = await ctx.channel.fetch_message(id)
-                if msg.attachments:  # if replied has image
-                    link = msg.attachments[0].url
-                elif msg.embeds:  # if replied has link
-                    link = msg.embeds[0].url
-
-        if link == None:  # check again
-            await ctx.send("Bruh, there's nothing there. what am i supposed to do?")
-            return
+        link = await msg_link_grabber.grab_link(ctx,link)
+        print(link)
 
         filename = link.split("/")[-1]
         new_filename = "".join(filename.split(".")[:-1]) + ".gif"
@@ -178,24 +163,9 @@ class Gif(commands.Cog):
                 quality = 70
         else:
             quality = 70
-        if link == None:
-            print(ctx.message.attachments)  # a list
-            print(ctx.message.reference)
-            if ctx.message.attachments:  # message has images
-                print("is attachment")
-                link = ctx.message.attachments[0].url
-            elif ctx.message.reference is not None:  # message is replying
-                print("is reply")
-                id = ctx.message.reference.message_id
-                msg = await ctx.channel.fetch_message(id)
-                if msg.attachments:  # if replied has image
-                    link = msg.attachments[0].url
-                elif msg.embeds:  # if replied has link
-                    link = msg.embeds[0].url
-
-        if link == None:  # check again
-            await ctx.send("Bruh, there's nothing there. what am i supposed to do?")
-            return
+            
+        link = await msg_link_grabber.grab_link(ctx,link)
+        print(link)
 
         filename = link.split("/")[-1]
         new_filename = "".join(filename.split(".")[:-1]) + ".gif"

@@ -770,15 +770,14 @@ class Help(commands.Cog):
                                                 "__k.clearqueue__ - clears the queue",inline=False)  
         await ctx.send(embed=em)         
         
-    @help.command(aliases=["quickvergil","smallvergil"])
+    @help.command(aliases=["quickvergil"])
     async def vergil(self, ctx):
         em = disnake.Embed(
             title="Vergil Cut Green Screen",
             description="Give it an image and Vergil will cut through it with his unending\n**ＭＯＴＩＶＡＴＩＯＮ**."
         )
         em.add_field(name="**Commands**", value="__k.vergil <image>__ - normal version\n\n" \
-                                                "__k.quickvergil <image>__ - the image doesn't get sliced but 1-2 seconds quicker than above\n\n" \
-                                                "__k.smallvergil <image>__ -  quickvergil but compressed version. i'll also make one for the normal version soon.",inline=False)  
+                                                "__k.quickvergil <image>__ - just greenscreen, image doesn't get sliced but a couple seconds faster than above",inline=False)  
         await ctx.send(embed=em)      
         
     @help.command()

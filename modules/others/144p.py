@@ -8,7 +8,7 @@ from tqdm import tqdm
 import io
 from aiolimiter import AsyncLimiter
 from datetime import datetime, timedelta
-
+import myfunctions.msg_link_grabber as msg_link_grabber
 
 limiter = AsyncLimiter(1, 1)
 
@@ -36,24 +36,8 @@ class lowQual(commands.Cog):
     @commands.command(aliases=["shitify", "pixelize"])
     async def lowqual(self, ctx, link=None):
 
-        if link == None:
-            print(ctx.message.attachments)  # a list
-            print(ctx.message.reference)
-            if ctx.message.attachments:  # message has images
-                print("is attachment")
-                link = ctx.message.attachments[0].url
-            elif ctx.message.reference is not None:  # message is replying
-                print("is reply")
-                id = ctx.message.reference.message_id
-                msg = await ctx.channel.fetch_message(id)
-                if msg.attachments:  # if replied has image
-                    link = msg.attachments[0].url
-                elif msg.embeds:  # if replied has link
-                    link = msg.embeds[0].url
-
-        if link == None:  # check again
-            await ctx.send("Bruh, there's nothing there. what am i supposed to do?")
-            return
+        link = await msg_link_grabber.grab_link(ctx,link)
+        print(link)
 
         # print(f"link is {link}")
         if "tenor.com" in link:

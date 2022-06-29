@@ -7,7 +7,7 @@ import requests
 import io
 import re
 from PIL import Image, ImageFile
-
+import myfunctions.msg_link_grabber as msg_link_grabber
 class EmoteSticker(commands.Cog):
     def __init__(self, client):
         self.client = client
@@ -140,31 +140,8 @@ class EmoteSticker(commands.Cog):
         if (
             any(role in roles for role in ctx.author.roles) or ctx.author.id == 396892407884546058
         ):            
-            if link == None:
-                print(ctx.message.attachments)  # a list
-                print(ctx.message.reference)
-                if ctx.message.attachments:  # message has images
-                    print("is attachment")
-                    link = ctx.message.attachments[0].url
-                elif ctx.message.reference is not None:  # message is replying
-                    print("is reply")
-                    id = ctx.message.reference.message_id
-                    msg = await ctx.channel.fetch_message(id)
-                    if msg.attachments:  # if replied has image
-                        link = msg.attachments[0].url
-                    elif msg.embeds:  # if replied has link
-                        link = msg.embeds[0].url
-
-                    # print("embmeds: {0}".format(msg.embeds))
-                    # if re.search(r'http.*\bpng\b|http.*\bjpg\b|http.*\bjpeg\b',msg.content):
-                    #   link = re.search(r'http.*\bpng\b|http.*\bjpg\b|http.*\bjpeg\b',msg.content)[0]
-                    # link= msg.attachments[0].url
-                    else:
-                        await ctx.send("the message you replied to has no image, baka!")
-                else:
-                    await ctx.send("you did something wrong. brug. try again.")
-                    return
-                print(link)               
+            link = await msg_link_grabber.grab_link(ctx,link)
+            print(link)          
             if re.match(r"https:\/\/cdn.discordapp.com\/emojis\/\d+",link):
                 async with aiohttp.ClientSession() as session:
                     async with session.get(
@@ -246,31 +223,8 @@ class EmoteSticker(commands.Cog):
                 any(role in roles for role in ctx.author.roles)
             ):    
             
-                if link == None:
-                    print(ctx.message.attachments)  # a list
-                    print(ctx.message.reference)
-                    if ctx.message.attachments:  # message has images
-                        print("is attachment")
-                        link = ctx.message.attachments[0].url
-                    elif ctx.message.reference is not None:  # message is replying
-                        print("is reply")
-                        id = ctx.message.reference.message_id
-                        msg = await ctx.channel.fetch_message(id)
-                        if msg.attachments:  # if replied has image
-                            link = msg.attachments[0].url
-                        elif msg.embeds:  # if replied has link
-                            link = msg.embeds[0].url
-
-                        # print("embmeds: {0}".format(msg.embeds))
-                        # if re.search(r'http.*\bpng\b|http.*\bjpg\b|http.*\bjpeg\b',msg.content):
-                        #   link = re.search(r'http.*\bpng\b|http.*\bjpg\b|http.*\bjpeg\b',msg.content)[0]
-                        # link= msg.attachments[0].url
-                        else:
-                            await ctx.send("the message you replied to has no image, baka!")
-                    else:
-                        await ctx.send("you did something wrong. brug. try again.")
-                        return
-                    print(link)             
+                link = await msg_link_grabber.grab_link(ctx,link)
+                print(link)           
                 file, width, height = await self.sticker_resize(link)
                 file.seek(0)       
                 await ctx.send(f"New image size is: {width}x{height}",delete_after=3.0)
