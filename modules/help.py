@@ -3,6 +3,7 @@ import disnake
 import json
 import os
 
+
 class Help(commands.Cog):
     @commands.group(invoke_without_command=True)
     async def help(self, ctx):
@@ -685,13 +686,15 @@ class Help(commands.Cog):
             value="k.mgr <sound_name>",
         )
         await ctx.send(embed=em)
-        
+
         mgr_list = ""
         for root, dirs, files in os.walk("sounds/mgr/", topdown=False):
             for name in dirs:
                 mgr_list += f"**{name}:**\n"
-                mgr_list += '\n'.join([f"- {x.split('.')[0]}" for x in os.listdir(f"sounds/mgr/{name}")])
-                mgr_list += '\n\n'   
+                mgr_list += "\n".join(
+                    [f"- {x.split('.')[0]}" for x in os.listdir(f"sounds/mgr/{name}")]
+                )
+                mgr_list += "\n\n"
         embed = disnake.Embed()
         for index, message in enumerate(self.paginate(mgr_list)):
             if index == 0:
@@ -699,7 +702,7 @@ class Help(commands.Cog):
             else:
                 embed.title = ""
             embed.description = "".join(message)
-            await ctx.send(embed=embed)        
+            await ctx.send(embed=embed)
 
     @help.command(aliases=["us"])
     async def uploadsticker(self, ctx):
@@ -707,92 +710,116 @@ class Help(commands.Cog):
             title="Upload sticker",
             description="Uploads an image as a sticker.",
         )
-        em.add_field(name="**Syntax**", value="k.uploadsticker <name> <emoji as text> <url>\nUpload image with k.uploadsticker <name> <emoji as text>\nReply to a message with k.uploadsticker <name> <emoji as text>",inline=False)
+        em.add_field(
+            name="**Syntax**",
+            value="k.uploadsticker <name> <emoji as text> <url>\nUpload image with k.uploadsticker <name> <emoji as text>\nReply to a message with k.uploadsticker <name> <emoji as text>",
+            inline=False,
+        )
         em.add_field(name="**Aliases**", value=",".join(ctx.command.aliases))
         em.add_field(
             name="**Example**",
             value="k.uploadsticker agony cry https://cdn.discordapp.com/attachments/812666551051747369/983132328945680434/IMG_1963.jpg",
-        )        
+        )
         await ctx.send(embed=em)
 
-    @help.command(aliases=["uploademoji","ue"])
+    @help.command(aliases=["uploademoji", "ue"])
     async def uploademote(self, ctx):
         em = disnake.Embed(
             title="Upload emote",
             description="Uploads an image as an emote.",
         )
-        em.add_field(name="**Syntax**", value="k.uploademote <name> <url\emote ID>\nUpload image with k.uploademote <name>\nReply to a message with k.uploademote <name>",inline=False)
+        em.add_field(
+            name="**Syntax**",
+            value="k.uploademote <name> <url\emote ID>\nUpload image with k.uploademote <name>\nReply to a message with k.uploademote <name>",
+            inline=False,
+        )
         em.add_field(name="**Aliases**", value=",".join(ctx.command.aliases))
         em.add_field(
             name="**Example**",
             value="k.uploademote stuff https://cdn.discordapp.com/attachments/809247468084133898/985504342461280306/stuff.png",
-        )        
+        )
         await ctx.send(embed=em)
-        
+
     @help.command(aliases=["japanese"])
     async def nihongo(self, ctx):
         em = disnake.Embed(
             title="Translate to Japanese",
             description="Translate given text to Japanese. Uses Google Translate because I can't get access to the DeepL API because I'm filipino :(",
         )
-        em.add_field(name="**Syntax**", value="k.nihongo <sentence>",inline=False)
+        em.add_field(name="**Syntax**", value="k.nihongo <sentence>", inline=False)
         em.add_field(name="**Aliases**", value=",".join(ctx.command.aliases))
         em.add_field(
             name="**Example**",
             value="k.uploademote hello",
-        )        
-        await ctx.send(embed=em)        
-        
+        )
+        await ctx.send(embed=em)
+
     @help.command(aliases=["english"])
     async def eigo(self, ctx):
         em = disnake.Embed(
             title="Translate to English",
             description="Translate given text to English. Uses Google Translate because I can't get access to the DeepL API because I'm filipino :(",
         )
-        em.add_field(name="**Syntax**", value="k.eigo <sentence>",inline=False)
+        em.add_field(name="**Syntax**", value="k.eigo <sentence>", inline=False)
         em.add_field(name="**Aliases**", value=",".join(ctx.command.aliases))
         em.add_field(
             name="**Example**",
             value="k.eigo 草",
-        )        
-        await ctx.send(embed=em)         
+        )
+        await ctx.send(embed=em)
 
-    @help.command(aliases=["addqueue","insertqueue","removequeue","clearqueue"])
+    @help.command(aliases=["addqueue", "insertqueue", "removequeue", "clearqueue"])
     async def queue(self, ctx):
         em = disnake.Embed(
             title="Queue",
-            description="The server's queue. This was originally made for Karaoke in the pacifam server to keep track of queues but it can be used for anything. For now, the queues are unique to each server and anybody can modify them."
+            description="The server's queue. This was originally made for Karaoke in the pacifam server to keep track of queues but it can be used for anything. For now, the queues are unique to each server and anybody can modify them.",
         )
-        em.add_field(name="**Commands**", value="__k.queue__ - shows the server's queue\n\n" \
-                                                "__k.addqueue <things separated w/ spaces>__ - adds things to queue\n\n" \
-                                                "__k.insertqueue <name of thing to insert new thing after> <new thing>__ - insert new thing right after an existing thing\n\n" \
-                                                "__k.removequeue <thing>__ - removes thing from queue\n\n" \
-                                                "__k.clearqueue__ - clears the queue",inline=False)  
-        await ctx.send(embed=em)         
-        
+        em.add_field(
+            name="**Commands**",
+            value="__k.queue__ - shows the server's queue\n\n"
+            "__k.addqueue <things separated w/ spaces>__ - adds things to queue\n\n"
+            "__k.insertqueue <name of thing to insert new thing after> <new thing>__ - insert new thing right after an existing thing\n\n"
+            "__k.removequeue <thing>__ - removes thing from queue\n\n"
+            "__k.clearqueue__ - clears the queue",
+            inline=False,
+        )
+        await ctx.send(embed=em)
+
     @help.command(aliases=["quickvergil"])
     async def vergil(self, ctx):
         em = disnake.Embed(
             title="Vergil Cut Green Screen",
-            description="Give it an image and Vergil will cut through it with his unending\n**ＭＯＴＩＶＡＴＩＯＮ**."
+            description="Give it an image and Vergil will cut through it with his unending\n**ＭＯＴＩＶＡＴＩＯＮ**.",
         )
-        em.add_field(name="**Commands**", value="__k.vergil <image>__ - normal version\n\n" \
-                                                "__k.quickvergil <image>__ - just greenscreen, image doesn't get sliced but a couple seconds faster than above",inline=False)  
-        await ctx.send(embed=em)      
-        
+        em.add_field(
+            name="**Commands**",
+            value="__k.vergil <image>__ - normal version\n\n"
+            "__k.quickvergil <image>__ - just greenscreen, image doesn't get sliced but a couple seconds faster than above",
+            inline=False,
+        )
+        await ctx.send(embed=em)
+
     @help.command()
     async def hallofshame(self, ctx):
         em = disnake.Embed(
             title="Hall Of Shame",
-            description="The hall of shame where people who commit cringe will be posted on."
+            description="The hall of shame where people who commit cringe will be posted on.",
         )
-        em.add_field(name="**Syntax**", value="k.hallofshame <mention_channel>",inline=False)  
-        em.add_field(name="**Cringe Requirements:**", value="You will be cringe when you play any of these games: \n" \
-                                                            "⦁ Mobile Legends: Bang Bang\n" \
-                                                            "⦁ League of Legends\n" \
-                                                            "⦁ Honkai Impact 3\n" \
-                                                            "⦁ Genshin Impact\n" \
-                                                            "(and no, these cannot be customized <a:trollplant:934777423881445436>)",inline=False)                                                               
-        await ctx.send(embed=em)           
+        em.add_field(
+            name="**Syntax**", value="k.hallofshame <mention_channel>", inline=False
+        )
+        em.add_field(
+            name="**Cringe Requirements:**",
+            value="You will be cringe when you play any of these games: \n"
+            "⦁ Mobile Legends: Bang Bang\n"
+            "⦁ League of Legends\n"
+            "⦁ Honkai Impact 3\n"
+            "⦁ Genshin Impact\n"
+            "(and no, these cannot be customized <a:trollplant:934777423881445436>)",
+            inline=False,
+        )
+        await ctx.send(embed=em)
+
+
 def setup(client):
     client.add_cog(Help(client))

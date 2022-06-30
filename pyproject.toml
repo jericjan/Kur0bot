@@ -16,7 +16,7 @@ mcrcon = "^0.7.0"
 saucenao-api = {git = "https://github.com/jericjan/saucenao_api.git"}
 aiohttp="<3.8.0"
 #py-cord = {git = "https://github.com/Pycord-Development/pycord.git"}
-black = "^21.12b0"
+black = "^22.6.0"
 pytz = "^2021.3"
 disnake = "^2.3.0"
 tqdm = "^4.62.3"

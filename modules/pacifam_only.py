@@ -5,10 +5,9 @@ import os
 import json
 import io
 import re
-# from aiomcrcon import Client as mcrconClient
+
 from mcrcon import MCRcon
 
-# from rcon import rcon
 
 
 class PacifamOnly(commands.Cog):
@@ -33,8 +32,6 @@ class PacifamOnly(commands.Cog):
 
             ftp = FTP(host="us28.pebblehost.com")
             ftp.login(user=os.getenv("PEBBLE_EMAIL"), passwd=os.getenv("PEBBLE_PASS"))
-            # ftp.cwd('mods')
-            # ftp.cwd('EasyAuth')
             r = io.BytesIO()
             ftp.retrbinary("RETR /mods/EasyAuth/config.json", r.write)
             config = json.loads(r.getvalue())
@@ -45,30 +42,13 @@ class PacifamOnly(commands.Cog):
                 config["main"]["forcedOfflinePlayers"].append(username.lower())
             print(config["main"]["forcedOfflinePlayers"])
             dump = json.dumps(config, indent=2).encode("utf-8")
-            # print(dump)
             ftp.storbinary("STOR /mods/EasyAuth/config.json", io.BytesIO(dump))
-            # print(ftp.retrlines('LIST'))
-            # coms = ["mcrcon", "-H", "51.81.142.14", "--password", str(os.getenv("RCON_PASS")), "-w", "1", "auth reload"]
-
-            # out = await asyncio.create_subprocess_exec(*coms,
-            #          stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-            # stdout, stderr = await out.communicate()
-            # print(stdout.decode())
-            # print(stderr)
-            # mc_client = mcrconClient("51.81.142.14", 25575, str(os.getenv("RCON_PASS")))
-            # await mc_client.connect()
-
-            # response = await mc_client.send_cmd("/say a")
-            # print(response)
-            # await mc_client.close()
 
             with MCRcon("51.81.142.14", str(os.getenv("RCON_PASS")), 8082) as mcr:
                 resp = mcr.command("/auth reload")
                 print(resp)
             await ctx.send("Done!")
 
-            # response = await rcon('/say a',host='51.81.142.14', port=25575, passwd=str(os.getenv("RCON_PASS")))
-            # print(response)
         else:
             await ctx.send("Only Avi/Admins/Mods can use this command")
 
@@ -117,8 +97,6 @@ class PacifamOnly(commands.Cog):
 
             ftp = FTP(host="us28.pebblehost.com")
             ftp.login(user=os.getenv("PEBBLE_EMAIL"), passwd=os.getenv("PEBBLE_PASS"))
-            # ftp.cwd('mods')
-            # ftp.cwd('EasyAuth')
             r = io.BytesIO()
             ftp.retrbinary("RETR /mods/EasyAuth/config.json", r.write)
             config = json.loads(r.getvalue())
@@ -129,30 +107,14 @@ class PacifamOnly(commands.Cog):
                 return
             print(config["main"]["forcedOfflinePlayers"])
             dump = json.dumps(config, indent=2).encode("utf-8")
-            # print(dump)
             ftp.storbinary("STOR /mods/EasyAuth/config.json", io.BytesIO(dump))
-            # print(ftp.retrlines('LIST'))
-            # coms = ["mcrcon", "-H", "51.81.142.14", "--password", str(os.getenv("RCON_PASS")), "-w", "1", "auth reload"]
 
-            # out = await asyncio.create_subprocess_exec(*coms,
-            #          stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-            # stdout, stderr = await out.communicate()
-            # print(stdout.decode())
-            # print(stderr)
-            # mc_client = mcrconClient("51.81.142.14", 25575, str(os.getenv("RCON_PASS")))
-            # await mc_client.connect()
-
-            # response = await mc_client.send_cmd("/say a")
-            # print(response)
-            # await mc_client.close()
 
             with MCRcon("51.81.142.14", str(os.getenv("RCON_PASS")), 8082) as mcr:
                 resp = mcr.command("/auth reload")
                 print(resp)
             await ctx.send("Done!")
 
-            # response = await rcon('/say a',host='51.81.142.14', port=25575, passwd=str(os.getenv("RCON_PASS")))
-            # print(response)
         else:
             await ctx.send("Only Avi/Admins/Mods can use this command")
 
@@ -161,22 +123,18 @@ class PacifamOnly(commands.Cog):
         if ctx.guild.id == 603147860225032192:
             ftp = FTP(host="us28.pebblehost.com")
             ftp.login(user=os.getenv("PEBBLE_EMAIL"), passwd=os.getenv("PEBBLE_PASS"))
-            # r = io.BytesIO()
-            # ftp.retrbinary("RETR /mods/EasyAuth/config.json", r.write)
-            # config = json.loads(r.getvalue())
             modlist = list(ftp.mlsd("/mods/"))
             clean_modlist = []
             for i in modlist:
                 filename = i[0]
                 if filename.endswith(".jar"):
-                    modname = re.findall(r"[\w-]+(?=-)(?=\d)?|[\w-]+(?=\.)",filename)[0]
+                    modname = re.findall(r"[\w-]+(?=-)(?=\d)?|[\w-]+(?=\.)", filename)[
+                        0
+                    ]
                     clean_modlist.append(modname)
-            await ctx.send('\n'.join(clean_modlist))
-            # for i in self.paginate(list(modlist)):
-                # await ctx.send(i)
+            await ctx.send("\n".join(clean_modlist))
         else:
             await ctx.send("Only usable in the pacifam server")
-
 
 
 def setup(client):

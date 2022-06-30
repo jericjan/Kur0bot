@@ -12,7 +12,7 @@ import uuid
 import glob
 import shutil
 import time
-import shlex 
+import shlex
 import myfunctions.msg_link_grabber as msg_link_grabber
 
 limiter = AsyncLimiter(1, 1)
@@ -24,23 +24,20 @@ class Gif(commands.Cog):
         self.pbar_list = []
 
     async def updatebar(self, msg):
-        # print("Updating bar...")
         try:
 
             async with limiter:
                 await asyncio.wait_for(msg.edit(content=self.pbar_list[-1]), timeout=1)
-                # print("\033[92m SUCCESS! \033[0m")
         except Exception as e:
             if str(e).startswith("404 Not Found"):
                 pass
             else:
-                # print(f"\033[91m timeout!\n{e} \033[0m")
                 pass
             pass
 
     @commands.command(aliases=["vid2gif", "gifify"])
     async def gif(self, ctx, link=None):
-        link = await msg_link_grabber.grab_link(ctx,link)
+        link = await msg_link_grabber.grab_link(ctx, link)
         print(link)
 
         filename = link.split("/")[-1]
@@ -57,7 +54,6 @@ class Gif(commands.Cog):
             process = await asyncio.create_subprocess_exec(
                 *coms, stdout=subprocess.PIPE, stderr=subprocess.STDOUT
             )
-            # stdout, stderr = await process.communicate()
             full_line = ""
             pbar = tqdm(total=100)
             while process.returncode is None:
@@ -65,7 +61,6 @@ class Gif(commands.Cog):
                 line = await process.stdout.read(500)
                 if not line:
                     break
-                # print(line.decode('utf-8'))
                 linedec = line.decode("utf-8")
                 full_line += linedec
                 print(linedec)
@@ -76,7 +71,6 @@ class Gif(commands.Cog):
                     duration_str = re.findall(
                         r"(?<=Duration: )\d{2}:\d{2}:\d{2}.\d{2}", full_line
                     )[-1]
-                    # print(f"Duration is {duration_str}")
                     strpcurr = datetime.strptime(duration_str, "%H:%M:%S.%f")
                     duration = timedelta(
                         hours=strpcurr.hour,
@@ -88,7 +82,6 @@ class Gif(commands.Cog):
                     re.search(r"(?<=time=)\d{2}:\d{2}:\d{2}.\d{2}", full_line)
                     is not None
                 ):
-                    # print(linedec)
                     if (
                         re.findall(r"(?<=time=)\d{2}:\d{2}:\d{2}.\d{2}", full_line)[-1]
                         != "00:00:00.00"
@@ -96,7 +89,6 @@ class Gif(commands.Cog):
                         currtime_str = re.findall(
                             r"(?<=time=)\d{2}:\d{2}:\d{2}.\d{2}", full_line
                         )[-1]
-                        # print(f"Current time is {currtime_str}")
                         strpcurr = datetime.strptime(currtime_str, "%H:%M:%S.%f")
                         currtime = timedelta(
                             hours=strpcurr.hour,
@@ -104,12 +96,10 @@ class Gif(commands.Cog):
                             seconds=strpcurr.second,
                             microseconds=strpcurr.microsecond,
                         )
-                        # print(linedec)
                         try:
                             percentage = (
                                 currtime.total_seconds() / duration.total_seconds()
                             ) * 100
-                            # print(f"{percentage}% complete...")
 
                             output = io.StringIO()
                             pbar = tqdm(total=100, file=output, ascii=False)
@@ -118,7 +108,6 @@ class Gif(commands.Cog):
                             final = output.getvalue()
                             output.close()
                             final1 = final.splitlines()[-1]
-                            # print(final1)
                             aaa = re.findall(
                                 r"(?<=\d\%)\|.+\| (?=\d+|\d+.\d+/\d+|\d+.\d+)", final1
                             )[0]
@@ -143,8 +132,10 @@ class Gif(commands.Cog):
     async def gif2(self, ctx, link=None, quality=None):
         uuid_id = uuid.uuid4()
         if link:
-            if link.isdigit():  # if link is digits 1-100. usually for when replying to message or sending vid directly.
-                if int(link) in range(1,101):
+            if (
+                link.isdigit()
+            ):  # if link is digits 1-100. usually for when replying to message or sending vid directly.
+                if int(link) in range(1, 101):
                     quality = link
                     if ctx.message.attachments:  # message has images
                         print("is attachment")
@@ -156,15 +147,17 @@ class Gif(commands.Cog):
                         if msg.attachments:  # if replied has image
                             link = msg.attachments[0].url
                         elif msg.embeds:  # if replied has link
-                            link = msg.embeds[0].url                    
+                            link = msg.embeds[0].url
                 else:
-                    await ctx.send("If you were trying to specify a quality. It's not valid.")
+                    await ctx.send(
+                        "If you were trying to specify a quality. It's not valid."
+                    )
             elif quality == None:
                 quality = 70
         else:
             quality = 70
-            
-        link = await msg_link_grabber.grab_link(ctx,link)
+
+        link = await msg_link_grabber.grab_link(ctx, link)
         print(link)
 
         filename = link.split("/")[-1]
@@ -173,9 +166,6 @@ class Gif(commands.Cog):
             new_filename = new_filename[1:]
         print(f"filename is: {filename}, quality is: {quality}")
         if re.search(r".+\.mp4|.+\.mkv|.+\.mov|.+\.webm", filename) is not None:
-            # r = requests.get(link)
-            # vid = io.BytesIO(r.content)
-            # vid.seek(0)
             frames_folder = f"frames_{uuid_id}"
             os.mkdir(f"{frames_folder}/")
             frames_path = f"{frames_folder}/frame%04d.png"
@@ -192,7 +182,6 @@ class Gif(commands.Cog):
                 await ctx.send(stderr.decode("utf-8"))
             gif_ski_frames_path = f"{frames_folder}/frame*.png"
             gif_ski_frames_path = glob.glob(gif_ski_frames_path)
-            # gif_ski_frames_path = ' '.join(gif_ski_frames_path)
             coms = [
                 "ffprobe",
                 "-v",
@@ -225,9 +214,8 @@ class Gif(commands.Cog):
                 "--output",
                 new_filename,
             ]
-            
+
             coms = coms + gif_ski_frames_path
-            # print(shlex.join(coms))
             print(shlex.join(coms))
             process = await asyncio.create_subprocess_exec(
                 *coms, stdout=subprocess.PIPE, stderr=subprocess.STDOUT
@@ -271,8 +259,10 @@ class Gif(commands.Cog):
                     await ctx.send(link)
             os.remove(new_filename)
             shutil.rmtree(f"{frames_folder}/")
-        elif re.search(r".+\.jpg|.+\.png|.+\.webp", filename) is not None:         
-            pre_message = await ctx.send("You... want to turn an image into a gif? Uh ok then.")
+        elif re.search(r".+\.jpg|.+\.png|.+\.webp", filename) is not None:
+            pre_message = await ctx.send(
+                "You... want to turn an image into a gif? Uh ok then."
+            )
             frames_folder = f"frames_{uuid_id}"
             os.mkdir(f"{frames_folder}/")
             frames_path1 = f"{frames_folder}/frame1.png"
@@ -287,14 +277,13 @@ class Gif(commands.Cog):
             process = await asyncio.create_subprocess_exec(
                 *coms2, stdout=subprocess.PIPE, stderr=subprocess.STDOUT
             )
-            stdout, stderr = await process.communicate()            
+            stdout, stderr = await process.communicate()
             print("FFMPEGGGG")
             print(stdout.decode("utf-8"))
             if stderr is not None:
                 await ctx.send(stderr.decode("utf-8"))
             gif_ski_frames_path = f"{frames_folder}/frame*.png"
             gif_ski_frames_path = glob.glob(gif_ski_frames_path)
-            # gif_ski_frames_path = ' '.join(gif_ski_frames_path)
             coms = [
                 "ffprobe",
                 "-v",
@@ -313,18 +302,16 @@ class Gif(commands.Cog):
                 "--output",
                 new_filename,
             ]
-            
+
             coms = coms + gif_ski_frames_path
-            # print(shlex.join(coms))
             print(shlex.join(coms))
             process = await asyncio.create_subprocess_exec(
                 *coms, stdout=subprocess.PIPE, stderr=subprocess.STDOUT
             )
-            
 
             print("GIFSKI")
             stdout, stderr = await process.communicate()
-            print(stdout.decode('utf-8'))
+            print(stdout.decode("utf-8"))
             await message.edit(content="Sending...")
             try:
                 await ctx.send(file=disnake.File(new_filename))
@@ -344,13 +331,14 @@ class Gif(commands.Cog):
                     link = stdout.decode("utf-8").splitlines()[-1]
                     await ctx.send(link)
             os.remove(new_filename)
-            shutil.rmtree(f"{frames_folder}/")       
+            shutil.rmtree(f"{frames_folder}/")
             await message.delete()
             await pre_message.delete()
         else:
             await ctx.send(
                 "I don't support this filetype yet ig. Ping kur0 or smth. <:towashrug:853606191711649812> "
             )
+
 
 def setup(client):
     client.add_cog(Gif(client))

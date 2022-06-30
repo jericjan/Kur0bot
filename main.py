@@ -1,47 +1,28 @@
 import time
-
 start_time = time.time()
 
-# import sys
-# sys.stdout = open('console_log.txt', 'a')
-# sys.stderr = open('console_log.txt', 'a')
-
-# import discord
 import disnake
-
 print(f"Running Disnake {disnake.__version__}")
+
 from disnake.ext import commands
 import os
-
-
 from keep_alive import keep_alive
-
 import asyncio
 import aiohttp
-
 from datetime import datetime, timedelta
 import pytz
-
-
 import requests
-
 import threading
-
-# import io #used in twitter_link_giver
 import atexit
 import signal
-
 import importlib
 
 from dotenv import load_dotenv
-
 load_dotenv()
 
 
 def goodbye(a=None, b=None):
     print("Exiting...")
-    # sys.stdout.close()
-
     f = open("log.txt", "a")
     f.write("Exiting...\n")
     f.close()
@@ -64,21 +45,11 @@ else:
     print(f"{(time.time() - start_time):.2f}s - Not rate limited. ({r.status_code})")
 
 
-# client = discord.Client()
-intents = disnake.Intents().all()
 
-# global client
+intents = disnake.Intents().all()
 game = disnake.Activity(name="sus gaming | k.help", type=disnake.ActivityType.playing)
 client = commands.Bot(command_prefix="k.", intents=intents, activity=game)
-
 client.remove_command("help")
-
-
-pass_words = ["password", "pass word"]
-
-
-custom_words = ["amgus", "amogus", "sushi", "pog"]
-
 
 async def log(text, printText=None):
     tz = pytz.timezone("Asia/Manila")
@@ -135,7 +106,6 @@ print(f"{(time.time() - start_time):.2f}s - Done!")
 @client.before_invoke
 async def common(ctx):
     text = f'k.{ctx.invoked_with} | {ctx.author.name}#{ctx.author.discriminator} | "{ctx.guild.name}" - "{ctx.channel.name}"'
-    # print = True
     await log(str(text))
 
 
@@ -198,7 +168,6 @@ async def stream(ctx, link, noembed=None):
         isotime = r["items"][0]["liveStreamingDetails"]["scheduledStartTime"]
         title = r["items"][0]["snippet"]["title"]
         author = r["items"][0]["snippet"]["channelTitle"]
-        # resos = ['maxres','standard','high','medium','default']
         try:
             thumbnail = r["items"][0]["snippet"]["thumbnails"]["maxres"]["url"]
         except Exception:
@@ -219,16 +188,12 @@ async def stream(ctx, link, noembed=None):
         channelid = r["items"][0]["snippet"]["channelId"]
         parsed_t = dp.parse(isotime)
         t_in_seconds = parsed_t.timestamp()
-        #  dsctime = f"<t:{str(t_in_seconds).split('.')[0]}:F>"
         reltime = f"<t:{str(t_in_seconds).split('.')[0]}:R>"
         dttime = datetime.strptime(isotime, "%Y-%m-%dT%H:%M:%S%z")
-        #  dayofweek = parsed_t.weekday()
-
         f = open("list.txt", "a")  # add stream url and time to list.txt
         f.write(f"{link} {parsed_t.strftime('%a %b %d %Y %H:%M:%S')}\n")
         f.close()
         a_file = open("list.txt", "r")  # reads list.txt
-        #   lines = a_file.read().splitlines()
         a_file.close()
 
         params2 = {
@@ -299,7 +264,6 @@ async def open_url(url):
 
     count = 0
     for msg in messages:
-        # print(msg)
         if msg.reference is not None and not msg.is_system():
 
             msg_id = int(msg.reference.message_id)
@@ -313,14 +277,12 @@ async def open_url(url):
     if count == 0:
         for msg in messages:
             for i in msg.embeds:
-                #  print(i.url)
                 if i.url == url:
                     print("found specific message")
                     print(msg.jump_url.split("/")[-1])
                     msg_id = int(msg.jump_url.split("/")[-1])
                     msg = await sched_ch.fetch_message(msg_id)
                     await msg.reply("<@&888794254837706804> Starting!")
-                    # await msg.reply('test')
     await clear_list(url)
 
 
@@ -328,10 +290,9 @@ async def open_url(url):
 async def sched(ctx, url):
     sched_ch = client.get_guild(603147860225032192).get_channel(879702977898741770)
     messages = await sched_ch.history(limit=200).flatten()
-    # print(messages)
+
     count = 0
     for msg in messages:
-        # print(msg)
         if msg.reference is not None and not msg.is_system():
 
             msg_id = int(msg.reference.message_id)
@@ -345,10 +306,6 @@ async def sched(ctx, url):
 
 @client.command()
 async def tasks(ctx):
-    # tasks = client.loop.all_tasks()
-    # for i in tasks:
-    #   await ctx.send(i.get_coro())
-    #   await ctx.send(i.get_name())
     client.loop.set_debug(True)
 
 
@@ -404,7 +361,6 @@ def precheck():
     a_file = open("list.txt", "r")  # reads the txt
     lines = a_file.read().splitlines()
     a_file.close()
-    # print(lines)
     with open("list.txt", "w+") as r:
         for i in lines:
             later = datetime.strptime(i.split(" ", 1)[1], "%a %b %d %Y %H:%M:%S")
@@ -413,16 +369,10 @@ def precheck():
             if later > now:
                 r.write(i + "\n")
             url = i.split(" ")[0]
-            #  day = i.split(" ")[1]
-            #  timee = i.split(" ")[5]
+
             if later > now + timedelta(days=6):
                 print("more than 1 week")
             else:
-                # loop = asyncio.new_event_loop()
-                # asyncio.set_event_loop(loop)
-
-                # loop.run_until_complete()
-                # loop.close()
                 client.loop.create_task(run_at(later, open_url(url), url))
 
 
@@ -431,7 +381,6 @@ tcheck.start()
 print(f"{(time.time() - start_time):.2f}s - schedules checked!")
 keep_alive()
 isDiscordrunning = False
-# client.run(os.getenv("TOKEN"))
 
 from running_check import check
 
@@ -454,13 +403,11 @@ while isDiscordrunning is False:
 
         r = requests.head(url="https://discord.com/api/v1")
         print(f"{type(e).__name__}: {r.status_code}")
-        # print(e)
         if r.status_code == 429:
             print("Rate limited again lmao")
         try:
             minutes = round(int(r.headers["Retry-After"]) / 60)
             print(f"{minutes} minutes left")
-            # print(f"Trying again in {(minutes*60)+1} seconds...")
             print("Trying again in 5 seconds")
             time.sleep(5)
             os.system("busybox reboot")
@@ -474,6 +421,4 @@ while isDiscordrunning is False:
         loop.close()
 
 
-# if __name__ == '__main__':
-# run app in debug mode on port 5000
-# schedule.clear()
+

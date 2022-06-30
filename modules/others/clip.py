@@ -10,8 +10,6 @@ import subprocess
 
 
 class Clip(commands.Cog):
-    # def __init__(self, client):
-    #     self.client = client
 
     @commands.command()
     async def fastclip(self, ctx, link, start, end, *, filename):
@@ -72,7 +70,6 @@ class Clip(commands.Cog):
         print(stderr)
         dirlinks = stdout.decode("utf-8").split("\n")
         vid = dirlinks[0]
-        # aud = dirlinks[1]
         if seconds < 30:
             coms = [
                 "ffmpeg",
@@ -112,16 +109,9 @@ class Clip(commands.Cog):
             *coms, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE
         )
 
-        # while process.returncode is None:
-        #     line = await process.stdout.readline()
-        #     if not line:
-        #             break
-        #     await ctx.send(line.decode('utf-8'))
-
         stdout, stderr = await process.communicate()
         print(stdout)
         print(stderr.decode("utf-8"))
-        # os.rename(filename+".mkv",filename+".mp4")
 
         def max_le(seq, val):
             """
@@ -158,7 +148,7 @@ class Clip(commands.Cog):
             return None
 
         def round_down(n, decimals=0):
-            multiplier = 10 ** decimals
+            multiplier = 10**decimals
             return math.floor(n * multiplier) / multiplier
 
         coms = [
@@ -409,7 +399,6 @@ class Clip(commands.Cog):
         print(stderr)
         dirlinks = stdout.decode("utf-8").split("\n")
         vid = dirlinks[0]
-        # aud = dirlinks[1]
 
         if seconds < 30:
             coms = [
@@ -448,16 +437,9 @@ class Clip(commands.Cog):
             *coms, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE
         )
 
-        # while process.returncode is None:
-        #     line = await process.stdout.readline()
-        #     if not line:
-        #             break
-        #     await ctx.send(line.decode('utf-8'))
-
         stdout, stderr = await process.communicate()
         print(stdout)
         print(stderr.decode("utf-8"))
-        # os.rename(filename+".mkv",filename+".mp4")
 
         def max_le(seq, val):
             """
@@ -494,7 +476,7 @@ class Clip(commands.Cog):
             return None
 
         def round_down(n, decimals=0):
-            multiplier = 10 ** decimals
+            multiplier = 10**decimals
             return math.floor(n * multiplier) / multiplier
 
         coms = [
@@ -843,7 +825,6 @@ class Clip(commands.Cog):
         print(stderr)
         dirlinks = stdout.decode("utf-8").split("\n")
         vid = dirlinks[0]
-        # aud = dirlinks[1]
         if seconds < 30:
             coms = [
                 "ffmpeg",
@@ -883,14 +864,10 @@ class Clip(commands.Cog):
             line = await process.stdout.readline()
             if not line:
                 break
-            # await message.edit(content=line.decode('utf-8'))
             await ctx.send(line.decode("utf-8"))
-            # await asyncio.sleep(1)
 
-        # stdout, stderr = await process.communicate()
         print(stdout)
         print(stderr.decode("utf-8"))
-        # os.rename(filename+".mkv",filename+".mp4")
 
         def max_le(seq, val):
             """
@@ -927,7 +904,7 @@ class Clip(commands.Cog):
             return None
 
         def round_down(n, decimals=0):
-            multiplier = 10 ** decimals
+            multiplier = 10**decimals
             return math.floor(n * multiplier) / multiplier
 
         coms = [
@@ -1100,7 +1077,6 @@ class Clip(commands.Cog):
         print(stderr)
         dirlinks = stdout.decode("utf-8").split("\n")
         vid = dirlinks[0]
-        # aud = dirlinks[1]
         if seconds < 30:
             coms = [
                 "ffmpeg",
@@ -1173,7 +1149,6 @@ class Clip(commands.Cog):
             print(stdout)
             print(stderr.decode("utf-8"))
 
-        # os.rename(filename+".mkv",filename+".mp4")
         try:
             await ctx.send(file=disnake.File(f"{filename}.{filetype.lower()}"))
         except Exception:
@@ -1242,7 +1217,6 @@ class Clip(commands.Cog):
         stdout, stderr = await out.communicate()
         dirlinks = stdout.decode("utf-8").split("\n")
         vid = dirlinks[0]
-        # aud = dirlinks[1]
         if seconds < 30:
             coms = [
                 "ffmpeg",
@@ -1281,16 +1255,11 @@ class Clip(commands.Cog):
             process = await asyncio.create_subprocess_exec(
                 *coms, stdout=subprocess.PIPE, stderr=subprocess.STDOUT
             )
-            # for line in process.stdout:
-            # print(line)
-            # process.communicate()
             while process.returncode is None:
-                # await asyncio.sleep(1)
 
                 line = await process.stdout.read(100)
                 if not line:
                     break
-                # print(line.decode('utf-8'))
                 linedec = line.decode("utf-8")
 
                 if "frame=" in linedec:
@@ -1314,7 +1283,6 @@ class Clip(commands.Cog):
                         )
             os.rename(f"{filename}.mkv", f"{filename}.mp4")
             await ctx.send(file=disnake.File(f"{filename}.mp4"))
-            # await ctx.send(ctx.message.author.mention)
             os.remove(f"{filename}.mp4")
             await message.delete()
         except ValueError:
@@ -1359,7 +1327,6 @@ class Clip(commands.Cog):
         print(stderr)
         dirlinks = stdout.decode("utf-8").split("\n")
         vid = dirlinks[0]
-        # aud = dirlinks[1]
         if seconds < 30:
             coms = [
                 "ffmpeg",
@@ -1400,7 +1367,6 @@ class Clip(commands.Cog):
         stdout, stderr = await process.communicate()
         print(stdout)
         print(stderr.decode("utf-8"))
-        # os.rename(filename+".mkv",filename+".mp4")
         try:
             await ctx.send(file=disnake.File(f"{filename}.mp4"))
         except Exception:
@@ -1436,7 +1402,6 @@ class Clip(commands.Cog):
         print(stderr)
         dirlinks = stdout.decode("utf-8").split("\n")
         vid = dirlinks[0]
-        # aud = dirlinks[1]
         coms = [
             "ffmpeg",
             "-ss",
@@ -1457,20 +1422,15 @@ class Clip(commands.Cog):
         process = await asyncio.create_subprocess_exec(
             *coms, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE
         )
-        # stdout, stderr = await process.communicate()
         while process.returncode is None:
             line = await process.stdout.read(100)
             if not line:
                 break
-            # await message.edit(content=line.decode('utf-8'))
             await ctx.send(line.decode("utf-8"))
             await asyncio.sleep(1)
         if process.returncode != 0:
             await ctx.send("return code is not 0. i give up")
             return
-        # print(stdout)
-        # print(stderr)
-        # os.rename(filename+".mkv",filename+".mp4")
         try:
             await ctx.send(file=disnake.File(f"{filename}.mp4"))
         except Exception:

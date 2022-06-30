@@ -19,9 +19,11 @@ class Badapple(commands.Cog):
         list4 = []
         if isinstance(ctx.channel, disnake.TextChannel):
             webhook = await ctx.channel.create_webhook(name=ctx.message.author.name)
-        elif isinstance(ctx.channel, disnake.Thread):         
-            webhook = await ctx.channel.parent.create_webhook(name=ctx.message.author.name)
-            
+        elif isinstance(ctx.channel, disnake.Thread):
+            webhook = await ctx.channel.parent.create_webhook(
+                name=ctx.message.author.name
+            )
+
         for i in range(80):
             if i <= 19:
                 if i == 9:
@@ -43,20 +45,21 @@ class Badapple(commands.Cog):
                     list4.append(f"{self.getemote(ctx,f'b{i}')}\n")
                 else:
                     list4.append(self.getemote(ctx, f"b{i}"))
-                    
+
         if isinstance(ctx.channel, disnake.TextChannel):
             await webhook.send(
                 f"{''.join([str(i) for i in list1])}",
                 username=ctx.message.author.name,
                 avatar_url=ctx.message.author.display_avatar.url,
             )
-        elif isinstance(ctx.channel, disnake.Thread):             
+        elif isinstance(ctx.channel, disnake.Thread):
             await webhook.send(
                 f"{''.join([str(i) for i in list1])}",
                 username=ctx.message.author.name,
-                avatar_url=ctx.message.author.display_avatar.url,thread=ctx.channel
-            )    
-            
+                avatar_url=ctx.message.author.display_avatar.url,
+                thread=ctx.channel,
+            )
+
         await asyncio.sleep(0.5)
         if isinstance(ctx.channel, disnake.TextChannel):
             await webhook.send(
@@ -64,12 +67,13 @@ class Badapple(commands.Cog):
                 username=ctx.message.author.name,
                 avatar_url=ctx.message.author.display_avatar.url,
             )
-        elif isinstance(ctx.channel, disnake.Thread):   
+        elif isinstance(ctx.channel, disnake.Thread):
             await webhook.send(
                 f"{''.join([str(i) for i in list2])}",
                 username=ctx.message.author.name,
-                avatar_url=ctx.message.author.display_avatar.url,thread=ctx.channel
-            )        
+                avatar_url=ctx.message.author.display_avatar.url,
+                thread=ctx.channel,
+            )
         await asyncio.sleep(0.5)
         if isinstance(ctx.channel, disnake.TextChannel):
             await webhook.send(
@@ -77,12 +81,13 @@ class Badapple(commands.Cog):
                 username=ctx.message.author.name,
                 avatar_url=ctx.message.author.display_avatar.url,
             )
-        elif isinstance(ctx.channel, disnake.Thread):    
+        elif isinstance(ctx.channel, disnake.Thread):
             await webhook.send(
                 f"{''.join([str(i) for i in list3])}",
                 username=ctx.message.author.name,
-                avatar_url=ctx.message.author.display_avatar.url,thread=ctx.channel
-            )        
+                avatar_url=ctx.message.author.display_avatar.url,
+                thread=ctx.channel,
+            )
         await asyncio.sleep(0.5)
         if isinstance(ctx.channel, disnake.TextChannel):
             await webhook.send(
@@ -90,12 +95,13 @@ class Badapple(commands.Cog):
                 username=ctx.message.author.name,
                 avatar_url=ctx.message.author.display_avatar.url,
             )
-        elif isinstance(ctx.channel, disnake.Thread): 
+        elif isinstance(ctx.channel, disnake.Thread):
             await webhook.send(
                 f"{''.join([str(i) for i in list4])}",
                 username=ctx.message.author.name,
-                avatar_url=ctx.message.author.display_avatar.url,thread=ctx.channel
-            )                
+                avatar_url=ctx.message.author.display_avatar.url,
+                thread=ctx.channel,
+            )
 
         await webhook.delete()
         await ctx.message.delete()

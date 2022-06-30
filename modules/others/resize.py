@@ -1,9 +1,6 @@
 from disnake.ext import commands
 import disnake
 
-# from selenium import webdriver
-# from selenium.webdriver.chrome.options import Options
-# from selenium.webdriver.support.ui import Select
 
 import asyncio
 
@@ -52,9 +49,9 @@ class Resize(commands.Cog):
 
     @commands.command()
     async def resize(self, ctx, width, height, link=None):
-        link = await msg_link_grabber.grab_link(ctx,link)
+        link = await msg_link_grabber.grab_link(ctx, link)
         print(link)
-        
+
         message = await ctx.send("Resizing...")
         bruh = await self.foo(link, width, height)
         bruh.seek(0)
@@ -66,7 +63,7 @@ class Resize(commands.Cog):
 
     @commands.command()
     async def rs(self, ctx, link=None):
-        link = await msg_link_grabber.grab_link(ctx,link)
+        link = await msg_link_grabber.grab_link(ctx, link)
         print(link)
         message = await ctx.send("Resizing...")
         bruh = await self.foo(link, 1600, 720)

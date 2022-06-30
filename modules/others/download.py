@@ -10,7 +10,8 @@ import re
 from urllib.parse import unquote, quote
 import humanize
 import requests
-# import codecs
+
+
 limiter = AsyncLimiter(1, 1)
 
 
@@ -20,17 +21,14 @@ class Download(commands.Cog):
         self.pbar_list = []
 
     async def updatebar(self, msg):
-        # print("Updating bar...")
         try:
 
             async with limiter:
                 await msg.edit(content=self.pbar_list[-1])
-                # print("\033[92m SUCCESS! \033[0m")
         except Exception as e:
             if str(e).startswith("404 Not Found"):
                 pass
             else:
-                # print(f"\033[91m timeout!\n{e} \033[0m")
                 pass
             pass
 
@@ -64,7 +62,6 @@ class Download(commands.Cog):
             proc = await asyncio.create_subprocess_exec(
                 *coms, stdout=subprocess.PIPE, stderr=subprocess.STDOUT
             )
-            # stdout, stderr = await proc.communicate()
             while proc.returncode is None:
                 line = await proc.stdout.readline()
                 if not line:
@@ -73,7 +70,6 @@ class Download(commands.Cog):
                 asyncio.ensure_future(self.updatebar(message))
                 await asyncio.sleep(1)
                 print(f"\033[32m{line.decode('utf-8')}\033[0m")
-                # await ctx.send(line.decode('utf-8'))
             if proc.returncode != 0:
                 success = False
                 await ctx.send("return code is not 0. trying something else")
@@ -86,7 +82,6 @@ class Download(commands.Cog):
                 proc = await asyncio.create_subprocess_exec(
                     *coms, stdout=subprocess.PIPE, stderr=subprocess.STDOUT
                 )
-                # stdout, stderr = await proc.communicate()
                 while proc.returncode is None:
                     line = await proc.stdout.readline()
                     if not line:
@@ -95,21 +90,24 @@ class Download(commands.Cog):
                     asyncio.ensure_future(self.updatebar(message))
                     await asyncio.sleep(1)
                     print(f"\033[32m[{line.decode('utf-8')}\033[0m")
-                    linedec = line.decode('utf-8')
-                    if re.search(r"Following redirect to ",linedec):
+                    linedec = line.decode("utf-8")
+                    if re.search(r"Following redirect to ", linedec):
                         success = True
                         print("match!")
-                        if re.search(r"https:\/\/www.reddit.com\/over18.+",linedec):
-                            link = unquote(re.findall(r"https%3A%2F%2Fwww.reddit.com.+",linedec)[0])
+                        if re.search(r"https:\/\/www.reddit.com\/over18.+", linedec):
+                            link = unquote(
+                                re.findall(r"https%3A%2F%2Fwww.reddit.com.+", linedec)[
+                                    0
+                                ]
+                            )
                         else:
-                            link = re.findall(r'https://.+',linedec)[0]
-                        print(f"match is: {link}")    
-                    # await ctx.send(line.decode('utf-8'))
+                            link = re.findall(r"https://.+", linedec)[0]
+                        print(f"match is: {link}")
                 if proc.returncode != 0 and success == False:
                     await ctx.send("return code is not 0. i give up")
                     return
             print("almost there")
-            await message.edit(content="Almost there...")            
+            await message.edit(content="Almost there...")
             coms2 = [
                 "yt-dlp",
                 "--get-filename",
@@ -117,7 +115,7 @@ class Download(commands.Cog):
                 "cookies (17).txt",
                 "--no-warnings",
                 link,
-            ]            
+            ]
             print(shjoin(coms2))
             out2 = await asyncio.create_subprocess_exec(
                 *coms2, stdout=subprocess.PIPE, stderr=subprocess.STDOUT
@@ -126,20 +124,20 @@ class Download(commands.Cog):
                 stdout, stderr = await out2.communicate()
                 print(f"\033[32m{stdout.decode('utf-8')}\033[0m")
                 filename = stdout.decode("utf-8").split("\n")[0]
-                clean_name = filename.replace(",","")
+                clean_name = filename.replace(",", "")
                 await message.edit(content="Sending video...")
                 try:
                     if filename.endswith(".mp4"):
-                        await ctx.send(file=disnake.File(filename,filename=clean_name))
+                        await ctx.send(file=disnake.File(filename, filename=clean_name))
                     else:
-                        await ctx.send(file=disnake.File(filename,filename=f"{clean_name}.mp4"))
+                        await ctx.send(
+                            file=disnake.File(filename, filename=f"{clean_name}.mp4")
+                        )
                 except Exception as e:
                     await ctx.send(e)
                     await ctx.send(type(e).__name__)
             except disnake.HTTPException:
-                await ctx.send(
-                    "File too large, broski <:towashrug:853606191711649812>"
-                )
+                await ctx.send("File too large, broski <:towashrug:853606191711649812>")
             os.remove("cookies (17).txt")
             os.remove(filename)
             await message.delete()
@@ -158,12 +156,6 @@ class Download(commands.Cog):
                 *cookiecoms, stdout=subprocess.PIPE, stderr=subprocess.STDOUT
             )
             stdout, stderr = await cookieproc.communicate()
-            # res = stdout.decode('UTF-8').split('\n')[2:]
-            # fin = '\n'.join(res)
-            # print(fin)
-            # return_data = io.BytesIO()
-            # return_data.write(fin.encode())
-            # return_data.seek(0)
             coms = [
                 "yt-dlp",
                 "-f",
@@ -203,20 +195,18 @@ class Download(commands.Cog):
             try:
                 stdout, stderr = await out2.communicate()
                 filename = stdout.decode("utf-8").split("\n")[-2]
-                clean_name = filename.replace(",","")
+                clean_name = filename.replace(",", "")
                 print(stdout.decode("utf-8"))
                 await message.edit(content="Sending video...")
                 try:
-                    await ctx.send(file=disnake.File(filename,filename=clean_name))
+                    await ctx.send(file=disnake.File(filename, filename=clean_name))
                 except Exception as e:
                     await ctx.send(e)
             except disnake.HTTPException:
-                await ctx.send(
-                    "File too large, broski <:towashrug:853606191711649812>"
-                )
+                await ctx.send("File too large, broski <:towashrug:853606191711649812>")
             except Exception as e:
                 await message.edit(content=e)
-            os.remove("cookies (15).txt")        
+            os.remove("cookies (15).txt")
             os.remove(filename)
 
             await message.delete()
@@ -236,7 +226,6 @@ class Download(commands.Cog):
             proc = await asyncio.create_subprocess_exec(
                 *coms, stdout=subprocess.PIPE, stderr=subprocess.STDOUT
             )
-            # stdout, stderr = await proc.communicate()
             while proc.returncode is None:
                 line = await proc.stdout.readline()
                 if not line:
@@ -251,16 +240,14 @@ class Download(commands.Cog):
             try:
                 stdout, stderr = await out2.communicate()
                 filename = stdout.decode("utf-8").split("\n")[0]
-                clean_name = filename.replace(",","")
+                clean_name = filename.replace(",", "")
                 await message.edit(content="Sending video...")
                 try:
-                    await ctx.send(file=disnake.File(filename,filename=clean_name))
+                    await ctx.send(file=disnake.File(filename, filename=clean_name))
                 except Exception as e:
                     await ctx.send(e)
             except disnake.HTTPException:
-                await ctx.send(
-                    "File too large, broski <:towashrug:853606191711649812>"
-                )
+                await ctx.send("File too large, broski <:towashrug:853606191711649812>")
             except Exception as e:
                 await message.edit(content=e)
             os.remove(filename)
@@ -281,7 +268,7 @@ class Download(commands.Cog):
             json_dict = json.loads(json_str)
             bilibili_id = json_dict["webpage_url_basename"]
             filename = f"bilibili_{bilibili_id}.mp4"
-            clean_name = filename.replace(",","")
+            clean_name = filename.replace(",", "")
             coms2 = ["ffmpeg", "-i", url, "-c", "copy", "-y", filename]
             out2 = await asyncio.create_subprocess_exec(
                 *coms2, stdout=subprocess.PIPE, stderr=subprocess.STDOUT
@@ -293,7 +280,7 @@ class Download(commands.Cog):
 
                     await message.edit(content="Sending video...")
                     try:
-                        await ctx.send(file=disnake.File(filename,filename=clean_name))
+                        await ctx.send(file=disnake.File(filename, filename=clean_name))
                     except Exception as e:
                         await ctx.send(e)
                 except disnake.HTTPException:
@@ -314,7 +301,6 @@ class Download(commands.Cog):
             proc = await asyncio.create_subprocess_exec(
                 *coms, stdout=subprocess.PIPE, stderr=subprocess.STDOUT
             )
-            # stdout, stderr = await proc.communicate()
             while proc.returncode is None:
                 line = await proc.stdout.readline()
                 if not line:
@@ -336,8 +322,8 @@ class Download(commands.Cog):
             try:
                 stdout, stderr = await out2.communicate()
                 filename = stdout.decode("utf-8").split("\n")[0]
-                clean_name = filename.replace(",","")
-                boost_size_limits = [8388608,8388608,52428800,104857600]
+                clean_name = filename.replace(",", "")
+                boost_size_limits = [8388608, 8388608, 52428800, 104857600]
                 if ctx.guild is not None:
                     boosts = ctx.guild.premium_tier
                     try:
@@ -348,32 +334,30 @@ class Download(commands.Cog):
                 else:
                     limit = 8388608
                 filesize = os.path.getsize(filename)
-                if filesize <= limit:                                    
+                if filesize <= limit:
                     await message.edit(content="Sending video...")
                     try:
-                        await ctx.send(file=disnake.File(filename,filename=clean_name))
-                    # except disnake.HTTPException:
-                        # await ctx.send(
-                            # f"File too large, broski <:towashrug:853606191711649812>\nThe file: {humanize.naturalsize(filesize, binary=True)} Server upload limit: {humanize.naturalsize(limit, binary=True)}"
-                        # )    
+                        await ctx.send(file=disnake.File(filename, filename=clean_name))
+
                     except Exception as e:
                         await ctx.send(e)
                     os.remove(filename)
                 else:
-                    os.rename(filename,f"temp/{filename}")
+                    os.rename(filename, f"temp/{filename}")
                     url_enc_filename = quote(filename)
-                    ip = requests.get('https://checkip.amazonaws.com').text.strip()
-                    msg = "File too large, broski <:towashrug:853606191711649812>\n" \
-                    f"The file: {humanize.naturalsize(filesize, binary=True)}\n" \
-                    f"Server upload limit: {humanize.naturalsize(limit, binary=True)}\n" \
-                    f"You can access the file here but it will only be up for 12 hours:\n" \
-                    f"http://{ip}:{os.getenv('PORT')}/temp/{url_enc_filename}"
-                    await ctx.send(msg)                           
-                    
-                    
+                    ip = requests.get("https://checkip.amazonaws.com").text.strip()
+                    msg = (
+                        "File too large, broski <:towashrug:853606191711649812>\n"
+                        f"The file: {humanize.naturalsize(filesize, binary=True)}\n"
+                        f"Server upload limit: {humanize.naturalsize(limit, binary=True)}\n"
+                        f"You can access the file here but it will only be up for 12 hours:\n"
+                        f"http://{ip}:{os.getenv('PORT')}/temp/{url_enc_filename}"
+                    )
+                    await ctx.send(msg)
+
             except Exception as e:
                 await ctx.send(e)
-            
+
             await message.delete()
 
 

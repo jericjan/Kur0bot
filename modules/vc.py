@@ -47,7 +47,6 @@ class Vc(commands.Cog):
                 voice.play(disnake.FFmpegPCMAudio(source=a))
 
         else:
-            # await ctx.send(f"{ctx.author.name} is not in a channel.")
             await ctx.send(
                 f"{ctx.author.name} is not in a VC. Sending file instead...",
                 delete_after=3,
@@ -56,48 +55,58 @@ class Vc(commands.Cog):
             if isRandom == True:
                 a = random.choice(a)
             print(f"playing {a}")
-            filename = a.split('/')[-1]
+            filename = a.split("/")[-1]
             print(f"filename is: {filename}")
-            if a.split('/')[1] == "mgr":
-                speaker = a.split('/')[-2]
+            if a.split("/")[1] == "mgr":
+                speaker = a.split("/")[-2]
                 with open("modules/mgr_users.json") as f:
                     mgr_json = json.load(f)
                 if speaker in mgr_json:
                     if isinstance(ctx.channel, disnake.TextChannel):
-                        webhook = await ctx.channel.create_webhook(name=mgr_json[speaker]["name"])
+                        webhook = await ctx.channel.create_webhook(
+                            name=mgr_json[speaker]["name"]
+                        )
                         await webhook.send(
                             file=disnake.File(a, filename=filename),
                             username=mgr_json[speaker]["name"],
                             avatar_url=mgr_json[speaker]["pfp"],
                         )
-                        await webhook.delete()            
-                    elif isinstance(ctx.channel, disnake.Thread):             
-                        webhook = await ctx.channel.parent.create_webhook(name=mgr_json[speaker]["name"])
+                        await webhook.delete()
+                    elif isinstance(ctx.channel, disnake.Thread):
+                        webhook = await ctx.channel.parent.create_webhook(
+                            name=mgr_json[speaker]["name"]
+                        )
                         await webhook.send(
                             file=disnake.File(a, filename=filename),
                             username=mgr_json[speaker]["name"],
-                            avatar_url=mgr_json[speaker]["pfp"],thread=ctx.channel
+                            avatar_url=mgr_json[speaker]["pfp"],
+                            thread=ctx.channel,
                         )
-                        await webhook.delete()                         
+                        await webhook.delete()
                 elif filename in mgr_json:
                     if isinstance(ctx.channel, disnake.TextChannel):
-                        webhook = await ctx.channel.create_webhook(name=mgr_json[filename]["name"])
+                        webhook = await ctx.channel.create_webhook(
+                            name=mgr_json[filename]["name"]
+                        )
                         await webhook.send(
                             file=disnake.File(a, filename=filename),
                             username=mgr_json[filename]["name"],
                             avatar_url=mgr_json[filename]["pfp"],
                         )
-                        await webhook.delete()              
+                        await webhook.delete()
                     elif isinstance(ctx.channel, disnake.Thread):
-                        webhook = await ctx.channel.parent.create_webhook(name=mgr_json[filename]["name"])
+                        webhook = await ctx.channel.parent.create_webhook(
+                            name=mgr_json[filename]["name"]
+                        )
                         await webhook.send(
                             file=disnake.File(a, filename=filename),
                             username=mgr_json[filename]["name"],
-                            avatar_url=mgr_json[filename]["pfp"],thread=ctx.channel
+                            avatar_url=mgr_json[filename]["pfp"],
+                            thread=ctx.channel,
                         )
-                        await webhook.delete()                                      
+                        await webhook.delete()
                 else:
-                    await ctx.send(file=disnake.File(a, filename=filename))                                  
+                    await ctx.send(file=disnake.File(a, filename=filename))
             else:
                 await ctx.send(file=disnake.File(a, filename=filename))
         # Delete command after the audio is done playing.
@@ -153,14 +162,13 @@ class Vc(commands.Cog):
         if ctx.voice_client:  # If the bot is in a voice channel
             await ctx.guild.voice_client.disconnect()  # Leave the channel
             await ctx.send("Sus bot has left the call.", delete_after=3.0)
-            #  await asyncio.sleep(0.3)
             await ctx.message.delete()
         else:  # But if it isn't
             await ctx.send(
                 "I'm not in a voice channel, use the join command to make me join",
                 delete_after=3.0,
             )
-        # await ctx.message.delete()
+
 
     @commands.command()
     async def yodayo(self, ctx, loop=None):
@@ -294,46 +302,50 @@ class Vc(commands.Cog):
     async def boowomp(self, ctx, loop=None):
         await self.vcplay(ctx, "sounds/boowomp.mp3", loop)
 
-
-
     @commands.command()
     async def mgr(self, ctx, *, name):
         loop = None
         matches = []
         for root, dirs, files in os.walk("sounds/mgr/", topdown=False):
-            for x in files:    
-                if any(word in x for word in [name]):    
-                    matches.append(os.path.join(root,x))                
-        
-       
-        #matches = difflib.get_close_matches(name, mgr_files,cutoff=0.5)
+            for x in files:
+                if any(word in x for word in [name]):
+                    matches.append(os.path.join(root, x))
+
+
         if matches:
-            numbered_mgr_files = [f"{index} - {item.split('/')[-2]}: {item.split('/')[-1].split('.')[0]}" for index, item in enumerate(matches, 1)]
+            numbered_mgr_files = [
+                f"{index} - {item.split('/')[-2]}: {item.split('/')[-1].split('.')[0]}"
+                for index, item in enumerate(matches, 1)
+            ]
             if len(matches) == 1:
                 await self.vcplay(ctx, matches[0], loop)
             else:
-                nl = '\n'
-                msg = await ctx.send(f"{len(matches)} matches. Pick a number. YOU HAVE 10 SECONDS!!!\n`{nl.join(numbered_mgr_files)}`")
+                nl = "\n"
+                msg = await ctx.send(
+                    f"{len(matches)} matches. Pick a number. YOU HAVE 10 SECONDS!!!\n`{nl.join(numbered_mgr_files)}`"
+                )
+
                 def check(m):
-                    return m.author == ctx.author and m.channel == ctx.channel                
+                    return m.author == ctx.author and m.channel == ctx.channel
+
                 try:
-                    await_msg = await self.client.wait_for("message", check=check, timeout=10)
-                    if int(await_msg.content) in list(range(1,len(matches)+1)):
-                        index = int(await_msg.content)-1
+                    await_msg = await self.client.wait_for(
+                        "message", check=check, timeout=10
+                    )
+                    if int(await_msg.content) in list(range(1, len(matches) + 1)):
+                        index = int(await_msg.content) - 1
                         await self.vcplay(ctx, matches[index], loop)
                     else:
-                        await ctx.send("Invalid number!",delete_after=3)
+                        await ctx.send("Invalid number!", delete_after=3)
                         await ctx.message.delete()
-                    await await_msg.delete()    
+                    await await_msg.delete()
                 except asyncio.TimeoutError:
-                    await ctx.send("Too slow lmao!",delete_after=3)
+                    await ctx.send("Too slow lmao!", delete_after=3)
                     await ctx.message.delete()
-                await msg.delete()    
-                # 
+                await msg.delete()
+                #
         else:
-            await ctx.send("No matches lol.",delete_after=3)
-        
-        
+            await ctx.send("No matches lol.", delete_after=3)
 
 
 def setup(client):

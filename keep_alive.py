@@ -1,54 +1,21 @@
-from flask import Flask, cli, request, send_from_directory
+from flask import Flask, cli, send_from_directory
 from threading import Thread
 import os
 
-# import sys
-import requests
-
 cli.show_server_banner = lambda *_: None
 app = Flask("")
-app.config['TEMPLATES_AUTO_RELOAD'] = True
+app.config["TEMPLATES_AUTO_RELOAD"] = True
 
 @app.route("/")
 def home():
     return "Hello. I am alive!"
 
-
-# def shutdown_server():
-    # func = request.environ.get("werkzeug.server.shutdown")
-    # if func is None:
-        # raise RuntimeError("Not running with the Werkzeug Server")
-    # func()
-
-
-# @app.route("/shutdown", methods=["POST"])
-# def shutdown():
-    # shutdown_server()
-    # return "Server shutting down..."
-
-
-# @app.route("/kill", methods=["POST", "GET"])
-# def kill():
-    # id = request.args.get("id")
-    # os.system(f"kill -9 {id}")
-    # return f"Killed {id}..."
-
-@app.route('/temp/<path>')
+@app.route("/temp/<path>")
 def send_report(path):
-    return send_from_directory('temp', path)
+    return send_from_directory("temp", path)
 
 def run():
-    app.run(host="0.0.0.0", port=os.getenv('PORT'))
-    # isRunning = False
-    # while isRunning == False:
-        # try:
-            # app.run(host="0.0.0.0", port=8081)
-            # isRunning = True
-        # except OSError as e:
-            # if e == "[Errno 98] Address already in use":
-                # print("Flask already running. Killing it.")
-            # requests.post("https://Kur0bot.jericjanjan.repl.co/shutdown")
-
+    app.run(host="0.0.0.0", port=os.getenv("PORT"))
 
 def keep_alive():
     t = Thread(target=run)

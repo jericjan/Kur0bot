@@ -11,9 +11,6 @@ from lorem.text import TextLorem
 from dotenv import load_dotenv
 
 
-
-
-
 class Kur0only(commands.Cog):
     def __init__(self, client):
         self.client = client
@@ -197,7 +194,6 @@ class Kur0only(commands.Cog):
         )
         stdout, stderr = await out.communicate()
         print(stdout.decode())
-        # print(stderr)
 
         if out.returncode == 0:
             msg = await msg.edit(content=f"{msg.content}Done! ({out.returncode})")
@@ -281,10 +277,15 @@ class Kur0only(commands.Cog):
             c.name for c in self.client.get_command("help").commands
         ]
         aliases = [
-            a for c in self.client.get_command("help").commands if c.aliases for a in c.aliases
+            a
+            for c in self.client.get_command("help").commands
+            if c.aliases
+            for a in c.aliases
         ]
         print(aliases)
-        diffcomms2 = [c for c in comm_list if c not in commands_with_help_msg and c not in aliases]
+        diffcomms2 = [
+            c for c in comm_list if c not in commands_with_help_msg and c not in aliases
+        ]
         diffcomms2_joined = "\n".join(diffcomms2)
         await ctx.send(f"Commands without help commands are:\n{diffcomms2_joined}")
 

@@ -6,18 +6,21 @@ import os
 import asyncio
 from urllib.request import urlopen
 
+
 class CheckComment(commands.Cog):
     @commands.command()
     async def checkcomment(self, ctx, link):
         comment_start_time = time.time()
         comment_end_time = comment_start_time + (60 * 5)
         community_comment = False
-        
+
         if re.search(r"https:\/\/www.youtube.com\/watch\?v=.+&lc=.+(\..+)?", link):
             id = re.search(
                 r"(?<=https:\/\/www.youtube.com\/watch\?v=.{11}&lc=).+(\..+)?", link
             ).group(0)
-        elif re.search(r"https://www.youtube.com/channel/.+?/community\?lc=.+?&lb=.+", link):
+        elif re.search(
+            r"https://www.youtube.com/channel/.+?/community\?lc=.+?&lb=.+", link
+        ):
             id = re.search(r"(?<=lc=).+?(?=&lb)", link).group(0)
             community_comment = True
         else:
@@ -39,10 +42,10 @@ class CheckComment(commands.Cog):
                     try:
                         name = r.json()["items"][0]["snippet"][
                             "authorDisplayName"
-                        ]  # DON'T REMOVE
+                        ] 
                         comment_content = r.json()["items"][0]["snippet"][
                             "textOriginal"
-                        ]  # DON'T REMOVE
+                        ] 
                         print(f"{name}: {comment_content[:15]}...")
                         await msg.edit(
                             content=f"{time_passed:.2f}s: We're good! ({r.status_code})"
@@ -58,31 +61,44 @@ class CheckComment(commands.Cog):
                     )
                     return
                 await asyncio.sleep(10)
-            await msg.edit(content=f"{time_passed:.2f} seconds passed and it's still up!")
-        else:     #is community comment   
+            await msg.edit(
+                content=f"{time_passed:.2f} seconds passed and it's still up!"
+            )
+        else:  # is community comment
             msg = await ctx.send("Searching...")
             response = urlopen(link)
             result = response.read().decode(response.headers.get_content_charset())
             index = result.find("continuationCommand")
             if index != 0:
-                chunk = result[index:index+1000]
-                results = re.findall(r'(?<=continuationCommand":{"token":").+?(?=")',chunk)
+                chunk = result[index : index + 1000]
+                results = re.findall(
+                    r'(?<=continuationCommand":{"token":").+?(?=")', chunk
+                )
                 if results:
                     continuation_token = results[0]
                 else:
                     await ctx.send("Could not find continuation token. Sorry :((")
-                    return                    
+                    return
             else:
                 await ctx.send("Could not find continuation token. Sorry :(")
-                return        
-            while time.time() < comment_end_time:            
-                headers = {'content-type': 'application/json'}           
-                data = {"context":{"client":{"clientName":"WEB","clientVersion":"2.2022011"}},"continuation":continuation_token}
-                                                                                      #VVVVVVVVVVVV seems to be some public API key on youtube. https://stackoverflow.com/a/70793047
-                r = requests.post('https://www.youtube.com/youtubei/v1/browse?key=AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8&prettyPrint=true',headers=headers,json=data)
+                return
+            while time.time() < comment_end_time:
+                headers = {"content-type": "application/json"}
+                data = {
+                    "context": {
+                        "client": {"clientName": "WEB", "clientVersion": "2.2022011"}
+                    },
+                    "continuation": continuation_token,
+                }
+                # VVVVVVVVVVVV seems to be some public API key on youtube. https://stackoverflow.com/a/70793047
+                r = requests.post(
+                    "https://www.youtube.com/youtubei/v1/browse?key=AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8&prettyPrint=true",
+                    headers=headers,
+                    json=data,
+                )
                 found_index = r.text.find(id)
-                print(f"Found? {found_index}")            
-                
+                print(f"Found? {found_index}")
+
                 time_passed = time.time() - comment_start_time
                 if found_index != -1:
                     await msg.edit(
@@ -94,10 +110,9 @@ class CheckComment(commands.Cog):
                     )
                     return
                 await asyncio.sleep(10)
-            await msg.edit(content=f"{time_passed:.2f} seconds passed and it's still up!")        
-        
-        
-
+            await msg.edit(
+                content=f"{time_passed:.2f} seconds passed and it's still up!"
+            )
 
 
 def setup(client):

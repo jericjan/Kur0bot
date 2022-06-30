@@ -52,30 +52,6 @@ deez_replies = [
     "my name jef",
 ]
 
-# hidden_commands = [
-#     "addoffline",
-#     "makeembed",
-#     "sched",
-#     "tasks",
-#     "removeoffline",
-#     "idclip",
-#     "id",
-#     "stream",
-#     "editembed",
-#     "sticker",
-#     "rolecheck",
-#     "viewoffline",
-#     "repost",
-#     "fastclip3",
-#     "fastclip2",
-#     "speak",
-#     "speak2",
-#     "load",
-#     "reload",
-#     "unload",
-#     "checkhelp"
-# ]
-
 with open("modules/commands.json") as f:
     data = json.load(f)
     hidden_commands = data["hidden"]
@@ -94,7 +70,6 @@ class Events(commands.Cog):
             f"\033[92m{(time.time() - self.start_time):.2f}s - We have logged in as {self.client.user}\033[0m"
         )
         await self.log("Bot started", False)
-        #  await client.change_presence(activity=discord.Game(name="sus gaming | k.help"))
         avi_guild = self.client.get_guild(603147860225032192)
         while avi_guild == None:
             avi_guild = self.client.get_guild(603147860225032192)
@@ -107,26 +82,17 @@ class Events(commands.Cog):
                 if avibot.status is disnake.Status.offline:
                     print("avibot ded")
                     await self.log("avi bot ded", False)
-                    # channel = client.get_guild(603147860225032192).get_channel(836222286432043018)  # notification channel
-                    # msg_id = 887707057808085042
-                    # msg = await channel.fetch_message(msg_id)
                     vc = self.client.get_guild(603147860225032192).get_channel(
                         887717074191937667
                     )
-                    # await msg.edit(content="avi bot dead temporarily. password no work. so tell them that as well.")
-                    # staffch = client.get_guild(603147860225032192).get_channel(812666568613167125)
                     await vc.edit(name="AviBot: dead")
-                # await staffch.send('<@97122523086340096> bot ded')
                 if avibot.status is disnake.Status.online:
                     print("avi bot bac")
                     await self.log("avi bot bac", False)
-                    # channel = client.get_guild(603147860225032192).get_channel(836222286432043018)  # notification channel
-                    # msg_id = 887707057808085042
-                    # msg = await channel.fetch_message(msg_id)
+
                     vc = self.client.get_guild(603147860225032192).get_channel(
                         887717074191937667
                     )
-                    # await msg.edit(content="AviBot is online. (ignore this)")
                     await vc.edit(name="AviBot: alive")
 
     @commands.Cog.listener()
@@ -140,16 +106,10 @@ class Events(commands.Cog):
                 print(after.id)
                 print("avi bot ded")
                 await self.log("avi bot ded", False)
-                # channel = client.get_guild(603147860225032192).get_channel(836222286432043018)  # notification channel
-                #  msg_id = 887707057808085042
-                # msg = await channel.fetch_message(msg_id)
                 vc = self.client.get_guild(603147860225032192).get_channel(
                     887717074191937667
                 )
-                # await msg.edit(content="avi bot dead temporarily. password no work. so tell them that as well.")
-                # staffch = client.get_guild(603147860225032192).get_channel(812666568613167125)
                 await vc.edit(name="AviBot: dead")
-                # await staffch.send('<@97122523086340096> bot ded')
         elif (
             before.status is disnake.Status.offline
             and after.status is disnake.Status.online
@@ -158,70 +118,79 @@ class Events(commands.Cog):
                 print(after.id)
                 print("avi bot bac")
                 await self.log("avi bot bac", False)
-                # channel = client.get_guild(603147860225032192).get_channel(836222286432043018)  # notification channel
-                # msg_id = 887707057808085042
-                # msg = await channel.fetch_message(msg_id)
                 vc = self.client.get_guild(603147860225032192).get_channel(
                     887717074191937667
                 )
-                # await msg.edit(content="AviBot is online. (ignore this)")
                 await vc.edit(name="AviBot: alive")
-    
+
     @commands.Cog.listener()
     async def on_presence_update(self, before, after):
-        #old_user_activities = before.activities
         new_user_activities = after.activities
         id_list = []
         game_names = []
         game_names.append("Mobile Legends: Bang Bang")
-        id_list.append(588739191433723914) #mobile_legends
+        id_list.append(588739191433723914)  # mobile_legends
         game_names.append("League of Legends")
-        id_list.append(401518684763586560) #league
+        id_list.append(401518684763586560)  # league
         game_names.append("Honkai Impact 3rd")
         game_names.append("honka donka badonkers")
-        id_list.append(604089691519713300) #honkai 3rd
+        id_list.append(604089691519713300)  # honkai 3rd
         game_names.append("Honkai Impact 3")
-        id_list.append(614393437030187008) #honkai 3
+        id_list.append(614393437030187008)  # honkai 3
         game_names.append("Genshin Impact")
-        id_list.append(762434991303950386) #genshin        
+        id_list.append(762434991303950386)  # genshin
         if new_user_activities:
             for activity in new_user_activities:
                 if str(activity.type) == "ActivityType.playing" and after.bot == False:
                     try:
                         game_id = activity.application_id
                     except:
-                        game_id = "UNKNOWN"       
-                    with open(f"activities.txt", 'a') as f:
-                        f.write(f"({game_id}) [{after.guild}] {after.name}: started playing {activity.name}") 
-                    if game_id in id_list or activity.name in game_names:    
-                        hall_of_shame_json = json.load(open("modules/others/hall_of_shame_ids.json"))
+                        game_id = "UNKNOWN"
+                    with open("activities.txt", "a") as f:
+                        f.write(
+                            f"({game_id}) [{after.guild}] {after.name}: started playing {activity.name}"
+                        )
+                    if game_id in id_list or activity.name in game_names:
+                        hall_of_shame_json = json.load(
+                            open("modules/others/hall_of_shame_ids.json")
+                        )
                         try:
-                            hall_of_shame_channel_id = hall_of_shame_json[str(after.guild.id)]['channel-id']
-                            hall_of_shame_embed_id = hall_of_shame_json[str(after.guild.id)]['embed-id']
-                            hall_of_shame_channel = await self.client.fetch_channel(hall_of_shame_channel_id) 
-                            hall_of_shame = await hall_of_shame_channel.fetch_message(hall_of_shame_embed_id)
+                            hall_of_shame_channel_id = hall_of_shame_json[
+                                str(after.guild.id)
+                            ]["channel-id"]
+                            hall_of_shame_embed_id = hall_of_shame_json[
+                                str(after.guild.id)
+                            ]["embed-id"]
+                            hall_of_shame_channel = await self.client.fetch_channel(
+                                hall_of_shame_channel_id
+                            )
+                            hall_of_shame = await hall_of_shame_channel.fetch_message(
+                                hall_of_shame_embed_id
+                            )
                             if after.guild == hall_of_shame.guild:
-                                #await hall_of_shame.send(f"{after.name} started playing {activity.name}")
-                                em = hall_of_shame.embeds[0]                                      
-                                name_list = [i.name for i in em.fields]   
+                                em = hall_of_shame.embeds[0]
+                                name_list = [i.name for i in em.fields]
                                 try:
-                                    start_time = f"<t:{round(activity.start.timestamp())}:R>"   
+                                    start_time = (
+                                        f"<t:{round(activity.start.timestamp())}:R>"
+                                    )
                                 except:
                                     start_time = "at an unknown time"
-                                value = f"{after.mention} opened **{activity.name}** {start_time}"            
+                                value = f"{after.mention} opened **{activity.name}** {start_time}"
                                 name = after.name
                                 if name in name_list:
                                     index = name_list.index(name)
-                                    em.remove_field(index)                                                                   
-                                em.add_field(name=name, value=value,inline=False)  
+                                    em.remove_field(index)
+                                em.add_field(name=name, value=value, inline=False)
                                 while len(name_list) > 10:
-                                    em.remove_field(0)   
-                                    name_list = [i.name for i in em.fields]   
-                                await hall_of_shame.edit(embed=em)  
+                                    em.remove_field(0)
+                                    name_list = [i.name for i in em.fields]
+                                await hall_of_shame.edit(embed=em)
                         except Exception as e:
-                            print(f"UNSET: ({game_id}) [{after.guild}] {after.name}: started playing {activity.name}\n{e}")
-                        # user = await self.client.fetch_user(396892407884546058)
-                        # await user.send(f"({game_id}) [{after.guild}] {after.name}: started playing {activity.name}")    
+                            print(
+                                f"UNSET: ({game_id}) [{after.guild}] {after.name}: started playing {activity.name}\n{e}"
+                            )
+
     @commands.Cog.listener()
     async def on_message(self, message):
         if message.author == self.client.user:
@@ -229,26 +198,6 @@ class Events(commands.Cog):
         msg = message.content.lower()
 
         ################SUSSY REPLIES##################
-
-        # if message.channel.id == 836222286432043018: #verification
-        #   if message.content.startswith('+verify'):
-        #    if not message.content.startswith('+verify poggus'):
-        #      if any(word in msg for word in pass_words):
-        #       await message.delete()
-        #       nono = await message.channel.send('Booba! The password is not password!')
-        #       await asyncio.sleep(3)
-        #       await nono.delete()
-        #      else:
-        #       await message.delete()
-        #       nono = await message.channel.send#('https://media.tenor.com/images/e2791267b28c9e57b6966bacb65578e9/tenor.gif')
-        #       await asyncio.sleep(2)
-        #       await nono.delete()
-        #    else:
-        #     await message.delete()
-        #   else:
-        #     await asyncio.sleep(1)
-        #     print(message.channel.id)
-        #      await message.delete()
         if message.channel.id == 850380119646142504:  # sus-town
             if any(word in msg for word in sus_words):
                 for x in range(3):
@@ -288,7 +237,6 @@ class Events(commands.Cog):
         #############TWITTER LINK GIVER####################
 
         if "twitter.com" in msg:
-            # threads = []
             links = re.findall("http.*twitter.com/.*/status/\d*", msg)
             print([x for x in links])
             for i in links:
@@ -303,7 +251,6 @@ class Events(commands.Cog):
                     stdin=subprocess.PIPE,
                 )
                 stdout_value = proc.stdout.read() + proc.stderr.read()
-                # print(stdout_value.decode("utf-8"))
                 try:
                     json_list = json.loads(stdout_value)
                 except:
@@ -320,15 +267,6 @@ class Events(commands.Cog):
 
                     msg = await message.channel.send(json_list["url"])
                     await asyncio.sleep(3)
-                    # if not msg.embeds:
-                    #     await m1.edit(content="No embeds. Trying to manually upload...")
-                    #     r = requests.get(json_list["url"])
-                    #     # print(r.content)
-                    #     vid = io.BytesIO(r.content)
-                    #     filename = json_list["url"].split("/")[-1].split("?")[0]
-                    #     await message.channel.send(
-                    #         file=disnake.File(vid, filename=filename)
-                    #     )
                     await m1.delete()
 
         ######################TEXT TO SPEECH#################
@@ -456,16 +394,17 @@ class Events(commands.Cog):
                 else:
                     await ctx.send(error.original)
                 await self.log(error.original, False)
-            elif isinstance(error.original, disnake.ClientException):   
+            elif isinstance(error.original, disnake.ClientException):
                 if str(error.original) == "Already playing audio.":
-                    await ctx.send("I'm still playing smth rn bruh. Hold on.",delete_after=3)
+                    await ctx.send(
+                        "I'm still playing smth rn bruh. Hold on.", delete_after=3
+                    )
                 else:
-                    await ctx.send(error.original)                    
+                    await ctx.send(error.original)
             else:
                 await ctx.send(error.original)
         else:
             print(f"ERROR: {error}")
-            # print(dir(error))
             for i in dir(error):
                 if not str(i).startswith("_"):
                     print(f"{i}: {getattr(error,i)}\n")
@@ -473,7 +412,3 @@ class Events(commands.Cog):
             await ctx.send(error)
         await self.log(error, False)
         raise error  # re-raise the error so all the errors will still show up in console
-
-
-# def setup(client,start_time,log):
-#     client.add_cog(Events(client,start_time,log))

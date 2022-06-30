@@ -1,6 +1,6 @@
 from disnake.ext import commands
-import disnake
 import translators as ts
+
 
 class DeepL_commands(commands.Cog):
     def __init__(self, client):
@@ -17,8 +17,9 @@ class DeepL_commands(commands.Cog):
             else:
                 await ctx.send("what am i supposed to translate? try again dawg.")
                 return
-        result = ts.google(text,to_language='ja')
+        result = ts.google(text, to_language="ja")
         await ctx.send(result)
+
     @commands.command(aliases=["english"])
     async def eigo(self, ctx, *, text=None):
         if text == None:
@@ -30,7 +31,9 @@ class DeepL_commands(commands.Cog):
             else:
                 await ctx.send("what am i supposed to translate? try again dawg.")
                 return
-        result = ts.google(text,to_language='en')
+        result = ts.google(text, to_language="en")
         await ctx.send(result)
+
+
 def setup(client):
     client.add_cog(DeepL_commands(client))
