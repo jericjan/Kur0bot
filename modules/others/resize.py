@@ -12,7 +12,7 @@ import requests
 import functools
 from aiolimiter import AsyncLimiter
 
-import myfunctions.msg_link_grabber as msg_link_grabber
+from myfunctions import msg_link_grabber
 
 limiter = AsyncLimiter(1, 1)
 

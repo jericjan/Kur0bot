@@ -1,7 +1,5 @@
 from disnake.ext import commands
 import disnake
-import asyncio
-import subprocess
 import os
 import requests
 import glob
@@ -9,7 +7,7 @@ import json
 from lorem.text import TextLorem
 
 from dotenv import load_dotenv
-
+from myfunctions import subprocess_runner
 
 class Kur0only(commands.Cog):
     def __init__(self, client):
@@ -57,10 +55,7 @@ class Kur0only(commands.Cog):
         target_drive = "pog4"
         msg = await ctx.send("Checking for updates...")
         coms = ["rclone/rclone", "selfupdate"]
-        out = await asyncio.create_subprocess_exec(
-            *coms, stdout=subprocess.PIPE, stderr=subprocess.STDOUT
-        )
-        stdout, stderr = await out.communicate()
+        out, stdout, stderr = await subprocess_runner.run_subprocess(coms)
         msg = await msg.edit(content=f"{msg.content}\n{stdout.decode()}")
         msg = await msg.edit(content=f"{msg.content}\nDownload config file...")
         coms = [
@@ -69,11 +64,7 @@ class Kur0only(commands.Cog):
             "-O",
             "/home/kur0/.config/rclone/rclone.conf",
         ]
-        out = await asyncio.create_subprocess_exec(
-            *coms, stdout=subprocess.PIPE, stderr=subprocess.STDOUT
-        )
-        stdout, stderr = await out.communicate()
-        print(stdout.decode())
+        out, stdout, stderr = await subprocess_runner.run_subprocess(coms)
         msg = await msg.edit(content=f"{msg.content}Done!")
         if "www.youtube.com/watch" in url:
             fixed_link = f"https://youtu.be/{url[32:43]}"
@@ -105,11 +96,7 @@ class Kur0only(commands.Cog):
             "%(title)s-%(id)s.%(ext)s",
             fixed_link,
         ]
-        out = await asyncio.create_subprocess_exec(
-            *coms, stdout=subprocess.PIPE, stderr=subprocess.STDOUT
-        )
-        stdout, stderr = await out.communicate()
-        print(stdout.decode())
+        out, stdout, stderr = await subprocess_runner.run_subprocess(coms)
 
         if out.returncode == 0:
             msg = await msg.edit(content=f"{msg.content}Done! ({out.returncode})")
@@ -138,10 +125,7 @@ class Kur0only(commands.Cog):
             "--no-warnings",
             fixed_link,
         ]
-        out = await asyncio.create_subprocess_exec(
-            *coms, stdout=subprocess.PIPE, stderr=subprocess.STDOUT
-        )
-        stdout, stderr = await out.communicate()
+        out, stdout, stderr = await subprocess_runner.run_subprocess(coms)
         result = stdout.decode()
         title = result.splitlines()[-2]
         filename = result.splitlines()[-1]
@@ -189,11 +173,7 @@ class Kur0only(commands.Cog):
             "--suffix=2021_12_22_092152",
             "--suffix-keep-extension",
         ]
-        out = await asyncio.create_subprocess_exec(
-            *coms, stdout=subprocess.PIPE, stderr=subprocess.STDOUT
-        )
-        stdout, stderr = await out.communicate()
-        print(stdout.decode())
+        out, stdout, stderr = await subprocess_runner.run_subprocess(coms)
 
         if out.returncode == 0:
             msg = await msg.edit(content=f"{msg.content}Done! ({out.returncode})")
@@ -229,19 +209,6 @@ class Kur0only(commands.Cog):
         else:
             print("We gucci, my dude.")
             vid_id = data["id"]
-
-            if out.returncode == 0:
-                msg = await msg.edit(content=f"{msg.content}Done! ({out.returncode})")
-            else:
-                try:
-                    msg = await msg.edit(
-                        content=f"{msg.content}\n Return code: {out.returncode}\n{stderr.decode()}"
-                    )
-                except:
-                    msg = await msg.edit(
-                        content=f"{msg.content}\n Return code: {out.returncode}\n{stdout.decode()}"
-                    )
-                return
             await msg.delete()
             await ctx.send(f"{title} has been uploaded!")
             await ctx.send(

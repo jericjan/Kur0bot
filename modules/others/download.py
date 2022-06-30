@@ -10,7 +10,7 @@ import re
 from urllib.parse import unquote, quote
 import humanize
 import requests
-
+from myfunctions import subprocess_runner
 
 limiter = AsyncLimiter(1, 1)
 
@@ -43,10 +43,7 @@ class Download(commands.Cog):
                 os.getenv("ENCRYPTPASSPHRASE"),
                 "cookies (17).txt.gpg",
             ]
-            cookieproc = await asyncio.create_subprocess_exec(
-                *cookiecoms, stdout=subprocess.PIPE, stderr=subprocess.STDOUT
-            )
-            stdout, stderr = await cookieproc.communicate()
+            cookieproc, stdout, stderr = await subprocess_runner.run_subprocess(cookiecoms)
             message = await ctx.send("Downloading...")
             coms = [
                 "yt-dlp",
@@ -59,7 +56,7 @@ class Download(commands.Cog):
             ]
 
             print(shjoin(coms))
-            proc = await asyncio.create_subprocess_exec(
+            proc = await asyncio.create_subprocess_exec( #reads stdout live
                 *coms, stdout=subprocess.PIPE, stderr=subprocess.STDOUT
             )
             while proc.returncode is None:
@@ -79,7 +76,7 @@ class Download(commands.Cog):
                     link,
                 ]
                 print(shjoin(coms))
-                proc = await asyncio.create_subprocess_exec(
+                proc = await asyncio.create_subprocess_exec( #reads stdout live
                     *coms, stdout=subprocess.PIPE, stderr=subprocess.STDOUT
                 )
                 while proc.returncode is None:
@@ -115,13 +112,9 @@ class Download(commands.Cog):
                 "cookies (17).txt",
                 "--no-warnings",
                 link,
-            ]
-            print(shjoin(coms2))
-            out2 = await asyncio.create_subprocess_exec(
-                *coms2, stdout=subprocess.PIPE, stderr=subprocess.STDOUT
-            )
+            ]            
+            out2, stdout, stderr = await subprocess_runner.run_subprocess(coms2)
             try:
-                stdout, stderr = await out2.communicate()
                 print(f"\033[32m{stdout.decode('utf-8')}\033[0m")
                 filename = stdout.decode("utf-8").split("\n")[0]
                 clean_name = filename.replace(",", "")
@@ -152,10 +145,7 @@ class Download(commands.Cog):
                 os.getenv("ENCRYPTPASSPHRASE"),
                 "cookies (15).txt.gpg",
             ]
-            cookieproc = await asyncio.create_subprocess_exec(
-                *cookiecoms, stdout=subprocess.PIPE, stderr=subprocess.STDOUT
-            )
-            stdout, stderr = await cookieproc.communicate()
+            cookieproc, stdout, stderr = await subprocess_runner.run_subprocess(cookiecoms)
             coms = [
                 "yt-dlp",
                 "-f",
@@ -177,7 +167,7 @@ class Download(commands.Cog):
             ]
             print(shjoin(coms))
             print(shjoin(coms2))
-            proc = await asyncio.create_subprocess_exec(
+            proc = await asyncio.create_subprocess_exec( #reads stdout live
                 *coms, stdout=subprocess.PIPE, stderr=subprocess.STDOUT
             )
 
@@ -189,11 +179,8 @@ class Download(commands.Cog):
                 asyncio.ensure_future(self.updatebar(message))
                 await asyncio.sleep(1)
             await message.edit(content="Almost there...")
-            out2 = await asyncio.create_subprocess_exec(
-                *coms2, stdout=subprocess.PIPE, stderr=subprocess.STDOUT
-            )
+            out2, stdout, stderr = await subprocess_runner.run_subprocess(coms2)
             try:
-                stdout, stderr = await out2.communicate()
                 filename = stdout.decode("utf-8").split("\n")[-2]
                 clean_name = filename.replace(",", "")
                 print(stdout.decode("utf-8"))
@@ -222,8 +209,7 @@ class Download(commands.Cog):
                 link,
             ]
             print(shjoin(coms))
-            print(shjoin(coms2))
-            proc = await asyncio.create_subprocess_exec(
+            proc = await asyncio.create_subprocess_exec( #reads stdout live
                 *coms, stdout=subprocess.PIPE, stderr=subprocess.STDOUT
             )
             while proc.returncode is None:
@@ -234,11 +220,8 @@ class Download(commands.Cog):
                 asyncio.ensure_future(self.updatebar(message))
                 await asyncio.sleep(1)
             await message.edit(content="Almost there...")
-            out2 = await asyncio.create_subprocess_exec(
-                *coms2, stdout=subprocess.PIPE, stderr=subprocess.STDOUT
-            )
+            out2, stdout, stderr = await subprocess_runner.run_subprocess(coms2)
             try:
-                stdout, stderr = await out2.communicate()
                 filename = stdout.decode("utf-8").split("\n")[0]
                 clean_name = filename.replace(",", "")
                 await message.edit(content="Sending video...")
@@ -258,11 +241,8 @@ class Download(commands.Cog):
             )
             coms = ["yt-dlp", "--get-url", "-j", "--no-warnings", link]
 
-            print(shjoin(coms))
-            proc = await asyncio.create_subprocess_exec(
-                *coms, stdout=subprocess.PIPE, stderr=subprocess.STDOUT
-            )
-            stdout, stderr = await proc.communicate()
+            
+            proc, stdout, stderr = await subprocess_runner.run_subprocess(coms)
             url = stdout.splitlines()[0]
             json_str = stdout.splitlines()[1]
             json_dict = json.loads(json_str)
@@ -270,7 +250,7 @@ class Download(commands.Cog):
             filename = f"bilibili_{bilibili_id}.mp4"
             clean_name = filename.replace(",", "")
             coms2 = ["ffmpeg", "-i", url, "-c", "copy", "-y", filename]
-            out2 = await asyncio.create_subprocess_exec(
+            out2 = await asyncio.create_subprocess_exec( #reads stdout live
                 *coms2, stdout=subprocess.PIPE, stderr=subprocess.STDOUT
             )
             while out2.returncode is None:
@@ -298,7 +278,7 @@ class Download(commands.Cog):
             coms2 = ["yt-dlp", "-f", "b", "--get-filename", "--no-warnings", link]
             print(shjoin(coms))
             print(shjoin(coms2))
-            proc = await asyncio.create_subprocess_exec(
+            proc = await asyncio.create_subprocess_exec(# reads stdout live
                 *coms, stdout=subprocess.PIPE, stderr=subprocess.STDOUT
             )
             while proc.returncode is None:
@@ -316,11 +296,8 @@ class Download(commands.Cog):
                 await ctx.send("epic fail <a:trollplane:934777423881445436>")
                 return
             await message.edit(content="Almost there...")
-            out2 = await asyncio.create_subprocess_exec(
-                *coms2, stdout=subprocess.PIPE, stderr=subprocess.STDOUT
-            )
-            try:
-                stdout, stderr = await out2.communicate()
+            out2, stdout, stderr = await subprocess_runner.run_subprocess(coms2)
+            try:                
                 filename = stdout.decode("utf-8").split("\n")[0]
                 clean_name = filename.replace(",", "")
                 boost_size_limits = [8388608, 8388608, 52428800, 104857600]

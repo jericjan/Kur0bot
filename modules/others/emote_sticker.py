@@ -7,7 +7,7 @@ import requests
 import io
 import re
 from PIL import Image
-import myfunctions.msg_link_grabber as msg_link_grabber
+from myfunctions import msg_link_grabber
 
 
 class EmoteSticker(commands.Cog):

@@ -8,7 +8,8 @@ from tqdm import tqdm
 import io
 from aiolimiter import AsyncLimiter
 from datetime import datetime, timedelta
-import myfunctions.msg_link_grabber as msg_link_grabber
+from myfunctions import msg_link_grabber
+from myfunctions import subprocess_runner
 from shlex import join as shjoin
 
 limiter = AsyncLimiter(1, 1)
@@ -75,13 +76,7 @@ class lowQual(commands.Cog):
                     "copy",
                     muxname,
                 ]
-            print(shjoin(coms))
-            process = await asyncio.create_subprocess_exec(
-                *coms, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE
-            )
-            stdout, stderr = await process.communicate()
-            print(f"stdout:\n\033[;32m{stdout.decode('utf-8')}\033[0m")
-            print(f"stderr:\n\033[;31m{stderr.decode('utf-8')}\033[0m")
+            out, stdout, stderr = await subprocess_runner.run_subprocess(coms)
             tempname = re.sub(r"(.+(?=\..+))", r"\g<1>01", filename)
             coms = [
                 "ffmpeg",
@@ -98,7 +93,7 @@ class lowQual(commands.Cog):
             ]
             print(shjoin(coms))
             message = await ctx.send("Downscaling...")
-            process = await asyncio.create_subprocess_exec(
+            process = await asyncio.create_subprocess_exec( #reads stdout live
                 *coms, stdout=subprocess.PIPE, stderr=subprocess.STDOUT
             )
             full_line = ""
@@ -182,7 +177,7 @@ class lowQual(commands.Cog):
             ]
             print(shjoin(coms))
             await message.edit(content="Upscaling...")
-            process = await asyncio.create_subprocess_exec(
+            process = await asyncio.create_subprocess_exec( #reads stdout live
                 *coms, stdout=subprocess.PIPE, stderr=subprocess.STDOUT
             )
             full_line = ""
@@ -268,10 +263,7 @@ class lowQual(commands.Cog):
                 tempname,
             ]
             message = await ctx.send("Downscaling...")
-            process = await asyncio.create_subprocess_exec(
-                *coms, stdout=subprocess.PIPE, stderr=subprocess.STDOUT
-            )
-            stdout, stderr = await process.communicate()
+            out, stdout, stderr = await subprocess_runner.run_subprocess(coms)
 
             coms = [
                 "ffmpeg",
@@ -282,10 +274,7 @@ class lowQual(commands.Cog):
                 filename,
             ]
             await message.edit(content="Upscaling...")
-            process = await asyncio.create_subprocess_exec(
-                *coms, stdout=subprocess.PIPE, stderr=subprocess.STDOUT
-            )
-            stdout, stderr = await process.communicate()
+            out, stdout, stderr = await subprocess_runner.run_subprocess(coms)
             os.remove(tempname)
         else:
             await ctx.send(

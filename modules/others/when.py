@@ -2,8 +2,7 @@ from disnake.ext import commands
 import os
 import requests
 import dateutil.parser as dp
-import myfunctions.msg_link_grabber as msg_link_grabber
-
+from myfunctions import msg_link_grabber
 
 class When(commands.Cog):
     @commands.command()

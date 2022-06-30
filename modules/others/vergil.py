@@ -5,12 +5,9 @@ import numpy as np
 import uuid
 import requests
 import os
-import asyncio
-import subprocess
-from shlex import join as shlexjoin
 import shutil
 import time
-import myfunctions.msg_link_grabber as msg_link_grabber
+from myfunctions import msg_link_grabber
 from myfunctions import subprocess_runner
 
 
@@ -88,11 +85,7 @@ class Vergil(commands.Cog):
         vid5 = f"videos/vergil_greenscreen/{random_uuid}/vergil_5.mp4"
         vergil_audio = "videos/vergil_greenscreen/vergil_full.m4a"
         coms = ["ffmpeg", "-i", vid1, "-vcodec", "h264", vid1_h264]
-        print(shlexjoin(coms))
-        out = await asyncio.create_subprocess_exec(
-            *coms, stdout=subprocess.PIPE, stderr=subprocess.STDOUT
-        )
-        stdout, stderr = await out.communicate()
+        out, stdout, stderr = await subprocess_runner.run_subprocess(coms)
         coms = [
             "ffmpeg",
             "-i",
@@ -105,12 +98,7 @@ class Vergil(commands.Cog):
             "mpegts",
             vid1_ts,
         ]
-        print(shlexjoin(coms))
-        out = await asyncio.create_subprocess_exec(
-            *coms, stdout=subprocess.PIPE, stderr=subprocess.STDOUT
-        )
-        stdout, stderr = await out.communicate()
-        print(stdout.decode("utf-8"))
+        out, stdout, stderr = await subprocess_runner.run_subprocess(coms)
         if not os.path.exists(vid2_ts):
             coms = [
                 "ffmpeg",
@@ -124,12 +112,7 @@ class Vergil(commands.Cog):
                 "mpegts",
                 vid2_ts,
             ]
-            print(shlexjoin(coms))
-            out = await asyncio.create_subprocess_exec(
-                *coms, stdout=subprocess.PIPE, stderr=subprocess.STDOUT
-            )
-            stdout, stderr = await out.communicate()
-            print(stdout.decode("utf-8"))
+            out, stdout, stderr = await subprocess_runner.run_subprocess(coms)
         await vergil_status.edit(content="Becoming the reclaimer of my name...")
         coms = [
             "ffmpeg",
@@ -141,12 +124,7 @@ class Vergil(commands.Cog):
             "aac_adtstoasc",
             vid3,
         ]
-        print(shlexjoin(coms))
-        out = await asyncio.create_subprocess_exec(
-            *coms, stdout=subprocess.PIPE, stderr=subprocess.STDOUT
-        )
-        stdout, stderr = await out.communicate()
-        print(stdout.decode("utf-8"))
+        out, stdout, stderr = await subprocess_runner.run_subprocess(coms)
         coms = [
             "ffmpeg",
             "-i",
@@ -161,19 +139,9 @@ class Vergil(commands.Cog):
             "1:a:0",
             vid4,
         ]
-        print(shlexjoin(coms))
-        out = await asyncio.create_subprocess_exec(
-            *coms, stdout=subprocess.PIPE, stderr=subprocess.STDOUT
-        )
-        stdout, stderr = await out.communicate()
-        print(stdout.decode("utf-8"))
+        out, stdout, stderr = await subprocess_runner.run_subprocess(coms)
         coms = ["ffmpeg", "-i", vid4, "-c", "copy", vid5]
-        print(shlexjoin(coms))
-        out = await asyncio.create_subprocess_exec(
-            *coms, stdout=subprocess.PIPE, stderr=subprocess.STDOUT
-        )
-        stdout, stderr = await out.communicate()
-        print(stdout.decode("utf-8"))
+        out, stdout, stderr = await subprocess_runner.run_subprocess(coms)
         await vergil_status.edit(content="Approaching...")
         await vergil_status.edit(
             content="", file=disnake.File(vid5, filename="vergil status.mp4")
@@ -357,7 +325,7 @@ class Vergil(commands.Cog):
             "28",
             vid1_h264,
         ]
-        stdout, stderr = await subprocess_runner.run_subprocess(coms)
+        out, stdout, stderr = await subprocess_runner.run_subprocess(coms)
         if debug_mode:
             log += f"Converted to H264:\t{time.time()-mid_time:.2f}\n"
         mid_time = time.time()
@@ -374,7 +342,7 @@ class Vergil(commands.Cog):
             "mpegts",
             vid1_ts,
         ]
-        stdout, stderr = await subprocess_runner.run_subprocess(coms)
+        out, stdout, stderr = await subprocess_runner.run_subprocess(coms)
         if debug_mode:
             log += f"Converted to MPEG-TS:\t{time.time()-mid_time:.2f}\n"
         mid_time = time.time()
@@ -392,7 +360,7 @@ class Vergil(commands.Cog):
                 "mpegts",
                 vid2_ts,
             ]
-            stdout, stderr = await subprocess_runner.run_subprocess(coms)
+            out, stdout, stderr = await subprocess_runner.run_subprocess(coms)
             log += (
                 f"(2) Converted to MPEG-TS: {time.time()-mid_time:.2f} seconds passed\n"
             )
@@ -408,7 +376,7 @@ class Vergil(commands.Cog):
             "aac_adtstoasc",
             vid3,
         ]
-        stdout, stderr = await subprocess_runner.run_subprocess(coms)
+        out, stdout, stderr = await subprocess_runner.run_subprocess(coms)
         if debug_mode:
             log += f"Concatenatted vods:\t{time.time()-mid_time:.2f}\n"
         mid_time = time.time()
@@ -427,7 +395,7 @@ class Vergil(commands.Cog):
             "1:a:0",
             vid4,
         ]
-        stdout, stderr = await subprocess_runner.run_subprocess(coms)
+        out, stdout, stderr = await subprocess_runner.run_subprocess(coms)
         if debug_mode:
             log += f"Added audio:\t{time.time()-mid_time:.2f}\n"
         mid_time = time.time()

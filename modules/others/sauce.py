@@ -4,7 +4,7 @@ import disnake
 from saucenao_api import SauceNao
 import os
 import re
-import myfunctions.msg_link_grabber as msg_link_grabber
+from myfunctions import msg_link_grabber
 
 
 class Sauce(commands.Cog):

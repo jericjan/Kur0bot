@@ -3,8 +3,7 @@ import os
 import time
 from functools import wraps, partial
 import asyncio
-import subprocess
-
+from myfunctions import subprocess_runner
 
 class myTasks(commands.Cog):
     def __init__(self, client):
@@ -71,10 +70,7 @@ class myTasks(commands.Cog):
             "-O",
             "/home/kur0/.config/rclone/rclone.conf",
         ]
-        out = await asyncio.create_subprocess_exec(
-            *coms, stdout=subprocess.PIPE, stderr=subprocess.STDOUT
-        )
-        stdout, stderr = await out.communicate()
+        out, stdout, stderr = await subprocess_runner.run_subprocess(coms)
         channel = self.client.get_channel(976064150935576596)
         drives = ["pog4:", "pog6:", "pog7:", "pog8:"]
         coms_list = {}
@@ -84,10 +80,7 @@ class myTasks(commands.Cog):
             coms_list[idx] = pre_coms
         for i in coms_list:
             print(coms_list[i])
-            out = await asyncio.create_subprocess_exec(
-                *coms_list[i], stdout=subprocess.PIPE, stderr=subprocess.STDOUT
-            )
-            stdout, stderr = await out.communicate()
+            out, stdout, stderr = await subprocess_runner.run_subprocess(coms_list[i])
             if out.returncode == 0:
                 await channel.send(content=f"{drives[i]}Exists! ({out.returncode})")
             else:

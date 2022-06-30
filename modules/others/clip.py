@@ -7,7 +7,7 @@ from shlex import join as shjoin
 import math
 import os
 import subprocess
-
+from myfunctions import subprocess_runner
 
 class Clip(commands.Cog):
 
@@ -26,7 +26,6 @@ class Clip(commands.Cog):
 
         message = await ctx.send("Fetching url...")
         coms = ["yt-dlp", "-g", "-f", "best", "--youtube-skip-dash-manifest", link]
-        print(shjoin(coms))
         startsplit = start.split(":")
         shour = startsplit[0]
         sminute = startsplit[1]
@@ -62,12 +61,7 @@ class Clip(commands.Cog):
                 )
                 + timedelta(seconds=30)
             )
-        out = await asyncio.create_subprocess_exec(
-            *coms, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE
-        )
-        stdout, stderr = await out.communicate()
-        print(stdout)
-        print(stderr)
+        out, stdout, stderr = await subprocess_runner.run_subprocess(coms)    
         dirlinks = stdout.decode("utf-8").split("\n")
         vid = dirlinks[0]
         if seconds < 30:
@@ -103,15 +97,8 @@ class Clip(commands.Cog):
                 "-y",
                 f"{filename}_temp0.mp4",
             ]
-        print(shjoin(coms))
         await message.edit(content="Downloading... This will take a while...")
-        process = await asyncio.create_subprocess_exec(
-            *coms, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE
-        )
-
-        stdout, stderr = await process.communicate()
-        print(stdout)
-        print(stderr.decode("utf-8"))
+        process, stdout, stderr = await subprocess_runner.run_subprocess(coms)
 
         def max_le(seq, val):
             """
@@ -165,12 +152,7 @@ class Clip(commands.Cog):
             "csv=p=0",
             f"{filename}_temp0.mp4",
         ]
-        process = await asyncio.create_subprocess_exec(
-            *coms, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE
-        )
-        stdout, stderr = await process.communicate()
-        print(stderr)
-        print(stdout.decode("utf-8"))
+        process, stdout, stderr = await subprocess_runner.run_subprocess(coms)
         timelist_str = stdout.decode("utf-8").strip().split("\n")
         print(timelist_str)
         timelist_float = [float(i) for i in timelist_str]
@@ -188,11 +170,7 @@ class Clip(commands.Cog):
             "copy",
             f"{filename}_temp.mp4",
         ]
-        process = await asyncio.create_subprocess_exec(
-            *coms, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE
-        )
-        stdout, stderr = await process.communicate()
-        print(stdout.decode("utf-8"))
+        process, stdout, stderr = await subprocess_runner.run_subprocess(coms)
 
         round_number = 1
         round_frames = False
@@ -213,13 +191,7 @@ class Clip(commands.Cog):
                         "default=noprint_wrappers=1:nokey=1",
                         f"{filename}_temp0.mp4",
                     ]  # get duration
-                    process = await asyncio.create_subprocess_exec(
-                        *coms,
-                        stdout=asyncio.subprocess.PIPE,
-                        stderr=asyncio.subprocess.PIPE,
-                    )
-                    stdout, stderr = await process.communicate()
-                    print(stderr)
+                    process, stdout, stderr = await subprocess_runner.run_subprocess(coms)
                     next_keyframe = float(stdout.decode("utf-8"))
                 else:
                     next_keyframe = min_gt(timelist_float, seconds)
@@ -256,13 +228,7 @@ class Clip(commands.Cog):
                         "default=noprint_wrappers=1:nokey=1",
                         f"{filename}_temp0.mp4",
                     ]  # get duration
-                    process = await asyncio.create_subprocess_exec(
-                        *coms,
-                        stdout=asyncio.subprocess.PIPE,
-                        stderr=asyncio.subprocess.PIPE,
-                    )
-                    stdout, stderr = await process.communicate()
-                    print(stderr)
+                    process, stdout, stderr = await subprocess_runner.run_subprocess(coms)
                     next_keyframe = float(stdout.decode("utf-8"))
                 else:
                     next_keyframe = min_gt(timelist_float, 30)
@@ -298,13 +264,8 @@ class Clip(commands.Cog):
             "make_zero",
             f"{filename}.mp4",
         ]
-        print(shjoin(coms))
-        process = await asyncio.create_subprocess_exec(
-            *coms, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE
-        )
-        stdout, stderr = await process.communicate()
-        print(stdout)
-        print(stderr.decode("utf-8"))
+        process, stdout, stderr = await subprocess_runner.run_subprocess(coms)
+
 
         coms = [
             "ffprobe",
@@ -320,13 +281,9 @@ class Clip(commands.Cog):
             "csv=p=0",
             f"{filename}.mp4",
         ]
-        process = await asyncio.create_subprocess_exec(
-            *coms, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE
-        )
-        stdout, stderr = await process.communicate()
-        print(stderr)
         print("final keyframes:")
-        print(stdout.decode("utf-8"))
+        process, stdout, stderr = await subprocess_runner.run_subprocess(coms)
+        
 
         try:
             await ctx.send(f"Sending {filename}.mp4...")
@@ -355,7 +312,6 @@ class Clip(commands.Cog):
 
         message = await ctx.send("Fetching url...")
         coms = ["yt-dlp", "-g", "-f", "best", "--youtube-skip-dash-manifest", link]
-        print(shjoin(coms))
         startsplit = start.split(":")
         shour = startsplit[0]
         sminute = startsplit[1]
@@ -391,12 +347,7 @@ class Clip(commands.Cog):
                 )
                 + timedelta(seconds=30)
             )
-        out = await asyncio.create_subprocess_exec(
-            *coms, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE
-        )
-        stdout, stderr = await out.communicate()
-        print(stdout)
-        print(stderr)
+        out, stdout, stderr = await subprocess_runner.run_subprocess(coms)
         dirlinks = stdout.decode("utf-8").split("\n")
         vid = dirlinks[0]
 
@@ -431,15 +382,8 @@ class Clip(commands.Cog):
                 "-y",
                 f"{filename}_temp0.mp4",
             ]
-        print(shjoin(coms))
         await message.edit(content="Downloading... This will take a while...")
-        process = await asyncio.create_subprocess_exec(
-            *coms, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE
-        )
-
-        stdout, stderr = await process.communicate()
-        print(stdout)
-        print(stderr.decode("utf-8"))
+        process, stdout, stderr = await subprocess_runner.run_subprocess(coms)
 
         def max_le(seq, val):
             """
@@ -493,12 +437,7 @@ class Clip(commands.Cog):
             "csv=p=0",
             f"{filename}_temp0.mp4",
         ]
-        process = await asyncio.create_subprocess_exec(
-            *coms, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE
-        )
-        stdout, stderr = await process.communicate()
-        print(stderr)
-        print(stdout.decode("utf-8"))
+        process, stdout, stderr = await subprocess_runner.run_subprocess(coms)
         timelist_str = stdout.decode("utf-8").strip().split("\n")
         print(timelist_str)
         timelist_float = [float(i) for i in timelist_str]
@@ -517,11 +456,7 @@ class Clip(commands.Cog):
             "-y",
             f"{filename}_temp.mp4",
         ]
-        process = await asyncio.create_subprocess_exec(
-            *coms, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE
-        )
-        stdout, stderr = await process.communicate()
-        print(stdout.decode("utf-8"))
+        process, stdout, stderr = await subprocess_runner.run_subprocess(coms)
 
         round_number = 1
         round_frames = False
@@ -543,13 +478,7 @@ class Clip(commands.Cog):
                         "default=noprint_wrappers=1:nokey=1",
                         f"{filename}_temp0.mp4",
                     ]  # get duration
-                    process = await asyncio.create_subprocess_exec(
-                        *coms,
-                        stdout=asyncio.subprocess.PIPE,
-                        stderr=asyncio.subprocess.PIPE,
-                    )
-                    stdout, stderr = await process.communicate()
-                    print(stderr)
+                    process, stdout, stderr = await subprocess_runner.run_subprocess(coms)
                     next_keyframe = float(stdout.decode("utf-8"))
                 else:
                     next_keyframe = min_gt(timelist_float, seconds)
@@ -587,13 +516,7 @@ class Clip(commands.Cog):
                         "default=noprint_wrappers=1:nokey=1",
                         f"{filename}_temp0.mp4",
                     ]  # get duration
-                    process = await asyncio.create_subprocess_exec(
-                        *coms,
-                        stdout=asyncio.subprocess.PIPE,
-                        stderr=asyncio.subprocess.PIPE,
-                    )
-                    stdout, stderr = await process.communicate()
-                    print(stderr)
+                    process, stdout, stderr = await subprocess_runner.run_subprocess(coms)
                     next_keyframe = float(stdout.decode("utf-8"))
                 else:
                     next_keyframe = min_gt(timelist_float, 30)
@@ -631,13 +554,8 @@ class Clip(commands.Cog):
             "-y",
             f"{filename}_nosub.mp4",
         ]
-        print(shjoin(coms))
-        process = await asyncio.create_subprocess_exec(
-            *coms, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE
-        )
-        stdout, stderr = await process.communicate()
-        print(stdout)
-        print(stderr.decode("utf-8"))
+        
+        process, stdout, stderr = await subprocess_runner.run_subprocess(coms)
 
         coms = [
             "ffprobe",
@@ -653,13 +571,9 @@ class Clip(commands.Cog):
             "csv=p=0",
             f"{filename}_nosub.mp4",
         ]
-        process = await asyncio.create_subprocess_exec(
-            *coms, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE
-        )
-        stdout, stderr = await process.communicate()
-        print(stderr)
         print("final keyframes:")
-        print(stdout.decode("utf-8"))
+        process, stdout, stderr = await subprocess_runner.run_subprocess(coms)
+        
         await message.edit(content="Getting fancy subs... (en, srv3)")
         coms = [
             "yt-dlp",
@@ -671,10 +585,7 @@ class Clip(commands.Cog):
             "--skip-download",
             link,
         ]
-        process = await asyncio.create_subprocess_exec(
-            *coms, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE
-        )
-        stdout, stderr = await process.communicate()
+        process, stdout, stderr = await subprocess_runner.run_subprocess(coms)
         try:
             sub_name = re.findall(
                 r"(?<=Writing video subtitles to: ).+", stdout.decode("utf-8")
@@ -690,10 +601,7 @@ class Clip(commands.Cog):
                 "--skip-download",
                 link,
             ]
-            process = await asyncio.create_subprocess_exec(
-                *coms, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE
-            )
-            stdout, stderr = await process.communicate()
+            process, stdout, stderr = await subprocess_runner.run_subprocess(coms)
             try:
                 sub_name = re.findall(
                     r"(?<=Writing video subtitles to: ).+", stdout.decode("utf-8")
@@ -703,10 +611,7 @@ class Clip(commands.Cog):
                 return
         await message.edit(content="Converting subs...")
         coms = ["mono", "ytsubconverter/YTSubConverter.exe", sub_name]
-        process = await asyncio.create_subprocess_exec(
-            *coms, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE
-        )
-        stdout, stderr = await process.communicate()
+        process, stdout, stderr = await subprocess_runner.run_subprocess(coms)
 
         sub_name_ass = ".".join(sub_name.split(".")[:-1]) + ".ass"
         sub_name_ass2 = ".".join(sub_name.split(".")[:-2]) + "_2.en.ass"
@@ -727,10 +632,7 @@ class Clip(commands.Cog):
             "-y",
             sub_name_ass2,
         ]
-        process = await asyncio.create_subprocess_exec(
-            *coms, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE
-        )
-        stdout, stderr = await process.communicate()
+        process, stdout, stderr = await subprocess_runner.run_subprocess(coms)
 
         await message.edit(content="Burning subs into video...")
         coms = [
@@ -742,12 +644,7 @@ class Clip(commands.Cog):
             "-y",
             f"{filename}.mp4",
         ]
-        process = await asyncio.create_subprocess_exec(
-            *coms, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE
-        )
-        stdout, stderr = await process.communicate()
-        print(stdout.decode("utf-8"))
-        print(stderr.decode("utf-8"))
+        process, stdout, stderr = await subprocess_runner.run_subprocess(coms)
         try:
 
             await ctx.send(file=disnake.File(f"{filename}.mp4"))
@@ -781,7 +678,6 @@ class Clip(commands.Cog):
 
         message = await ctx.send("Fetching url...")
         coms = ["yt-dlp", "-g", "-f", f"{id}+{id2}", link]
-        print(shjoin(coms))
         startsplit = start.split(":")
         shour = startsplit[0]
         sminute = startsplit[1]
@@ -817,12 +713,7 @@ class Clip(commands.Cog):
                 )
                 + timedelta(seconds=30)
             )
-        out = await asyncio.create_subprocess_exec(
-            *coms, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE
-        )
-        stdout, stderr = await out.communicate()
-        print(stdout)
-        print(stderr)
+        out, stdout, stderr = await subprocess_runner.run_subprocess(coms)
         dirlinks = stdout.decode("utf-8").split("\n")
         vid = dirlinks[0]
         if seconds < 30:
@@ -856,7 +747,7 @@ class Clip(commands.Cog):
             ]
         print(shjoin(coms))
         await message.edit(content="Downloading... This will take a while...")
-        process = await asyncio.create_subprocess_exec(
+        process = await asyncio.create_subprocess_exec(#reads stdout live
             *coms, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE
         )
 
@@ -921,12 +812,8 @@ class Clip(commands.Cog):
             "csv=p=0",
             f"{filename}_temp.mp4",
         ]
-        process = await asyncio.create_subprocess_exec(
-            *coms, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE
-        )
-        stdout, stderr = await process.communicate()
-        print(stderr)
-        print(stdout.decode("utf-8"))
+        process, stdout, stderr = await subprocess_runner.run_subprocess(coms)
+
         timelist_str = stdout.decode("utf-8").strip().split("\n")
         print(timelist_str)
         timelist_float = [float(i) for i in timelist_str]
@@ -980,13 +867,8 @@ class Clip(commands.Cog):
             "make_zero",
             f"{filename}.mp4",
         ]
-        print(shjoin(coms))
-        process = await asyncio.create_subprocess_exec(
-            *coms, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE
-        )
-        stdout, stderr = await process.communicate()
-        print(stdout)
-        print(stderr.decode("utf-8"))
+        
+        process, stdout, stderr = await subprocess_runner.run_subprocess(coms)
 
         coms = [
             "ffprobe",
@@ -1002,13 +884,10 @@ class Clip(commands.Cog):
             "csv=p=0",
             f"{filename}.mp4",
         ]
-        process = await asyncio.create_subprocess_exec(
-            *coms, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE
-        )
-        stdout, stderr = await process.communicate()
-        print(stderr)
         print("final keyframes:")
-        print(stdout.decode("utf-8"))
+        process, stdout, stderr = await subprocess_runner.run_subprocess(coms)
+        
+
 
         try:
             await ctx.send(f"Sending {filename}.mp4...")
@@ -1042,7 +921,6 @@ class Clip(commands.Cog):
 
         message = await ctx.send("Fetching url...")
         coms = ["yt-dlp", "-g", "-f", "251", link]
-        print(shjoin(coms))
         startsplit = start.split(":")
         shour = startsplit[0]
         sminute = startsplit[1]
@@ -1069,12 +947,7 @@ class Clip(commands.Cog):
         result2 = timedelta(
             hours=int(ehour), minutes=int(eminute), seconds=int(esecond)
         ) - timedelta(hours=int(shour), minutes=int(sminute), seconds=int(ssecond))
-        out = await asyncio.create_subprocess_exec(
-            *coms, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE
-        )
-        stdout, stderr = await out.communicate()
-        print(stdout)
-        print(stderr)
+        out, stdout, stderr = await subprocess_runner.run_subprocess(coms)
         dirlinks = stdout.decode("utf-8").split("\n")
         vid = dirlinks[0]
         if seconds < 30:
@@ -1109,14 +982,8 @@ class Clip(commands.Cog):
                 "copy",
                 f"{filename}.ogg",
             ]
-        print(shjoin(coms))
         await message.edit(content="Downloading... This will take a while...")
-        process = await asyncio.create_subprocess_exec(
-            *coms, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE
-        )
-        stdout, stderr = await process.communicate()
-        print(stdout)
-        print(stderr.decode("utf-8"))
+        process, stdout, stderr = await subprocess_runner.run_subprocess(coms)
 
         if filetype == "ogg":
             pass
@@ -1131,24 +998,12 @@ class Clip(commands.Cog):
                 "0",
                 f"{filename}.mp3",
             ]
-            print(shjoin(coms))
             await message.edit(content="Using libmp3lame to convert to VBR 0 MP3...")
-            process = await asyncio.create_subprocess_exec(
-                *coms, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE
-            )
-            stdout, stderr = await process.communicate()
-            print(stdout)
-            print(stderr.decode("utf-8"))
+            process, stdout, stderr = await subprocess_runner.run_subprocess(coms)
         elif filetype == "wav":
             coms = ["ffmpeg", "-i", f"{filename}.ogg", f"{filename}.wav"]
-            print(shjoin(coms))
-            process = await asyncio.create_subprocess_exec(
-                *coms, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE
-            )
-            stdout, stderr = await process.communicate()
-            print(stdout)
-            print(stderr.decode("utf-8"))
-
+            process, stdout, stderr = await subprocess_runner.run_subprocess(coms)
+            
         try:
             await ctx.send(file=disnake.File(f"{filename}.{filetype.lower()}"))
         except Exception:
@@ -1185,7 +1040,6 @@ class Clip(commands.Cog):
             "--youtube-skip-dash-manifest",
             link,
         ]
-        print(shjoin(coms))
         startsplit = start.split(":")
         shour = startsplit[0]
         sminute = startsplit[1]
@@ -1211,10 +1065,7 @@ class Clip(commands.Cog):
         result2 = timedelta(
             hours=int(ehour), minutes=int(eminute), seconds=int(esecond)
         ) - timedelta(hours=int(shour), minutes=int(sminute), seconds=int(ssecond))
-        out = await asyncio.create_subprocess_exec(
-            *coms, stdout=subprocess.PIPE, stderr=subprocess.STDOUT
-        )
-        stdout, stderr = await out.communicate()
+        out, stdout, stderr = await subprocess_runner.run_subprocess(coms)
         dirlinks = stdout.decode("utf-8").split("\n")
         vid = dirlinks[0]
         if seconds < 30:
@@ -1252,7 +1103,7 @@ class Clip(commands.Cog):
         print(shjoin(coms))
         await message.edit(content="Downloading... This will take a while...")
         try:
-            process = await asyncio.create_subprocess_exec(
+            process = await asyncio.create_subprocess_exec( #reads stdout live
                 *coms, stdout=subprocess.PIPE, stderr=subprocess.STDOUT
             )
             while process.returncode is None:
@@ -1292,7 +1143,6 @@ class Clip(commands.Cog):
     async def fastclip3(self, ctx, link, start, end, filename):
         message = await ctx.send("Fetching url...")
         coms = ["yt-dlp", "-g", "-f", "best", "--youtube-skip-dash-manifest", link]
-        print(shjoin(coms))
         startsplit = start.split(":")
         shour = startsplit[0]
         sminute = startsplit[1]
@@ -1319,12 +1169,7 @@ class Clip(commands.Cog):
         result2 = timedelta(
             hours=int(ehour), minutes=int(eminute), seconds=int(esecond)
         ) - timedelta(hours=int(shour), minutes=int(sminute), seconds=int(ssecond))
-        out = await asyncio.create_subprocess_exec(
-            *coms, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE
-        )
-        stdout, stderr = await out.communicate()
-        print(stdout)
-        print(stderr)
+        out, stdout, stderr = await subprocess_runner.run_subprocess(coms)
         dirlinks = stdout.decode("utf-8").split("\n")
         vid = dirlinks[0]
         if seconds < 30:
@@ -1359,14 +1204,9 @@ class Clip(commands.Cog):
                 "copy",
                 f"{filename}.mp4",
             ]
-        print(shjoin(coms))
+
         await message.edit(content="Downloading... This will take a while...")
-        process = await asyncio.create_subprocess_exec(
-            *coms, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE
-        )
-        stdout, stderr = await process.communicate()
-        print(stdout)
-        print(stderr.decode("utf-8"))
+        process, stdout, stderr = await subprocess_runner.run_subprocess(coms)
         try:
             await ctx.send(file=disnake.File(f"{filename}.mp4"))
         except Exception:
@@ -1379,7 +1219,6 @@ class Clip(commands.Cog):
     async def fastclip2(self, ctx, link, start, end, filename):
         message = await ctx.send("Fetching url...")
         coms = ["yt-dlp", "-g", "-f", "best", "--youtube-skip-dash-manifest", link]
-        print(shjoin(coms))
         startsplit = start.split(":")
         shour = startsplit[0]
         sminute = startsplit[1]
@@ -1394,12 +1233,7 @@ class Clip(commands.Cog):
         result2 = timedelta(
             hours=int(ehour), minutes=int(eminute), seconds=int(esecond)
         ) - timedelta(hours=int(shour), minutes=int(sminute), seconds=int(ssecond))
-        out = await asyncio.create_subprocess_exec(
-            *coms, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE
-        )
-        stdout, stderr = await out.communicate()
-        print(stdout)
-        print(stderr)
+        out, stdout, stderr = await subprocess_runner.run_subprocess(coms)
         dirlinks = stdout.decode("utf-8").split("\n")
         vid = dirlinks[0]
         coms = [
@@ -1419,7 +1253,7 @@ class Clip(commands.Cog):
 
         print(shjoin(coms))
         await message.edit(content="Downloading... This will take a while...")
-        process = await asyncio.create_subprocess_exec(
+        process = await asyncio.create_subprocess_exec(# reads stdout live
             *coms, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE
         )
         while process.returncode is None:

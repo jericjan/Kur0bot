@@ -17,4 +17,4 @@ async def run_subprocess(coms, doPrint=False):
     if stderr:
         print(shjoin(coms))
         print(f"stderr ({return_code}):\n\033[;31m{stderr.decode('utf-8')}\033[0m")
-    return stdout, stderr
+    return process, stdout, stderr

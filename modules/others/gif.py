@@ -13,8 +13,8 @@ import glob
 import shutil
 import time
 import shlex
-import myfunctions.msg_link_grabber as msg_link_grabber
-
+from myfunctions import msg_link_grabber
+from myfunctions import subprocess_runner
 limiter = AsyncLimiter(1, 1)
 
 
@@ -51,7 +51,7 @@ class Gif(commands.Cog):
                 new_filename,
             ]
             message = await ctx.send("Converting to GIF...")
-            process = await asyncio.create_subprocess_exec(
+            process = await asyncio.create_subprocess_exec( #reads stdout live
                 *coms, stdout=subprocess.PIPE, stderr=subprocess.STDOUT
             )
             full_line = ""
@@ -172,14 +172,9 @@ class Gif(commands.Cog):
 
             coms = ["ffmpeg", "-i", link, frames_path]
             message = await ctx.send("Extracting frames... This might take a bit.")
-            process = await asyncio.create_subprocess_exec(
-                *coms, stdout=subprocess.PIPE, stderr=subprocess.STDOUT
-            )
-            stdout, stderr = await process.communicate()
             print("FFMPEGGGG")
-            print(stdout.decode("utf-8"))
-            if stderr is not None:
-                await ctx.send(stderr.decode("utf-8"))
+            out, stdout, stderr = await subprocess_runner.run_subprocess(coms)
+            
             gif_ski_frames_path = f"{frames_folder}/frame*.png"
             gif_ski_frames_path = glob.glob(gif_ski_frames_path)
             coms = [
@@ -195,10 +190,7 @@ class Gif(commands.Cog):
                 link,
             ]
             await message.edit(content="Getting framerate...")
-            process = await asyncio.create_subprocess_exec(
-                *coms, stdout=subprocess.PIPE, stderr=subprocess.STDOUT
-            )
-            stdout, stderr = await process.communicate()
+            out, stdout, stderr = await subprocess_runner.run_subprocess(coms)
             result_string = stdout.decode("utf-8").split()[0].split("/")
             fps = float(result_string[0]) / float(result_string[1])
             await message.edit(content="Making gif...")
@@ -217,7 +209,7 @@ class Gif(commands.Cog):
 
             coms = coms + gif_ski_frames_path
             print(shlex.join(coms))
-            process = await asyncio.create_subprocess_exec(
+            process = await asyncio.create_subprocess_exec( #reads stdout live
                 *coms, stdout=subprocess.PIPE, stderr=subprocess.STDOUT
             )
             full_line = ""
@@ -251,10 +243,7 @@ class Gif(commands.Cog):
                         new_filename,
                         f"https://transfer.sh/{new_filename}",
                     ]
-                    process = await asyncio.create_subprocess_exec(
-                        *coms, stdout=subprocess.PIPE, stderr=subprocess.STDOUT
-                    )
-                    stdout, stderr = await process.communicate()
+                    out, stdout, stderr = await subprocess_runner.run_subprocess(coms)
                     link = stdout.decode("utf-8").splitlines()[-1]
                     await ctx.send(link)
             os.remove(new_filename)
@@ -270,18 +259,10 @@ class Gif(commands.Cog):
 
             coms = ["ffmpeg", "-i", link, frames_path1]
             coms2 = ["ffmpeg", "-i", link, frames_path2]
-            process = await asyncio.create_subprocess_exec(
-                *coms, stdout=subprocess.PIPE, stderr=subprocess.STDOUT
-            )
-            stdout, stderr = await process.communicate()
-            process = await asyncio.create_subprocess_exec(
-                *coms2, stdout=subprocess.PIPE, stderr=subprocess.STDOUT
-            )
-            stdout, stderr = await process.communicate()
+            out, stdout, stderr = await subprocess_runner.run_subprocess(coms)
+            out, stdout, stderr = await subprocess_runner.run_subprocess(coms2)
             print("FFMPEGGGG")
-            print(stdout.decode("utf-8"))
-            if stderr is not None:
-                await ctx.send(stderr.decode("utf-8"))
+
             gif_ski_frames_path = f"{frames_folder}/frame*.png"
             gif_ski_frames_path = glob.glob(gif_ski_frames_path)
             coms = [
@@ -304,14 +285,8 @@ class Gif(commands.Cog):
             ]
 
             coms = coms + gif_ski_frames_path
-            print(shlex.join(coms))
-            process = await asyncio.create_subprocess_exec(
-                *coms, stdout=subprocess.PIPE, stderr=subprocess.STDOUT
-            )
-
             print("GIFSKI")
-            stdout, stderr = await process.communicate()
-            print(stdout.decode("utf-8"))
+            out, stdout, stderr = await subprocess_runner.run_subprocess(coms)
             await message.edit(content="Sending...")
             try:
                 await ctx.send(file=disnake.File(new_filename))
@@ -324,10 +299,7 @@ class Gif(commands.Cog):
                         new_filename,
                         f"https://transfer.sh/{new_filename}",
                     ]
-                    process = await asyncio.create_subprocess_exec(
-                        *coms, stdout=subprocess.PIPE, stderr=subprocess.STDOUT
-                    )
-                    stdout, stderr = await process.communicate()
+                    out, stdout, stderr = await subprocess_runner.run_subprocess(coms)
                     link = stdout.decode("utf-8").splitlines()[-1]
                     await ctx.send(link)
             os.remove(new_filename)
