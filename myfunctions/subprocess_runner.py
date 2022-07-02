@@ -1,6 +1,7 @@
 from shlex import join as shjoin
 import asyncio
 
+
 async def run_subprocess(coms, doPrint=False):
     process = await asyncio.create_subprocess_exec(
         *coms, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.STDOUT

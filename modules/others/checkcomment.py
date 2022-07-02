@@ -40,12 +40,10 @@ class CheckComment(commands.Cog):
                 time_passed = time.time() - comment_start_time
                 if r.status_code == 200:
                     try:
-                        name = r.json()["items"][0]["snippet"][
-                            "authorDisplayName"
-                        ] 
+                        name = r.json()["items"][0]["snippet"]["authorDisplayName"]
                         comment_content = r.json()["items"][0]["snippet"][
                             "textOriginal"
-                        ] 
+                        ]
                         print(f"{name}: {comment_content[:15]}...")
                         await msg.edit(
                             content=f"{time_passed:.2f}s: We're good! ({r.status_code})"

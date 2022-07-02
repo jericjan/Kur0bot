@@ -1,5 +1,4 @@
 from disnake.ext import commands
-import disnake
 import asyncio
 import re
 from datetime import datetime, timedelta
@@ -7,10 +6,10 @@ from shlex import join as shjoin
 import math
 import os
 import subprocess
-from myfunctions import subprocess_runner
+from myfunctions import subprocess_runner, file_handler
+
 
 class Clip(commands.Cog):
-
     @commands.command()
     async def fastclip(self, ctx, link, start, end, *, filename):
         filename = filename.replace(" ", "_")
@@ -61,7 +60,7 @@ class Clip(commands.Cog):
                 )
                 + timedelta(seconds=30)
             )
-        out, stdout, stderr = await subprocess_runner.run_subprocess(coms)    
+        out, stdout, stderr = await subprocess_runner.run_subprocess(coms)
         dirlinks = stdout.decode("utf-8").split("\n")
         vid = dirlinks[0]
         if seconds < 30:
@@ -191,7 +190,9 @@ class Clip(commands.Cog):
                         "default=noprint_wrappers=1:nokey=1",
                         f"{filename}_temp0.mp4",
                     ]  # get duration
-                    process, stdout, stderr = await subprocess_runner.run_subprocess(coms)
+                    process, stdout, stderr = await subprocess_runner.run_subprocess(
+                        coms
+                    )
                     next_keyframe = float(stdout.decode("utf-8"))
                 else:
                     next_keyframe = min_gt(timelist_float, seconds)
@@ -228,7 +229,9 @@ class Clip(commands.Cog):
                         "default=noprint_wrappers=1:nokey=1",
                         f"{filename}_temp0.mp4",
                     ]  # get duration
-                    process, stdout, stderr = await subprocess_runner.run_subprocess(coms)
+                    process, stdout, stderr = await subprocess_runner.run_subprocess(
+                        coms
+                    )
                     next_keyframe = float(stdout.decode("utf-8"))
                 else:
                     next_keyframe = min_gt(timelist_float, 30)
@@ -266,7 +269,6 @@ class Clip(commands.Cog):
         ]
         process, stdout, stderr = await subprocess_runner.run_subprocess(coms)
 
-
         coms = [
             "ffprobe",
             "-v",
@@ -283,17 +285,11 @@ class Clip(commands.Cog):
         ]
         print("final keyframes:")
         process, stdout, stderr = await subprocess_runner.run_subprocess(coms)
-        
-
-        try:
-            await ctx.send(f"Sending {filename}.mp4...")
-            await ctx.send(file=disnake.File(f"{filename}.mp4"))
-        except Exception as e:
-            await ctx.send(content=f"I failed.\n{e}")
+        await file_handler.send_file(ctx, message, f"{filename}.mp4")
         await ctx.send(ctx.message.author.mention)
-        os.remove(f"{filename}.mp4")
-        os.remove(f"{filename}_temp0.mp4")
-        os.remove(f"{filename}_temp.mp4")
+        file_handler.delete_file(f"{filename}.mp4")
+        file_handler.delete_file(f"{filename}_temp0.mp4")
+        file_handler.delete_file(f"{filename}_temp.mp4")
         await message.delete()
 
     ############################################################################
@@ -478,7 +474,9 @@ class Clip(commands.Cog):
                         "default=noprint_wrappers=1:nokey=1",
                         f"{filename}_temp0.mp4",
                     ]  # get duration
-                    process, stdout, stderr = await subprocess_runner.run_subprocess(coms)
+                    process, stdout, stderr = await subprocess_runner.run_subprocess(
+                        coms
+                    )
                     next_keyframe = float(stdout.decode("utf-8"))
                 else:
                     next_keyframe = min_gt(timelist_float, seconds)
@@ -516,7 +514,9 @@ class Clip(commands.Cog):
                         "default=noprint_wrappers=1:nokey=1",
                         f"{filename}_temp0.mp4",
                     ]  # get duration
-                    process, stdout, stderr = await subprocess_runner.run_subprocess(coms)
+                    process, stdout, stderr = await subprocess_runner.run_subprocess(
+                        coms
+                    )
                     next_keyframe = float(stdout.decode("utf-8"))
                 else:
                     next_keyframe = min_gt(timelist_float, 30)
@@ -554,7 +554,7 @@ class Clip(commands.Cog):
             "-y",
             f"{filename}_nosub.mp4",
         ]
-        
+
         process, stdout, stderr = await subprocess_runner.run_subprocess(coms)
 
         coms = [
@@ -573,7 +573,7 @@ class Clip(commands.Cog):
         ]
         print("final keyframes:")
         process, stdout, stderr = await subprocess_runner.run_subprocess(coms)
-        
+
         await message.edit(content="Getting fancy subs... (en, srv3)")
         coms = [
             "yt-dlp",
@@ -645,21 +645,15 @@ class Clip(commands.Cog):
             f"{filename}.mp4",
         ]
         process, stdout, stderr = await subprocess_runner.run_subprocess(coms)
-        try:
-
-            await ctx.send(file=disnake.File(f"{filename}.mp4"))
-        except Exception:
-            await message.edit(content="I failed.")
+        await file_handler.send_file(ctx, message, f"{filename}.mp4")
         await ctx.send(ctx.message.author.mention)
-        os.remove(sub_name)
-        os.remove(sub_name_ass)
-        os.remove(sub_name_ass2)
-        os.remove(f"{filename}.mp4")
-        os.remove(
-            f"{filename}_nosub.mp4",
-        )
-        os.remove(f"{filename}_temp0.mp4")
-        os.remove(f"{filename}_temp.mp4")
+        file_handler.delete_file(sub_name)
+        file_handler.delete_file(sub_name_ass)
+        file_handler.delete_file(sub_name_ass2)
+        file_handler.delete_file(f"{filename}.mp4")
+        file_handler.delete_file(f"{filename}_nosub.mp4")
+        file_handler.delete_file(f"{filename}_temp0.mp4")
+        file_handler.delete_file(f"{filename}_temp.mp4")
 
         await message.delete()
 
@@ -747,7 +741,7 @@ class Clip(commands.Cog):
             ]
         print(shjoin(coms))
         await message.edit(content="Downloading... This will take a while...")
-        process = await asyncio.create_subprocess_exec(#reads stdout live
+        process = await asyncio.create_subprocess_exec(  # reads stdout live
             *coms, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE
         )
 
@@ -867,7 +861,7 @@ class Clip(commands.Cog):
             "make_zero",
             f"{filename}.mp4",
         ]
-        
+
         process, stdout, stderr = await subprocess_runner.run_subprocess(coms)
 
         coms = [
@@ -886,19 +880,10 @@ class Clip(commands.Cog):
         ]
         print("final keyframes:")
         process, stdout, stderr = await subprocess_runner.run_subprocess(coms)
-        
-
-
-        try:
-            await ctx.send(f"Sending {filename}.mp4...")
-            await ctx.send(file=disnake.File(f"{filename}.mp4"))
-        except Exception as e:
-            await message.edit(content="I failed.")
-            await ctx.send(e)
-            print(f"Could not send video\n{e}")
+        await file_handler.send_file(ctx, message, f"{filename}.mp4")
         await ctx.send(ctx.message.author.mention)
-        os.remove(f"{filename}.mp4")
-        os.remove(f"{filename}_temp.mp4")
+        file_handler.delete_file(f"{filename}.mp4")
+        file_handler.delete_file(f"{filename}_temp.mp4")
         await message.delete()
 
     @commands.command()
@@ -1003,14 +988,10 @@ class Clip(commands.Cog):
         elif filetype == "wav":
             coms = ["ffmpeg", "-i", f"{filename}.ogg", f"{filename}.wav"]
             process, stdout, stderr = await subprocess_runner.run_subprocess(coms)
-            
-        try:
-            await ctx.send(file=disnake.File(f"{filename}.{filetype.lower()}"))
-        except Exception:
-            await message.edit(content="I failed.")
+        await file_handler.send_file(ctx, message, f"{filename}.{filetype.lower()}")
         await ctx.send(ctx.message.author.mention)
-        os.remove(f"{filename}.ogg")
-        os.remove(f"{filename}.{filetype.lower()}")
+        file_handler.delete_file(f"{filename}.ogg")
+        file_handler.delete_file(f"{filename}.{filetype.lower()}")
         await message.delete()
 
     @commands.command()
@@ -1103,7 +1084,7 @@ class Clip(commands.Cog):
         print(shjoin(coms))
         await message.edit(content="Downloading... This will take a while...")
         try:
-            process = await asyncio.create_subprocess_exec( #reads stdout live
+            process = await asyncio.create_subprocess_exec(  # reads stdout live
                 *coms, stdout=subprocess.PIPE, stderr=subprocess.STDOUT
             )
             while process.returncode is None:
@@ -1133,8 +1114,8 @@ class Clip(commands.Cog):
                             content=f"{round(percentage, 2)}% complete..."
                         )
             os.rename(f"{filename}.mkv", f"{filename}.mp4")
-            await ctx.send(file=disnake.File(f"{filename}.mp4"))
-            os.remove(f"{filename}.mp4")
+            await file_handler.send_file(ctx, message, f"{filename}.mp4")
+            file_handler.delete_file(f"{filename}.mp4")
             await message.delete()
         except ValueError:
             await message.edit(content="An error occured... Uh, try it again.")
@@ -1207,12 +1188,9 @@ class Clip(commands.Cog):
 
         await message.edit(content="Downloading... This will take a while...")
         process, stdout, stderr = await subprocess_runner.run_subprocess(coms)
-        try:
-            await ctx.send(file=disnake.File(f"{filename}.mp4"))
-        except Exception:
-            await message.edit(content="I failed.")
+        await file_handler.send_file(ctx, message, f"{filename}.mp4")
         await ctx.send(ctx.message.author.mention)
-        os.remove(f"{filename}.mp4")
+        file_handler.delete_file(f"{filename}.mp4")
         await message.delete()
 
     @commands.command()
@@ -1253,7 +1231,7 @@ class Clip(commands.Cog):
 
         print(shjoin(coms))
         await message.edit(content="Downloading... This will take a while...")
-        process = await asyncio.create_subprocess_exec(# reads stdout live
+        process = await asyncio.create_subprocess_exec(  # reads stdout live
             *coms, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE
         )
         while process.returncode is None:
@@ -1265,12 +1243,9 @@ class Clip(commands.Cog):
         if process.returncode != 0:
             await ctx.send("return code is not 0. i give up")
             return
-        try:
-            await ctx.send(file=disnake.File(f"{filename}.mp4"))
-        except Exception:
-            await message.edit(content="I failed.")
+        await file_handler.send_file(ctx, message, f"{filename}.mp4")
         await ctx.send(ctx.message.author.mention)
-        os.remove(f"{filename}.mp4")
+        file_handler.delete_file(f"{filename}.mp4")
         await message.delete()
 
 

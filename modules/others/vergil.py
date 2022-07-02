@@ -7,8 +7,7 @@ import requests
 import os
 import shutil
 import time
-from myfunctions import msg_link_grabber
-from myfunctions import subprocess_runner
+from myfunctions import msg_link_grabber, subprocess_runner
 
 
 class Vergil(commands.Cog):
@@ -219,7 +218,7 @@ class Vergil(commands.Cog):
         done = False
         shift = 10
         saved_position = 0
-        blue = 5        
+        blue = 5
         while not done:
             ret, img = cap.read()
             if not ret:
@@ -408,6 +407,7 @@ class Vergil(commands.Cog):
         log += f"Vergil arrived in {time.time()-start_time:.2f} seconds\n"
         await ctx.send(log)
         shutil.rmtree(f"videos/vergil_greenscreen/{random_uuid}/")
+
 
 def setup(client):
     client.add_cog(Vergil(client))

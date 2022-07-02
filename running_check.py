@@ -3,6 +3,7 @@ import time
 import pytz
 from datetime import datetime
 
+
 def log(text, printText=None):
     tz = pytz.timezone("Asia/Manila")
     curr_time = datetime.now(tz)
@@ -15,6 +16,7 @@ def log(text, printText=None):
     f = open("log.txt", "a")
     f.write(final)
     f.close()
+
 
 def check(start_time, proc_id):
     print(f"{(time.time() - start_time):.2f}s - Checking for dupe processes...")

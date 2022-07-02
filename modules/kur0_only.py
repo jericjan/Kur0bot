@@ -9,6 +9,7 @@ from lorem.text import TextLorem
 from dotenv import load_dotenv
 from myfunctions import subprocess_runner
 
+
 class Kur0only(commands.Cog):
     def __init__(self, client):
         self.client = client

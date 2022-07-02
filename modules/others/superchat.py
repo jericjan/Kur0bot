@@ -14,6 +14,7 @@ from tqdm import tqdm
 import functools
 from aiolimiter import AsyncLimiter
 import shlex
+from myfunctions import file_handler
 
 limiter = AsyncLimiter(1, 1)
 
@@ -22,7 +23,6 @@ class Superchat(commands.Cog):
     def __init__(self, client):
         self.client = client
         self.pbar_list = []
-
 
     @commands.command(aliases=["oldakasupa", "oldsupacha"])
     async def oldsuperchat(self, ctx, amount, *, message):
@@ -47,7 +47,7 @@ class Superchat(commands.Cog):
                 "moz:firefoxOptions": {
                     "args": ["-headless"],
                     "prefs": prefs,
-                    "log": {"level": "trace"}
+                    "log": {"level": "trace"},
                 }
             }
         )
@@ -80,7 +80,6 @@ class Superchat(commands.Cog):
             await webhook.delete()
             os.remove(f"supers/{cur_uuid}/superchat.png")
             os.rmdir(f"supers/{cur_uuid}/")
-
 
     async def updatebar(self, msg):
 
@@ -152,8 +151,6 @@ class Superchat(commands.Cog):
         bgnMessage,
     ):
 
-
-
         temp_str = temp_str.split("\n")[-1]
 
         text_size = draw0.textsize(temp_str, font=fnt0, spacing=28)
@@ -173,8 +170,6 @@ class Superchat(commands.Cog):
             pass
         else:
             img = img.resize((1760, txt_height + 92))
-
-
 
         with Pilmoji(img) as pilmoji:
             pilmoji.text(
@@ -300,14 +295,14 @@ class Superchat(commands.Cog):
                 self.pbar_list.append(
                     f"{ctx.author.name} is sending a superchat...\n{round(percentage, 2)}% complete...\n`{aaa}`<a:ameroll:941314708022128640>"
                 )
-                asyncio.ensure_future(self.updatebar(bgnMessage))              
+                asyncio.ensure_future(self.updatebar(bgnMessage))
             except:
                 pass
         pbar.close()
         output.close()
         bruh = await self.foo3(msg_split, out)
         bruh.seek(0)
-        await ctx.send(file=disnake.File(bruh, filename="superchat.png"))
+        await file_handler.send_file(ctx, bgnMessage, bruh, "superchat.png")
         bruh.close()
         await bgnMessage.delete()
 

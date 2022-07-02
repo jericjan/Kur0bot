@@ -9,7 +9,6 @@ import re
 from mcrcon import MCRcon
 
 
-
 class PacifamOnly(commands.Cog):
     def __init__(self, client):
         self.client = client
@@ -108,7 +107,6 @@ class PacifamOnly(commands.Cog):
             print(config["main"]["forcedOfflinePlayers"])
             dump = json.dumps(config, indent=2).encode("utf-8")
             ftp.storbinary("STOR /mods/EasyAuth/config.json", io.BytesIO(dump))
-
 
             with MCRcon("51.81.142.14", str(os.getenv("RCON_PASS")), 8082) as mcr:
                 resp = mcr.command("/auth reload")

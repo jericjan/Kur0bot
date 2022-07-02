@@ -7,14 +7,13 @@ from aiolimiter import AsyncLimiter
 from datetime import datetime, timedelta
 import io
 import os
-import disnake
 import uuid
 import glob
 import shutil
 import time
 import shlex
-from myfunctions import msg_link_grabber
-from myfunctions import subprocess_runner
+from myfunctions import msg_link_grabber, subprocess_runner, file_handler
+
 limiter = AsyncLimiter(1, 1)
 
 
@@ -51,7 +50,7 @@ class Gif(commands.Cog):
                 new_filename,
             ]
             message = await ctx.send("Converting to GIF...")
-            process = await asyncio.create_subprocess_exec( #reads stdout live
+            process = await asyncio.create_subprocess_exec(  # reads stdout live
                 *coms, stdout=subprocess.PIPE, stderr=subprocess.STDOUT
             )
             full_line = ""
@@ -124,9 +123,9 @@ class Gif(commands.Cog):
             await ctx.send(
                 "I don't support this filetype yet ig. Ping kur0 or smth. <:towashrug:853606191711649812> "
             )
-        await ctx.send(file=disnake.File(new_filename))
+        await file_handler.send_file(ctx, message, new_filename)
         await message.delete()
-        os.remove(new_filename)
+        file_handler.delete_file(new_filename)
 
     @commands.command(aliases=["vid2gif2", "gifify2"])
     async def gif2(self, ctx, link=None, quality=None):
@@ -174,7 +173,7 @@ class Gif(commands.Cog):
             message = await ctx.send("Extracting frames... This might take a bit.")
             print("FFMPEGGGG")
             out, stdout, stderr = await subprocess_runner.run_subprocess(coms)
-            
+
             gif_ski_frames_path = f"{frames_folder}/frame*.png"
             gif_ski_frames_path = glob.glob(gif_ski_frames_path)
             coms = [
@@ -209,7 +208,7 @@ class Gif(commands.Cog):
 
             coms = coms + gif_ski_frames_path
             print(shlex.join(coms))
-            process = await asyncio.create_subprocess_exec( #reads stdout live
+            process = await asyncio.create_subprocess_exec(  # reads stdout live
                 *coms, stdout=subprocess.PIPE, stderr=subprocess.STDOUT
             )
             full_line = ""
@@ -230,23 +229,8 @@ class Gif(commands.Cog):
                     pass
 
             print("GIFSKI")
-
-            await message.edit(content="Sending...")
-            try:
-                await ctx.send(file=disnake.File(new_filename))
-            except disnake.HTTPException as e:
-                if e.status == 413:
-                    await ctx.send("Too large for server. Sending somewhere else..")
-                    coms = [
-                        "curl",
-                        "--upload-file",
-                        new_filename,
-                        f"https://transfer.sh/{new_filename}",
-                    ]
-                    out, stdout, stderr = await subprocess_runner.run_subprocess(coms)
-                    link = stdout.decode("utf-8").splitlines()[-1]
-                    await ctx.send(link)
-            os.remove(new_filename)
+            await file_handler.send_file(ctx, message, new_filename)
+            file_handler.delete_file(new_filename)
             shutil.rmtree(f"{frames_folder}/")
         elif re.search(r".+\.jpg|.+\.png|.+\.webp", filename) is not None:
             pre_message = await ctx.send(
@@ -287,22 +271,8 @@ class Gif(commands.Cog):
             coms = coms + gif_ski_frames_path
             print("GIFSKI")
             out, stdout, stderr = await subprocess_runner.run_subprocess(coms)
-            await message.edit(content="Sending...")
-            try:
-                await ctx.send(file=disnake.File(new_filename))
-            except disnake.HTTPException as e:
-                if e.status == 413:
-                    await ctx.send("Too large for server. Sending somewhere else..")
-                    coms = [
-                        "curl",
-                        "--upload-file",
-                        new_filename,
-                        f"https://transfer.sh/{new_filename}",
-                    ]
-                    out, stdout, stderr = await subprocess_runner.run_subprocess(coms)
-                    link = stdout.decode("utf-8").splitlines()[-1]
-                    await ctx.send(link)
-            os.remove(new_filename)
+            await file_handler.send_file(ctx, message, new_filename)
+            file_handler.delete_file(new_filename)
             shutil.rmtree(f"{frames_folder}/")
             await message.delete()
             await pre_message.delete()

@@ -1,5 +1,4 @@
 from disnake.ext import commands
-import disnake
 
 
 import asyncio
@@ -12,7 +11,7 @@ import requests
 import functools
 from aiolimiter import AsyncLimiter
 
-from myfunctions import msg_link_grabber
+from myfunctions import msg_link_grabber, file_handler
 
 limiter = AsyncLimiter(1, 1)
 
@@ -56,7 +55,7 @@ class Resize(commands.Cog):
         bruh = await self.foo(link, width, height)
         bruh.seek(0)
         filename = link.split("/")[-1]
-        await ctx.send(file=disnake.File(bruh, filename=filename))
+        await file_handler.send_file(ctx, message, filename)
         bruh.close()
         await message.delete()
         await ctx.message.delete()
@@ -69,7 +68,7 @@ class Resize(commands.Cog):
         bruh = await self.foo(link, 1600, 720)
         bruh.seek(0)
         filename = link.split("/")[-1]
-        await ctx.send(file=disnake.File(bruh, filename=filename))
+        await file_handler.send_file(ctx, message, filename)
         bruh.close()
         await message.delete()
         await ctx.message.delete()

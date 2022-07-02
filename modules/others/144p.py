@@ -1,5 +1,4 @@
 from disnake.ext import commands
-import disnake
 import asyncio
 import os
 import subprocess
@@ -8,8 +7,7 @@ from tqdm import tqdm
 import io
 from aiolimiter import AsyncLimiter
 from datetime import datetime, timedelta
-from myfunctions import msg_link_grabber
-from myfunctions import subprocess_runner
+from myfunctions import msg_link_grabber, subprocess_runner, file_handler
 from shlex import join as shjoin
 
 limiter = AsyncLimiter(1, 1)
@@ -93,7 +91,7 @@ class lowQual(commands.Cog):
             ]
             print(shjoin(coms))
             message = await ctx.send("Downscaling...")
-            process = await asyncio.create_subprocess_exec( #reads stdout live
+            process = await asyncio.create_subprocess_exec(  # reads stdout live
                 *coms, stdout=subprocess.PIPE, stderr=subprocess.STDOUT
             )
             full_line = ""
@@ -177,7 +175,7 @@ class lowQual(commands.Cog):
             ]
             print(shjoin(coms))
             await message.edit(content="Upscaling...")
-            process = await asyncio.create_subprocess_exec( #reads stdout live
+            process = await asyncio.create_subprocess_exec(  # reads stdout live
                 *coms, stdout=subprocess.PIPE, stderr=subprocess.STDOUT
             )
             full_line = ""
@@ -281,9 +279,9 @@ class lowQual(commands.Cog):
                 "I don't support this filetype yet ig. Ping kur0 or smth. <:towashrug:853606191711649812> "
             )
             return
-        await ctx.send(file=disnake.File(filename))
+        await file_handler.send_file(ctx, message, filename)
         await message.delete()
-        os.remove(filename)
+        file_handler.delete_file(filename)
 
 
 def setup(client):

@@ -34,6 +34,7 @@ class Hall_Of_Shame(commands.Cog):
             await ctx.send(f"<#{channel.id}> is now the Hall Of Shame!")
         with open("modules/others/hall_of_shame_ids.json", "w") as f:
             f.write(json.dumps(hall_of_shame_json))
-            
+
+
 def setup(client):
     client.add_cog(Hall_Of_Shame(client))

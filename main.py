@@ -1,7 +1,9 @@
 import time
+
 start_time = time.time()
 
 import disnake
+
 print(f"Running Disnake {disnake.__version__}")
 
 from disnake.ext import commands
@@ -18,6 +20,7 @@ import signal
 import importlib
 
 from dotenv import load_dotenv
+
 load_dotenv()
 
 
@@ -45,11 +48,11 @@ else:
     print(f"{(time.time() - start_time):.2f}s - Not rate limited. ({r.status_code})")
 
 
-
 intents = disnake.Intents().all()
 game = disnake.Activity(name="sus gaming | k.help", type=disnake.ActivityType.playing)
 client = commands.Bot(command_prefix="k.", intents=intents, activity=game)
 client.remove_command("help")
+
 
 async def log(text, printText=None):
     tz = pytz.timezone("Asia/Manila")
@@ -419,6 +422,3 @@ while isDiscordrunning is False:
         asyncio.run(log("Something went wrong. Exiting..."))
     finally:
         loop.close()
-
-
-

@@ -169,7 +169,6 @@ class Vc(commands.Cog):
                 delete_after=3.0,
             )
 
-
     @commands.command()
     async def yodayo(self, ctx, loop=None):
         await self.vcplay(ctx, "sounds/Nakiri Ayame's yo dayo_.mp3", loop)
@@ -310,7 +309,6 @@ class Vc(commands.Cog):
             for x in files:
                 if any(word in x for word in [name]):
                     matches.append(os.path.join(root, x))
-
 
         if matches:
             numbered_mgr_files = [
