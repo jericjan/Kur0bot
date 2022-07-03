@@ -7,6 +7,7 @@ class Reactions(commands.Cog):
         self.client = client
 
     @commands.command()
+    @commands.bot_has_permissions(manage_webhooks=True, manage_messages=True)
     async def fmega(self, ctx):
         if isinstance(ctx.channel, disnake.TextChannel):
             webhook = await ctx.channel.create_webhook(name=ctx.message.author.name)
@@ -30,6 +31,7 @@ class Reactions(commands.Cog):
         await ctx.message.delete()
 
     @commands.command()
+    @commands.bot_has_permissions(manage_webhooks=True, manage_messages=True)
     async def kotowaru(self, ctx):
         if isinstance(ctx.channel, disnake.TextChannel):
             webhook = await ctx.channel.create_webhook(name=ctx.message.author.name)
@@ -53,6 +55,7 @@ class Reactions(commands.Cog):
         await ctx.message.delete()
 
     @commands.command()
+    @commands.bot_has_permissions(manage_webhooks=True, manage_messages=True)
     async def ascend(self, ctx):
         if isinstance(ctx.channel, disnake.TextChannel):
             webhook = await ctx.channel.create_webhook(name=ctx.message.author.name)
@@ -76,6 +79,7 @@ class Reactions(commands.Cog):
         await ctx.message.delete()
 
     @commands.command()
+    @commands.bot_has_permissions(manage_webhooks=True, manage_messages=True)
     async def jizz(self, ctx):
         if isinstance(ctx.channel, disnake.TextChannel):
             webhook = await ctx.channel.create_webhook(name=ctx.message.author.name)

@@ -1,6 +1,5 @@
 from disnake.ext import commands
 import asyncio
-import os
 import subprocess
 import re
 from tqdm import tqdm
@@ -30,6 +29,7 @@ class lowQual(commands.Cog):
             pass
 
     @commands.command(aliases=["shitify", "pixelize"])
+    @commands.bot_has_permissions(manage_messages=True)
     async def lowqual(self, ctx, link=None):
         link = await msg_link_grabber.grab_link(ctx, link)
         print(link)
@@ -161,7 +161,7 @@ class lowQual(commands.Cog):
                                 )
             all_lines = await process.stdout.read()
             print(f"output:\n\033[;32m{all_lines.decode('utf-8')}\033[0m")
-            os.remove(muxname)
+            file_handler.delete_file(muxname)
             coms = [
                 "ffmpeg",
                 "-i",
@@ -245,7 +245,7 @@ class lowQual(commands.Cog):
                                 )
             all_lines = await process.stdout.read()
             print(f"output:\n\033[;32m{all_lines.decode('utf-8')}\033[0m")
-            os.remove(tempname)
+            file_handler.delete_file(tempname)
 
         elif re.search(r".+\.jpg|.+\.jpeg|.+\.png|.+\.webp", filename) is not None:
             filename = filename.split("?")[0]
@@ -273,7 +273,7 @@ class lowQual(commands.Cog):
             ]
             await message.edit(content="Upscaling...")
             out, stdout, stderr = await subprocess_runner.run_subprocess(coms)
-            os.remove(tempname)
+            file_handler.delete_file(tempname)
         else:
             await ctx.send(
                 "I don't support this filetype yet ig. Ping kur0 or smth. <:towashrug:853606191711649812> "

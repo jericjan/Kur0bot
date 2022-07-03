@@ -18,7 +18,7 @@ To do list:
 - k.addaudio
 - k.demotivate
 - k.mgr replace audio with videos
-- make calling subprocesses a thing in myfunctions and make it use asyncio.subprocess.PIPE
+- make the webhook imitate user thing a custom function
 
 Notes:
 

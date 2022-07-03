@@ -11,6 +11,7 @@ from myfunctions import subprocess_runner, file_handler
 
 class Clip(commands.Cog):
     @commands.command()
+    @commands.bot_has_permissions(manage_messages=True)
     async def fastclip(self, ctx, link, start, end, *, filename):
         filename = filename.replace(" ", "_")
         if (
@@ -294,6 +295,7 @@ class Clip(commands.Cog):
 
     ############################################################################
     @commands.command()
+    @commands.bot_has_permissions(manage_messages=True)
     async def fastclipsub(self, ctx, link, start, end, *, filename):
         filename = filename.replace(" ", "_")
         if (
@@ -658,6 +660,7 @@ class Clip(commands.Cog):
         await message.delete()
 
     @commands.command()
+    @commands.bot_has_permissions(manage_messages=True)
     async def idclip(self, ctx, link, start, end, filename, id, id2):
 
         if (
@@ -887,6 +890,7 @@ class Clip(commands.Cog):
         await message.delete()
 
     @commands.command()
+    @commands.bot_has_permissions(manage_messages=True)
     async def clipaudio(self, ctx, link, start, end, filename, filetype=None):
         if filetype not in ["mp3", "wav", "ogg"]:
             await ctx.send(
@@ -995,6 +999,7 @@ class Clip(commands.Cog):
         await message.delete()
 
     @commands.command()
+    @commands.bot_has_permissions(manage_messages=True)
     async def clip(self, ctx, link, start, end, filename):
 
         if (
@@ -1121,6 +1126,7 @@ class Clip(commands.Cog):
             await message.edit(content="An error occured... Uh, try it again.")
 
     @commands.command()
+    @commands.bot_has_permissions(manage_messages=True)
     async def fastclip3(self, ctx, link, start, end, filename):
         message = await ctx.send("Fetching url...")
         coms = ["yt-dlp", "-g", "-f", "best", "--youtube-skip-dash-manifest", link]
@@ -1194,6 +1200,7 @@ class Clip(commands.Cog):
         await message.delete()
 
     @commands.command()
+    @commands.bot_has_permissions(manage_messages=True)
     async def fastclip2(self, ctx, link, start, end, filename):
         message = await ctx.send("Fetching url...")
         coms = ["yt-dlp", "-g", "-f", "best", "--youtube-skip-dash-manifest", link]

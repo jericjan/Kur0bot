@@ -47,6 +47,7 @@ class Resize(commands.Cog):
         return out
 
     @commands.command()
+    @commands.bot_has_permissions(manage_messages=True)
     async def resize(self, ctx, width, height, link=None):
         link = await msg_link_grabber.grab_link(ctx, link)
         print(link)
@@ -61,6 +62,7 @@ class Resize(commands.Cog):
         await ctx.message.delete()
 
     @commands.command()
+    @commands.bot_has_permissions(manage_messages=True)
     async def rs(self, ctx, link=None):
         link = await msg_link_grabber.grab_link(ctx, link)
         print(link)

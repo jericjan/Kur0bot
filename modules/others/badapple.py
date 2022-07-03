@@ -12,6 +12,7 @@ class Badapple(commands.Cog):
 
     @commands.command()
     @commands.cooldown(1.0, 60.0, commands.BucketType.guild)
+    @commands.bot_has_permissions(manage_webhooks=True, manage_messages=True)
     async def badapple(self, ctx, *, message=None):
         list1 = []
         list2 = []

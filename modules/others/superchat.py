@@ -25,6 +25,7 @@ class Superchat(commands.Cog):
         self.pbar_list = []
 
     @commands.command(aliases=["oldakasupa", "oldsupacha"])
+    @commands.bot_has_permissions(manage_webhooks=True, manage_messages=True)
     async def oldsuperchat(self, ctx, amount, *, message):
 
         await ctx.message.delete()
@@ -78,7 +79,7 @@ class Superchat(commands.Cog):
             )
             await bgnMessage.delete()
             await webhook.delete()
-            os.remove(f"supers/{cur_uuid}/superchat.png")
+            file_handler.delete_file(f"supers/{cur_uuid}/superchat.png")
             os.rmdir(f"supers/{cur_uuid}/")
 
     async def updatebar(self, msg):
@@ -229,6 +230,7 @@ class Superchat(commands.Cog):
         return byteio
 
     @commands.command(aliases=["akasupa", "supacha"])
+    @commands.bot_has_permissions(manage_messages=True)
     async def superchat(self, ctx, amount=None, *, message=None):
         if ctx.message.attachments:  # if there are attachments
             attachment_type = ctx.message.attachments[0].content_type

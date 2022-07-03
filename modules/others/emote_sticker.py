@@ -15,6 +15,7 @@ class EmoteSticker(commands.Cog):
         self.client = client
 
     @commands.command(aliases=["e"])
+    @commands.bot_has_permissions(manage_webhooks=True, manage_messages=True)
     async def emote(self, ctx, *message):
         if len(message) == 0:
             await ctx.send("Give an emoji name.")
@@ -53,11 +54,6 @@ class EmoteSticker(commands.Cog):
         await webhook.delete()
         await ctx.message.delete()
 
-    @commands.command(aliases=["s"])
-    async def sticker(self, ctx, msgID: int):
-        msg = await ctx.fetch_message(msgID)
-        await ctx.send(msg.stickers)
-
     def paginate(self, lines, chars=2000):
         size = 0
         message = []
@@ -71,6 +67,10 @@ class EmoteSticker(commands.Cog):
         yield message
 
     @commands.command(aliases=["ge"])
+    @commands.bot_has_permissions(
+        embed_links=True,
+        use_external_emojis=True,
+    )
     async def getemotes(self, ctx):
         server = ctx.message.guild
         emojis = [str(x) for x in server.emojis]
@@ -83,7 +83,7 @@ class EmoteSticker(commands.Cog):
                 emojis = [str(x) for x in guild.emojis]
                 for index, message in enumerate(self.paginate(emojis)):
                     if index == 0:
-                        embed.title = guild.name
+                        embed.title = re.sub(r"(?<=\w)\w", "█", guild.name)
                     else:
                         embed.title = ""
                     embed.description = "".join(message)
@@ -116,6 +116,7 @@ class EmoteSticker(commands.Cog):
         return byteio2, new_width, new_height
 
     @commands.command(aliases=["uploademoji", "ue"])
+    @commands.bot_has_permissions(manage_emojis=True, manage_messages=True)
     async def uploademote(
         self, ctx, title, *, link=None
     ):  # upload emoji from emoji url
@@ -213,11 +214,20 @@ class EmoteSticker(commands.Cog):
         return byteio2, new_width, new_height
 
     @commands.command(aliases=["us"])
+    @commands.bot_has_permissions(manage_emojis=True, manage_messages=True)
     async def uploadsticker(
         self, ctx, name, emoji, link=None
     ):  # upload emoji from emoji url
         limit = ctx.guild.sticker_limit
+        if limit == 0:
+            await ctx.send(
+                "It says here the server's sticker limit is 0 but uhhh that doesn't seem right.",
+                delete_after=3.0,
+            )
+            limit = 5
         sticker_count = len(ctx.guild.stickers)
+        print(f"sticker_count {sticker_count}")
+        print(f"limit {limit}")
         free_slots = limit - sticker_count
         if free_slots == 0:
             await ctx.send("No more free slots :(")
@@ -231,7 +241,10 @@ class EmoteSticker(commands.Cog):
                 moderator = disnake.utils.get(avi_guild.roles, name="Moderator")
                 avilon = disnake.utils.get(avi_guild.roles, name="Avilon")
             roles = [admin, moderator, avilon]
-            if any(role in roles for role in ctx.author.roles):
+            if (
+                any(role in roles for role in ctx.author.roles)
+                or ctx.author.id == 396892407884546058
+            ):
 
                 link = await msg_link_grabber.grab_link(ctx, link)
                 print(link)

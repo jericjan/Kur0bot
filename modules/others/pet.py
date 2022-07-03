@@ -7,6 +7,7 @@ import disnake
 
 class Pet(commands.Cog):
     @commands.command()
+    @commands.bot_has_permissions(manage_webhooks=True)
     async def pet(self, ctx, url):
         if ctx.message.mentions.__len__() > 0:
             for user in ctx.message.mentions:

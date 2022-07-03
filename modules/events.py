@@ -346,6 +346,9 @@ class Events(commands.Cog):
     ################################ON_COMMAND_ERROR#############
     @commands.Cog.listener()
     async def on_command_error(self, ctx, error):
+
+        if isinstance(error, commands.CommandInvokeError):
+            error = error.original
         if isinstance(error, commands.CommandOnCooldown):
             await ctx.send(
                 f"Ayo this command is on cooldown.\nWait for {error.retry_after:.2f}s to try it again.",
@@ -376,33 +379,72 @@ class Events(commands.Cog):
             await ctx.send(
                 "Bruh, how'd you find this command? Only Kur0 can use this tho lmao."
             )
-        elif isinstance(error, commands.CommandInvokeError):
-            if isinstance(error.original, disnake.NotFound):
+        elif isinstance(error, commands.BotMissingPermissions):
+            missing_perms = [f"**{x}**" for x in error.missing_permissions]
+            try:
                 await ctx.send(
-                    "404 moment. I dunno what you just did but I can't find something. Automod deleted it perhaps? Maybe it doesn't actually exist? Maybe it's a bug lol."
+                    f"Doktor, turn off my {' and '.join(missing_perms)} inhibitors"
                 )
-            elif isinstance(error.original, disnake.HTTPException):
-                print("HTTPException!")
-                if error.original.status == 429:
-                    print("Rate limited lmao")
-                    os.system("busybox reboot")
-                elif error.original.status == 413:
-                    print("File too big!")
-                    await ctx.send(
-                        "Your server isn't strong enough to handle the size of the file I'm sending <a:trollplant:934777423881445436>"
+            except:
+                await ctx.author.send(
+                    f"Doktor, turn off my {' and '.join(missing_perms)} inhibitors"
+                )
+        # elif isinstance(error, commands.CommandInvokeError):
+
+        # CCCCCCCVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
+        elif isinstance(error, disnake.NotFound):
+            await ctx.send(
+                "404 moment. I dunno what you just did but I can't find something. Automod deleted it perhaps? Maybe it doesn't actually exist? Maybe it's a bug lol."
+            )
+        elif isinstance(error, disnake.HTTPException):
+            print("HTTPException!")
+            if error.status == 429:
+                print("Rate limited lmao")
+                os.system("busybox reboot")
+            elif error.status == 413:
+                print("File too big!")
+                await ctx.send(
+                    "Your server isn't strong enough to handle the size of the file I'm sending <a:trollplant:934777423881445436>"
+                )
+
+            elif error.status == 403:  # Forbidden
+                if error.code == 50013:  # missing permissions
+                    responses = [
+                        "I NEED MORE POWER! By that I mean permissions. I don't have enough permissions. What's up with that bruh.",
+                        "Doktor, turn off my permission inhibitors! I don't have enough permissions to do the thing you want me to do. Yeah, You gotta give me it. ",
+                    ]
+                    traceback = error.__traceback__
+                    log_thing = ""
+                    while traceback.tb_next:
+                        filename = traceback.tb_frame.f_code.co_filename
+                        line_no = traceback.tb_lineno
+                        if filename.startswith("/home/kur0/Kur0bot"):
+                            log_thing += f"{filename}:{line_no}\n"
+                            with open(filename) as f:
+                                for pos, line in enumerate(f):
+                                    if pos + 1 == int(line_no):
+                                        log_thing += f"{line}\n"
+                                        break
+                        traceback = traceback.tb_next
+                    message = random.choice(responses)
+                    await ctx.send(f"{message}\n```\n{log_thing}```")
+                elif error.code == 50001:  # missing access
+                    await ctx.author.send(
+                        "Yo dawg. I can't acess that channel/thread. Give me perms bruv."
                     )
                 else:
-                    await ctx.send(error.original)
-                await self.log(error.original, False)
-            elif isinstance(error.original, disnake.ClientException):
-                if str(error.original) == "Already playing audio.":
-                    await ctx.send(
-                        "I'm still playing smth rn bruh. Hold on.", delete_after=3
-                    )
-                else:
-                    await ctx.send(error.original)
+                    await ctx.send(error)
             else:
-                await ctx.send(error.original)
+                await ctx.send(error)
+            await self.log(error, False)
+        elif isinstance(error, disnake.ClientException):
+            if str(error) == "Already playing audio.":
+                await ctx.send(
+                    "I'm still playing smth rn bruh. Hold on.", delete_after=3
+                )
+            else:
+                await ctx.send(error)
+                # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
         else:
             print(f"ERROR: {error}")
             for i in dir(error):

@@ -6,6 +6,7 @@ import os
 
 class Help(commands.Cog):
     @commands.group(invoke_without_command=True)
+    @commands.bot_has_permissions(embed_links=True)
     async def help(self, ctx):
         em = disnake.Embed(
             title="Commands",
@@ -26,6 +27,7 @@ class Help(commands.Cog):
         await ctx.send(embed=em)
 
     @help.command()
+    @commands.bot_has_permissions(embed_links=True)
     async def glasses(self, ctx):
         em = disnake.Embed(
             title="Glasses", description="Gives the entire fubuki glasses copypasta"
@@ -33,11 +35,13 @@ class Help(commands.Cog):
         await ctx.send(embed=em)
 
     @help.command()
+    @commands.bot_has_permissions(embed_links=True)
     async def nene(self, ctx):
         em = disnake.Embed(title="Nene", description="Gives Nenechi's full title")
         await ctx.send(embed=em)
 
     @help.command()
+    @commands.bot_has_permissions(embed_links=True)
     async def nenelong(self, ctx):
         em = disnake.Embed(
             title="Nene", description="Gives Nenechi's LONGER full title"
@@ -45,6 +49,7 @@ class Help(commands.Cog):
         await ctx.send(embed=em)
 
     @help.command()
+    @commands.bot_has_permissions(embed_links=True)
     async def on(self, ctx):
         em = disnake.Embed(
             title="On",
@@ -53,6 +58,7 @@ class Help(commands.Cog):
         await ctx.send(embed=em)
 
     @help.command()
+    @commands.bot_has_permissions(embed_links=True)
     async def off(self, ctx):
         em = disnake.Embed(
             title="Off",
@@ -61,6 +67,7 @@ class Help(commands.Cog):
         await ctx.send(embed=em)
 
     @help.command()
+    @commands.bot_has_permissions(embed_links=True)
     async def megasus(self, ctx):
         em = disnake.Embed(
             title="Megasus",
@@ -69,6 +76,7 @@ class Help(commands.Cog):
         await ctx.send(embed=em)
 
     @help.command()
+    @commands.bot_has_permissions(embed_links=True)
     async def bulk(self, ctx):
         em = disnake.Embed(
             title="Bulk",
@@ -78,6 +86,7 @@ class Help(commands.Cog):
         await ctx.send(embed=em)
 
     @help.command()
+    @commands.bot_has_permissions(embed_links=True)
     async def stopamongus(self, ctx):
         em = disnake.Embed(
             title="Stop posting about Among Us!",
@@ -86,6 +95,7 @@ class Help(commands.Cog):
         await ctx.send(embed=em)
 
     @help.command()
+    @commands.bot_has_permissions(embed_links=True)
     async def confession(self, ctx):
         em = disnake.Embed(
             title="Matsuri's Confession",
@@ -94,6 +104,7 @@ class Help(commands.Cog):
         await ctx.send(embed=em)
 
     @help.command()
+    @commands.bot_has_permissions(embed_links=True)
     async def fortnite(self, ctx):
         em = disnake.Embed(
             title="Fortnite", description="Sends the fortnite dance in text"
@@ -101,6 +112,7 @@ class Help(commands.Cog):
         await ctx.send(embed=em)
 
     @help.command(aliases=["e"])
+    @commands.bot_has_permissions(embed_links=True)
     async def emote(self, ctx):
         em = disnake.Embed(
             title="Emote",
@@ -111,6 +123,7 @@ class Help(commands.Cog):
         await ctx.send(embed=em)
 
     @help.command(aliases=["ge"])
+    @commands.bot_has_permissions(embed_links=True)
     async def getemotes(self, ctx):
         em = disnake.Embed(
             title="Get Emotes!",
@@ -120,6 +133,7 @@ class Help(commands.Cog):
         await ctx.send(embed=em)
 
     @help.command()
+    @commands.bot_has_permissions(embed_links=True)
     async def wristworld(self, ctx):
         em = disnake.Embed(
             title="Wristworld", description="Sends the wristworld miku copypasta."
@@ -127,6 +141,7 @@ class Help(commands.Cog):
         await ctx.send(embed=em)
 
     @help.command()
+    @commands.bot_has_permissions(embed_links=True)
     async def fmega(self, ctx):
         em = disnake.Embed(
             title="F Mega!", description="Sends the F MEGA gif from Jojo's."
@@ -134,6 +149,7 @@ class Help(commands.Cog):
         await ctx.send(embed=em)
 
     @help.command()
+    @commands.bot_has_permissions(embed_links=True)
     async def kotowaru(self, ctx):
         em = disnake.Embed(
             title="Daga kotowaru!", description="Use this to refuse someone's offer"
@@ -141,6 +157,7 @@ class Help(commands.Cog):
         await ctx.send(embed=em)
 
     @help.command()
+    @commands.bot_has_permissions(embed_links=True)
     async def ascend(self, ctx):
         em = disnake.Embed(
             title="Ascend to Heaven!",
@@ -149,21 +166,25 @@ class Help(commands.Cog):
         await ctx.send(embed=em)
 
     @help.command()
+    @commands.bot_has_permissions(embed_links=True)
     async def jizz(self, ctx):
         em = disnake.Embed(title="Jizz", description="Use this to jizz.")
         await ctx.send(embed=em)
 
     @help.command()
+    @commands.bot_has_permissions(embed_links=True)
     async def letsgo(self, ctx):
         em = disnake.Embed(title="Let's go!", description="Playus 'Let's gooo' in vc")
         await ctx.send(embed=em)
 
     @help.command()
+    @commands.bot_has_permissions(embed_links=True)
     async def vtubus(self, ctx):
         em = disnake.Embed(title="Vtubus", description="vtubus")
         await ctx.send(embed=em)
 
     @help.command()
+    @commands.bot_has_permissions(embed_links=True)
     async def ding(self, ctx):
         em = disnake.Embed(
             title="Ding ding ding ding ding ddi di ding", description="amongus"
@@ -171,6 +192,7 @@ class Help(commands.Cog):
         await ctx.send(embed=em)
 
     @help.command()
+    @commands.bot_has_permissions(embed_links=True)
     async def yodayo(self, ctx):
         em = disnake.Embed(
             title="Yo dayo!", description="Plays Ayame's 'Yo dayo!' in VC"
@@ -178,6 +200,7 @@ class Help(commands.Cog):
         await ctx.send(embed=em)
 
     @help.command()
+    @commands.bot_has_permissions(embed_links=True)
     async def yodazo(self, ctx):
         em = disnake.Embed(
             title="Yo dazo!", description="Plays Ayame's 'Yo dazo!' in VC"
@@ -185,6 +208,7 @@ class Help(commands.Cog):
         await ctx.send(embed=em)
 
     @help.command()
+    @commands.bot_has_permissions(embed_links=True)
     async def jonathan(self, ctx):
         em = disnake.Embed(
             title="Jonathan's theme", description="Plays Jonathan's theme in VC"
@@ -192,6 +216,7 @@ class Help(commands.Cog):
         await ctx.send(embed=em)
 
     @help.command()
+    @commands.bot_has_permissions(embed_links=True)
     async def joseph(self, ctx):
         em = disnake.Embed(
             title="Joseph's theme", description="Plays Joseph's theme in VC"
@@ -199,6 +224,7 @@ class Help(commands.Cog):
         await ctx.send(embed=em)
 
     @help.command()
+    @commands.bot_has_permissions(embed_links=True)
     async def jotaro(self, ctx):
         em = disnake.Embed(
             title="Jotaro's theme", description="Plays Jotaro's theme in VC"
@@ -206,6 +232,7 @@ class Help(commands.Cog):
         await ctx.send(embed=em)
 
     @help.command()
+    @commands.bot_has_permissions(embed_links=True)
     async def josuke(self, ctx):
         em = disnake.Embed(
             title="Josuke's theme", description="Plays Josuke's theme in VC"
@@ -213,6 +240,7 @@ class Help(commands.Cog):
         await ctx.send(embed=em)
 
     @help.command()
+    @commands.bot_has_permissions(embed_links=True)
     async def giorno(self, ctx):
         em = disnake.Embed(
             title="Giorno's theme", description="Plays Giorno's theme in VC"
@@ -220,6 +248,7 @@ class Help(commands.Cog):
         await ctx.send(embed=em)
 
     @help.command()
+    @commands.bot_has_permissions(embed_links=True)
     async def kira(self, ctx):
         em = disnake.Embed(
             title="Yoshikage Kira's theme",
@@ -228,6 +257,7 @@ class Help(commands.Cog):
         await ctx.send(embed=em)
 
     @help.command()
+    @commands.bot_has_permissions(embed_links=True)
     async def pillarmen(self, ctx):
         em = disnake.Embed(
             title="Pillar Men Theme", description="Plays the Pillar Men Theme in VC"
@@ -235,6 +265,7 @@ class Help(commands.Cog):
         await ctx.send(embed=em)
 
     @help.command()
+    @commands.bot_has_permissions(embed_links=True)
     async def tts(self, ctx):
         em = disnake.Embed(
             title="Text to speech", description="Send a TTS message in VC"
@@ -247,6 +278,7 @@ class Help(commands.Cog):
         await ctx.send(embed=em)
 
     @help.command()
+    @commands.bot_has_permissions(embed_links=True)
     async def badapple(self, ctx):
         em = disnake.Embed(
             title="Bad Apple but in custom emotes",
@@ -256,6 +288,7 @@ class Help(commands.Cog):
         await ctx.send(embed=em)
 
     @help.command()
+    @commands.bot_has_permissions(embed_links=True)
     async def clip(self, ctx):
         em = disnake.Embed(
             title="Clip a YT Video",
@@ -271,6 +304,7 @@ class Help(commands.Cog):
         await ctx.send(embed=em)
 
     @help.command()
+    @commands.bot_has_permissions(embed_links=True)
     async def fastclip(self, ctx):
         em = disnake.Embed(
             title="Quickly clip a YT Video",
@@ -287,6 +321,7 @@ class Help(commands.Cog):
         await ctx.send(embed=em)
 
     @help.command()
+    @commands.bot_has_permissions(embed_links=True)
     async def fastclipsub(self, ctx):
         em = disnake.Embed(
             title="Quickly clip a YT Video w/ fancy subs",
@@ -303,6 +338,7 @@ class Help(commands.Cog):
         await ctx.send(embed=em)
 
     @help.command()
+    @commands.bot_has_permissions(embed_links=True)
     async def download(self, ctx):
         em = disnake.Embed(
             title="Download a YT Video", description="Download a YouTube of your choice"
@@ -311,6 +347,7 @@ class Help(commands.Cog):
         await ctx.send(embed=em)
 
     @help.command()
+    @commands.bot_has_permissions(embed_links=True)
     async def botansneeze(self, ctx):
         em = disnake.Embed(
             title="Botan Sneeze", description="because fuck you, have a botan sneeze"
@@ -319,6 +356,7 @@ class Help(commands.Cog):
         await ctx.send(embed=em)
 
     @help.command()
+    @commands.bot_has_permissions(embed_links=True)
     async def boom(self, ctx):
         em = disnake.Embed(
             title="Vine Boom SFX", description="plays the funni boom sfx in vc"
@@ -326,17 +364,20 @@ class Help(commands.Cog):
         await ctx.send(embed=em)
 
     @help.command(aliases=["ogei"])
+    @commands.bot_has_permissions(embed_links=True)
     async def ogey(self, ctx):
         em = disnake.Embed(title="Ogey...", description="Plays Pekora's ogey in VC.")
         em.add_field(name="**Aliases**", value=",".join(ctx.command.aliases))
         await ctx.send(embed=em)
 
     @help.command()
+    @commands.bot_has_permissions(embed_links=True)
     async def rrat(self, ctx):
         em = disnake.Embed(title="Rrat!", description="Plays Pekora's rrat in VC.")
         await ctx.send(embed=em)
 
     @help.command()
+    @commands.bot_has_permissions(embed_links=True)
     async def fart(self, ctx):
         em = disnake.Embed(
             title="Reverb fart sfx", description="Plays funni fart sound in VC."
@@ -344,6 +385,7 @@ class Help(commands.Cog):
         await ctx.send(embed=em)
 
     @help.command()
+    @commands.bot_has_permissions(embed_links=True)
     async def mogumogu(self, ctx):
         em = disnake.Embed(
             title="Mogu mogu!", description="Plays okayu's mogu mogu in VC."
@@ -351,11 +393,13 @@ class Help(commands.Cog):
         await ctx.send(embed=em)
 
     @help.command()
+    @commands.bot_has_permissions(embed_links=True)
     async def bababooey(self, ctx):
         em = disnake.Embed(title="Bababooey!", description="Plays bababooey in VC.")
         await ctx.send(embed=em)
 
     @help.command()
+    @commands.bot_has_permissions(embed_links=True)
     async def dog(self, ctx):
         em = disnake.Embed(
             title="What the dog doin?", description="Plays 'what da dog doin' in VC."
@@ -363,6 +407,7 @@ class Help(commands.Cog):
         await ctx.send(embed=em)
 
     @help.command()
+    @commands.bot_has_permissions(embed_links=True)
     async def totsugeki(self, ctx):
         em = disnake.Embed(
             title="TOTSUGEKI!!!", description="Plays May's Totsugeki in VC."
@@ -370,6 +415,7 @@ class Help(commands.Cog):
         await ctx.send(embed=em)
 
     @help.command(aliases=["bong"])
+    @commands.bot_has_permissions(embed_links=True)
     async def tacobell(self, ctx):
         em = disnake.Embed(
             title="Taco Bell bong sfx",
@@ -379,6 +425,7 @@ class Help(commands.Cog):
         await ctx.send(embed=em)
 
     @help.command(aliases=["amogus"])
+    @commands.bot_has_permissions(embed_links=True)
     async def amongus(self, ctx):
         em = disnake.Embed(
             title="AMONGUS!", description="Plays the guy yelling amongus in VC."
@@ -387,6 +434,7 @@ class Help(commands.Cog):
         await ctx.send(embed=em)
 
     @help.command(aliases=["classtrial"])
+    @commands.bot_has_permissions(embed_links=True)
     async def danganronpa(self, ctx):
         em = disnake.Embed(
             title="Class trial time!",
@@ -396,11 +444,13 @@ class Help(commands.Cog):
         await ctx.send(embed=em)
 
     @help.command()
+    @commands.bot_has_permissions(embed_links=True)
     async def join(self, ctx):
         em = disnake.Embed(title="Join VC", description="Sus bot will enter the VC.")
         await ctx.send(embed=em)
 
     @help.command()
+    @commands.bot_has_permissions(embed_links=True)
     async def stop(self, ctx):
         em = disnake.Embed(
             title="STOP!",
@@ -409,6 +459,7 @@ class Help(commands.Cog):
         await ctx.send(embed=em)
 
     @help.command()
+    @commands.bot_has_permissions(embed_links=True)
     async def stoploop(self, ctx):
         em = disnake.Embed(
             title="STOP THE LOOP!",
@@ -418,6 +469,7 @@ class Help(commands.Cog):
         await ctx.send(embed=em)
 
     @help.command()
+    @commands.bot_has_permissions(embed_links=True)
     async def leave(self, ctx):
         em = disnake.Embed(
             title="Sayonara...", description="Sus bot will leave the VC."
@@ -425,6 +477,7 @@ class Help(commands.Cog):
         await ctx.send(embed=em)
 
     @help.command()
+    @commands.bot_has_permissions(embed_links=True)
     async def stream(self, ctx):
         em = disnake.Embed(
             title="YouTube Stream Time Embed",
@@ -434,6 +487,7 @@ class Help(commands.Cog):
         await ctx.send(embed=em)
 
     @help.command()
+    @commands.bot_has_permissions(embed_links=True)
     async def water(self, ctx):
         em = disnake.Embed(
             title="Water and Water and Water Water",
@@ -442,11 +496,13 @@ class Help(commands.Cog):
         await ctx.send(embed=em)
 
     @help.command()
+    @commands.bot_has_permissions(embed_links=True)
     async def necoarc(self, ctx):
         em = disnake.Embed(title="Neco arc", description="Plays neco arc in VC.")
         await ctx.send(embed=em)
 
     @help.command()
+    @commands.bot_has_permissions(embed_links=True)
     async def vsauce(self, ctx):
         em = disnake.Embed(
             title="Vsauce music", description="Plays the vsauce music in VC."
@@ -454,6 +510,7 @@ class Help(commands.Cog):
         await ctx.send(embed=em)
 
     @help.command()
+    @commands.bot_has_permissions(embed_links=True)
     async def gigachad(self, ctx):
         em = disnake.Embed(
             title="Gigachad",
@@ -462,6 +519,7 @@ class Help(commands.Cog):
         await ctx.send(embed=em)
 
     @help.command()
+    @commands.bot_has_permissions(embed_links=True)
     async def bruh(self, ctx):
         em = disnake.Embed(
             title="Rushia Bruh SFX",
@@ -470,6 +528,7 @@ class Help(commands.Cog):
         await ctx.send(embed=em)
 
     @help.command()
+    @commands.bot_has_permissions(embed_links=True)
     async def believeit(self, ctx):
         em = disnake.Embed(
             title="Naruto - Believe it!",
@@ -478,6 +537,7 @@ class Help(commands.Cog):
         await ctx.send(embed=em)
 
     @help.command()
+    @commands.bot_has_permissions(embed_links=True)
     async def pikamee(self, ctx):
         em = disnake.Embed(
             title="pikamee is insane",
@@ -486,6 +546,7 @@ class Help(commands.Cog):
         await ctx.send(embed=em)
 
     @help.command(aliases=["hellskitchen", "violin"])
+    @commands.bot_has_permissions(embed_links=True)
     async def waterphone(self, ctx):
         em = disnake.Embed(
             title="Hell's Kitchen SFX",
@@ -495,6 +556,7 @@ class Help(commands.Cog):
         await ctx.send(embed=em)
 
     @help.command(aliases=["boo-womp"])
+    @commands.bot_has_permissions(embed_links=True)
     async def boowomp(self, ctx):
         em = disnake.Embed(
             title="Boo-womp!",
@@ -504,6 +566,7 @@ class Help(commands.Cog):
         await ctx.send(embed=em)
 
     @help.command()
+    @commands.bot_has_permissions(embed_links=True)
     async def pet(self, ctx):
         em = disnake.Embed(
             title="Pet user",
@@ -515,6 +578,7 @@ class Help(commands.Cog):
         await ctx.send(embed=em)
 
     @help.command(aliases=["findsauce", "getsauce"])
+    @commands.bot_has_permissions(embed_links=True)
     async def sauce(self, ctx):
         em = disnake.Embed(
             title="Get sauce", description="Uses Saucenao API to find sauce."
@@ -527,6 +591,7 @@ class Help(commands.Cog):
         await ctx.send(embed=em)
 
     @help.command()
+    @commands.bot_has_permissions(embed_links=True)
     async def clipaudio(self, ctx):
         em = disnake.Embed(
             title="Clip Audio", description="Clips the audio of a given YouTube video"
@@ -543,6 +608,7 @@ class Help(commands.Cog):
         await ctx.send(embed=em)
 
     @help.command()
+    @commands.bot_has_permissions(embed_links=True)
     async def ping(self, ctx):
         em = disnake.Embed(
             title="Ping",
@@ -551,6 +617,7 @@ class Help(commands.Cog):
         await ctx.send(embed=em)
 
     @help.command(aliases=["flip"])
+    @commands.bot_has_permissions(embed_links=True)
     async def coinflip(self, ctx):
         em = disnake.Embed(
             title="Coin Flip",
@@ -561,6 +628,7 @@ class Help(commands.Cog):
         await ctx.send(embed=em)
 
     @help.command(aliases=["shitify", "pixelize"])
+    @commands.bot_has_permissions(embed_links=True)
     async def lowqual(self, ctx):
         em = disnake.Embed(
             title="Low quality-ify",
@@ -574,6 +642,7 @@ class Help(commands.Cog):
         await ctx.send(embed=em)
 
     @help.command()
+    @commands.bot_has_permissions(embed_links=True)
     async def when(self, ctx):
         em = disnake.Embed(
             title="When?",
@@ -583,6 +652,7 @@ class Help(commands.Cog):
         await ctx.send(embed=em)
 
     @help.command()
+    @commands.bot_has_permissions(embed_links=True)
     async def checkcomment(self, ctx):
         em = disnake.Embed(
             title="YT Comment Checker",
@@ -592,6 +662,7 @@ class Help(commands.Cog):
         await ctx.send(embed=em)
 
     @help.command(aliases=["akasupa", "supacha"])
+    @commands.bot_has_permissions(embed_links=True)
     async def superchat(self, ctx):
         em = disnake.Embed(
             title="Superchat!",
@@ -609,6 +680,7 @@ class Help(commands.Cog):
         await ctx.send(embed=em)
 
     @help.command(aliases=["oldakasupa", "oldsupacha"])
+    @commands.bot_has_permissions(embed_links=True)
     async def oldsuperchat(self, ctx):
         em = disnake.Embed(
             title="Superchat! (OLD)",
@@ -626,6 +698,7 @@ class Help(commands.Cog):
         await ctx.send(embed=em)
 
     @help.command(aliases=["vid2gif", "gifify"])
+    @commands.bot_has_permissions(embed_links=True)
     async def gif(self, ctx):
         em = disnake.Embed(
             title="Video to Gif",
@@ -639,6 +712,7 @@ class Help(commands.Cog):
         await ctx.send(embed=em)
 
     @help.command(aliases=["vid2gif2", "gifify2"])
+    @commands.bot_has_permissions(embed_links=True)
     async def gif2(self, ctx):
         em = disnake.Embed(
             title="Video to Gif 2",
@@ -652,6 +726,7 @@ class Help(commands.Cog):
         await ctx.send(embed=em)
 
     @help.command()
+    @commands.bot_has_permissions(embed_links=True)
     async def resize(self, ctx):
         em = disnake.Embed(
             title="Resize image",
@@ -676,6 +751,7 @@ class Help(commands.Cog):
         yield message
 
     @help.command()
+    @commands.bot_has_permissions(embed_links=True)
     async def mgr(self, ctx):
         em = disnake.Embed(
             title="Metal Gear Rising: Revengeance Soundboard",
@@ -705,6 +781,7 @@ class Help(commands.Cog):
             await ctx.send(embed=embed)
 
     @help.command(aliases=["us"])
+    @commands.bot_has_permissions(embed_links=True)
     async def uploadsticker(self, ctx):
         em = disnake.Embed(
             title="Upload sticker",
@@ -723,6 +800,7 @@ class Help(commands.Cog):
         await ctx.send(embed=em)
 
     @help.command(aliases=["uploademoji", "ue"])
+    @commands.bot_has_permissions(embed_links=True)
     async def uploademote(self, ctx):
         em = disnake.Embed(
             title="Upload emote",
@@ -741,6 +819,7 @@ class Help(commands.Cog):
         await ctx.send(embed=em)
 
     @help.command(aliases=["japanese"])
+    @commands.bot_has_permissions(embed_links=True)
     async def nihongo(self, ctx):
         em = disnake.Embed(
             title="Translate to Japanese",
@@ -755,6 +834,7 @@ class Help(commands.Cog):
         await ctx.send(embed=em)
 
     @help.command(aliases=["english"])
+    @commands.bot_has_permissions(embed_links=True)
     async def eigo(self, ctx):
         em = disnake.Embed(
             title="Translate to English",
@@ -769,6 +849,7 @@ class Help(commands.Cog):
         await ctx.send(embed=em)
 
     @help.command(aliases=["addqueue", "insertqueue", "removequeue", "clearqueue"])
+    @commands.bot_has_permissions(embed_links=True)
     async def queue(self, ctx):
         em = disnake.Embed(
             title="Queue",
@@ -786,6 +867,7 @@ class Help(commands.Cog):
         await ctx.send(embed=em)
 
     @help.command(aliases=["quickvergil"])
+    @commands.bot_has_permissions(embed_links=True)
     async def vergil(self, ctx):
         em = disnake.Embed(
             title="Vergil Cut Green Screen",
@@ -800,6 +882,7 @@ class Help(commands.Cog):
         await ctx.send(embed=em)
 
     @help.command()
+    @commands.bot_has_permissions(embed_links=True)
     async def hallofshame(self, ctx):
         em = disnake.Embed(
             title="Hall Of Shame",

@@ -3,9 +3,6 @@ import asyncio
 
 
 class Copypasta(commands.Cog):
-    # def __init__(self, client):
-    #   self.client = client
-
     @commands.command()
     async def glasses(self, ctx):
         await ctx.send(
@@ -52,6 +49,7 @@ class Copypasta(commands.Cog):
         )
 
     @commands.command()
+    @commands.bot_has_permissions(manage_messages=True)
     async def wristworld(self, ctx):
         message = await ctx.send(
             "You’ve seen Miku on stage, but what about your wrist?"

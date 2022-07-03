@@ -30,6 +30,7 @@ class Download(commands.Cog):
             pass
 
     @commands.command()
+    @commands.bot_has_permissions(manage_messages=True)
     async def download(self, ctx, link):  # reddit, facebook, instagram, tiktok, yt
         if "reddit.com" in link or "v.redd.it" in link:
             cookiecoms = [
@@ -37,7 +38,7 @@ class Download(commands.Cog):
                 "--pinentry-mode=loopback",
                 "--passphrase",
                 os.getenv("ENCRYPTPASSPHRASE"),
-                "cookies (17).txt.gpg",
+                "cookies/seventina.gpg",
             ]
             cookieproc, stdout, stderr = await subprocess_runner.run_subprocess(
                 cookiecoms
@@ -48,7 +49,7 @@ class Download(commands.Cog):
                 "-f",
                 "bestvideo+bestaudio",
                 "--cookies",
-                "cookies (17).txt",
+                "cookies/seventina",
                 "--no-warnings",
                 link,
             ]
@@ -107,7 +108,7 @@ class Download(commands.Cog):
                 "yt-dlp",
                 "--get-filename",
                 "--cookies",
-                "cookies (17).txt",
+                "cookies/seventina",
                 "--no-warnings",
                 link,
             ]
@@ -126,19 +127,19 @@ class Download(commands.Cog):
                     await ctx.send(type(e).__name__)
             except disnake.HTTPException:
                 await ctx.send("File too large, broski <:towashrug:853606191711649812>")
-            file_handler.delete_file("cookies (17).txt")
+            file_handler.delete_file("cookies/seventina")
             file_handler.delete_file(filename)
             await message.delete()
 
         elif "facebook.com" in link:
             message = await ctx.send("Downloading...")
-            # encypted with `gpg -c --pinentry-mode=loopback your-file.txt`
+            # encypted with `gpg -c --pinentry-mode=loopback --passphrase pass your-file.txt`
             cookiecoms = [
                 "gpg",
                 "--pinentry-mode=loopback",
                 "--passphrase",
                 os.getenv("ENCRYPTPASSPHRASE"),
-                "cookies (15).txt.gpg",
+                "cookies/iofifteen.gpg",
             ]
             cookieproc, stdout, stderr = await subprocess_runner.run_subprocess(
                 cookiecoms
@@ -148,7 +149,7 @@ class Download(commands.Cog):
                 "-f",
                 "best",
                 "--cookies",
-                "cookies (15).txt",
+                "cookies/iofifteen",
                 "--no-warnings",
                 link,
             ]
@@ -158,7 +159,7 @@ class Download(commands.Cog):
                 "best",
                 "--get-filename",
                 "--cookies",
-                "cookies (15).txt",
+                "cookies/iofifteen",
                 "--no-warnings",
                 link,
             ]
@@ -179,7 +180,7 @@ class Download(commands.Cog):
                 await file_handler.send_file(ctx, message, filename)
             except Exception as e:
                 await message.edit(content=e)
-            file_handler.delete_file("cookies (15).txt")
+            file_handler.delete_file("cookies/iofifteen")
             file_handler.delete_file(filename)
 
             await message.delete()

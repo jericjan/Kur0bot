@@ -35,6 +35,7 @@ class Gif(commands.Cog):
             pass
 
     @commands.command(aliases=["vid2gif", "gifify"])
+    @commands.bot_has_permissions(manage_messages=True)
     async def gif(self, ctx, link=None):
         link = await msg_link_grabber.grab_link(ctx, link)
         print(link)
@@ -128,6 +129,7 @@ class Gif(commands.Cog):
         file_handler.delete_file(new_filename)
 
     @commands.command(aliases=["vid2gif2", "gifify2"])
+    @commands.bot_has_permissions(manage_messages=True)
     async def gif2(self, ctx, link=None, quality=None):
         uuid_id = uuid.uuid4()
         if link:
