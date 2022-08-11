@@ -34,6 +34,19 @@ class DeepL_commands(commands.Cog):
         result = ts.google(text, to_language="en")
         await ctx.send(result)
 
+    @commands.command(aliases=["german"])
+    async def doitsu(self, ctx, *, text=None):
+        if text == None:
+            if ctx.message.reference is not None:  # message is replying
+                print("is reply")
+                id = ctx.message.reference.message_id
+                msg = await ctx.channel.fetch_message(id)
+                text = msg.content
+            else:
+                await ctx.send("what am i supposed to translate? try again dawg.")
+                return
+        result = ts.google(text, to_language="de")
+        await ctx.send(result)
 
 def setup(client):
     client.add_cog(DeepL_commands(client))

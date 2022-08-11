@@ -181,6 +181,9 @@ class EmoteSticker(commands.Cog):
                 await ctx.send(f"New image size is: {width}x{height}", delete_after=3.0)
             try:
                 file = file.read()
+            except:
+                pass
+            try:
                 print(f"1 - file is a {type(file)}")
                 await ctx.guild.create_custom_emoji(name=title, image=file)
                 print("2")

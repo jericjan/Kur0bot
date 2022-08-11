@@ -12,3 +12,5 @@ nohup.out
 modules/others/karaoke_queue/
 activities.txt
 diff.diff
+filehost.py
+list.txt

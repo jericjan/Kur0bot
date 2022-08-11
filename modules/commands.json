@@ -28,6 +28,7 @@
     "stream",
     "pet",
     "sauce",
+	"altsauce",
     "ping",
     "coinflip",
     "lowqual",
@@ -40,7 +41,8 @@
     "resize",
 	"uploademote",
 	"uploadsticker",
-	"hallofshame"
+	"hallofshame",
+	"getosumap"
   ],
   "reactions": [
     "fmega",
@@ -90,7 +92,8 @@
   ],
   "translate": [
 	"nihongo",
-	"eigo"
+	"eigo",
+	"doitsu"
   ],
   "queue": [
   "queue",

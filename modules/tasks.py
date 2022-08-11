@@ -73,7 +73,7 @@ class myTasks(commands.Cog):
         ]
         out, stdout, stderr = await subprocess_runner.run_subprocess(coms)
         channel = self.client.get_channel(976064150935576596)
-        drives = ["pog4:", "pog6:", "pog7:", "pog8:"]
+        drives = ["pog6:", "pog7:", "pog8:", "pog9:", "pog10:", "pog11:"]
         coms_list = {}
         for idx, val in enumerate(drives):
             pre_coms = ["rclone/rclone", "lsd"]

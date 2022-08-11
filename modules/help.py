@@ -592,6 +592,18 @@ class Help(commands.Cog):
 
     @help.command()
     @commands.bot_has_permissions(embed_links=True)
+    async def altsauce(self, ctx):
+        em = disnake.Embed(
+            title="Alternate way to get sauce", description="Use this in case the default one breaks for some reason."
+        )
+        em.add_field(
+            name="**Syntax**",
+            value="k.altsauce <url>\nUpload image with k.sauce\nReply to a message with k.sauce ",
+        )
+        await ctx.send(embed=em)
+
+    @help.command()
+    @commands.bot_has_permissions(embed_links=True)
     async def clipaudio(self, ctx):
         em = disnake.Embed(
             title="Clip Audio", description="Clips the audio of a given YouTube video"
@@ -829,7 +841,7 @@ class Help(commands.Cog):
         em.add_field(name="**Aliases**", value=",".join(ctx.command.aliases))
         em.add_field(
             name="**Example**",
-            value="k.uploademote hello",
+            value="k.nihongo hello",
         )
         await ctx.send(embed=em)
 
@@ -845,6 +857,21 @@ class Help(commands.Cog):
         em.add_field(
             name="**Example**",
             value="k.eigo 草",
+        )
+        await ctx.send(embed=em)
+
+    @help.command(aliases=["german"])
+    @commands.bot_has_permissions(embed_links=True)
+    async def doitsu(self, ctx):
+        em = disnake.Embed(
+            title="Translate to German",
+            description="Translate given text to German. Uses Google Translate.",
+        )
+        em.add_field(name="**Syntax**", value="k.doitsu <sentence>", inline=False)
+        em.add_field(name="**Aliases**", value=",".join(ctx.command.aliases))
+        em.add_field(
+            name="**Example**",
+            value="k.doitsu hello",
         )
         await ctx.send(embed=em)
 
@@ -900,6 +927,21 @@ class Help(commands.Cog):
             "⦁ Genshin Impact\n"
             "(and no, these cannot be customized <a:trollplant:934777423881445436>)",
             inline=False,
+        )
+        await ctx.send(embed=em)
+
+    @help.command(aliases=["getmap","getosu"])
+    @commands.bot_has_permissions(embed_links=True)
+    async def getosumap(self, ctx):
+        em = disnake.Embed(
+            title="Get osu! map",
+            description="Sends you the osu! map someone is playing.",
+        )
+        em.add_field(name="**Syntax**", value=r"k.getosumap <user\ping\id>", inline=False)
+        em.add_field(name="**Aliases**", value=",".join(ctx.command.aliases))
+        em.add_field(
+            name="**Example**",
+            value="k.getosumap Kur0",
         )
         await ctx.send(embed=em)
 

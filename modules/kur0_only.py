@@ -53,7 +53,7 @@ class Kur0only(commands.Cog):
     @commands.command()
     @commands.is_owner()
     async def repost(self, ctx, url):
-        target_drive = "pog4"
+        target_drive = "pog6"
         msg = await ctx.send("Checking for updates...")
         coms = ["rclone/rclone", "selfupdate"]
         out, stdout, stderr = await subprocess_runner.run_subprocess(coms)

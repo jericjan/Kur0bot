@@ -147,7 +147,7 @@ class Download(commands.Cog):
             coms = [
                 "yt-dlp",
                 "-f",
-                "best",
+                "b",
                 "--cookies",
                 "cookies/iofifteen",
                 "--no-warnings",
@@ -156,7 +156,7 @@ class Download(commands.Cog):
             coms2 = [
                 "yt-dlp",
                 "-f",
-                "best",
+                "b",
                 "--get-filename",
                 "--cookies",
                 "cookies/iofifteen",
@@ -186,11 +186,11 @@ class Download(commands.Cog):
             await message.delete()
         elif "tiktok.com" in link:
             message = await ctx.send("Downloading...")
-            coms = ["yt-dlp", "-f", "best[vcodec=h264]", "--no-warnings", link]
+            coms = ["yt-dlp", "-f", "b[vcodec=h264]", "--no-warnings", link]
             coms2 = [
                 "yt-dlp",
                 "-f",
-                "best",
+                "b",
                 "--get-filename",
                 "--no-warnings",
                 link,

@@ -25,7 +25,7 @@ class Clip(commands.Cog):
             return
 
         message = await ctx.send("Fetching url...")
-        coms = ["yt-dlp", "-g", "-f", "best", "--youtube-skip-dash-manifest", link]
+        coms = ["yt-dlp", "-g", "-f", "b", "--youtube-skip-dash-manifest", "--no-warnings", link]
         startsplit = start.split(":")
         shour = startsplit[0]
         sminute = startsplit[1]
@@ -309,7 +309,7 @@ class Clip(commands.Cog):
             return
 
         message = await ctx.send("Fetching url...")
-        coms = ["yt-dlp", "-g", "-f", "best", "--youtube-skip-dash-manifest", link]
+        coms = ["yt-dlp", "-g", "-f", "b", "--youtube-skip-dash-manifest", "--no-warnings", link]
         startsplit = start.split(":")
         shour = startsplit[0]
         sminute = startsplit[1]
@@ -1021,9 +1021,10 @@ class Clip(commands.Cog):
             "yt-dlp",
             "-g",
             "-f",
-            "best",
+            "b",
             "--no-warnings",
             "--youtube-skip-dash-manifest",
+            "--no-warnings", 
             link,
         ]
         startsplit = start.split(":")
@@ -1129,7 +1130,7 @@ class Clip(commands.Cog):
     @commands.bot_has_permissions(manage_messages=True)
     async def fastclip3(self, ctx, link, start, end, filename):
         message = await ctx.send("Fetching url...")
-        coms = ["yt-dlp", "-g", "-f", "best", "--youtube-skip-dash-manifest", link]
+        coms = ["yt-dlp", "-g", "-f", "b", "--youtube-skip-dash-manifest", "--no-warnings", link]
         startsplit = start.split(":")
         shour = startsplit[0]
         sminute = startsplit[1]
@@ -1203,7 +1204,7 @@ class Clip(commands.Cog):
     @commands.bot_has_permissions(manage_messages=True)
     async def fastclip2(self, ctx, link, start, end, filename):
         message = await ctx.send("Fetching url...")
-        coms = ["yt-dlp", "-g", "-f", "best", "--youtube-skip-dash-manifest", link]
+        coms = ["yt-dlp", "-g", "-f", "b", "--youtube-skip-dash-manifest", "--no-warnings", link]
         startsplit = start.split(":")
         shour = startsplit[0]
         sminute = startsplit[1]

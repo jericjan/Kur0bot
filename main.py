@@ -97,6 +97,7 @@ client.load_extension("modules.others.resize")
 client.load_extension("modules.others.deepl")
 client.load_extension("modules.others.karaoke")
 client.load_extension("modules.others.hall_of_shame")
+client.load_extension("modules.others.getosumap")
 client.load_extension("modules.others.vergil")
 client.load_extension("modules.pacifam_only")
 client.load_extension("modules.kur0_only")
@@ -315,26 +316,6 @@ async def tasks(ctx):
 @client.command()
 async def ping(ctx):
     await ctx.send(f"My ping is {round (client.latency * 1000)}ms!")
-
-
-@client.command()
-async def rolecheck(ctx):
-    avi_guild = client.get_guild(603147860225032192)
-    while avi_guild == None:
-        pass
-    else:
-        admin = disnake.utils.get(avi_guild.roles, name="Admin")
-        moderator = disnake.utils.get(avi_guild.roles, name="Moderator")
-        avilon = disnake.utils.get(avi_guild.roles, name="Aweelom")
-    roles = [admin, moderator, avilon]
-    if (
-        any(role in roles for role in ctx.author.roles)
-        or ctx.author.id == 216830153441935360
-    ):
-        await ctx.send("You match the roles!")
-    else:
-        await ctx.send("Only Avi/Admins/Mods can use this command")
-
 
 async def wait_until(dt):
     # sleep until the specified datetime
