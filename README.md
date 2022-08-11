@@ -21,6 +21,7 @@ To do list:
 - make the webhook imitate user thing a custom function
 - replace synchronous requests with asyncio w/ aiohttp.ClientSession()
 - use asynchronous database for storing user data
+
 Notes:
 
 - in root folder, there is folder `ffmpeg-git` that contains latest release of git master from https://johnvansickle.com/ffmpeg/
