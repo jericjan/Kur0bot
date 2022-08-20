@@ -53,3 +53,4 @@ async def send_file(ctx, message, filename, custom_name=None):
             f"http://{ip}:{os.getenv('PORT')}/temp/{url_enc_filename}"
         )
         await ctx.send(msg)
+    await message.delete()

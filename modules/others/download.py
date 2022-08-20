@@ -133,7 +133,7 @@ class Download(commands.Cog):
 
         elif "facebook.com" in link:
             message = await ctx.send("Downloading...")
-            # encypted with `gpg -c --pinentry-mode=loopback --passphrase pass your-file.txt`
+            # encypted with `gpg -c --pinentry-mode=loopback --passphrase 'pass' your-file.txt`
             cookiecoms = [
                 "gpg",
                 "--pinentry-mode=loopback",
@@ -236,6 +236,60 @@ class Download(commands.Cog):
                 await file_handler.send_file(ctx, message, filename)
             file_handler.delete_file(filename)
             await message.delete()
+        elif "instagram.com" and "/stories/" in link:
+            message = await ctx.send("Downloading...")
+            cookiecoms = [
+                "gpg",
+                "--pinentry-mode=loopback",
+                "--passphrase",
+                os.getenv("ENCRYPTPASSPHRASE"),
+                "cookies/morbius.gpg",
+            ]
+            cookieproc, stdout, stderr = await subprocess_runner.run_subprocess(
+                cookiecoms
+            )           
+            coms = ["yt-dlp", "-f", "b", "--no-warnings", "--cookies", "cookies/morbius",link]
+            coms2 = ["yt-dlp", "-f", "b", "--get-filename", "--no-warnings", "--cookies", "cookies/morbius", link]                
+            out, stdout, stderr = await subprocess_runner.run_subprocess(coms)
+            await message.edit(content="Almost there...")
+            out2, stdout, stderr = await subprocess_runner.run_subprocess(coms2)
+            try:
+                filenames = [x for x in stdout.decode("utf-8").split("\n") if x]
+                if len(filenames) == 1:
+                    await file_handler.send_file(ctx, message, filenames[0])
+                else:
+                
+                    msg = await ctx.send(
+                        f"This story has {len(filenames)} videos. Instagram is weird and I can't exactly find which video this is in the story. Tell me the nth video that you want (Ex: 2). You have 5 minutes.\nType \"all\" and I'll DM you all the videos."
+                    )
+
+                    def check(m):
+                        return m.author == ctx.author and m.channel == ctx.channel
+
+                    try:
+                        await_msg = await self.client.wait_for(
+                            "message", check=check, timeout=300
+                        )
+                        if await_msg.content.isdecimal():
+                            index = int(await_msg.content) - 1
+                            await file_handler.send_file(ctx, message, filenames[index])
+                        elif await_msg.content.lower() == "all":
+                            for file in filenames:
+                                await ctx.author.send(file=disnake.File(file))                   
+                        else:
+                            await ctx.send("Invalid!", delete_after=3)
+                            await ctx.message.delete()
+                        await await_msg.delete()
+                    except asyncio.TimeoutError:
+                        await ctx.send("Too slow lmao!", delete_after=3)
+                        await ctx.message.delete()
+                    await msg.delete()                         
+
+            except Exception as e:
+                await ctx.send(e)           
+            file_handler.delete_file("cookies/morbius")
+            for file in filenames:
+                file_handler.delete_file(file)
         # yt links usually
         else:
             message = await ctx.send("Downloading...")
