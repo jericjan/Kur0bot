@@ -196,44 +196,45 @@ class Events(commands.Cog):
         if message.author == self.client.user:
             return
         msg = message.content.lower()
-
+        
         ################SUSSY REPLIES##################
         if message.channel.id == 850380119646142504:  # sus-town
             if any(word in msg for word in sus_words):
                 for x in range(3):
                     await message.channel.send(random.choice(sus_replies))
         else:
-            if not any(word in msg for word in custom_words):
-                if any(word in msg for word in sus_words):
-                    if self.client.sus_on == False:
-                        await message.channel.send(
-                            random.choice(sus_replies), delete_after=3.0
-                        )
-                        await self.log("sussy reply", False)
-                    if self.client.sus_on:
-                        await message.channel.send(random.choice(sus_replies))
-                        await self.log("sussy reply", False)
-            else:
-                if "amgus" in msg:
+            if any(word in msg for word in sus_words):
+                if self.client.sus_on == False:
                     await message.channel.send(
-                        random.choice(sugma_replies), delete_after=3.0
+                        random.choice(sus_replies), delete_after=3.0
                     )
                     await self.log("sussy reply", False)
-                if "amogus" in msg:
-                    await message.channel.send(
-                        random.choice(sugoma_replies), delete_after=3.0
-                    )
+                if self.client.sus_on:
+                    await message.channel.send(random.choice(sus_replies))
                     await self.log("sussy reply", False)
-                if "sushi" in msg:
-                    await message.channel.send(
-                        "remove the hi from sushi. what do you get? <:sus:850628234746920971>",
-                        delete_after=3.0,
-                    )
-                    await self.log("sussy reply", False)
-                if "pog" in msg:
-                    await message.channel.send("poggusus", delete_after=3.0)
-                    await self.log("sussy reply", False)
-
+            if "amgus" in msg:
+                await message.channel.send(
+                    random.choice(sugma_replies), delete_after=3.0
+                )
+                await self.log("sussy reply", False)
+            if "amogus" in msg:
+                await message.channel.send(
+                    random.choice(sugoma_replies), delete_after=3.0
+                )
+                await self.log("sussy reply", False)
+            if "sushi" in msg:
+                await message.channel.send(
+                    "remove the hi from sushi. what do you get? <:sus:850628234746920971>",
+                    delete_after=3.0,
+                )
+                await self.log("sussy reply", False)
+            if "pog" in msg:
+                await message.channel.send("poggusus", delete_after=3.0)
+                await self.log("sussy reply", False)
+            if any(word in msg for word in ["feet","foot","toe"]):
+                strepto_in_server = await message.guild.getch_member(268188421871108097)
+                if strepto_in_server:
+                    await message.channel.send("<@268188421871108097>") #pings strepto
         #############TWITTER LINK GIVER####################
 
         if "twitter.com" in msg:
