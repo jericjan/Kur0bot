@@ -56,23 +56,22 @@ class Resize(commands.Cog):
         bruh = await self.foo(link, width, height)
         bruh.seek(0)
         filename = link.split("/")[-1]
-        await file_handler.send_file(ctx, message, filename)
+        await file_handler.send_file(ctx, message, bruh, filename)
         bruh.close()
         await message.delete()
         await ctx.message.delete()
 
     @commands.command()
     @commands.bot_has_permissions(manage_messages=True)
-    async def rs(self, ctx, link=None):
+    async def rs(self, ctx, link=None):     
         link = await msg_link_grabber.grab_link(ctx, link)
         print(link)
         message = await ctx.send("Resizing...")
         bruh = await self.foo(link, 1600, 720)
         bruh.seek(0)
         filename = link.split("/")[-1]
-        await file_handler.send_file(ctx, message, filename)
-        bruh.close()
-        await message.delete()
+        await file_handler.send_file(ctx, message, bruh, filename)
+        bruh.close()    
         await ctx.message.delete()
 
 

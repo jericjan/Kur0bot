@@ -212,29 +212,36 @@ class Events(commands.Cog):
                 if self.client.sus_on:
                     await message.channel.send(random.choice(sus_replies))
                     await self.log("sussy reply", False)
-            if "amgus" in msg:
-                await message.channel.send(
-                    random.choice(sugma_replies), delete_after=3.0
-                )
-                await self.log("sussy reply", False)
-            if "amogus" in msg:
-                await message.channel.send(
-                    random.choice(sugoma_replies), delete_after=3.0
-                )
-                await self.log("sussy reply", False)
-            if "sushi" in msg:
-                await message.channel.send(
-                    "remove the hi from sushi. what do you get? <:sus:850628234746920971>",
-                    delete_after=3.0,
-                )
-                await self.log("sussy reply", False)
-            if "pog" in msg:
-                await message.channel.send("poggusus", delete_after=3.0)
-                await self.log("sussy reply", False)
-            if any(word in msg for word in ["feet","foot","toe"]):
-                strepto_in_server = await message.guild.getch_member(268188421871108097)
-                if strepto_in_server:
-                    await message.channel.send("<@268188421871108097>") #pings strepto
+        if "amgus" in msg:
+            await message.channel.send(
+                random.choice(sugma_replies), delete_after=3.0
+            )
+            await self.log("sussy reply", False)
+        if "amogus" in msg:
+            await message.channel.send(
+                random.choice(sugoma_replies), delete_after=3.0
+            )
+            await self.log("sussy reply", False)
+        if "sushi" in msg:
+            await message.channel.send(
+                "remove the hi from sushi. what do you get? <:sus:850628234746920971>",
+                delete_after=3.0,
+            )
+            await self.log("sussy reply", False)
+        if "pog" in msg:
+            await message.channel.send("poggusus", delete_after=3.0)
+            await self.log("sussy reply", False)
+            
+        #le strepto
+        if any(word in msg for word in ["feet","foot","toe"]):
+            strepto_in_server = await message.guild.getch_member(268188421871108097)
+            if strepto_in_server:
+                await message.channel.send("<@268188421871108097>") #pings strepto
+        
+        #PACIFAM ONLY
+        if message.guild.id == 603147860225032192:
+            if "dox" in msg:
+                await message.channel.send(file=disnake.File("videos/professional_doxxers.mp4"))
         #############TWITTER LINK GIVER####################
 
         if "twitter.com" in msg:

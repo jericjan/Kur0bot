@@ -36,9 +36,7 @@ async def send_file(ctx, message, filename, custom_name=None):
     if filesize <= limit:
         await message.edit(content="Sending...")
         try:
-
             await ctx.send(file=disnake.File(filename, filename=clean_name))
-
         except Exception as e:
             await ctx.send(e)
     else:

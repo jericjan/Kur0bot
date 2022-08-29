@@ -155,7 +155,15 @@ class Clip(commands.Cog):
         process, stdout, stderr = await subprocess_runner.run_subprocess(coms)
         timelist_str = stdout.decode("utf-8").strip().split("\n")
         print(timelist_str)
-        timelist_float = [float(i) for i in timelist_str]
+        
+        def isfloat(num):
+            try:
+                float(num)
+                return True
+            except ValueError:
+                return False
+     
+        timelist_float = [float(i) for i in timelist_str if isfloat(i)]
         timelist_float.sort()
         print(timelist_float)
 
