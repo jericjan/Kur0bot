@@ -5,7 +5,7 @@ import requests
 import glob
 import json
 from lorem.text import TextLorem
-
+import aiohttp
 from dotenv import load_dotenv
 from myfunctions import subprocess_runner
 
@@ -54,7 +54,21 @@ class Kur0only(commands.Cog):
     @commands.is_owner()
     async def repost(self, ctx, url):
         target_drive = "pog6"
-        msg = await ctx.send("Checking for updates...")
+        msg = await ctx.send("Checking FB token...")
+        access_token = os.getenv("FB_ACCESS_TOKEN")
+        fb_app_id = os.getenv("FB_APP_ID")
+        fb_app_secret = os.getenv("FB_APP_SECRET")
+        fb_url = f"https://graph.facebook.com/v14.0/debug_token?input_token={access_token}&access_token={fb_app_id}|{fb_app_secret}"
+        async with aiohttp.ClientSession() as session:
+            async with session.get(fb_url) as response:
+                fb_json = await response.json()
+        valid_token = fb_json['data']['is_valid']
+        epoch_expires = f"<t:{fb_json['data']['expires_at']}:R>"
+        if not valid_token:
+            await msg.edit(content=f"{msg.content}\n{fb_json['data']['error']['message']}")
+            return
+        await ctx.send(f"Token expires {epoch_expires}")
+        msg = await msg.edit(content=f"{msg.content}Done\nChecking for updates...")
         coms = ["rclone/rclone", "selfupdate"]
         out, stdout, stderr = await subprocess_runner.run_subprocess(coms)
         msg = await msg.edit(content=f"{msg.content}\n{stdout.decode()}")
@@ -190,7 +204,7 @@ class Kur0only(commands.Cog):
             return
         # upload to fb
         msg = await msg.edit(content=f"{msg.content}\nUploading to FB...")
-        access_token = os.getenv("FB_ACCESS_TOKEN")
+        
 
         url = f"https://graph-video.facebook.com/v8.0/100887555109330/videos?access_token={access_token}&limit=10"
         files = {"file": ("vid.mp4", open(fname, mode="rb"))}
