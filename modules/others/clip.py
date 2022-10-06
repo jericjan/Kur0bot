@@ -14,15 +14,23 @@ class Clip(commands.Cog):
     @commands.bot_has_permissions(manage_messages=True)
     async def fastclip(self, ctx, link, start, end, *, filename):
         filename = filename.replace(" ", "_")
+        zeroes = "00:00:00"
+        if len(start) < 8:
+            start = zeroes[:-len(start)]+start
+        if len(end) < 8:
+            end = zeroes[:-len(end)]+end            
         if (
-            re.match("\d{2}:\d{2}:\d{2}", start) != None
-            and re.match("\d{2}:\d{2}:\d{2}", end) != None
+            re.match("\d{2}(:|;)\d{2}(:|;)\d{2}", start) != None
+            and re.match("\d{2}(:|;)\d{2}(:|;)\d{2}", end) != None
         ):
             print("good timestamps!")
         else:
             print("bad timestamps!")
             await ctx.send("Timestamps are wrong. Please provide it in HH:MM:SS")
             return
+
+        start = start.replace(";",":")
+        end = end.replace(";",":")
 
         message = await ctx.send("Fetching url...")
         coms = ["yt-dlp", "-g", "-f", "b", "--youtube-skip-dash-manifest", "--no-warnings", link]
@@ -298,8 +306,7 @@ class Clip(commands.Cog):
         await ctx.send(ctx.message.author.mention)
         file_handler.delete_file(f"{filename}.mp4")
         file_handler.delete_file(f"{filename}_temp0.mp4")
-        file_handler.delete_file(f"{filename}_temp.mp4")
-        await message.delete()
+        file_handler.delete_file(f"{filename}_temp.mp4")        
 
     ############################################################################
     @commands.command()
@@ -663,9 +670,7 @@ class Clip(commands.Cog):
         file_handler.delete_file(f"{filename}.mp4")
         file_handler.delete_file(f"{filename}_nosub.mp4")
         file_handler.delete_file(f"{filename}_temp0.mp4")
-        file_handler.delete_file(f"{filename}_temp.mp4")
-
-        await message.delete()
+        file_handler.delete_file(f"{filename}_temp.mp4")       
 
     @commands.command()
     @commands.bot_has_permissions(manage_messages=True)
@@ -894,8 +899,7 @@ class Clip(commands.Cog):
         await file_handler.send_file(ctx, message, f"{filename}.mp4")
         await ctx.send(ctx.message.author.mention)
         file_handler.delete_file(f"{filename}.mp4")
-        file_handler.delete_file(f"{filename}_temp.mp4")
-        await message.delete()
+        file_handler.delete_file(f"{filename}_temp.mp4")       
 
     @commands.command()
     @commands.bot_has_permissions(manage_messages=True)
@@ -1003,8 +1007,7 @@ class Clip(commands.Cog):
         await file_handler.send_file(ctx, message, f"{filename}.{filetype.lower()}")
         await ctx.send(ctx.message.author.mention)
         file_handler.delete_file(f"{filename}.ogg")
-        file_handler.delete_file(f"{filename}.{filetype.lower()}")
-        await message.delete()
+        file_handler.delete_file(f"{filename}.{filetype.lower()}")        
 
     @commands.command()
     @commands.bot_has_permissions(manage_messages=True)
@@ -1129,8 +1132,7 @@ class Clip(commands.Cog):
                         )
             os.rename(f"{filename}.mkv", f"{filename}.mp4")
             await file_handler.send_file(ctx, message, f"{filename}.mp4")
-            file_handler.delete_file(f"{filename}.mp4")
-            await message.delete()
+            file_handler.delete_file(f"{filename}.mp4")            
         except ValueError:
             await message.edit(content="An error occured... Uh, try it again.")
 
@@ -1205,8 +1207,7 @@ class Clip(commands.Cog):
         process, stdout, stderr = await subprocess_runner.run_subprocess(coms)
         await file_handler.send_file(ctx, message, f"{filename}.mp4")
         await ctx.send(ctx.message.author.mention)
-        file_handler.delete_file(f"{filename}.mp4")
-        await message.delete()
+        file_handler.delete_file(f"{filename}.mp4")        
 
     @commands.command()
     @commands.bot_has_permissions(manage_messages=True)
@@ -1261,8 +1262,7 @@ class Clip(commands.Cog):
             return
         await file_handler.send_file(ctx, message, f"{filename}.mp4")
         await ctx.send(ctx.message.author.mention)
-        file_handler.delete_file(f"{filename}.mp4")
-        await message.delete()
+        file_handler.delete_file(f"{filename}.mp4")        
 
 
 def setup(client):

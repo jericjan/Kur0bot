@@ -279,8 +279,7 @@ class lowQual(commands.Cog):
                 "I don't support this filetype yet ig. Ping kur0 or smth. <:towashrug:853606191711649812> "
             )
             return
-        await file_handler.send_file(ctx, message, filename)
-        await message.delete()
+        await file_handler.send_file(ctx, message, filename)       
         file_handler.delete_file(filename)
 
 

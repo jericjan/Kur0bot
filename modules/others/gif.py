@@ -124,8 +124,7 @@ class Gif(commands.Cog):
             await ctx.send(
                 "I don't support this filetype yet ig. Ping kur0 or smth. <:towashrug:853606191711649812> "
             )
-        await file_handler.send_file(ctx, message, new_filename)
-        await message.delete()
+        await file_handler.send_file(ctx, message, new_filename)        
         file_handler.delete_file(new_filename)
 
     @commands.command(aliases=["vid2gif2", "gifify2"])
@@ -276,7 +275,6 @@ class Gif(commands.Cog):
             await file_handler.send_file(ctx, message, new_filename)
             file_handler.delete_file(new_filename)
             shutil.rmtree(f"{frames_folder}/")
-            await message.delete()
             await pre_message.delete()
         else:
             await ctx.send(

@@ -305,8 +305,7 @@ class Superchat(commands.Cog):
         bruh = await self.foo3(msg_split, out)
         bruh.seek(0)
         await file_handler.send_file(ctx, bgnMessage, bruh, "superchat.png")
-        bruh.close()
-        await bgnMessage.delete()
+        bruh.close()        
 
 
 def setup(client):

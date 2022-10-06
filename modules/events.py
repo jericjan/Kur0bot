@@ -348,6 +348,15 @@ class Events(commands.Cog):
                 print("It is Friday... in California. SHOOT!")
                 await message.channel.send(file=disnake.File("videos/friday.webm"))
 
+        if "wednesday" in msg:
+            tz_str_list = ["Etc/GMT+12","Etc/GMT-14","Etc/GMT-12"]
+            tz_day_list = [datetime.now(pytz.timezone(x)).strftime("%A") for x in tz_str_list]
+            if "Wednesday" in tz_day_list:
+                await message.channel.send(file=disnake.File("videos/wednesday.mp4"))
+
+        if any(word in msg for word in ["10:49pm","10:49 pm","10 49 pm","10 49pm"]):
+            await message.channel.send(file=disnake.File("videos/10_49_pm.mp4"))
+            
         if any(word in msg for word in ["deez", "deez nuts"]):
             await message.channel.send(random.choice(deez_replies), delete_after=3.0)
 

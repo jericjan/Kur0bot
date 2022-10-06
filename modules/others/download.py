@@ -129,7 +129,6 @@ class Download(commands.Cog):
                 await ctx.send("File too large, broski <:towashrug:853606191711649812>")
             file_handler.delete_file("cookies/seventina")
             file_handler.delete_file(filename)
-            await message.delete()
 
         elif "facebook.com" in link:
             message = await ctx.send("Downloading...")
@@ -183,7 +182,6 @@ class Download(commands.Cog):
             file_handler.delete_file("cookies/iofifteen")
             file_handler.delete_file(filename)
 
-            await message.delete()
         elif "tiktok.com" in link:
             message = await ctx.send("Downloading...")
             coms = ["yt-dlp", "-f", "b[vcodec=h264]", "--no-warnings", link]
@@ -214,7 +212,6 @@ class Download(commands.Cog):
             except Exception as e:
                 await message.edit(content=e)
             file_handler.delete_file(filename)
-            await message.delete()
         elif "bilibili.com" in link:
             message = await ctx.send(
                 "Bilibili? <:oka:944181217467723826>\n Let me do something different here. Give me a moment..."
@@ -234,8 +231,7 @@ class Download(commands.Cog):
                 await message.edit(content="Downloading...")
             else:
                 await file_handler.send_file(ctx, message, filename)
-            file_handler.delete_file(filename)
-            await message.delete()
+            file_handler.delete_file(filename)            
         elif "instagram.com" and "/stories/" in link:
             message = await ctx.send("Downloading...")
             cookiecoms = [
@@ -320,9 +316,7 @@ class Download(commands.Cog):
                 filename = stdout.decode("utf-8").split("\n")[0]
                 await file_handler.send_file(ctx, message, filename)
             except Exception as e:
-                await ctx.send(e)
-
-            await message.delete()
+                await ctx.send(e)            
 
 
 def setup(client):
