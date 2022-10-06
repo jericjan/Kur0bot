@@ -8,8 +8,7 @@ from aiolimiter import AsyncLimiter
 import json
 import re
 from urllib.parse import unquote
-from myfunctions import subprocess_runner, file_handler
-
+from myfunctions import subprocess_runner, file_handler, msg_link_grabber
 limiter = AsyncLimiter(1, 1)
 
 
@@ -31,7 +30,8 @@ class Download(commands.Cog):
 
     @commands.command()
     @commands.bot_has_permissions(manage_messages=True)
-    async def download(self, ctx, link):  # reddit, facebook, instagram, tiktok, yt
+    async def download(self, ctx, link=None):  # reddit, facebook, instagram, tiktok, yt
+        link = await msg_link_grabber.grab_link(ctx, link)
         if "reddit.com" in link or "v.redd.it" in link:
             cookiecoms = [
                 "gpg",
@@ -317,7 +317,7 @@ class Download(commands.Cog):
                 await file_handler.send_file(ctx, message, filename)
             except Exception as e:
                 await ctx.send(e)            
-
+            file_handler.delete_file(filename)
 
 def setup(client):
     client.add_cog(Download(client))
