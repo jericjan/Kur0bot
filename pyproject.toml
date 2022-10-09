@@ -28,6 +28,7 @@ lorem = "^0.1.1"
 translators = "^5.2.2"
 opencv-python = "^4.6.0"
 ffmpegcv = "^0.2.3"
+pymongo = {extras = ["srv"], version = "^4.2.0"}
 
 [tool.poetry.dev-dependencies]
 

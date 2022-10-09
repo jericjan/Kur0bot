@@ -7,13 +7,20 @@ import random
 import os
 import asyncio
 import json
-
+from myfunctions import subprocess_runner
+import uuid
+from myfunctions.my_db import get_db
+import time
+from yt_dlp import YoutubeDL
+from functools import wraps, partial
 
 class Vc(commands.Cog):
     def __init__(self, client):
         self.client = client
-
-    async def vcplay(self, ctx, a, loop=None, isRandom=None):
+        self.dbname = get_db("music_queue")   
+        self.temp_servers_playing = {}
+        self.song_now_playing = {}
+    async def vcplay(self, ctx, a, loop=None, isRandom=None, **kwargs):
 
         voicestate = ctx.author.voice
         if voicestate:
@@ -51,8 +58,47 @@ class Vc(commands.Cog):
             else:
                 if isRandom == True:
                     a = random.choice(a)
-                voice.play(disnake.FFmpegPCMAudio(source=a))
-
+                    
+                async def remove_and_run_queue(a):
+                    try:
+                        os.remove(a)                    
+                        server_queue = self.dbname[str(ctx.guild.id)]
+                        music_queue = server_queue.find().sort("epoch_time",1)       
+                        song_count = server_queue.count_documents({})
+                        if song_count != 0:
+                            print(f"THere is a queue {song_count}")
+                            first_epoch = [x['epoch_time'] for x in music_queue][0]          
+                            print(f"first epoch is {first_epoch}")                        
+                            myquery = { "epoch_time": first_epoch }   
+                            first_doc =server_queue.find_one(myquery)                        
+                            file_path = first_doc['file_path']                       
+                            url = first_doc['url']   
+                            title = first_doc['title']   
+                            await self.download_audio(ctx, file_path, url, title)
+                            #first_song = self.music_queue.pop(0)
+                                                            #loop = asyncio.get_running_loop()
+                                                            #loop.create_task(first_song)
+                                                            
+                                                            #asyncio.run(first_song)
+                                                            
+                                                            #loop = asyncio.get_event_loop()
+                                                            #loop.create_task(first_song)
+                                                            #loop.run_until_complete(first_song)
+                            server_queue.delete_one(myquery)
+                            #await first_song
+                        else:
+                            print("no mo queue")
+                            self.temp_servers_playing.pop(ctx.guild.id)
+                            self.song_now_playing.pop(ctx.guild.id)
+                            await ctx.send("Queue has ended")
+                    except Exception as e:
+                        print(f"remove_and_run_queue exception: {e}")
+                if "delete_file" in kwargs:
+                    voice.play(disnake.FFmpegPCMAudio(source=a), after=lambda e: asyncio.run_coroutine_threadsafe(remove_and_run_queue(a), self.client.loop))
+                else:
+                    voice.play(disnake.FFmpegPCMAudio(source=a))
+                
+                    
         else:
             await ctx.send(
                 f"{ctx.author.name} is not in a VC. Sending file instead...",
@@ -117,7 +163,8 @@ class Vc(commands.Cog):
             else:
                 await ctx.send(file=disnake.File(a, filename=filename))
         # Delete command after the audio is done playing.
-        await ctx.message.delete()
+        if not "dont_delete" in kwargs:
+            await ctx.message.delete()
 
     @commands.command()
     @commands.bot_has_permissions(manage_messages=True)
@@ -416,7 +463,117 @@ class Vc(commands.Cog):
                 #
         else:
             await ctx.send("No matches lol.", delete_after=3)
+            
+    def wrap(func):
+        @wraps(func)
+        async def run(*args, loop=None, executor=None, **kwargs):
+            if loop is None:
+                loop = asyncio.get_event_loop()
+            pfunc = partial(func, *args, **kwargs)
+            return await loop.run_in_executor(executor, pfunc)
+        return run
+        
+    @wrap
+    def actual_dl(self, file_path, url):
+        ydl_opts= {
+           'format' : '251',
+           'outtmpl': file_path,
+           'nopart' : True
+          }        
+        with YoutubeDL(ydl_opts) as ydl:
+            ydl.download(url)
+            
+    @wrap
+    def get_title(self, url):
+        with YoutubeDL() as ydl: 
+            info_dict = ydl.extract_info(url, download=False)
+            title = info_dict.get('title', None)         
+        return title
+    async def download_audio(self,ctx, file_path, url, title=None):     
 
+        #await subprocess_runner.run_subprocess(coms)
+        start_time = time.time()
+        asyncio.run_coroutine_threadsafe(self.actual_dl(file_path, url), self.client.loop)        
+        #loop = asyncio.get_running_loop()
+        #title_task = loop.create_task(self.get_title(url))
+        if title is None:
+            title_task = asyncio.run_coroutine_threadsafe(self.get_title(url), self.client.loop)
+        print(f"tasks ran: {(time.time()-start_time):.2f}")
+        start_time = time.time()
+        while not os.path.exists(file_path):
+            await asyncio.sleep(0.1)        
+        print(f"file exists: {(time.time()-start_time):.2f}")
+        start_time = time.time()
+        asyncio.run_coroutine_threadsafe(self.vcplay(ctx, file_path, dont_delete=True, delete_file=True), self.client.loop)
+        if title is None:
+            while not title_task.done():
+                await asyncio.sleep(0.1)        
+        if title is None:
+            title = title_task.result()        
+        await ctx.send(f"Playing **{title}**...")  
+        self.song_now_playing[ctx.guild.id] = f"[{title}]({url})"
+        print(f"playing sent: {(time.time()-start_time):.2f}")
+    @commands.command(aliases=['p'])
+    async def play(self, ctx, url):        
+        
+        start_time = time.time()
+        voicestate = ctx.author.voice
+        if not voicestate:
+            await ctx.send("You ain't in a VC buhhhh")
+            return
+        random_uuid = uuid.uuid4()
+        file_path =  f"music_temp/{random_uuid}"
+        loop = asyncio.get_running_loop()
+        voice = disnake.utils.get(self.client.voice_clients, guild=ctx.guild)
+        if voice == None:
+            voice_channel = ctx.author.voice.channel
+            voice = await voice_channel.connect()
+        print(f"pre stuff: {(time.time()-start_time):.2f}")
+        if not voice.is_playing() and not ctx.guild.id in self.temp_servers_playing:            
+            loop.create_task(self.download_audio(ctx, file_path, url))
+            self.temp_servers_playing[ctx.guild.id] = 0 #temporarily adds to this dict to let bot now the server is playing music
+        else:
+            with YoutubeDL() as ydl: 
+                info_dict = ydl.extract_info(url, download=False)
+                title = info_dict.get('title', None) 
+            self.temp_servers_playing[ctx.guild.id] += 1
+            await ctx.send(f"Adding **{title}** to queue... ({self.temp_servers_playing[ctx.guild.id]})")            
+            server_queue = self.dbname[str(ctx.guild.id)]
+            item = {
+              "file_path" : file_path,
+              "title" : title,
+              "url" : url,
+              "epoch_time" : time.time()                    
+            }
+            server_queue.insert_one(item)
+            #self.music_queue.append(self.download_audio(ctx, coms, file_path, url))
 
+       
+        
+    @commands.command(aliases=['mq'])
+    @commands.bot_has_permissions(embed_links=True)
+    async def mqueue(self, ctx):        
+        server_queue = self.dbname[str(ctx.guild.id)]
+        music_queue = server_queue.find().sort("epoch_time",1)     
+        music_queue = '\n'.join([f"[{x['title']}]({x['url']})" for x in music_queue])
+        if music_queue:            
+            em = disnake.Embed(
+            title="💥 THE QUEUE 💥", description=music_queue
+            )
+            await ctx.send(embed=em)
+        else:
+            await ctx.send("Ain't no way bruh. There's no queue!! :skull:")
+            
+    @commands.command(aliases=['np'])
+    @commands.bot_has_permissions(embed_links=True)
+    async def nowplaying(self, ctx): 
+        np = self.song_now_playing[ctx.guild.id]
+        if np:
+            em = disnake.Embed(
+            title="🎧 NOW PLAYING 🎧", description=np
+            )
+            await ctx.send(embed=em)        
+        else:
+            await ctx.send("Nothin's playin rn :sob:")
 def setup(client):
     client.add_cog(Vc(client))

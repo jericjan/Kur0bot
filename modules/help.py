@@ -930,7 +930,7 @@ class Help(commands.Cog):
         )
         await ctx.send(embed=em)
 
-    @help.command(aliases=["getmap","getosu"])
+    @help.command(aliases=["getmap","getosu","getosumap2","getmap2","getosu2","getosumap3","getmap3","getosu3"])
     @commands.bot_has_permissions(embed_links=True)
     async def getosumap(self, ctx):
         em = disnake.Embed(
@@ -943,8 +943,42 @@ class Help(commands.Cog):
             name="**Example**",
             value="k.getosumap Kur0",
         )
+        em.add_field(
+            name="**Alternative**",
+            value="you can try k.getosumap2 and k.getosumap3 for a different method of grabbing maps.",
+        )        
         await ctx.send(embed=em)
 
+    @help.command(aliases=["mq"])
+    @commands.bot_has_permissions(embed_links=True)
+    async def mqueue(self, ctx):
+        em = disnake.Embed(
+            title="Not a music queue",
+            description="Does not show the queue of songs you've queued",
+        )
+        em.add_field(name="**Aliases**", value=",".join(ctx.command.aliases))
+        await ctx.send(embed=em)
+
+    @help.command(aliases=["p"])
+    @commands.bot_has_permissions(embed_links=True)
+    async def play(self, ctx):
+        em = disnake.Embed(
+            title="Not a music player",
+            description="Does not play a song in VC given a YT link",
+        )
+        em.add_field(name="**Syntax**", value=r"k.play <yt_url>", inline=False)
+        em.add_field(name="**Aliases**", value=",".join(ctx.command.aliases))
+        await ctx.send(embed=em)
+
+    @help.command(aliases=["np"])
+    @commands.bot_has_permissions(embed_links=True)
+    async def nowplaying(self, ctx):
+        em = disnake.Embed(
+            title="Not a nowplaying shower",
+            description="Does not show the currently playing song in VC",
+        )
+        em.add_field(name="**Aliases**", value=",".join(ctx.command.aliases))
+        await ctx.send(embed=em)
 
 def setup(client):
     client.add_cog(Help(client))
