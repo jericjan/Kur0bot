@@ -10,7 +10,7 @@ PyNaCl = "^1.4.0"
 gtts = "^2.2.2"
 pet-pet-gif = "^1.0.1"
 Flask = "^2.0.1"
-python-dateutil = "^2.8.2"
+python-dateutil = "*"
 yt-dlp = "^2022.8.19"
 mcrcon = "^0.7.0"
 saucenao-api = {git = "https://github.com/jericjan/saucenao_api.git"}
@@ -28,7 +28,9 @@ lorem = "^0.1.1"
 translators = "^5.2.2"
 opencv-python = "^4.6.0"
 ffmpegcv = "^0.2.3"
-pymongo = {extras = ["srv"], version = "^4.2.0"}
+pymongo = {extras = ["srv"], version = "3.12.3"}
+pipdeptree = "^2.3.1"
+ChatterBot = "1.0.4"
 
 [tool.poetry.dev-dependencies]
 

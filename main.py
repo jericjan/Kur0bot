@@ -17,7 +17,6 @@ import requests
 import threading
 import atexit
 import signal
-import importlib
 
 from dotenv import load_dotenv
 
@@ -67,42 +66,49 @@ async def log(text, printText=None):
     f.write(final)
     f.close()
 
+client.start_time = start_time
+client.log = log
 
-import modules.events
 
 
 client.sus_on = False
 
 
 print(f"{(time.time() - start_time):.2f}s - Importing Kur0's modules...")
-client.add_cog(modules.events.Events(client, start_time, log))
-client.load_extension("modules.vc")
-client.load_extension("modules.copypasta")
-client.load_extension("modules.help")
-client.load_extension("modules.ascii")
-client.load_extension("modules.reactions")
-client.load_extension("modules.others.clip")
-client.load_extension("modules.others.download")
-client.load_extension("modules.others.emote_sticker")
-client.load_extension("modules.others.badapple")
-client.load_extension("modules.others.pet")
-client.load_extension("modules.others.sauce")
-client.load_extension("modules.others.144p")
-client.load_extension("modules.others.when")
-client.load_extension("modules.others.checkcomment")
-client.load_extension("modules.others.coinflip")
-client.load_extension("modules.others.superchat")
-client.load_extension("modules.others.gif")
-client.load_extension("modules.others.resize")
-client.load_extension("modules.others.deepl")
-client.load_extension("modules.others.karaoke")
-client.load_extension("modules.others.hall_of_shame")
-client.load_extension("modules.others.getosumap")
-client.load_extension("modules.others.vergil")
-client.load_extension("modules.pacifam_only")
-client.load_extension("modules.kur0_only")
-client.load_extension("modules.sus")
-client.load_extension("modules.tasks")
+module_paths = (
+"modules.events",
+"modules.loaders",
+"modules.vc",
+"modules.copypasta",
+"modules.help",
+"modules.ascii",
+"modules.reactions",
+"modules.others.clip",
+"modules.others.download",
+"modules.others.emote_sticker",
+"modules.others.badapple",
+"modules.others.pet",
+"modules.others.sauce",
+"modules.others.144p",
+"modules.others.when",
+"modules.others.checkcomment",
+"modules.others.coinflip",
+"modules.others.superchat",
+"modules.others.gif",
+"modules.others.resize",
+"modules.others.deepl",
+"modules.others.karaoke",
+"modules.others.hall_of_shame",
+"modules.others.getosumap",
+"modules.others.vergil",
+"modules.pacifam_only",
+"modules.kur0_only",
+"modules.sus",
+"modules.tasks"
+)
+for module in module_paths:
+    client.load_extension(module)
+    print(f"{(time.time() - start_time):.2f}s - {module} loaded")
 
 print(f"{(time.time() - start_time):.2f}s - Done!")
 
@@ -113,34 +119,7 @@ async def common(ctx):
     await log(str(text))
 
 
-@client.command(aliases=["refresh"])
-@commands.is_owner()
-async def reload(ctx, name):
-    if name == "events":
-        try:
-            client.get_cog("Events").cog_unload()
-            client.remove_cog("Events")
-        except:
-            print("epic failure")
-        importlib.reload(modules.events)
-        client.add_cog(modules.events.Events(client, start_time, log))
-    else:
-        client.reload_extension(name)
-    await ctx.send(f"{name} reloaded!")
 
-
-@client.command()
-@commands.is_owner()
-async def load(ctx, name):
-    client.load_extension(name)
-    await ctx.send(f"{name} loaded!")
-
-
-@client.command()
-@commands.is_owner()
-async def unload(ctx, name):
-    client.unload_extension(name)
-    await ctx.send(f"{name} unloaded!")
 
 
 from disnake import Webhook

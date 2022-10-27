@@ -13,6 +13,8 @@ class Clip(commands.Cog):
     @commands.command()
     @commands.bot_has_permissions(manage_messages=True)
     async def fastclip(self, ctx, link, start, end, *, filename):
+        start = start.strip(" ")
+        end = end.strip(" ")       
         filename = filename.replace(" ", "_")
         zeroes = "00:00:00"
         if len(start) < 8:
@@ -72,6 +74,9 @@ class Clip(commands.Cog):
         out, stdout, stderr = await subprocess_runner.run_subprocess(coms)
         dirlinks = stdout.decode("utf-8").split("\n")
         vid = dirlinks[0]
+        if vid.endswith("index.m3u8"):
+            await ctx.send("yeah sorry bud, can't clip this one. m guessing it's a stream and it hasn't finished processing. come back later and try again homie.")
+            return
         if seconds < 30:
             coms = [
                 "ffmpeg",
@@ -106,6 +111,7 @@ class Clip(commands.Cog):
                 f"{filename}_temp0.mp4",
             ]
         await message.edit(content="Downloading... This will take a while...")
+        print(shjoin(coms))
         process, stdout, stderr = await subprocess_runner.run_subprocess(coms)
 
         def max_le(seq, val):

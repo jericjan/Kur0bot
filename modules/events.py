@@ -8,7 +8,7 @@ import json
 import asyncio
 from gtts import gTTS
 import difflib
-from datetime import datetime
+from datetime import datetime, timedelta
 import pytz
 import os
 
@@ -58,10 +58,10 @@ with open("modules/commands.json") as f:
 
 
 class Events(commands.Cog):
-    def __init__(self, client, start_time, log):
+    def __init__(self, client):
         self.client = client
-        self.start_time = start_time
-        self.log = log
+        self.start_time = self.client.start_time
+        self.log = self.client.log
 
     @commands.Cog.listener()
     async def on_ready(self):
@@ -349,10 +349,15 @@ class Events(commands.Cog):
                 await message.channel.send(file=disnake.File("videos/friday.webm"))
 
         if "wednesday" in msg:
-            tz_str_list = ["Etc/GMT+12","Etc/GMT-14","Etc/GMT-12"]
+            tz_str_list = ["Etc/GMT+12","Etc/GMT-14","Etc/GMT-12"] #signs are opposite for some reason
             tz_day_list = [datetime.now(pytz.timezone(x)).strftime("%A") for x in tz_str_list]
+            
             if "Wednesday" in tz_day_list:
-                await message.channel.send(file=disnake.File("videos/wednesday.mp4"))
+                today = datetime.now(pytz.timezone("Etc/GMT+12"))                
+                thursday = datetime(today.year, today.month, today.day + ((3-today.weekday()) % 7 ), tzinfo = pytz.timezone("Etc/GMT+12"))
+                epoch = int(thursday.timestamp())
+                epoch = f"Walter Wednesday ends <t:{epoch}:R>"                
+                await message.channel.send(epoch, file=disnake.File("videos/wednesday.mp4"))
 
         if any(word in msg for word in ["10:49pm","10:49 pm","10 49 pm","10 49pm"]):
             await message.channel.send(file=disnake.File("videos/10_49_pm.mp4"))
@@ -471,3 +476,16 @@ class Events(commands.Cog):
             await ctx.send(error)
         await self.log(error, False)
         raise error  # re-raise the error so all the errors will still show up in console
+
+    ################################ON_SLASH_COMMAND_ERROR#############
+    @commands.Cog.listener()
+    async def on_slash_command_error(self, inter, error):
+        def get_full_class_name(obj):
+            module = obj.__class__.__module__
+            if module is None or module == str.__class__.__module__:
+                return obj.__class__.__name__
+            return module + "." + obj.__class__.__name__    
+            
+        await inter.followup.send(f"{get_full_class_name(error)}: {e}")
+def setup(client):
+    client.add_cog(Events(client))

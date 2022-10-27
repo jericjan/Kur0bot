@@ -9,6 +9,7 @@ import json
 import re
 from urllib.parse import unquote
 from myfunctions import subprocess_runner, file_handler, msg_link_grabber
+from yt_dlp import YoutubeDL
 limiter = AsyncLimiter(1, 1)
 
 
@@ -28,9 +29,73 @@ class Download(commands.Cog):
                 pass
             pass
 
-    @commands.command()
+
+
+    @commands.slash_command(name="download")
+    async def s_download(self, inter, link: str): 
+        """
+        Downloads a video. Still early, mostly works on YouTube.
+
+        Parameters
+        ----------
+        link: The URL you want to download
+        """    
+        await inter.response.defer(ephemeral=True)
+        self.did_download_edit = False
+        def get_full_class_name(obj):
+            module = obj.__class__.__module__
+            if module is None or module == str.__class__.__module__:
+                return obj.__class__.__name__
+            return module + "." + obj.__class__.__name__    
+        try:
+        
+            async def send_vid(filename):
+                    await inter.edit_original_response(f"Done!")
+                    webhook = await inter.channel.create_webhook(
+                        name=inter.author.display_name
+                    )
+                    await webhook.send(
+                        content=f"{inter.author.mention}\n<{link}>",
+                        file=disnake.File(filename),
+                        username=inter.author.display_name,
+                        avatar_url=inter.author.display_avatar.url,
+                    )
+                    await webhook.delete()
+                    file_handler.delete_file(filename)
+            def my_hook(d):
+                if d['status'] == 'finished':
+                    filename = d['filename']  
+                    self.client.loop.create_task(
+                        send_vid(filename)
+                        )
+                    
+                    # asyncio.run_coroutine_threadsafe(
+                        # inter.edit_original_response(file=filename), 
+                        # self.client.loop)
+                    return
+                if d['status'] == 'downloading':   
+                    if not self.did_download_edit:
+                        self.client.loop.create_task(
+                            inter.edit_original_response(f"Downloading...\n{d['_eta_str']} remaining")
+                            )
+                        self.did_download_edit = True
+                    # asyncio.run_coroutine_threadsafe(
+                        # inter.edit_original_response("Downloading..."), 
+                        # ,
+                        # self.client.loop)
+                    
+            ydl_opts= {
+               'format' : 'b',
+               'progress_hooks': [my_hook],
+              }        
+            with YoutubeDL(ydl_opts) as ydl:
+                ydl.download(link)
+        except Exception as e:
+            await inter.edit_original_response(f"{get_full_class_name(e)} - {e}")
+            
+    @commands.command(name="download")
     @commands.bot_has_permissions(manage_messages=True)
-    async def download(self, ctx, link=None):  # reddit, facebook, instagram, tiktok, yt
+    async def p_download(self, ctx, link=None):  # reddit, facebook, instagram, tiktok, yt
         link = await msg_link_grabber.grab_link(ctx, link)
         if "reddit.com" in link or "v.redd.it" in link:
             cookiecoms = [
@@ -307,7 +372,8 @@ class Download(commands.Cog):
             if proc.returncode != 0:
                 response = await proc.stdout.read()
                 response = response.decode("utf-8")
-                await message.edit(content=response)
+                if response:
+                    await message.edit(content=response)
                 await ctx.send("epic fail <a:trollplane:934777423881445436>")
                 return
             await message.edit(content="Almost there...")

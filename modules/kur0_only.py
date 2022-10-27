@@ -288,6 +288,17 @@ class Kur0only(commands.Cog):
         load_dotenv(override=True)
         await ctx.send("env variables reloaded!")
 
-
+    @commands.command()
+    @commands.is_owner()
+    async def editmsg(self, ctx, msg_id: disnake.Message, *, msg):
+        await msg_id.edit(content=msg)
+        await ctx.send("Done!")
+        
+    @commands.command()
+    @commands.is_owner()
+    async def send(self, ctx, ch_id: disnake.TextChannel, *, msg):
+        await ch_id.send(msg)    
+        await ctx.send("Done!")
+    
 def setup(client):
     client.add_cog(Kur0only(client))

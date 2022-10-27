@@ -91,8 +91,15 @@ class Vc(commands.Cog):
                             self.temp_servers_playing.pop(ctx.guild.id)
                             self.song_now_playing.pop(ctx.guild.id)
                             await ctx.send("Queue has ended")
+                    except KeyError:
+                        pass
                     except Exception as e:
-                        print(f"remove_and_run_queue exception: {e}")
+                        def get_full_class_name(obj):
+                            module = obj.__class__.__module__
+                            if module is None or module == str.__class__.__module__:
+                                return obj.__class__.__name__
+                            return module + "." + obj.__class__.__name__                    
+                        print(f"remove_and_run_queue exception: {get_full_class_name(e)}: {e}")
                 if "delete_file" in kwargs:
                     voice.play(disnake.FFmpegPCMAudio(source=a), after=lambda e: asyncio.run_coroutine_threadsafe(remove_and_run_queue(a), self.client.loop))
                 else:
@@ -161,7 +168,10 @@ class Vc(commands.Cog):
                 else:
                     await ctx.send(file=disnake.File(a, filename=filename))
             else:
-                await ctx.send(file=disnake.File(a, filename=filename))
+                if "custom_name" in kwargs:
+                    await ctx.send(file=disnake.File(a, filename=kwargs['custom_name']))
+                else:
+                    await ctx.send(file=disnake.File(a, filename=filename))
         # Delete command after the audio is done playing.
         if not "dont_delete" in kwargs:
             await ctx.message.delete()
@@ -575,5 +585,13 @@ class Vc(commands.Cog):
             await ctx.send(embed=em)        
         else:
             await ctx.send("Nothin's playin rn :sob:")
+            
+    @commands.command(aliases=['ultrakill'])
+    async def sam(self, ctx, *, msg):             
+        id = uuid.uuid4()
+        file_path = f'sam/{id}.wav'
+        coms = ['sam/sam', '-wav', file_path, msg]
+        out, stdout, stderr = await subprocess_runner.run_subprocess(coms)
+        await self.vcplay(ctx, file_path, delete_file=True, custom_name="sam.wav")
 def setup(client):
     client.add_cog(Vc(client))
