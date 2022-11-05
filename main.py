@@ -106,9 +106,10 @@ module_paths = (
 "modules.sus",
 "modules.tasks"
 )
+
 for module in module_paths:
     client.load_extension(module)
-    print(f"{(time.time() - start_time):.2f}s - {module} loaded")
+    print(f"{(time.time() - start_time):.2f}s - {module} loaded")    
 
 print(f"{(time.time() - start_time):.2f}s - Done!")
 

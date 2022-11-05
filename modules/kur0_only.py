@@ -6,7 +6,7 @@ import glob
 import json
 from lorem.text import TextLorem
 import aiohttp
-from dotenv import load_dotenv
+from dotenv import load_dotenv, set_key, find_dotenv
 from myfunctions import subprocess_runner
 
 
@@ -63,11 +63,25 @@ class Kur0only(commands.Cog):
             async with session.get(fb_url) as response:
                 fb_json = await response.json()
         valid_token = fb_json['data']['is_valid']
-        epoch_expires = f"<t:{fb_json['data']['expires_at']}:R>"
+        epoch_expires = "**Never**" if fb_json['data']['expires_at'] == 0 else f"<t:{fb_json['data']['expires_at']}:R>"
+        epoch_access_expires = f"<t:{fb_json['data']['data_access_expires_at']}:R>"
         if not valid_token:
             await msg.edit(content=f"{msg.content}\n{fb_json['data']['error']['message']}")
             return
-        await ctx.send(f"Token expires {epoch_expires}")
+        await ctx.send(f"Token expires {epoch_expires}\nAccess expires {epoch_access_expires}")
+        # fb_url = f"https://graph.facebook.com/v14.0/oauth/access_token?" \
+                 # f"grant_type=fb_exchange_token&" \
+                 # f"client_id={fb_app_id}&" \
+                 # f"client_secret={fb_app_secret}&" \
+                 # f"fb_exchange_token={access_token}"
+        # async with aiohttp.ClientSession() as session:
+            # async with session.get(fb_url) as response:
+                # fb_json = await response.json()        
+        # new_token = fb_json['access_token']
+        # dotenv_file = find_dotenv()
+        # set_key(dotenv_file,"FB_ACCESS_TOKEN", new_token)
+        # load_dotenv(override=True)
+        # access_token = os.getenv("FB_ACCESS_TOKEN")        
         msg = await msg.edit(content=f"{msg.content}Done\nChecking for updates...")
         coms = ["rclone/rclone", "selfupdate"]
         out, stdout, stderr = await subprocess_runner.run_subprocess(coms)

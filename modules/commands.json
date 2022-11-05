@@ -88,7 +88,8 @@
     "pikamee",
     "waterphone",
     "boowomp",
-	"mgr"
+	"mgr",
+	"sam"
   ],
   "translate": [
 	"nihongo",
@@ -109,7 +110,8 @@
   "not moosic": [
 	"play",
 	"mqueue",
-	"nowplaying"
+	"nowplaying",
+	"skip"
   ],  
   "TTS": [
     "just do ] while in VC (\"k.help tts\" for more info)"
@@ -141,6 +143,8 @@
     "rs",
 	"dotenv",
 	"getosumap3",
-	"getosumap2"
+	"getosumap2",
+	"send",
+	"editmsg"
   ]
 }

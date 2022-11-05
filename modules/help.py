@@ -980,5 +980,25 @@ class Help(commands.Cog):
         em.add_field(name="**Aliases**", value=",".join(ctx.command.aliases))
         await ctx.send(embed=em)
 
+    @help.command(aliases=["s"])
+    @commands.bot_has_permissions(embed_links=True)
+    async def skip(self, ctx):
+        em = disnake.Embed(
+            title="Not a song skipper",
+            description="Does not skip the currently playing song in VC",
+        )
+        em.add_field(name="**Aliases**", value=",".join(ctx.command.aliases))
+        await ctx.send(embed=em)
+
+    @help.command(aliases=["ultrakill"])
+    @commands.bot_has_permissions(embed_links=True)
+    async def sam(self, ctx):
+        em = disnake.Embed(
+            title="Sam TTS",
+            description="Plays Sam TTS, commonly known as the Ultrakill TTS, in VC",
+        )
+        em.add_field(name="**Aliases**", value=",".join(ctx.command.aliases))
+        await ctx.send(embed=em)
+
 def setup(client):
     client.add_cog(Help(client))

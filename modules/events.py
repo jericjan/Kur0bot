@@ -365,10 +365,19 @@ class Events(commands.Cog):
         if any(word in msg for word in ["deez", "deez nuts"]):
             await message.channel.send(random.choice(deez_replies), delete_after=3.0)
 
+
+    def get_full_class_name(self, obj):
+        module = obj.__class__.__module__
+        if module is None or module == str.__class__.__module__:
+            return obj.__class__.__name__
+        return module + "." + obj.__class__.__name__  
+
     ################################ON_COMMAND_ERROR#############
     @commands.Cog.listener()
-    async def on_command_error(self, ctx, error):
-
+    async def on_command_error(self, ctx, error):    
+        def full_error(err):
+            return f"{self.get_full_class_name(err)}: {err}"
+            
         if isinstance(error, commands.CommandInvokeError):
             error = error.original
         if isinstance(error, commands.CommandOnCooldown):
@@ -455,9 +464,9 @@ class Events(commands.Cog):
                         "Yo dawg. I can't acess that channel/thread. Give me perms bruv."
                     )
                 else:
-                    await ctx.send(error)
+                    await ctx.send(full_error(error))
             else:
-                await ctx.send(error)
+                await ctx.send(full_error(error))
             await self.log(error, False)
         elif isinstance(error, disnake.ClientException):
             if str(error) == "Already playing audio.":
@@ -465,7 +474,7 @@ class Events(commands.Cog):
                     "I'm still playing smth rn bruh. Hold on.", delete_after=3
                 )
             else:
-                await ctx.send(error)
+                await ctx.send(full_error(error))
                 # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
         else:
             print(f"ERROR: {error}")
@@ -473,19 +482,13 @@ class Events(commands.Cog):
                 if not str(i).startswith("_"):
                     print(f"{i}: {getattr(error,i)}\n")
             print(f"invoked command: {ctx.command}")
-            await ctx.send(error)
+            await ctx.send(full_error(error))
         await self.log(error, False)
         raise error  # re-raise the error so all the errors will still show up in console
 
     ################################ON_SLASH_COMMAND_ERROR#############
     @commands.Cog.listener()
-    async def on_slash_command_error(self, inter, error):
-        def get_full_class_name(obj):
-            module = obj.__class__.__module__
-            if module is None or module == str.__class__.__module__:
-                return obj.__class__.__name__
-            return module + "." + obj.__class__.__name__    
-            
-        await inter.followup.send(f"{get_full_class_name(error)}: {e}")
+    async def on_slash_command_error(self, inter, error):           
+        await inter.followup.send(f"{self.get_full_class_name(error)}: {e}")
 def setup(client):
     client.add_cog(Events(client))
