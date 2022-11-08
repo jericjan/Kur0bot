@@ -37,15 +37,19 @@ signal.signal(signal.SIGINT, goodbye)
 # signal.signal(signal.SIGSTOP, goodbye)
 signal.signal(signal.SIGHUP, goodbye)
 
-headers = {"Authorization": f"Bot {os.getenv('TOKEN')}"}
-r = requests.get(
-    url="https://discord.com/api/v9/channels/809247468084133898", headers=headers
-)
-if r.status_code == 429:
-    print(f"{(time.time() - start_time):.2f}s - Rate limited again lmao")
-else:
-    print(f"{(time.time() - start_time):.2f}s - Not rate limited. ({r.status_code})")
+def rate_limit_check():
 
+    headers = {"Authorization": f"Bot {os.getenv('TOKEN')}"}
+    r = requests.get(
+        url="https://discord.com/api/v9/channels/809247468084133898", headers=headers
+    )
+    if r.status_code == 429:
+        print(f"{(time.time() - start_time):.2f}s - Rate limited again lmao")
+    else:
+        print(f"{(time.time() - start_time):.2f}s - Not rate limited. ({r.status_code})")
+
+rlimit = threading.Thread(target=rate_limit_check)
+rlimit.start()
 
 intents = disnake.Intents().all()
 game = disnake.Activity(name="sus gaming | k.help", type=disnake.ActivityType.playing)
@@ -295,8 +299,11 @@ async def tasks(ctx):
 
 @client.command()
 async def ping(ctx):
-    await ctx.send(f"My ping is {round (client.latency * 1000)}ms!")
-
+    start_time = time.time()
+    msg = await ctx.send(f"My ping is {round (client.latency * 1000)}ms")
+    send_time = (time.time() - start_time)*1000
+    await msg.edit(content=f"{msg.content} but it took {send_time:.2f}ms to send this message")
+    
 async def wait_until(dt):
     # sleep until the specified datetime
     now = datetime.now()

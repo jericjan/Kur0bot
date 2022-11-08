@@ -574,14 +574,28 @@ class Vc(commands.Cog):
         else:
             await ctx.send("Nothing is playing rn bruh. can't skip shit")
         
- 
             
     @commands.command(aliases=['ultrakill'])
     async def sam(self, ctx, *, msg):             
         id = uuid.uuid4()
         file_path = f'sam/{id}.wav'
         coms = ['sam/sam', '-wav', file_path, msg]
-        out, stdout, stderr = await subprocess_runner.run_subprocess(coms)
+        try:
+            await asyncio.wait_for(subprocess_runner.run_subprocess(coms), timeout=10)
+        except asyncio.TimeoutError as e:            
+            coms = "ps -aef | grep sam/sam | awk '{print $2}' | xargs kill -9 $1"
+            try:
+                await subprocess_runner.run_subprocess(coms, shell=True)
+            except subprocess_runner.SubprocessError as e:
+                pass
+            await ctx.send("Timed out. I can't do it :(")
+        except subprocess_runner.SubprocessError as e:
+            if e.err == 1:
+                await ctx.send("I don't wtf you want me to say. Try again.")
+            elif e.err == -6:
+                await ctx.send("Whoops. That's a little too much text, buckaroo. Try again.")
+            else:
+                await ctx.send(f"Error ({e.err}): {e.message}"[:2000])
         await self.vcplay(ctx, file_path, delete_file=True, custom_name="sam.wav")
 def setup(client):
     client.add_cog(Vc(client))
