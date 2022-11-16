@@ -12,21 +12,20 @@ from myfunctions import msg_link_grabber
 
 
 class Sauce(commands.Cog):
-
     @commands.command()
     async def altsauce(self, ctx, link=None):
         link = await msg_link_grabber.grab_link(ctx, link)
         print(link)
         api_key = os.getenv("SAUCENAO_KEY")
         api_url = f"https://saucenao.com/search.php?api_key={api_key}&db=999&output_type=2&numres=6&url={link}"
-        msg = await ctx.send("Getting sauce...")   
-        try:    
+        msg = await ctx.send("Getting sauce...")
+        try:
             async with aiohttp.ClientSession() as session:
                 async with session.get(api_url) as resp:
                     sauce_json = await resp.json()
-            short_remaining = sauce_json['header']['short_remaining']
-            long_remaining = sauce_json['header']['long_remaining']
-            status = sauce_json['header']['status']
+            short_remaining = sauce_json["header"]["short_remaining"]
+            long_remaining = sauce_json["header"]["long_remaining"]
+            status = sauce_json["header"]["status"]
             if status == 0:
                 status_meaning = "Success!"
             elif status > 0:
@@ -44,20 +43,20 @@ class Sauce(commands.Cog):
         except Exception as e:
             await msg.edit(f"I fail. Reason:\n{e}")
             return
-        results = sauce_json['results']
+        results = sauce_json["results"]
         print(f"{len(results)} results!")
         embed_dict = {}
         for idx, val in enumerate(results):
             print(f"this thing is:\n{val}")
-            title = val['data']['title']
+            title = val["data"]["title"]
             description = f"{val['header']['similarity']}% accurate"
             try:
-                author = val['data']['author_name']
+                author = val["data"]["author_name"]
             except:
-                author = val['data']['member_name']
-            image = val['header']['thumbnail']      
+                author = val["data"]["member_name"]
+            image = val["header"]["thumbnail"]
             try:
-                urls = val['data']['ext_urls'][0]
+                urls = val["data"]["ext_urls"][0]
                 site_name = re.search(r"(?<=https:\/\/)[^\/]*", urls)
                 embed_dict[idx] = disnake.Embed(
                     title=title,
@@ -81,8 +80,6 @@ class Sauce(commands.Cog):
 
         paginator = ButtonPaginator(segments=embed_list)
         await paginator.send(ctx)
-        
-        
 
     @commands.command(aliases=["findsauce", "getsauce"])
     async def sauce(self, ctx, link=None):

@@ -9,13 +9,14 @@ class SubprocessError(Exception):
         super().__init__(self.message)
 
     def __str__(self):
-            return f'{self.err} -> {self.message}'
+        return f"{self.err} -> {self.message}"
+
 
 async def run_subprocess(coms, doPrint=False, shell=None):
     if shell:
         process = await asyncio.create_subprocess_shell(
             coms, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.STDOUT
-        )    
+        )
     else:
         process = await asyncio.create_subprocess_exec(
             *coms, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.STDOUT
@@ -29,9 +30,9 @@ async def run_subprocess(coms, doPrint=False, shell=None):
     else:
         print(shjoin(coms))
         print(f"stdout ({return_code}):\n\033[;31m{stdout.decode('utf-8')}\033[0m")
-        raise SubprocessError(return_code,stdout.decode('utf-8'))
+        raise SubprocessError(return_code, stdout.decode("utf-8"))
     if stderr:
         print(shjoin(coms))
         print(f"stderr ({return_code}):\n\033[;31m{stderr.decode('utf-8')}\033[0m")
-        raise SubprocessError(return_code,stdout.decode('utf-8'))
+        raise SubprocessError(return_code, stdout.decode("utf-8"))
     return process, stdout, stderr

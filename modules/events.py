@@ -196,7 +196,7 @@ class Events(commands.Cog):
         if message.author == self.client.user:
             return
         msg = message.content.lower()
-        
+
         ################SUSSY REPLIES##################
         if message.channel.id == 850380119646142504:  # sus-town
             if any(word in msg for word in sus_words):
@@ -213,14 +213,10 @@ class Events(commands.Cog):
                     await message.channel.send(random.choice(sus_replies))
                     await self.log("sussy reply", False)
         if "amgus" in msg:
-            await message.channel.send(
-                random.choice(sugma_replies), delete_after=3.0
-            )
+            await message.channel.send(random.choice(sugma_replies), delete_after=3.0)
             await self.log("sussy reply", False)
         if "amogus" in msg:
-            await message.channel.send(
-                random.choice(sugoma_replies), delete_after=3.0
-            )
+            await message.channel.send(random.choice(sugoma_replies), delete_after=3.0)
             await self.log("sussy reply", False)
         if "sushi" in msg:
             await message.channel.send(
@@ -231,17 +227,19 @@ class Events(commands.Cog):
         if "pog" in msg:
             await message.channel.send("poggusus", delete_after=3.0)
             await self.log("sussy reply", False)
-            
-        #le strepto
-        if any(word in msg for word in ["feet","foot","toe"]):
+
+        # le strepto
+        if any(word in msg for word in ["feet", "foot", "toe"]):
             strepto_in_server = await message.guild.getch_member(268188421871108097)
             if strepto_in_server:
-                await message.channel.send("<@268188421871108097>") #pings strepto
-        
-        #PACIFAM ONLY
+                await message.channel.send("<@268188421871108097>")  # pings strepto
+
+        # PACIFAM ONLY
         if message.guild.id == 603147860225032192:
             if "dox" in msg:
-                await message.channel.send(file=disnake.File("videos/professional_doxxers.mp4"))
+                await message.channel.send(
+                    file=disnake.File("videos/professional_doxxers.mp4")
+                )
         #############TWITTER LINK GIVER####################
 
         if "twitter.com" in msg:
@@ -349,35 +347,47 @@ class Events(commands.Cog):
                 await message.channel.send(file=disnake.File("videos/friday.webm"))
 
         if "wednesday" in msg:
-            tz_str_list = ["Etc/GMT+12","Etc/GMT-14","Etc/GMT-12"] #signs are opposite for some reason
-            tz_day_list = [datetime.now(pytz.timezone(x)).strftime("%A") for x in tz_str_list]
-            
-            if "Wednesday" in tz_day_list:
-                today = datetime.now(pytz.timezone("Etc/GMT+12"))                
-                thursday = datetime(today.year, today.month, today.day + ((3-today.weekday()) % 7 ), tzinfo = pytz.timezone("Etc/GMT+12"))
-                epoch = int(thursday.timestamp())
-                epoch = f"Walter Wednesday ends <t:{epoch}:R>"                
-                await message.channel.send(epoch, file=disnake.File("videos/wednesday.mp4"))
+            tz_str_list = [
+                "Etc/GMT+12",
+                "Etc/GMT-14",
+                "Etc/GMT-12",
+            ]  # signs are opposite for some reason
+            tz_day_list = [
+                datetime.now(pytz.timezone(x)).strftime("%A") for x in tz_str_list
+            ]
 
-        if any(word in msg for word in ["10:49pm","10:49 pm","10 49 pm","10 49pm"]):
+            if "Wednesday" in tz_day_list:
+                today = datetime.now(pytz.timezone("Etc/GMT+12"))
+                thursday = datetime(
+                    today.year,
+                    today.month,
+                    today.day + ((3 - today.weekday()) % 7),
+                    tzinfo=pytz.timezone("Etc/GMT+12"),
+                )
+                epoch = int(thursday.timestamp())
+                epoch = f"Walter Wednesday ends <t:{epoch}:R>"
+                await message.channel.send(
+                    epoch, file=disnake.File("videos/wednesday.mp4")
+                )
+
+        if any(word in msg for word in ["10:49pm", "10:49 pm", "10 49 pm", "10 49pm"]):
             await message.channel.send(file=disnake.File("videos/10_49_pm.mp4"))
-            
+
         if any(word in msg for word in ["deez", "deez nuts"]):
             await message.channel.send(random.choice(deez_replies), delete_after=3.0)
-
 
     def get_full_class_name(self, obj):
         module = obj.__class__.__module__
         if module is None or module == str.__class__.__module__:
             return obj.__class__.__name__
-        return module + "." + obj.__class__.__name__  
+        return module + "." + obj.__class__.__name__
 
     ################################ON_COMMAND_ERROR#############
     @commands.Cog.listener()
-    async def on_command_error(self, ctx, error):    
+    async def on_command_error(self, ctx, error):
         def full_error(err):
             return f"{self.get_full_class_name(err)}: {err}"
-            
+
         if isinstance(error, commands.CommandInvokeError):
             error = error.original
         if isinstance(error, commands.CommandOnCooldown):
@@ -488,7 +498,9 @@ class Events(commands.Cog):
 
     ################################ON_SLASH_COMMAND_ERROR#############
     @commands.Cog.listener()
-    async def on_slash_command_error(self, inter, error):           
+    async def on_slash_command_error(self, inter, error):
         await inter.followup.send(f"{self.get_full_class_name(error)}: {e}")
+
+
 def setup(client):
     client.add_cog(Events(client))

@@ -2,23 +2,24 @@ from disnake.ext import commands
 import modules.events
 import importlib
 
+
 class Loaders(commands.Cog):
     def __init__(self, client):
         self.client = client
         self.start_time = self.client.start_time
         self.log = self.client.log
-        
+
     # def reload_module(self, name):
-        # if name == "events":
-            # try:
-                # self.client.get_cog("Events").cog_unload()
-                # self.client.remove_cog("Events")
-            # except:
-                # print("epic failure")
-            # importlib.reload(modules.events)
-            # self.client.add_cog(modules.events.Events( self.client, self.start_time, self.log))
-        # else:
-            # self.client.reload_extension(name)
+    # if name == "events":
+    # try:
+    # self.client.get_cog("Events").cog_unload()
+    # self.client.remove_cog("Events")
+    # except:
+    # print("epic failure")
+    # importlib.reload(modules.events)
+    # self.client.add_cog(modules.events.Events( self.client, self.start_time, self.log))
+    # else:
+    # self.client.reload_extension(name)
 
     @commands.command(name="reload", aliases=["refresh"])
     @commands.is_owner()
@@ -58,7 +59,6 @@ class Loaders(commands.Cog):
         self.client.load_extension(name)
         await inter.response.send_message(f"{name} loaded!", ephemeral=True)
 
-
     @commands.command(name="unload")
     @commands.is_owner()
     async def p_unload(self, ctx, name):
@@ -78,7 +78,6 @@ class Loaders(commands.Cog):
         self.client.unload_extension(name)
         await inter.response.send_message(f"{name} unloaded!", ephemeral=True)
 
+
 def setup(client):
     client.add_cog(Loaders(client))
-
-

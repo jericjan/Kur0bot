@@ -14,13 +14,13 @@ class Clip(commands.Cog):
     @commands.bot_has_permissions(manage_messages=True)
     async def fastclip(self, ctx, link, start, end, *, filename):
         start = start.strip(" ")
-        end = end.strip(" ")       
+        end = end.strip(" ")
         filename = filename.replace(" ", "_")
         zeroes = "00:00:00"
         if len(start) < 8:
-            start = zeroes[:-len(start)]+start
+            start = zeroes[: -len(start)] + start
         if len(end) < 8:
-            end = zeroes[:-len(end)]+end            
+            end = zeroes[: -len(end)] + end
         if (
             re.match("\d{2}(:|;)\d{2}(:|;)\d{2}", start) != None
             and re.match("\d{2}(:|;)\d{2}(:|;)\d{2}", end) != None
@@ -31,11 +31,19 @@ class Clip(commands.Cog):
             await ctx.send("Timestamps are wrong. Please provide it in HH:MM:SS")
             return
 
-        start = start.replace(";",":")
-        end = end.replace(";",":")
+        start = start.replace(";", ":")
+        end = end.replace(";", ":")
 
         message = await ctx.send("Fetching url...")
-        coms = ["yt-dlp", "-g", "-f", "b", "--youtube-skip-dash-manifest", "--no-warnings", link]
+        coms = [
+            "yt-dlp",
+            "-g",
+            "-f",
+            "b",
+            "--youtube-skip-dash-manifest",
+            "--no-warnings",
+            link,
+        ]
         startsplit = start.split(":")
         shour = startsplit[0]
         sminute = startsplit[1]
@@ -75,7 +83,9 @@ class Clip(commands.Cog):
         dirlinks = stdout.decode("utf-8").split("\n")
         vid = dirlinks[0]
         if vid.endswith("index.m3u8"):
-            await ctx.send("yeah sorry bud, can't clip this one. m guessing it's a stream and it hasn't finished processing. come back later and try again homie.")
+            await ctx.send(
+                "yeah sorry bud, can't clip this one. m guessing it's a stream and it hasn't finished processing. come back later and try again homie."
+            )
             return
         if seconds < 30:
             coms = [
@@ -169,14 +179,14 @@ class Clip(commands.Cog):
         process, stdout, stderr = await subprocess_runner.run_subprocess(coms)
         timelist_str = stdout.decode("utf-8").strip().split("\n")
         print(timelist_str)
-        
+
         def isfloat(num):
             try:
                 float(num)
                 return True
             except ValueError:
                 return False
-     
+
         timelist_float = [float(i) for i in timelist_str if isfloat(i)]
         timelist_float.sort()
         print(timelist_float)
@@ -312,7 +322,7 @@ class Clip(commands.Cog):
         await ctx.send(ctx.message.author.mention)
         file_handler.delete_file(f"{filename}.mp4")
         file_handler.delete_file(f"{filename}_temp0.mp4")
-        file_handler.delete_file(f"{filename}_temp.mp4")        
+        file_handler.delete_file(f"{filename}_temp.mp4")
 
     ############################################################################
     @commands.command()
@@ -330,7 +340,15 @@ class Clip(commands.Cog):
             return
 
         message = await ctx.send("Fetching url...")
-        coms = ["yt-dlp", "-g", "-f", "b", "--youtube-skip-dash-manifest", "--no-warnings", link]
+        coms = [
+            "yt-dlp",
+            "-g",
+            "-f",
+            "b",
+            "--youtube-skip-dash-manifest",
+            "--no-warnings",
+            link,
+        ]
         startsplit = start.split(":")
         shour = startsplit[0]
         sminute = startsplit[1]
@@ -676,7 +694,7 @@ class Clip(commands.Cog):
         file_handler.delete_file(f"{filename}.mp4")
         file_handler.delete_file(f"{filename}_nosub.mp4")
         file_handler.delete_file(f"{filename}_temp0.mp4")
-        file_handler.delete_file(f"{filename}_temp.mp4")       
+        file_handler.delete_file(f"{filename}_temp.mp4")
 
     @commands.command()
     @commands.bot_has_permissions(manage_messages=True)
@@ -905,7 +923,7 @@ class Clip(commands.Cog):
         await file_handler.send_file(ctx, message, f"{filename}.mp4")
         await ctx.send(ctx.message.author.mention)
         file_handler.delete_file(f"{filename}.mp4")
-        file_handler.delete_file(f"{filename}_temp.mp4")       
+        file_handler.delete_file(f"{filename}_temp.mp4")
 
     @commands.command()
     @commands.bot_has_permissions(manage_messages=True)
@@ -1013,7 +1031,7 @@ class Clip(commands.Cog):
         await file_handler.send_file(ctx, message, f"{filename}.{filetype.lower()}")
         await ctx.send(ctx.message.author.mention)
         file_handler.delete_file(f"{filename}.ogg")
-        file_handler.delete_file(f"{filename}.{filetype.lower()}")        
+        file_handler.delete_file(f"{filename}.{filetype.lower()}")
 
     @commands.command()
     @commands.bot_has_permissions(manage_messages=True)
@@ -1041,7 +1059,7 @@ class Clip(commands.Cog):
             "b",
             "--no-warnings",
             "--youtube-skip-dash-manifest",
-            "--no-warnings", 
+            "--no-warnings",
             link,
         ]
         startsplit = start.split(":")
@@ -1138,7 +1156,7 @@ class Clip(commands.Cog):
                         )
             os.rename(f"{filename}.mkv", f"{filename}.mp4")
             await file_handler.send_file(ctx, message, f"{filename}.mp4")
-            file_handler.delete_file(f"{filename}.mp4")            
+            file_handler.delete_file(f"{filename}.mp4")
         except ValueError:
             await message.edit(content="An error occured... Uh, try it again.")
 
@@ -1146,7 +1164,15 @@ class Clip(commands.Cog):
     @commands.bot_has_permissions(manage_messages=True)
     async def fastclip3(self, ctx, link, start, end, filename):
         message = await ctx.send("Fetching url...")
-        coms = ["yt-dlp", "-g", "-f", "b", "--youtube-skip-dash-manifest", "--no-warnings", link]
+        coms = [
+            "yt-dlp",
+            "-g",
+            "-f",
+            "b",
+            "--youtube-skip-dash-manifest",
+            "--no-warnings",
+            link,
+        ]
         startsplit = start.split(":")
         shour = startsplit[0]
         sminute = startsplit[1]
@@ -1213,13 +1239,21 @@ class Clip(commands.Cog):
         process, stdout, stderr = await subprocess_runner.run_subprocess(coms)
         await file_handler.send_file(ctx, message, f"{filename}.mp4")
         await ctx.send(ctx.message.author.mention)
-        file_handler.delete_file(f"{filename}.mp4")        
+        file_handler.delete_file(f"{filename}.mp4")
 
     @commands.command()
     @commands.bot_has_permissions(manage_messages=True)
     async def fastclip2(self, ctx, link, start, end, filename):
         message = await ctx.send("Fetching url...")
-        coms = ["yt-dlp", "-g", "-f", "b", "--youtube-skip-dash-manifest", "--no-warnings", link]
+        coms = [
+            "yt-dlp",
+            "-g",
+            "-f",
+            "b",
+            "--youtube-skip-dash-manifest",
+            "--no-warnings",
+            link,
+        ]
         startsplit = start.split(":")
         shour = startsplit[0]
         sminute = startsplit[1]
@@ -1268,7 +1302,7 @@ class Clip(commands.Cog):
             return
         await file_handler.send_file(ctx, message, f"{filename}.mp4")
         await ctx.send(ctx.message.author.mention)
-        file_handler.delete_file(f"{filename}.mp4")        
+        file_handler.delete_file(f"{filename}.mp4")
 
 
 def setup(client):

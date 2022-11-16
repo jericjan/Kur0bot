@@ -124,7 +124,7 @@ class Gif(commands.Cog):
             await ctx.send(
                 "I don't support this filetype yet ig. Ping kur0 or smth. <:towashrug:853606191711649812> "
             )
-        await file_handler.send_file(ctx, message, new_filename)        
+        await file_handler.send_file(ctx, message, new_filename)
         file_handler.delete_file(new_filename)
 
     @commands.command(aliases=["vid2gif2", "gifify2"])

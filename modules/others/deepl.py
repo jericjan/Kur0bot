@@ -48,5 +48,6 @@ class DeepL_commands(commands.Cog):
         result = ts.google(text, to_language="de")
         await ctx.send(result)
 
+
 def setup(client):
     client.add_cog(DeepL_commands(client))

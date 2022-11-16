@@ -53,7 +53,12 @@ class lowQual(commands.Cog):
             link = vid_url
         else:
             filename = link.split("/")[-1]
-        if re.search(r".+\.mp4|.+\.mkv|.+\.mov|.+\.webm|.+\.gif|.+\.mp3|.+\.wav", filename) is not None:
+        if (
+            re.search(
+                r".+\.mp4|.+\.mkv|.+\.mov|.+\.webm|.+\.gif|.+\.mp3|.+\.wav", filename
+            )
+            is not None
+        ):
             # remuxes so it works with troll long videos, magic.
             muxname = re.sub(r"(.+(?=\..+))", r"\g<1>_mux", filename)
             if is_tenor:
@@ -279,7 +284,7 @@ class lowQual(commands.Cog):
                 "I don't support this filetype yet ig. Ping kur0 or smth. <:towashrug:853606191711649812> "
             )
             return
-        await file_handler.send_file(ctx, message, filename)       
+        await file_handler.send_file(ctx, message, filename)
         file_handler.delete_file(filename)
 
 

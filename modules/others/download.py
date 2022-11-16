@@ -10,6 +10,7 @@ import re
 from urllib.parse import unquote
 from myfunctions import subprocess_runner, file_handler, msg_link_grabber
 from yt_dlp import YoutubeDL
+
 limiter = AsyncLimiter(1, 1)
 
 
@@ -29,73 +30,76 @@ class Download(commands.Cog):
                 pass
             pass
 
-
-
     @commands.slash_command(name="download")
-    async def s_download(self, inter, link: str): 
+    async def s_download(self, inter, link: str):
         """
         Downloads a video. Still early, mostly works on YouTube.
 
         Parameters
         ----------
         link: The URL you want to download
-        """    
+        """
         await inter.response.defer(ephemeral=True)
         self.did_download_edit = False
+
         def get_full_class_name(obj):
             module = obj.__class__.__module__
             if module is None or module == str.__class__.__module__:
                 return obj.__class__.__name__
-            return module + "." + obj.__class__.__name__    
+            return module + "." + obj.__class__.__name__
+
         try:
-        
+
             async def send_vid(filename):
-                    await inter.edit_original_response(f"Done!")
-                    webhook = await inter.channel.create_webhook(
-                        name=inter.author.display_name
-                    )
-                    await webhook.send(
-                        content=f"{inter.author.mention}\n<{link}>",
-                        file=disnake.File(filename),
-                        username=inter.author.display_name,
-                        avatar_url=inter.author.display_avatar.url,
-                    )
-                    await webhook.delete()
-                    file_handler.delete_file(filename)
+                await inter.edit_original_response(f"Done!")
+                webhook = await inter.channel.create_webhook(
+                    name=inter.author.display_name
+                )
+                await webhook.send(
+                    content=f"{inter.author.mention}\n<{link}>",
+                    file=disnake.File(filename),
+                    username=inter.author.display_name,
+                    avatar_url=inter.author.display_avatar.url,
+                )
+                await webhook.delete()
+                file_handler.delete_file(filename)
+
             def my_hook(d):
-                if d['status'] == 'finished':
-                    filename = d['filename']  
-                    self.client.loop.create_task(
-                        send_vid(filename)
-                        )
-                    
+                if d["status"] == "finished":
+                    filename = d["filename"]
+                    self.client.loop.create_task(send_vid(filename))
+
                     # asyncio.run_coroutine_threadsafe(
-                        # inter.edit_original_response(file=filename), 
-                        # self.client.loop)
+                    # inter.edit_original_response(file=filename),
+                    # self.client.loop)
                     return
-                if d['status'] == 'downloading':   
+                if d["status"] == "downloading":
                     if not self.did_download_edit:
                         self.client.loop.create_task(
-                            inter.edit_original_response(f"Downloading...\n{d['_eta_str']} remaining")
+                            inter.edit_original_response(
+                                f"Downloading...\n{d['_eta_str']} remaining"
                             )
+                        )
                         self.did_download_edit = True
                     # asyncio.run_coroutine_threadsafe(
-                        # inter.edit_original_response("Downloading..."), 
-                        # ,
-                        # self.client.loop)
-                    
-            ydl_opts= {
-               'format' : 'b',
-               'progress_hooks': [my_hook],
-              }        
+                    # inter.edit_original_response("Downloading..."),
+                    # ,
+                    # self.client.loop)
+
+            ydl_opts = {
+                "format": "b",
+                "progress_hooks": [my_hook],
+            }
             with YoutubeDL(ydl_opts) as ydl:
                 ydl.download(link)
         except Exception as e:
             await inter.edit_original_response(f"{get_full_class_name(e)} - {e}")
-            
+
     @commands.command(name="download")
     @commands.bot_has_permissions(manage_messages=True)
-    async def p_download(self, ctx, link=None):  # reddit, facebook, instagram, tiktok, yt
+    async def p_download(
+        self, ctx, link=None
+    ):  # reddit, facebook, instagram, tiktok, yt
         link = await msg_link_grabber.grab_link(ctx, link)
         if "reddit.com" in link or "v.redd.it" in link:
             cookiecoms = [
@@ -296,7 +300,7 @@ class Download(commands.Cog):
                 await message.edit(content="Downloading...")
             else:
                 await file_handler.send_file(ctx, message, filename)
-            file_handler.delete_file(filename)            
+            file_handler.delete_file(filename)
         elif "instagram.com" and "/stories/" in link:
             message = await ctx.send("Downloading...")
             cookiecoms = [
@@ -308,9 +312,26 @@ class Download(commands.Cog):
             ]
             cookieproc, stdout, stderr = await subprocess_runner.run_subprocess(
                 cookiecoms
-            )           
-            coms = ["yt-dlp", "-f", "b", "--no-warnings", "--cookies", "cookies/morbius",link]
-            coms2 = ["yt-dlp", "-f", "b", "--get-filename", "--no-warnings", "--cookies", "cookies/morbius", link]                
+            )
+            coms = [
+                "yt-dlp",
+                "-f",
+                "b",
+                "--no-warnings",
+                "--cookies",
+                "cookies/morbius",
+                link,
+            ]
+            coms2 = [
+                "yt-dlp",
+                "-f",
+                "b",
+                "--get-filename",
+                "--no-warnings",
+                "--cookies",
+                "cookies/morbius",
+                link,
+            ]
             out, stdout, stderr = await subprocess_runner.run_subprocess(coms)
             await message.edit(content="Almost there...")
             out2, stdout, stderr = await subprocess_runner.run_subprocess(coms2)
@@ -319,7 +340,7 @@ class Download(commands.Cog):
                 if len(filenames) == 1:
                     await file_handler.send_file(ctx, message, filenames[0])
                 else:
-                
+
                     msg = await ctx.send(
                         f"This story has {len(filenames)} videos. Instagram is weird and I can't exactly find which video this is in the story. Tell me the nth video that you want (Ex: 2). You have 5 minutes.\nType \"all\" and I'll DM you all the videos."
                     )
@@ -336,7 +357,7 @@ class Download(commands.Cog):
                             await file_handler.send_file(ctx, message, filenames[index])
                         elif await_msg.content.lower() == "all":
                             for file in filenames:
-                                await ctx.author.send(file=disnake.File(file))                   
+                                await ctx.author.send(file=disnake.File(file))
                         else:
                             await ctx.send("Invalid!", delete_after=3)
                             await ctx.message.delete()
@@ -344,10 +365,10 @@ class Download(commands.Cog):
                     except asyncio.TimeoutError:
                         await ctx.send("Too slow lmao!", delete_after=3)
                         await ctx.message.delete()
-                    await msg.delete()                         
+                    await msg.delete()
 
             except Exception as e:
-                await ctx.send(e)           
+                await ctx.send(e)
             file_handler.delete_file("cookies/morbius")
             for file in filenames:
                 file_handler.delete_file(file)
@@ -382,8 +403,9 @@ class Download(commands.Cog):
                 filename = stdout.decode("utf-8").split("\n")[0]
                 await file_handler.send_file(ctx, message, filename)
             except Exception as e:
-                await ctx.send(e)            
+                await ctx.send(e)
             file_handler.delete_file(filename)
+
 
 def setup(client):
     client.add_cog(Download(client))

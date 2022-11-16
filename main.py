@@ -37,6 +37,7 @@ signal.signal(signal.SIGINT, goodbye)
 # signal.signal(signal.SIGSTOP, goodbye)
 signal.signal(signal.SIGHUP, goodbye)
 
+
 def rate_limit_check():
 
     headers = {"Authorization": f"Bot {os.getenv('TOKEN')}"}
@@ -46,7 +47,10 @@ def rate_limit_check():
     if r.status_code == 429:
         print(f"{(time.time() - start_time):.2f}s - Rate limited again lmao")
     else:
-        print(f"{(time.time() - start_time):.2f}s - Not rate limited. ({r.status_code})")
+        print(
+            f"{(time.time() - start_time):.2f}s - Not rate limited. ({r.status_code})"
+        )
+
 
 rlimit = threading.Thread(target=rate_limit_check)
 rlimit.start()
@@ -70,9 +74,9 @@ async def log(text, printText=None):
     f.write(final)
     f.close()
 
+
 client.start_time = start_time
 client.log = log
-
 
 
 client.sus_on = False
@@ -80,40 +84,40 @@ client.sus_on = False
 
 print(f"{(time.time() - start_time):.2f}s - Importing Kur0's modules...")
 module_paths = (
-"modules.events",
-"modules.loaders",
-"modules.vc",
-"modules.copypasta",
-"modules.help",
-"modules.ascii",
-"modules.reactions",
-"modules.others.clip",
-"modules.others.download",
-"modules.others.emote_sticker",
-"modules.others.badapple",
-"modules.others.pet",
-"modules.others.sauce",
-"modules.others.144p",
-"modules.others.when",
-"modules.others.checkcomment",
-"modules.others.coinflip",
-"modules.others.superchat",
-"modules.others.gif",
-"modules.others.resize",
-"modules.others.deepl",
-"modules.others.karaoke",
-"modules.others.hall_of_shame",
-"modules.others.getosumap",
-"modules.others.vergil",
-"modules.pacifam_only",
-"modules.kur0_only",
-"modules.sus",
-"modules.tasks"
+    "modules.events",
+    "modules.loaders",
+    "modules.vc",
+    "modules.copypasta",
+    "modules.help",
+    "modules.ascii",
+    "modules.reactions",
+    "modules.others.clip",
+    "modules.others.download",
+    "modules.others.emote_sticker",
+    "modules.others.badapple",
+    "modules.others.pet",
+    "modules.others.sauce",
+    "modules.others.144p",
+    "modules.others.when",
+    "modules.others.checkcomment",
+    "modules.others.coinflip",
+    "modules.others.superchat",
+    "modules.others.gif",
+    "modules.others.resize",
+    "modules.others.deepl",
+    "modules.others.karaoke",
+    "modules.others.hall_of_shame",
+    "modules.others.getosumap",
+    "modules.others.vergil",
+    "modules.pacifam_only",
+    "modules.kur0_only",
+    "modules.sus",
+    "modules.tasks",
 )
 
 for module in module_paths:
     client.load_extension(module)
-    print(f"{(time.time() - start_time):.2f}s - {module} loaded")    
+    print(f"{(time.time() - start_time):.2f}s - {module} loaded")
 
 print(f"{(time.time() - start_time):.2f}s - Done!")
 
@@ -122,9 +126,6 @@ print(f"{(time.time() - start_time):.2f}s - Done!")
 async def common(ctx):
     text = f'k.{ctx.invoked_with} | {ctx.author.name}#{ctx.author.discriminator} | "{ctx.guild.name}" - "{ctx.channel.name}"'
     await log(str(text))
-
-
-
 
 
 from disnake import Webhook
@@ -301,9 +302,12 @@ async def tasks(ctx):
 async def ping(ctx):
     start_time = time.time()
     msg = await ctx.send(f"My ping is {round (client.latency * 1000)}ms")
-    send_time = (time.time() - start_time)*1000
-    await msg.edit(content=f"{msg.content} but it took {send_time:.2f}ms to send this message")
-    
+    send_time = (time.time() - start_time) * 1000
+    await msg.edit(
+        content=f"{msg.content} but it took {send_time:.2f}ms to send this message"
+    )
+
+
 async def wait_until(dt):
     # sleep until the specified datetime
     now = datetime.now()

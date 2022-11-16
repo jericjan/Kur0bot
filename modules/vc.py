@@ -12,44 +12,47 @@ import uuid
 from myfunctions.my_db import get_db
 import time
 
+
 class Vc(commands.Cog):
     def __init__(self, client):
         self.client = client
-        self.dbname = get_db("music_queue")   
+        self.dbname = get_db("music_queue")
         self.temp_servers_playing = {}
         self.song_now_playing = {}
-        
-    async def run_queue(self, ctx):
-            try:                                    
-                server_queue = self.dbname[str(ctx.guild.id)]
-                music_queue = server_queue.find().sort("epoch_time",1)       
-                song_count = server_queue.count_documents({})
-                if song_count != 0:
-                    print(f"THere is a queue {song_count}")
-                    first_epoch = [x['epoch_time'] for x in music_queue][0]          
-                    print(f"first epoch is {first_epoch}")                        
-                    myquery = { "epoch_time": first_epoch }   
-                    first_doc =server_queue.find_one(myquery)                                              
-                    url = first_doc['url']   
-                    title = first_doc['title']   
-                    await self.pre_play(ctx, url, title)
-                    server_queue.delete_one(myquery)
 
-                else:
-                    print("no mo queue")
-                    self.temp_servers_playing.pop(ctx.guild.id)
-                    self.song_now_playing.pop(ctx.guild.id)
-                    await ctx.send("Queue has ended")
-            except KeyError:
-                pass
-            except Exception as e:
-                def get_full_class_name(obj):
-                    module = obj.__class__.__module__
-                    if module is None or module == str.__class__.__module__:
-                        return obj.__class__.__name__
-                    return module + "." + obj.__class__.__name__                    
-                print(f"run_queue exception: {get_full_class_name(e)}: {e}")        
-        
+    async def run_queue(self, ctx):
+        try:
+            server_queue = self.dbname[str(ctx.guild.id)]
+            music_queue = server_queue.find().sort("epoch_time", 1)
+            song_count = server_queue.count_documents({})
+            if song_count != 0:
+                print(f"THere is a queue {song_count}")
+                first_epoch = [x["epoch_time"] for x in music_queue][0]
+                print(f"first epoch is {first_epoch}")
+                myquery = {"epoch_time": first_epoch}
+                first_doc = server_queue.find_one(myquery)
+                url = first_doc["url"]
+                title = first_doc["title"]
+                await self.pre_play(ctx, url, title)
+                server_queue.delete_one(myquery)
+
+            else:
+                print("no mo queue")
+                self.temp_servers_playing.pop(ctx.guild.id)
+                self.song_now_playing.pop(ctx.guild.id)
+                await ctx.send("Queue has ended")
+        except KeyError:
+            pass
+        except Exception as e:
+
+            def get_full_class_name(obj):
+                module = obj.__class__.__module__
+                if module is None or module == str.__class__.__module__:
+                    return obj.__class__.__name__
+                return module + "." + obj.__class__.__name__
+
+            print(f"run_queue exception: {get_full_class_name(e)}: {e}")
+
     async def vcplay(self, ctx, a, loop=None, isRandom=None, **kwargs):
 
         voicestate = ctx.author.voice
@@ -88,15 +91,18 @@ class Vc(commands.Cog):
             else:
                 if isRandom == True:
                     a = random.choice(a)
-                    
 
                 if "music_bot" in kwargs:
                     before_options = "-reconnect 1 -reconnect_at_eof 0 -reconnect_streamed 1 -reconnect_delay_max 10 -copy_unknown"
-                    voice.play(disnake.FFmpegPCMAudio(source=a, before_options=before_options), after=lambda e: asyncio.run_coroutine_threadsafe(self.run_queue(ctx), self.client.loop))
+                    voice.play(
+                        disnake.FFmpegPCMAudio(source=a, before_options=before_options),
+                        after=lambda e: asyncio.run_coroutine_threadsafe(
+                            self.run_queue(ctx), self.client.loop
+                        ),
+                    )
                 else:
                     voice.play(disnake.FFmpegPCMAudio(source=a))
-                
-                    
+
         else:
             await ctx.send(
                 f"{ctx.author.name} is not in a VC. Sending file instead...",
@@ -160,7 +166,7 @@ class Vc(commands.Cog):
                     await ctx.send(file=disnake.File(a, filename=filename))
             else:
                 if "custom_name" in kwargs:
-                    await ctx.send(file=disnake.File(a, filename=kwargs['custom_name']))
+                    await ctx.send(file=disnake.File(a, filename=kwargs["custom_name"]))
                 else:
                     await ctx.send(file=disnake.File(a, filename=filename))
         # Delete command after the audio is done playing.
@@ -464,101 +470,121 @@ class Vc(commands.Cog):
                 #
         else:
             await ctx.send("No matches lol.", delete_after=3)
-            
 
-        
-
-            
-
-        
-    async def pre_play(self,ctx, url, title=None):     
+    async def pre_play(self, ctx, url, title=None):
         start_time = time.time()
         tasks = []
-        
-        coms = ['yt-dlp', '-f', 'bestaudio', '--get-url', url]
+
+        coms = ["yt-dlp", "-f", "bestaudio", "--get-url", url]
         tasks.append(subprocess_runner.run_subprocess(coms))
 
         if title is None:
-            coms = ['yt-dlp', '-f', 'bestaudio', '--get-title', url]
+            coms = ["yt-dlp", "-f", "bestaudio", "--get-title", url]
             tasks.append(subprocess_runner.run_subprocess(coms))
 
         gathered = await asyncio.gather(*tasks)
         direct_url = gathered[0][1].decode("utf-8").strip("\n")
         if title is None:
-            title = gathered[1][1].decode("utf-8").strip("\n")        
+            title = gathered[1][1].decode("utf-8").strip("\n")
         print(f"tasks ran: {(time.time()-start_time):.2f}")
         start_time = time.time()
-        asyncio.run_coroutine_threadsafe(self.vcplay(ctx, direct_url, dont_delete=True, music_bot=True), self.client.loop)      
-        await ctx.send(f"Playing **{title}**...")  
+        asyncio.run_coroutine_threadsafe(
+            self.vcplay(ctx, direct_url, dont_delete=True, music_bot=True),
+            self.client.loop,
+        )
+        await ctx.send(f"Playing **{title}**...")
         self.song_now_playing[ctx.guild.id] = f"[{title}]({url})"
         print(f"playing sent: {(time.time()-start_time):.2f}")
-        
-    @commands.command(aliases=['p'])
-    async def play(self, ctx, url):                       
+
+    def there_is_queue(self, ctx):
+        server_queue = self.dbname[str(ctx.guild.id)]
+        music_queue = server_queue.find().sort("epoch_time", 1)
+        music_queue = "\n".join([f"[{x['title']}]({x['url']})" for x in music_queue])
+        if music_queue:
+            return True
+        return False
+
+    @commands.command(aliases=["p"])
+    async def play(self, ctx, url=None):
+        if url is None:
+            if self.there_is_queue(ctx):
+                asyncio.run_coroutine_threadsafe(self.run_queue(ctx), self.client.loop)
+                em = disnake.Embed(
+                    title="▶ CONTINUING! ▶", description=f"There's a queue! Playing it!"
+                )
+                await ctx.send(embed=em)
+            else:
+                await ctx.send("You didn't give me anything. There is no queue either.")
+            return
         voicestate = ctx.author.voice
         if not voicestate:
             await ctx.send("You ain't in a VC buhhhh")
-            return        
+            return
         loop = asyncio.get_running_loop()
         voice = disnake.utils.get(self.client.voice_clients, guild=ctx.guild)
         if voice == None:
             voice_channel = ctx.author.voice.channel
             voice = await voice_channel.connect()
-        if not voice.is_playing() and not ctx.guild.id in self.temp_servers_playing:            
+        if not voice.is_playing() and not ctx.guild.id in self.temp_servers_playing:
             loop.create_task(self.pre_play(ctx, url))
-            self.temp_servers_playing[ctx.guild.id] = 0 #temporarily adds to this dict to let bot now the server is playing music
+            self.temp_servers_playing[
+                ctx.guild.id
+            ] = 0  # temporarily adds to this dict to let bot now the server is playing music
         else:
-            coms = ['yt-dlp', '-f', 'bestaudio', '--get-title', url]
+            coms = ["yt-dlp", "-f", "bestaudio", "--get-title", url]
             proc, stdout, stderr = await subprocess_runner.run_subprocess(coms)
             title = stdout.decode("utf-8").strip("\n")
             try:
                 self.temp_servers_playing[ctx.guild.id] += 1
             except KeyError:
                 self.temp_servers_playing[ctx.guild.id] = 1
-            await ctx.send(f"Adding **{title}** to queue... ({self.temp_servers_playing[ctx.guild.id]})")            
+            await ctx.send(
+                f"Adding **{title}** to queue... ({self.temp_servers_playing[ctx.guild.id]})"
+            )
             server_queue = self.dbname[str(ctx.guild.id)]
-            item = {
-              "title" : title,
-              "url" : url,
-              "epoch_time" : time.time()                    
-            }
+            item = {"title": title, "url": url, "epoch_time": time.time()}
             server_queue.insert_one(item)
 
-
-       
-        
-    @commands.command(aliases=['mq'])
+    @commands.command(aliases=["mq"])
     @commands.bot_has_permissions(embed_links=True)
-    async def mqueue(self, ctx):        
+    async def mqueue(self, ctx):
         server_queue = self.dbname[str(ctx.guild.id)]
-        music_queue = server_queue.find().sort("epoch_time",1)     
-        music_queue = '\n'.join([f"[{x['title']}]({x['url']})" for x in music_queue])
-        if music_queue:            
-            em = disnake.Embed(
-            title="💥 THE QUEUE 💥", description=music_queue
-            )
+        music_queue = server_queue.find().sort("epoch_time", 1)
+        music_queue = "\n".join([f"[{x['title']}]({x['url']})" for x in music_queue])
+        if music_queue:
+            em = disnake.Embed(title="💥 THE QUEUE 💥", description=music_queue)
             await ctx.send(embed=em)
         else:
             await ctx.send("Ain't no way bruh. There's no queue!! :skull:")
-            
-    @commands.command(aliases=['np'])
+
+    @commands.command(aliases=["np"])
     @commands.bot_has_permissions(embed_links=True)
-    async def nowplaying(self, ctx): 
+    async def nowplaying(self, ctx):
         try:
             np = self.song_now_playing[ctx.guild.id]
         except KeyError:
             await ctx.send("Nothin's playin rn :sob:")
-        if np:
-            em = disnake.Embed(
-            title="🎧 NOW PLAYING 🎧", description=np
+            server_queue = self.dbname[str(ctx.guild.id)]
+            music_queue = server_queue.find().sort("epoch_time", 1)
+            music_queue = "\n".join(
+                [f"[{x['title']}]({x['url']})" for x in music_queue]
             )
-            await ctx.send(embed=em)        
+            if music_queue:
+                asyncio.run_coroutine_threadsafe(self.run_queue(ctx), self.client.loop)
+                em = disnake.Embed(
+                    title="▶ CONTINUING! ▶", description=f"There's a queue! Playing it!"
+                )
+                await ctx.send(embed=em)
+            return
+        if np:
+            em = disnake.Embed(title="🎧 NOW PLAYING 🎧", description=np)
+            await ctx.send(embed=em)
         else:
             await ctx.send("Nothin's playin rn :sob:")
 
-    @commands.command(aliases=['s'])
+    @commands.command(aliases=["s"])
     @commands.bot_has_permissions(embed_links=True)
-    async def skip(self, ctx): 
+    async def skip(self, ctx):
         voice_client = ctx.message.guild.voice_client
         if voice_client.is_playing():
             try:
@@ -566,23 +592,29 @@ class Vc(commands.Cog):
             except KeyError:
                 await ctx.send("Nothing is playing rn bruh. can't skip shit")
             voice_client.stop()
-            asyncio.run_coroutine_threadsafe(self.run_queue(ctx), self.client.loop)            
+            asyncio.run_coroutine_threadsafe(self.run_queue(ctx), self.client.loop)
             em = disnake.Embed(
-            title="⏩ SKIPPED! ⏩", description=f"{np} has been skipped"
+                title="⏩ SKIPPED! ⏩", description=f"{np} has been skipped"
             )
-            await ctx.send(embed=em)               
+            await ctx.send(embed=em)
         else:
-            await ctx.send("Nothing is playing rn bruh. can't skip shit")
-        
-            
-    @commands.command(aliases=['ultrakill'])
-    async def sam(self, ctx, *, msg):             
+            if self.there_is_queue(ctx):
+                asyncio.run_coroutine_threadsafe(self.run_queue(ctx), self.client.loop)
+                em = disnake.Embed(
+                    title="▶ CONTINUING! ▶", description=f"There's a queue! Playing it!"
+                )
+                await ctx.send(embed=em)
+            else:
+                await ctx.send("Nothing is playing rn bruh. can't skip shit")
+
+    @commands.command(aliases=["ultrakill"])
+    async def sam(self, ctx, *, msg):
         id = uuid.uuid4()
-        file_path = f'sam/{id}.wav'
-        coms = ['sam/sam', '-wav', file_path, msg]
+        file_path = f"sam/{id}.wav"
+        coms = ["sam/sam", "-wav", file_path, msg]
         try:
             await asyncio.wait_for(subprocess_runner.run_subprocess(coms), timeout=10)
-        except asyncio.TimeoutError as e:            
+        except asyncio.TimeoutError as e:
             coms = "ps -aef | grep sam/sam | awk '{print $2}' | xargs kill -9 $1"
             try:
                 await subprocess_runner.run_subprocess(coms, shell=True)
@@ -593,9 +625,13 @@ class Vc(commands.Cog):
             if e.err == 1:
                 await ctx.send("I don't wtf you want me to say. Try again.")
             elif e.err == -6:
-                await ctx.send("Whoops. That's a little too much text, buckaroo. Try again.")
+                await ctx.send(
+                    "Whoops. That's a little too much text, buckaroo. Try again."
+                )
             else:
                 await ctx.send(f"Error ({e.err}): {e.message}"[:2000])
         await self.vcplay(ctx, file_path, delete_file=True, custom_name="sam.wav")
+
+
 def setup(client):
     client.add_cog(Vc(client))

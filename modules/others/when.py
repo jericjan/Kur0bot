@@ -6,9 +6,7 @@ from myfunctions import msg_link_grabber
 
 
 class When(commands.Cog):
-
-
-    async def grab_msg_time(self,msg):
+    async def grab_msg_time(self, msg):
         time = msg.created_at
         return time.strftime("%b %-d, %Y - %I:%M:%S.%f %p %Z")
 
@@ -29,13 +27,19 @@ class When(commands.Cog):
             else:
                 await ctx.send("Not a YT link!", delete_after=3.0)
                 if ctx.message.reference:
-                    await ctx.send("Gonna get time message was posted tho cuz yes...", delete_after=3.0)
+                    await ctx.send(
+                        "Gonna get time message was posted tho cuz yes...",
+                        delete_after=3.0,
+                    )
                     time = await self.grab_msg_time(ctx.message.reference.resolved)
                     await ctx.send(time)
                 return
-        else:            
+        else:
             if ctx.message.reference:
-                await ctx.send("You replied to a message & it has no link, getting time message posted instead...", delete_after=3.0)
+                await ctx.send(
+                    "You replied to a message & it has no link, getting time message posted instead...",
+                    delete_after=3.0,
+                )
                 time = await self.grab_msg_time(ctx.message.reference.resolved)
                 await ctx.send(time)
             return

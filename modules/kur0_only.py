@@ -8,6 +8,7 @@ from lorem.text import TextLorem
 import aiohttp
 from dotenv import load_dotenv, set_key, find_dotenv
 from myfunctions import subprocess_runner
+import asyncio
 
 
 class Kur0only(commands.Cog):
@@ -62,26 +63,21 @@ class Kur0only(commands.Cog):
         async with aiohttp.ClientSession() as session:
             async with session.get(fb_url) as response:
                 fb_json = await response.json()
-        valid_token = fb_json['data']['is_valid']
-        epoch_expires = "**Never**" if fb_json['data']['expires_at'] == 0 else f"<t:{fb_json['data']['expires_at']}:R>"
+        valid_token = fb_json["data"]["is_valid"]
+        epoch_expires = (
+            "**Never**"
+            if fb_json["data"]["expires_at"] == 0
+            else f"<t:{fb_json['data']['expires_at']}:R>"
+        )
         epoch_access_expires = f"<t:{fb_json['data']['data_access_expires_at']}:R>"
         if not valid_token:
-            await msg.edit(content=f"{msg.content}\n{fb_json['data']['error']['message']}")
+            await msg.edit(
+                content=f"{msg.content}\n{fb_json['data']['error']['message']}"
+            )
             return
-        await ctx.send(f"Token expires {epoch_expires}\nAccess expires {epoch_access_expires}")
-        # fb_url = f"https://graph.facebook.com/v14.0/oauth/access_token?" \
-                 # f"grant_type=fb_exchange_token&" \
-                 # f"client_id={fb_app_id}&" \
-                 # f"client_secret={fb_app_secret}&" \
-                 # f"fb_exchange_token={access_token}"
-        # async with aiohttp.ClientSession() as session:
-            # async with session.get(fb_url) as response:
-                # fb_json = await response.json()        
-        # new_token = fb_json['access_token']
-        # dotenv_file = find_dotenv()
-        # set_key(dotenv_file,"FB_ACCESS_TOKEN", new_token)
-        # load_dotenv(override=True)
-        # access_token = os.getenv("FB_ACCESS_TOKEN")        
+        await ctx.send(
+            f"Token expires {epoch_expires}\nAccess expires {epoch_access_expires}"
+        )
         msg = await msg.edit(content=f"{msg.content}Done\nChecking for updates...")
         coms = ["rclone/rclone", "selfupdate"]
         out, stdout, stderr = await subprocess_runner.run_subprocess(coms)
@@ -105,60 +101,72 @@ class Kur0only(commands.Cog):
         else:
             fixed_link = url
         # download vid
-        msg = await msg.edit(content=f"{msg.content}\nDownloading video...")
-        coms = [
-            "yt-dlp",
-            "-i",
-            "--no-warnings",
-            "--yes-playlist",
-            "--add-metadata",
-            "--merge-output-format",
-            "mkv",
-            "--all-subs",
-            "--write-sub",
-            "--convert-subs",
-            "srt",
-            "--embed-subs",
-            "-f",
-            "bestvideo[ext=webm]+bestaudio[ext=webm]/bestvideo+bestaudio/best",
-            "-o",
-            "%(title)s-%(id)s.%(ext)s",
-            fixed_link,
-        ]
-        out, stdout, stderr = await subprocess_runner.run_subprocess(coms)
+        tasks = []
+        msg = await msg.edit(content=f"{msg.content}\nDownloading video and info...")
 
-        if out.returncode == 0:
-            msg = await msg.edit(content=f"{msg.content}Done! ({out.returncode})")
-        else:
-            try:
-                print("test1")
-                msg = await msg.edit(
-                    content=f"{msg.content}\n Return code: {out.returncode}\n{stderr.decode()}"
-                )
+        async def dl_vid():
+            coms = [
+                "yt-dlp",
+                "-i",
+                "--no-warnings",
+                "--yes-playlist",
+                "--add-metadata",
+                "--merge-output-format",
+                "mkv",
+                "--all-subs",
+                "--write-sub",
+                "--convert-subs",
+                "srt",
+                "--embed-subs",
+                "-f",
+                "bestvideo[ext=webm]+bestaudio[ext=webm]/bestvideo+bestaudio/best",
+                "-o",
+                "%(title)s-%(id)s.%(ext)s",
+                fixed_link,
+            ]
+            out, stdout, stderr = await subprocess_runner.run_subprocess(coms)
 
-            except:
-                msg = await msg.edit(
-                    content=f"{msg.content}\n Return code: {out.returncode}\n{stdout.decode()}"
-                )
-                print("test2")
-            return
+            if out.returncode == 0:
+                return f"  Download success! ({out.returncode})"
+            else:
+                try:
+                    error = f"Downloading fail:\n Return code: {out.returncode}\n{stderr.decode()}"
+                except:
+                    error = f"Downloading fail:\n Return code: {out.returncode}\n{stdout.decode()}"
+                raise Exception(error)
 
-        # get title and filename
-        msg = await msg.edit(content=f"{msg.content}\nGetting title and filename...")
-        coms = [
-            "yt-dlp",
-            "--get-title",
-            "--get-filename",
-            "-o",
-            "%(title)s-%(id)s",
-            "--no-warnings",
-            fixed_link,
-        ]
-        out, stdout, stderr = await subprocess_runner.run_subprocess(coms)
-        result = stdout.decode()
-        title = result.splitlines()[-2]
-        filename = result.splitlines()[-1]
-        print(f"{title}\n{filename}")
+        tasks.append(dl_vid())
+
+        async def title_fname():
+            coms = [
+                "yt-dlp",
+                "--get-title",
+                "--get-filename",
+                "-o",
+                "%(title)s-%(id)s",
+                "--no-warnings",
+                fixed_link,
+            ]
+            out, stdout, stderr = await subprocess_runner.run_subprocess(coms)
+            result = stdout.decode()
+            title = result.splitlines()[-2]
+            filename = result.splitlines()[-1]
+            print(f"{title}\n{filename}")
+
+            if out.returncode == 0:
+                return title, filename, f"  Data grab success! ({out.returncode})"
+            else:
+                try:
+                    error = f"Data grab fail:\n Return code: {out.returncode}\n{stderr.decode()}"
+                except:
+                    error = f"Data grab fail:\n Return code: {out.returncode}\n{stdout.decode()}"
+                raise Exception(error)
+
+        tasks.append(title_fname())
+
+        gathered = await asyncio.gather(*tasks)
+        dl_result = gathered[0]
+        title, filename, info_result = gathered[1]        
         fname1 = glob.glob(f"{glob.escape(filename)}.*")
         for i in fname1:
             if not i.endswith(".srt") and not i.endswith(".json"):
@@ -166,88 +174,78 @@ class Kur0only(commands.Cog):
             else:
                 os.remove(i)
         print(fname)
-
-        if out.returncode == 0:
-            msg = await msg.edit(content=f"{msg.content}Done! ({out.returncode})")
-        else:
-            try:
-                msg = await msg.edit(
-                    content=f"{msg.content}\n Return code: {out.returncode}\n{stderr.decode()}"
-                )
-            except:
-                msg = await msg.edit(
-                    content=f"{msg.content}\n Return code: {out.returncode}\n{stdout.decode()}"
-                )
-            return
         # copy to drive
-        msg = await msg.edit(content=f"{msg.content}\nCopying to Drive...")
-        coms = [
-            "rclone/rclone",
-            "copy",
-            fname,
-            f"{target_drive}:/archived youtube vids/",
-            "--transfers",
-            "20",
-            "--checkers",
-            "20",
-            "-v",
-            "--stats=5s",
-            "--buffer-size",
-            "128M",
-            "--drive-chunk-size",
-            "128M",
-            "--drive-acknowledge-abuse",
-            "--drive-keep-revision-forever",
-            "--drive-server-side-across-configs=true",
-            "--suffix=2021_12_22_092152",
-            "--suffix-keep-extension",
-        ]
-        out, stdout, stderr = await subprocess_runner.run_subprocess(coms)
+        tasks = []
+        msg = await msg.edit(
+            content=f"{msg.content}\n{dl_result}\n{info_result}\nCopying to Drive and uploading to FB..."
+        )
 
-        if out.returncode == 0:
-            msg = await msg.edit(content=f"{msg.content}Done! ({out.returncode})")
-        else:
-            try:
-                msg = await msg.edit(
-                    content=f"{msg.content}\n Return code: {out.returncode}\n{stderr.decode()}"
+        async def to_drive():
+            coms = [
+                "rclone/rclone",
+                "copy",
+                fname,
+                f"{target_drive}:/archived youtube vids/",
+                "--transfers",
+                "20",
+                "--checkers",
+                "20",
+                "-v",
+                "--stats=5s",
+                "--buffer-size",
+                "128M",
+                "--drive-chunk-size",
+                "128M",
+                "--drive-acknowledge-abuse",
+                "--drive-keep-revision-forever",
+                "--drive-server-side-across-configs=true",
+                "--suffix=2021_12_22_092152",
+                "--suffix-keep-extension",
+            ]
+            out, stdout, stderr = await subprocess_runner.run_subprocess(coms)
+
+            if out.returncode == 0:
+                return f"Copy to Drive success! ({out.returncode})"
+            else:
+                try:
+                    error = f"Copy to Drive fail:\n Return code: {out.returncode}\n{stderr.decode()}"
+                except:
+                    error = f"Copy to Drive fail:\n Return code: {out.returncode}\n{stdout.decode()}"
+                raise Exception(error)
+
+        tasks.append(to_drive())
+
+        async def to_fb():
+            url = f"https://graph-video.facebook.com/v8.0/100887555109330/videos?access_token={access_token}&limit=10"
+            files = {"file": ("vid.mp4", open(fname, mode="rb"))}
+            flag = requests.post(
+                url,
+                files=files,
+                data={"description": f"{title}\n(NOT MINE) Source: {fixed_link}"},
+            )  # .text
+            flagg = flag.text
+
+            data = json.loads(flagg)
+
+            if flag.status_code != 200:
+                raise Exception(f"FB FAIL:\n{flagg}")
+            else:
+                print("We gucci, my dude.")
+                vid_id = data["id"]
+                os.remove(fname)
+                post_link = f"https://web.facebook.com/100887555109330/videos/{vid_id}"
+                return (
+                    f"{title} has been uploaded!\n"
+                    f"Vid link: https://web.facebook.com/100887555109330/videos/{vid_id}\n"
+                    f"Share to FB: https://www.facebook.com/sharer.php?u={post_link}"
                 )
-            except:
-                msg = await msg.edit(
-                    content=f"{msg.content}\n Return code: {out.returncode}\n{stdout.decode()}"
-                )
-            return
-        # upload to fb
-        msg = await msg.edit(content=f"{msg.content}\nUploading to FB...")
-        
 
-        url = f"https://graph-video.facebook.com/v8.0/100887555109330/videos?access_token={access_token}&limit=10"
-        files = {"file": ("vid.mp4", open(fname, mode="rb"))}
-        flag = requests.post(
-            url,
-            files=files,
-            data={"description": f"{title}\n(NOT MINE) Source: {fixed_link}"},
-        )  # .text
-        flagg = flag.text
+        tasks.append(to_fb())
 
-        data = json.loads(flagg)
-
-        if flag.status_code != 200:
-            print(flagg)
-            await ctx.send(flagg)
-
-        else:
-            print("We gucci, my dude.")
-            vid_id = data["id"]
-            await msg.delete()
-            await ctx.send(f"{title} has been uploaded!")
-            await ctx.send(
-                f"Vid link: https://web.facebook.com/100887555109330/videos/{vid_id}"
-            )
-            post_link = f"https://web.facebook.com/100887555109330/videos/{vid_id}"
-            await ctx.send(
-                f"Share to FB: https://www.facebook.com/sharer.php?u={post_link}"
-            )
-            os.remove(fname)
+        gathered = await asyncio.gather(*tasks)
+        gathered_str = "\n".join(gathered)
+        await ctx.send(gathered_str)
+        await msg.delete()
 
     @commands.command()
     @commands.is_owner()
@@ -307,12 +305,13 @@ class Kur0only(commands.Cog):
     async def editmsg(self, ctx, msg_id: disnake.Message, *, msg):
         await msg_id.edit(content=msg)
         await ctx.send("Done!")
-        
+
     @commands.command()
     @commands.is_owner()
     async def send(self, ctx, ch_id: disnake.TextChannel, *, msg):
-        await ch_id.send(msg)    
+        await ch_id.send(msg)
         await ctx.send("Done!")
-    
+
+
 def setup(client):
     client.add_cog(Kur0only(client))

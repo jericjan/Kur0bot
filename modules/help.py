@@ -594,7 +594,8 @@ class Help(commands.Cog):
     @commands.bot_has_permissions(embed_links=True)
     async def altsauce(self, ctx):
         em = disnake.Embed(
-            title="Alternate way to get sauce", description="Use this in case the default one breaks for some reason."
+            title="Alternate way to get sauce",
+            description="Use this in case the default one breaks for some reason.",
         )
         em.add_field(
             name="**Syntax**",
@@ -930,14 +931,27 @@ class Help(commands.Cog):
         )
         await ctx.send(embed=em)
 
-    @help.command(aliases=["getmap","getosu","getosumap2","getmap2","getosu2","getosumap3","getmap3","getosu3"])
+    @help.command(
+        aliases=[
+            "getmap",
+            "getosu",
+            "getosumap2",
+            "getmap2",
+            "getosu2",
+            "getosumap3",
+            "getmap3",
+            "getosu3",
+        ]
+    )
     @commands.bot_has_permissions(embed_links=True)
     async def getosumap(self, ctx):
         em = disnake.Embed(
             title="Get osu! map",
             description="Sends you the osu! map someone is playing.",
         )
-        em.add_field(name="**Syntax**", value=r"k.getosumap <user\ping\id>", inline=False)
+        em.add_field(
+            name="**Syntax**", value=r"k.getosumap <user\ping\id>", inline=False
+        )
         em.add_field(name="**Aliases**", value=",".join(ctx.command.aliases))
         em.add_field(
             name="**Example**",
@@ -946,7 +960,7 @@ class Help(commands.Cog):
         em.add_field(
             name="**Alternative**",
             value="you can try k.getosumap2 and k.getosumap3 for a different method of grabbing maps.",
-        )        
+        )
         await ctx.send(embed=em)
 
     @help.command(aliases=["mq"])
@@ -999,6 +1013,7 @@ class Help(commands.Cog):
         )
         em.add_field(name="**Aliases**", value=",".join(ctx.command.aliases))
         await ctx.send(embed=em)
+
 
 def setup(client):
     client.add_cog(Help(client))
