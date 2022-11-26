@@ -4,8 +4,6 @@ import disnake
 from saucenao_api import SauceNao
 import os
 import re
-import requests
-import asyncio
 import aiohttp
 
 from myfunctions import msg_link_grabber

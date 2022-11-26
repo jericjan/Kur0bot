@@ -51,7 +51,7 @@ class Download(commands.Cog):
         try:
 
             async def send_vid(filename):
-                await inter.edit_original_response(f"Done!")
+                await inter.edit_original_response("Done!")
                 webhook = await inter.channel.create_webhook(
                     name=inter.author.display_name
                 )

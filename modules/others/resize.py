@@ -6,8 +6,6 @@ import aiohttp
 from PIL import Image
 import io
 import requests
-import uuid
-import cv2
 import functools
 from aiolimiter import AsyncLimiter
 import re

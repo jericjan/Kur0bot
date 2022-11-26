@@ -109,6 +109,8 @@ module_paths = (
     "modules.others.hall_of_shame",
     "modules.others.getosumap",
     "modules.others.vergil",
+    "modules.others.google",
+    "modules.others.meme",
     "modules.pacifam_only",
     "modules.kur0_only",
     "modules.sus",

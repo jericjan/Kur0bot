@@ -510,7 +510,7 @@ class Vc(commands.Cog):
             if self.there_is_queue(ctx):
                 asyncio.run_coroutine_threadsafe(self.run_queue(ctx), self.client.loop)
                 em = disnake.Embed(
-                    title="▶ CONTINUING! ▶", description=f"There's a queue! Playing it!"
+                    title="▶ CONTINUING! ▶", description="There's a queue! Playing it!"
                 )
                 await ctx.send(embed=em)
             else:
@@ -572,7 +572,7 @@ class Vc(commands.Cog):
             if music_queue:
                 asyncio.run_coroutine_threadsafe(self.run_queue(ctx), self.client.loop)
                 em = disnake.Embed(
-                    title="▶ CONTINUING! ▶", description=f"There's a queue! Playing it!"
+                    title="▶ CONTINUING! ▶", description="There's a queue! Playing it!"
                 )
                 await ctx.send(embed=em)
             return
@@ -601,7 +601,7 @@ class Vc(commands.Cog):
             if self.there_is_queue(ctx):
                 asyncio.run_coroutine_threadsafe(self.run_queue(ctx), self.client.loop)
                 em = disnake.Embed(
-                    title="▶ CONTINUING! ▶", description=f"There's a queue! Playing it!"
+                    title="▶ CONTINUING! ▶", description="There's a queue! Playing it!"
                 )
                 await ctx.send(embed=em)
             else:
@@ -614,11 +614,11 @@ class Vc(commands.Cog):
         coms = ["sam/sam", "-wav", file_path, msg]
         try:
             await asyncio.wait_for(subprocess_runner.run_subprocess(coms), timeout=10)
-        except asyncio.TimeoutError as e:
+        except asyncio.TimeoutError:
             coms = "ps -aef | grep sam/sam | awk '{print $2}' | xargs kill -9 $1"
             try:
                 await subprocess_runner.run_subprocess(coms, shell=True)
-            except subprocess_runner.SubprocessError as e:
+            except subprocess_runner.SubprocessError:
                 pass
             await ctx.send("Timed out. I can't do it :(")
         except subprocess_runner.SubprocessError as e:

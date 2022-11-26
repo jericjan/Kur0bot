@@ -1014,6 +1014,29 @@ class Help(commands.Cog):
         em.add_field(name="**Aliases**", value=",".join(ctx.command.aliases))
         await ctx.send(embed=em)
 
+    @help.command()
+    @commands.bot_has_permissions(embed_links=True)
+    async def google(self, ctx):
+        em = disnake.Embed(
+            title="Google Search",
+            description="Searches Google and sends back results as an embed.",
+        )
+        em.add_field(name="**Syntax**", value=r"k.google <search_query>", inline=False)
+        await ctx.send(embed=em)
+
+    @help.command()
+    @commands.bot_has_permissions(embed_links=True)
+    async def meme(self, ctx):
+        em = disnake.Embed(
+            title="Meme Generator",
+            description="Make a quick meme with this command",
+        )
+        em.add_field(
+            name="**Syntax**",
+            value=r"k.meme <top_text> <bottom_text> <img_url/reply to a message>",
+            inline=False,
+        )
+        await ctx.send(embed=em)
 
 def setup(client):
     client.add_cog(Help(client))

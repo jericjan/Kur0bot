@@ -1,12 +1,11 @@
 from disnake.ext import commands
 import disnake
 import os
-import requests
 import glob
 import json
 from lorem.text import TextLorem
 import aiohttp
-from dotenv import load_dotenv, set_key, find_dotenv
+from dotenv import load_dotenv
 from myfunctions import subprocess_runner
 import asyncio
 
@@ -20,10 +19,12 @@ class Kur0only(commands.Cog):
     async def makeembed(self, ctx, title, description):
         if description.startswith("https"):
             print("description is url")
-            x = requests.get(
-                f"https://quiet-sun-6d6e.cantilfrederick.workers.dev/?{description}"
-            )
-            embed = disnake.Embed(title=title, description=x.text)
+            async with aiohttp.ClientSession() as session:
+                async with session.get(
+                    f"https://quiet-sun-6d6e.cantilfrederick.workers.dev/?{description}"
+                ) as response:
+                    text = await response.text()
+            embed = disnake.Embed(title=title, description=text)
             await ctx.send(embed=embed)
             await ctx.message.delete()
         else:
@@ -38,10 +39,12 @@ class Kur0only(commands.Cog):
         if description.startswith("https"):
             print("description is url")
             msg = await ctx.fetch_message(id)
-            x = requests.get(
-                f"https://quiet-sun-6d6e.cantilfrederick.workers.dev/?{description}"
-            )
-            embed = disnake.Embed(title=title, description=x.text)
+            async with aiohttp.ClientSession() as session:
+                async with session.get(
+                    f"https://quiet-sun-6d6e.cantilfrederick.workers.dev/?{description}"
+                ) as response:
+                    text = await response.text()
+            embed = disnake.Embed(title=title, description=text)
             await msg.edit(embed=embed)
             await ctx.message.delete()
         else:
@@ -217,18 +220,15 @@ class Kur0only(commands.Cog):
 
         async def to_fb():
             url = f"https://graph-video.facebook.com/v8.0/100887555109330/videos?access_token={access_token}&limit=10"
-            files = {"file": ("vid.mp4", open(fname, mode="rb"))}
-            flag = requests.post(
-                url,
-                files=files,
-                data={"description": f"{title}\n(NOT MINE) Source: {fixed_link}"},
-            )  # .text
-            flagg = flag.text
-
-            data = json.loads(flagg)
-
-            if flag.status_code != 200:
-                raise Exception(f"FB FAIL:\n{flagg}")
+            data = aiohttp.FormData()
+            data.add_field("file", open(fname, mode="rb"), filename="vid.mp4")
+            data.add_field("description", f"{title}\n(NOT MINE) Source: {fixed_link}")
+            async with aiohttp.ClientSession() as session:
+                async with session.post(url, data=data) as response:
+                    data = await response.json()
+                    status_code = response.status
+            if status_code != 200:
+                raise Exception(f"FB FAIL:\n{json.dumps(data, indent=4)}")
             else:
                 print("We gucci, my dude.")
                 vid_id = data["id"]

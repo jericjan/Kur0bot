@@ -1,6 +1,4 @@
 from disnake.ext import commands
-import modules.events
-import importlib
 
 
 class Loaders(commands.Cog):

@@ -6,7 +6,6 @@ import os
 import re
 import json
 import dateutil.parser as dp
-import re
 from html.parser import HTMLParser
 
 

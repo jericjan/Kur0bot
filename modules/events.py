@@ -8,7 +8,7 @@ import json
 import asyncio
 from gtts import gTTS
 import difflib
-from datetime import datetime, timedelta
+from datetime import datetime
 import pytz
 import os
 
@@ -499,7 +499,7 @@ class Events(commands.Cog):
     ################################ON_SLASH_COMMAND_ERROR#############
     @commands.Cog.listener()
     async def on_slash_command_error(self, inter, error):
-        await inter.followup.send(f"{self.get_full_class_name(error)}: {e}")
+        await inter.followup.send(f"{self.get_full_class_name(error)}: {error}")
 
 
 def setup(client):
