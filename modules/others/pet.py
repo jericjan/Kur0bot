@@ -1,8 +1,9 @@
-from petpetgif import petpet
-import requests
 from io import BytesIO
-from disnake.ext import commands
+
+import aiohttp
 import disnake
+from disnake.ext import commands
+from petpetgif import petpet
 
 
 class Pet(commands.Cog):
@@ -11,10 +12,10 @@ class Pet(commands.Cog):
     async def pet(self, ctx, url):
         if ctx.message.mentions.__len__() > 0:
             for user in ctx.message.mentions:
-                pfp = requests.get(user.display_avatar.url)
-                source = BytesIO(
-                    pfp.content
-                )  # file-like container to hold the emoji in memory
+                async with aiohttp.ClientSession() as session:
+                    async with session.get(user.display_avatar.url) as resp:
+                        pfp = await resp.read()
+                source = BytesIO(pfp)  # file-like container to hold the emoji in memory
                 source.seek(0)
                 dest = BytesIO()  # container to store the petpet gif in memory
                 petpet.make(source, dest)
@@ -41,10 +42,10 @@ class Pet(commands.Cog):
 
                 await webhook.delete()
         elif url.startswith("http"):
-            pfp = requests.get(url)
-            source = BytesIO(
-                pfp.content
-            )  # file-like container to hold the emoji in memory
+            async with aiohttp.ClientSession() as session:
+                async with session.get(url) as resp:
+                    pfp = await resp.read()
+            source = BytesIO(pfp)  # file-like container to hold the emoji in memory
             source.seek(0)
             dest = BytesIO()  # container to store the petpet gif in memory
             petpet.make(source, dest)

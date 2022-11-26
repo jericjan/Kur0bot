@@ -1,12 +1,14 @@
-from disnake.ext import commands
-import disnake
-import cv2
-import numpy as np
-import uuid
-import requests
 import os
 import shutil
 import time
+import uuid
+
+import aiohttp
+import cv2
+import disnake
+import numpy as np
+from disnake.ext import commands
+
 from myfunctions import msg_link_grabber, subprocess_runner
 
 
@@ -25,10 +27,10 @@ class Vergil(commands.Cog):
         cap = cv2.VideoCapture(
             "videos/vergil_greenscreen/vergil_%06d.png", cv2.CAP_IMAGES
         )
-        url_response = requests.get(link)
-        user_image = cv2.imdecode(
-            np.array(bytearray(url_response.content), dtype=np.uint8), -1
-        )
+        async with aiohttp.ClientSession() as session:
+            async with session.get(link) as resp:
+                byte_content = await resp.read()
+        user_image = cv2.imdecode(np.array(bytearray(byte_content), dtype=np.uint8), -1)
 
         # grab one frame
         _, frame = cap.read()
@@ -177,10 +179,10 @@ class Vergil(commands.Cog):
         cap = cv2.VideoCapture(
             "videos/vergil_greenscreen/vergil_%06d.png", cv2.CAP_IMAGES
         )
-        url_response = requests.get(link)
-        user_image = cv2.imdecode(
-            np.array(bytearray(url_response.content), dtype=np.uint8), -1
-        )
+        async with aiohttp.ClientSession() as session:
+            async with session.get(link) as resp:
+                byte_content = await resp.json()
+        user_image = cv2.imdecode(np.array(bytearray(byte_content), dtype=np.uint8), -1)
 
         # grab one frame
         _, frame = cap.read()

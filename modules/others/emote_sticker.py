@@ -201,7 +201,7 @@ class EmoteSticker(commands.Cog):
 
     @run_in_executor
     def sticker_resize(self, link):  # Your wrapper for async use
-        response = requests.get(link)
+        response = requests.get(link)  # threaded
         byteio = io.BytesIO(response.content)
         im = Image.open(byteio)
         width, height = im.size

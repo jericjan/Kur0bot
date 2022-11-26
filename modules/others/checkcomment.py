@@ -1,10 +1,11 @@
-from disnake.ext import commands
-import time
-import re
-import requests
-import os
 import asyncio
+import os
+import re
+import time
 from urllib.request import urlopen
+
+import aiohttp
+from disnake.ext import commands
 
 
 class CheckComment(commands.Cog):
@@ -36,17 +37,18 @@ class CheckComment(commands.Cog):
             url = "https://youtube.googleapis.com/youtube/v3/comments"
             msg = await ctx.send("Searching...")
             while time.time() < comment_end_time:
-                r = requests.get(url, headers=None, params=params)
+                async with aiohttp.ClientSession() as session:
+                    async with session.get(url, params=params) as resp:
+                        r_json = await resp.json()
+                        status_code = resp.status
                 time_passed = time.time() - comment_start_time
-                if r.status_code == 200:
+                if status_code == 200:
                     try:
-                        name = r.json()["items"][0]["snippet"]["authorDisplayName"]
-                        comment_content = r.json()["items"][0]["snippet"][
-                            "textOriginal"
-                        ]
+                        name = r_json["items"][0]["snippet"]["authorDisplayName"]
+                        comment_content = r_json["items"][0]["snippet"]["textOriginal"]
                         print(f"{name}: {comment_content[:15]}...")
                         await msg.edit(
-                            content=f"{time_passed:.2f}s: We're good! ({r.status_code})"
+                            content=f"{time_passed:.2f}s: We're good! ({status_code})"
                         )
                     except:
                         await msg.edit(
@@ -55,7 +57,7 @@ class CheckComment(commands.Cog):
                         return
                 else:
                     await msg.edit(
-                        content=f"{time_passed:.2f}s: FAIL! ({r.status_code}) {ctx.author.mention}"
+                        content=f"{time_passed:.2f}s: FAIL! ({status_code}) {ctx.author.mention}"
                     )
                     return
                 await asyncio.sleep(10)
@@ -89,18 +91,21 @@ class CheckComment(commands.Cog):
                     "continuation": continuation_token,
                 }
                 # VVVVVVVVVVVV seems to be some public API key on youtube. https://stackoverflow.com/a/70793047
-                r = requests.post(
-                    "https://www.youtube.com/youtubei/v1/browse?key=AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8&prettyPrint=true",
-                    headers=headers,
-                    json=data,
-                )
-                found_index = r.text.find(id)
+                async with aiohttp.ClientSession() as session:
+                    async with session.post(
+                        "https://www.youtube.com/youtubei/v1/browse?key=AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8&prettyPrint=true",
+                        headers=headers,
+                        json=data,
+                    ) as resp:
+                        text = await resp.text()
+                        status_code = resp.status
+                found_index = text.find(id)
                 print(f"Found? {found_index}")
 
                 time_passed = time.time() - comment_start_time
                 if found_index != -1:
                     await msg.edit(
-                        content=f"{time_passed:.2f}s: We're good! (Status: {r.status_code} | Index: {found_index})"
+                        content=f"{time_passed:.2f}s: We're good! (Status: {status_code} | Index: {found_index})"
                     )
                 else:
                     await msg.edit(

@@ -3,3 +3,6 @@ repos:
     rev: 1.5.1
     hooks:
     -   id: darker
+        args: [--isort]
+        additional_dependencies:
+        -   isort

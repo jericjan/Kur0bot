@@ -1,7 +1,9 @@
-from disnake.ext import commands
 import os
-import requests
+
+import aiohttp
 import dateutil.parser as dp
+from disnake.ext import commands
+
 from myfunctions import msg_link_grabber
 
 
@@ -52,7 +54,9 @@ class When(commands.Cog):
                 "id": idd,
             }
             url = "https://www.googleapis.com/youtube/v3/videos"
-            r = requests.get(url, headers=None, params=params).json()
+            async with aiohttp.ClientSession() as session:
+                async with session.get(url, params=params) as resp:
+                    r = await resp.json()
             publish_time = r["items"][0]["snippet"]["publishedAt"]
             epoch_time = dp.parse(publish_time).timestamp()
             await ctx.send(f"Video was published at <t:{epoch_time:.0f}:F>")

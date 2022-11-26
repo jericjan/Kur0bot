@@ -115,7 +115,7 @@ class Superchat(commands.Cog):
         out = Image.alpha_composite(out, blank2)
 
         mask = Image.open("masks/circle-mask.png").convert("L")
-        response = requests.get(pfp)
+        response = requests.get(pfp)  # threaded
         byteio = io.BytesIO(response.content)
         im0 = Image.open(byteio)
         im0.seek(0)

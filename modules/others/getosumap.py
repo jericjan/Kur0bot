@@ -98,9 +98,6 @@ class GetOsuMap(commands.Cog):
                                 url = f"https://osu.ppy.sh/beatmaps/{beatmap['beatmap_id']}"
                                 results.append(f"[{diff:.2f}] {title}\n{url}")
                             await ctx.send("\n".join(results))
-                            # r=requests.get(f"https://osu.ppy.sh/api/v2/beatmaps/lookup?filename={filename}", headers={"Authorization":f"Bearer {osukey}"})
-                            # r=requests.get(f"https://osu.ppy.sh/api/v2/beatmaps/lookup?filename={filename}", headers={"Authorization":f"Bearer {osukey}"})
-                            # await ctx.send(f"{r.status_code}: {r.content}")
                     except AttributeError:
                         not_osu_count += 1
                 else:

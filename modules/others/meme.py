@@ -2,7 +2,6 @@ from disnake.ext import commands
 import disnake
 from myfunctions import msg_link_grabber
 import aiohttp
-import os
 from io import BytesIO
 import re
 

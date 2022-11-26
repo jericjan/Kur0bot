@@ -28,7 +28,7 @@ class Resize(commands.Cog):
         return inner
 
     def bar(self, link, width, height):
-        response = requests.get(link)
+        response = requests.get(link)  # threaded
         byteio = io.BytesIO(response.content)
         im = Image.open(byteio)
         newsize = (int(width), int(height))

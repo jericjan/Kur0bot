@@ -155,7 +155,9 @@ async def stream(ctx, link, noembed=None):
         }
 
         url = "https://www.googleapis.com/youtube/v3/videos"
-        r = requests.get(url, headers=None, params=params).json()
+        async with aiohttp.ClientSession() as session:
+            async with session.get(url, params=params) as resp:
+                r = await resp.json()
         isotime = r["items"][0]["liveStreamingDetails"]["scheduledStartTime"]
         title = r["items"][0]["snippet"]["title"]
         author = r["items"][0]["snippet"]["channelTitle"]
@@ -194,7 +196,9 @@ async def stream(ctx, link, noembed=None):
         }
 
         url = "https://www.googleapis.com/youtube/v3/channels"
-        r2 = requests.get(url, headers=None, params=params2).json()
+        async with aiohttp.ClientSession() as session:
+            async with session.get(url, params=params2) as resp:
+                r2 = await resp.json()
         pfp = r2["items"][0]["snippet"]["thumbnails"]["default"]["url"]
         e = disnake.Embed(title=title, timestamp=dttime, description=reltime, url=link)
         e.set_author(

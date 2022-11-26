@@ -1,9 +1,10 @@
-import humanize
-import os
-import disnake
-from urllib.parse import quote
-import requests
 import io
+import os
+from urllib.parse import quote
+
+import aiohttp
+import disnake
+import humanize
 
 
 def delete_file(filename):
@@ -42,7 +43,9 @@ async def send_file(ctx, message, filename, custom_name=None):
     else:
         os.rename(filename, f"temp/{filename}")
         url_enc_filename = quote(filename)
-        ip = requests.get("https://checkip.amazonaws.com").text.strip()
+        async with aiohttp.ClientSession() as session:
+            async with session.get("https://checkip.amazonaws.com") as resp:
+                ip = await resp.text().strip()
         msg = (
             "File too large, broski <:towashrug:853606191711649812>\n"
             f"The file: {humanize.naturalsize(filesize, binary=True)}\n"
