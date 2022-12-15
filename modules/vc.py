@@ -475,17 +475,33 @@ class Vc(commands.Cog):
         start_time = time.time()
         tasks = []
 
-        coms = ["yt-dlp", "-f", "bestaudio", "--get-url", url]
+        coms = [
+            "yt-dlp",
+            "-f",
+            "bestaudio",
+            "--get-url",
+            "--force-ipv4",
+            "--no-warnings",
+            url,
+        ]
         tasks.append(subprocess_runner.run_subprocess(coms))
 
         if title is None:
-            coms = ["yt-dlp", "-f", "bestaudio", "--get-title", url]
+            coms = [
+                "yt-dlp",
+                "-f",
+                "bestaudio",
+                "--get-title",
+                "--force-ipv4",
+                "--no-warnings",
+                url,
+            ]
             tasks.append(subprocess_runner.run_subprocess(coms))
 
         gathered = await asyncio.gather(*tasks)
-        direct_url = gathered[0][1].decode("utf-8").strip("\n")
+        direct_url = gathered[0][1].decode("utf-8").splitlines()[0]
         if title is None:
-            title = gathered[1][1].decode("utf-8").strip("\n")
+            title = gathered[1][1].decode("utf-8").splitlines()[0]
         print(f"tasks ran: {(time.time()-start_time):.2f}")
         start_time = time.time()
         asyncio.run_coroutine_threadsafe(
@@ -520,20 +536,29 @@ class Vc(commands.Cog):
         if not voicestate:
             await ctx.send("You ain't in a VC buhhhh")
             return
-        loop = asyncio.get_running_loop()
+        # loop = asyncio.get_running_loop()
         voice = disnake.utils.get(self.client.voice_clients, guild=ctx.guild)
         if voice == None:
             voice_channel = ctx.author.voice.channel
             voice = await voice_channel.connect()
         if not voice.is_playing() and not ctx.guild.id in self.temp_servers_playing:
-            loop.create_task(self.pre_play(ctx, url))
+            # loop.create_task(self.pre_play(ctx, url))
+            asyncio.run_coroutine_threadsafe(self.pre_play(ctx, url), self.client.loop)
             self.temp_servers_playing[
                 ctx.guild.id
             ] = 0  # temporarily adds to this dict to let bot now the server is playing music
         else:
-            coms = ["yt-dlp", "-f", "bestaudio", "--get-title", url]
+            coms = [
+                "yt-dlp",
+                "-f",
+                "bestaudio",
+                "--get-title",
+                "--force-ipv4",
+                "--no-warnings",
+                url,
+            ]
             proc, stdout, stderr = await subprocess_runner.run_subprocess(coms)
-            title = stdout.decode("utf-8").strip("\n")
+            title = stdout.decode("utf-8").splitlines()[0]
             try:
                 self.temp_servers_playing[ctx.guild.id] += 1
             except KeyError:

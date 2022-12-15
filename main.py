@@ -6,22 +6,28 @@ import disnake
 
 print(f"Running Disnake {disnake.__version__}")
 
-from disnake.ext import commands
-import os
-from keep_alive import keep_alive
 import asyncio
-import aiohttp
+import atexit
+import logging
+import os
+import signal
+import threading
 from datetime import datetime, timedelta
+
+import aiohttp
 import pytz
 import requests
-import threading
-import atexit
-import signal
+from disnake.ext import commands
+
+from keep_alive import keep_alive
+
+logging.getLogger("asyncio").setLevel(logging.DEBUG)
+
 
 from dotenv import load_dotenv
 
 load_dotenv()
-
+print(f"Asyncio Debug Mode: {os.getenv('PYTHONASYNCIODEBUG')}")
 
 def goodbye(a=None, b=None):
     print("Exiting...")
@@ -130,8 +136,8 @@ async def common(ctx):
     await log(str(text))
 
 
-from disnake import Webhook
 import dateutil.parser as dp
+from disnake import Webhook
 
 
 @client.command()

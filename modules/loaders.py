@@ -1,3 +1,6 @@
+import importlib
+import sys
+
 from disnake.ext import commands
 
 
@@ -22,7 +25,14 @@ class Loaders(commands.Cog):
     @commands.command(name="reload", aliases=["refresh"])
     @commands.is_owner()
     async def p_reload(self, ctx, name):
-        self.client.reload_extension(name)
+        try:
+            self.client.reload_extension(name)
+        except commands.ExtensionNotLoaded as e:
+            try:
+                importlib.reload(sys.modules[name])
+            except KeyError as e:
+                await ctx.send(f"Could not find module")
+                return
         await ctx.send(f"{name} reloaded!")
 
     @commands.slash_command(name="reload")

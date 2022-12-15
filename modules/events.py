@@ -12,6 +12,8 @@ from datetime import datetime
 import pytz
 import os
 
+from myfunctions.async_wrapper import async_wrap
+
 sus_words = [
     "amongus",
     "аmongus",
@@ -65,7 +67,7 @@ class Events(commands.Cog):
 
     @commands.Cog.listener()
     async def on_ready(self):
-
+        self.client.loop.set_debug(True)
         print(
             f"\033[92m{(time.time() - self.start_time):.2f}s - We have logged in as {self.client.user}\033[0m"
         )
@@ -125,6 +127,17 @@ class Events(commands.Cog):
 
     @commands.Cog.listener()
     async def on_presence_update(self, before, after):
+        @async_wrap
+        def load_json():
+            return json.load(open("modules/others/hall_of_shame_ids.json"))
+
+        @async_wrap
+        def log_activity(game_id, guild, name, activity_name):
+            with open("activities.txt", "a") as f:
+                f.write(
+                    f"({game_id}) [{guild}] {name}: started playing {activity_name}"
+                )
+
         new_user_activities = after.activities
         id_list = []
         game_names = []
@@ -146,14 +159,11 @@ class Events(commands.Cog):
                         game_id = activity.application_id
                     except:
                         game_id = "UNKNOWN"
-                    with open("activities.txt", "a") as f:
-                        f.write(
-                            f"({game_id}) [{after.guild}] {after.name}: started playing {activity.name}"
-                        )
+
+                    await log_activity(game_id, after.guild, after.name, activity.name)
+
                     if game_id in id_list or activity.name in game_names:
-                        hall_of_shame_json = json.load(
-                            open("modules/others/hall_of_shame_ids.json")
-                        )
+                        hall_of_shame_json = await load_json()
                         try:
                             hall_of_shame_channel_id = hall_of_shame_json[
                                 str(after.guild.id)
@@ -187,9 +197,10 @@ class Events(commands.Cog):
                                     name_list = [i.name for i in em.fields]
                                 await hall_of_shame.edit(embed=em)
                         except Exception as e:
-                            print(
-                                f"UNSET: ({game_id}) [{after.guild}] {after.name}: started playing {activity.name}\n{e}"
-                            )
+                            pass
+                            # print(
+                            # f"UNSET: ({game_id}) [{after.guild}] {after.name}: started playing {activity.name}\n{e}"
+                            # )
 
     @commands.Cog.listener()
     async def on_message(self, message):

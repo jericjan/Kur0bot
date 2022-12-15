@@ -1,5 +1,10 @@
-from disnake.ext import commands
+import disnake
 import translators as ts
+from disnake.ext import commands
+from jisho_api.word import Word
+
+from modules.paginator import ButtonPaginator
+from myfunctions.async_wrapper import async_wrap
 
 
 class DeepL_commands(commands.Cog):
@@ -31,8 +36,12 @@ class DeepL_commands(commands.Cog):
             else:
                 await ctx.send("what am i supposed to translate? try again dawg.")
                 return
-        result = ts.google(text, to_language="en")
+        result = await self.google_translate(text, "en")
         await ctx.send(result)
+
+    @async_wrap
+    def google_translate(self, text, to_language):
+        return ts.google(text, to_language=to_language)
 
     @commands.command(aliases=["german"])
     async def doitsu(self, ctx, *, text=None):
@@ -45,9 +54,51 @@ class DeepL_commands(commands.Cog):
             else:
                 await ctx.send("what am i supposed to translate? try again dawg.")
                 return
+
         result = ts.google(text, to_language="de")
         await ctx.send(result)
 
+    @async_wrap
+    def jisho_word(self, word):
+        return Word.request(word)
 
+    @commands.command()
+    async def jisho(self, ctx, query):
+        r = await self.jisho_word(query)
+        if r is None:
+            await ctx.send("Could not find anything. Sorry")
+            return
+        print(r.dict())
+        datas = r.dict()["data"]
+        embed_list = []
+        for data in datas:
+            japanese = data["japanese"]
+            desc = ""
+            for x in japanese:
+                word = x["word"]
+                if word is None:
+                    word = ""
+                reading = x["reading"]
+                desc += f"**{word} ({reading})**\n"
+            senses = data["senses"]
+            for idx, x in enumerate(senses):
+                eng_def = x["english_definitions"]
+                parts_of_speech = x["parts_of_speech"]
+                if "Wikipedia definition" in parts_of_speech:
+                    if idx == 0:
+                        parts_of_speech = ""
+                    else:
+                        continue
+                else:
+                    parts_of_speech = f"__{', '.join(parts_of_speech)}__"
+                desc += f"{parts_of_speech}\n➤{', '.join(eng_def)}\n"
+            embed_list.append(
+                disnake.Embed(
+                    title=f"You searched for '{query}'",
+                    description=desc,
+                )
+            )
+        paginator = ButtonPaginator(segments=embed_list)
+        await paginator.send(ctx)
 def setup(client):
     client.add_cog(DeepL_commands(client))
