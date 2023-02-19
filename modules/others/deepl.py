@@ -57,18 +57,23 @@ class DeepL_commands(commands.Cog):
 
         result = ts.google(text, to_language="de")
         await ctx.send(result)
-
     @async_wrap
     def jisho_word(self, word):
         return Word.request(word)
 
     @commands.command()
-    async def jisho(self, ctx, query):
+    async def jisho(self, ctx, query=None):
+        if query is None:
+            replied_msg = ctx.message.reference
+            if replied_msg is not None:  # message is replying
+                query = replied_msg.resolved.content
+            else:
+                await ctx.send("I got nothin to jisho. L.")
+                return
         r = await self.jisho_word(query)
         if r is None:
-            await ctx.send("Could not find anything. Sorry")
+            await ctx.send(f"Could not find anything for `{query}`. Sorry")
             return
-        print(r.dict())
         datas = r.dict()["data"]
         embed_list = []
         for data in datas:

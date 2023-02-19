@@ -61,21 +61,31 @@ class When(commands.Cog):
             epoch_time = dp.parse(publish_time).timestamp()
             await ctx.send(f"Video was published at <t:{epoch_time:.0f}:F>")
             if "liveStreamingDetails" in r["items"][0].keys():
-                stream_start = r["items"][0]["liveStreamingDetails"]["actualStartTime"]
-                epoch_stream_start = dp.parse(stream_start).timestamp()
-                if "actualEndTime" in r["items"][0]["liveStreamingDetails"].keys():
-                    stream_end = r["items"][0]["liveStreamingDetails"]["actualEndTime"]
+                stream_details = r["items"][0]["liveStreamingDetails"]
+
+                if "actualStartTime" in stream_details.keys():
+                    stream_start = stream_details["actualStartTime"]
+                    epoch_stream_start = (
+                        f"<t:{dp.parse(stream_start).timestamp():.0f}:F>"
+                    )
+                else:
+                    epoch_stream_start = "**Not started yet.**"
+                if "actualEndTime" in stream_details.keys():
+                    stream_end = stream_details["actualEndTime"]
                     epoch_stream_end = f"<t:{dp.parse(stream_end).timestamp():.0f}:F>"
                 else:
                     epoch_stream_end = "**Not ended yet.**"
-                stream_schedule = r["items"][0]["liveStreamingDetails"][
-                    "scheduledStartTime"
-                ]
-                epoch_stream_schedule = dp.parse(stream_schedule).timestamp()
-                await ctx.send(
-                    f"Stream started at <t:{epoch_stream_start:.0f}:F>\nStream ended at {epoch_stream_end}\nStream was schedule to start at <t:{epoch_stream_schedule:.0f}:F>"
-                )
 
+                if "scheduledStartTime" in stream_details.keys():
+                    stream_schedule = stream_details["scheduledStartTime"]
+                    epoch_stream_schedule = (
+                        f"<t:{dp.parse(stream_schedule).timestamp():.0f}:F>"
+                    )
+                else:
+                    epoch_stream_schedule = "**No scheduled start time**"
+                await ctx.send(
+                    f"Stream started at {epoch_stream_start}\nStream ended at {epoch_stream_end}\nStream was schedule to start at {epoch_stream_schedule}"
+                )
 
 def setup(client):
     client.add_cog(When(client))

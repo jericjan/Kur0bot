@@ -1,16 +1,22 @@
 # followed this https://gist.github.com/15696/a1b10f044fbd658ce76ab1f862a1bda2
 # client becomes self.client
 
-from disnake.ext import commands
-import disnake
-import random
-import os
 import asyncio
+import base64
 import json
-from myfunctions import subprocess_runner
-import uuid
-from myfunctions.my_db import get_db
+import os
+import random
 import time
+import uuid
+from io import BytesIO
+from tempfile import NamedTemporaryFile
+
+import aiohttp
+import disnake
+from disnake.ext import commands
+
+from myfunctions import subprocess_runner
+from myfunctions.my_db import get_db
 
 
 class Vc(commands.Cog):
@@ -100,6 +106,16 @@ class Vc(commands.Cog):
                             self.run_queue(ctx), self.client.loop
                         ),
                     )
+                elif "file_obj" in kwargs:
+                    print(f"file object is {type(a)}")
+                    a.seek(0)
+                    with NamedTemporaryFile() as fp:
+                        fp.write(a.getbuffer())
+                        fp.seek(0)
+                        print(f"temp file is {fp.name}")
+                        pcm_audio = disnake.FFmpegPCMAudio(source=fp.name)
+                        magic = pcm_audio.read()  # doesn't work without this
+                        voice.play(pcm_audio)
                 else:
                     voice.play(disnake.FFmpegPCMAudio(source=a))
 
@@ -112,63 +128,65 @@ class Vc(commands.Cog):
             if isRandom == True:
                 a = random.choice(a)
             print(f"playing {a}")
-            filename = a.split("/")[-1]
-            print(f"filename is: {filename}")
-            if a.split("/")[1] == "mgr":
-                speaker = a.split("/")[-2]
-                with open("modules/mgr_users.json") as f:
-                    mgr_json = json.load(f)
-                if speaker in mgr_json:
-                    if isinstance(ctx.channel, disnake.TextChannel):
-                        webhook = await ctx.channel.create_webhook(
-                            name=mgr_json[speaker]["name"]
-                        )
-                        await webhook.send(
-                            file=disnake.File(a, filename=filename),
-                            username=mgr_json[speaker]["name"],
-                            avatar_url=mgr_json[speaker]["pfp"],
-                        )
-                        await webhook.delete()
-                    elif isinstance(ctx.channel, disnake.Thread):
-                        webhook = await ctx.channel.parent.create_webhook(
-                            name=mgr_json[speaker]["name"]
-                        )
-                        await webhook.send(
-                            file=disnake.File(a, filename=filename),
-                            username=mgr_json[speaker]["name"],
-                            avatar_url=mgr_json[speaker]["pfp"],
-                            thread=ctx.channel,
-                        )
-                        await webhook.delete()
-                elif filename in mgr_json:
-                    if isinstance(ctx.channel, disnake.TextChannel):
-                        webhook = await ctx.channel.create_webhook(
-                            name=mgr_json[filename]["name"]
-                        )
-                        await webhook.send(
-                            file=disnake.File(a, filename=filename),
-                            username=mgr_json[filename]["name"],
-                            avatar_url=mgr_json[filename]["pfp"],
-                        )
-                        await webhook.delete()
-                    elif isinstance(ctx.channel, disnake.Thread):
-                        webhook = await ctx.channel.parent.create_webhook(
-                            name=mgr_json[filename]["name"]
-                        )
-                        await webhook.send(
-                            file=disnake.File(a, filename=filename),
-                            username=mgr_json[filename]["name"],
-                            avatar_url=mgr_json[filename]["pfp"],
-                            thread=ctx.channel,
-                        )
-                        await webhook.delete()
-                else:
-                    await ctx.send(file=disnake.File(a, filename=filename))
-            else:
-                if "custom_name" in kwargs:
-                    await ctx.send(file=disnake.File(a, filename=kwargs["custom_name"]))
-                else:
-                    await ctx.send(file=disnake.File(a, filename=filename))
+
+            if "custom_name" in kwargs:
+                filename = kwargs["custom_name"]
+            elif not isinstance(a, BytesIO):
+                filename = a.split("/")[-1]
+                print(f"filename is: {filename}")
+                if a.split("/")[1] == "mgr":
+                    speaker = a.split("/")[-2]
+                    with open("modules/mgr_users.json") as f:
+                        mgr_json = json.load(f)
+                    if speaker in mgr_json:
+                        if isinstance(ctx.channel, disnake.TextChannel):
+                            webhook = await ctx.channel.create_webhook(
+                                name=mgr_json[speaker]["name"]
+                            )
+                            await webhook.send(
+                                file=disnake.File(a, filename=filename),
+                                username=mgr_json[speaker]["name"],
+                                avatar_url=mgr_json[speaker]["pfp"],
+                            )
+                            await webhook.delete()
+                        elif isinstance(ctx.channel, disnake.Thread):
+                            webhook = await ctx.channel.parent.create_webhook(
+                                name=mgr_json[speaker]["name"]
+                            )
+                            await webhook.send(
+                                file=disnake.File(a, filename=filename),
+                                username=mgr_json[speaker]["name"],
+                                avatar_url=mgr_json[speaker]["pfp"],
+                                thread=ctx.channel,
+                            )
+                            await webhook.delete()
+                    elif filename in mgr_json:
+                        if isinstance(ctx.channel, disnake.TextChannel):
+                            webhook = await ctx.channel.create_webhook(
+                                name=mgr_json[filename]["name"]
+                            )
+                            await webhook.send(
+                                file=disnake.File(a, filename=filename),
+                                username=mgr_json[filename]["name"],
+                                avatar_url=mgr_json[filename]["pfp"],
+                            )
+                            await webhook.delete()
+                        elif isinstance(ctx.channel, disnake.Thread):
+                            webhook = await ctx.channel.parent.create_webhook(
+                                name=mgr_json[filename]["name"]
+                            )
+                            await webhook.send(
+                                file=disnake.File(a, filename=filename),
+                                username=mgr_json[filename]["name"],
+                                avatar_url=mgr_json[filename]["pfp"],
+                                thread=ctx.channel,
+                            )
+                            await webhook.delete()
+                    else:
+                        await ctx.send(file=disnake.File(a, filename=filename))
+                    return
+
+            await ctx.send(file=disnake.File(a, filename=filename))
         # Delete command after the audio is done playing.
         if not "dont_delete" in kwargs:
             await ctx.message.delete()
@@ -656,6 +674,32 @@ class Vc(commands.Cog):
             else:
                 await ctx.send(f"Error ({e.err}): {e.message}"[:2000])
         await self.vcplay(ctx, file_path, delete_file=True, custom_name="sam.wav")
+
+    @commands.command(aliases=["tt"])
+    async def tiktok(self, ctx, *, msg):
+        if len(msg) > 300:
+            await ctx.send(
+                f"Shortening text to 300 characters. It's beyond my control. <:towashrug:853606191711649812>"
+            )
+            msg = msg[:300]
+        json_data = {
+            "text": msg,
+            "voice": "en_us_001",
+        }
+        url = "https://tiktok-tts.weilnet.workers.dev/api/generation"
+        async with aiohttp.ClientSession() as session:
+            async with session.post(url, json=json_data) as response:
+                json_resp = await response.json()
+        base64_data = json_resp["data"]
+        if base64_data is None:
+            await ctx.send(f"There was an error. i dunno.")
+            return
+        else:
+            raw_bytes = base64.b64decode(base64_data)
+        with BytesIO(raw_bytes) as file_obj:
+            await self.vcplay(
+                ctx, file_obj, file_obj=True, custom_name="tiktok_voice.mp3"
+            )
 
 
 def setup(client):

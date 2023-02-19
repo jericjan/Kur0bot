@@ -251,6 +251,11 @@ class Events(commands.Cog):
                 await message.channel.send(
                     file=disnake.File("videos/professional_doxxers.mp4")
                 )
+            if any(word in msg for word in ["hurensohn", "hurensöhne"]):
+                peeps = ["304268898637709312", "365496659611746304"]
+                await message.channel.send(
+                    f"<@{random.choice(peeps)}>"
+                )  # pings strepto
         #############TWITTER LINK GIVER####################
 
         if "twitter.com" in msg:
@@ -423,10 +428,17 @@ class Events(commands.Cog):
             else:
                 await ctx.send(f"bruh. there's no '{err[1]}' command.")
         elif isinstance(error, commands.MissingRequiredArgument):
+            commands_with_help_msg = [
+                c.name for c in self.client.get_command("help").commands
+            ]
+            print("Missing req arg")
+            await ctx.send(f"missing argument `{error.param}`, g")
             command = self.client.get_command(f"help {ctx.command}")
             ctx.command = command
             ctx.invoked_subcommand = command
-            await self.client.invoke(ctx)
+            if ctx.command.name in commands_with_help_msg:
+                await self.client.invoke(ctx)
+
         elif isinstance(error, commands.NotOwner):
             await ctx.send(
                 "Bruh, how'd you find this command? Only Kur0 can use this tho lmao."

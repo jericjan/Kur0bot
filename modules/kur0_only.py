@@ -57,7 +57,7 @@ class Kur0only(commands.Cog):
     @commands.command()
     @commands.is_owner()
     async def repost(self, ctx, url):
-        target_drive = "pog6"
+        target_drive = "backblaze"
         msg = await ctx.send("Checking FB token...")
         access_token = os.getenv("FB_ACCESS_TOKEN")
         fb_app_id = os.getenv("FB_APP_ID")
@@ -127,7 +127,9 @@ class Kur0only(commands.Cog):
                 "%(title)s-%(id)s.%(ext)s",
                 fixed_link,
             ]
-            out, stdout, stderr = await subprocess_runner.run_subprocess(coms)
+            out, stdout, stderr = await subprocess_runner.run_subprocess(
+                coms, doPrint=True
+            )
 
             if out.returncode == 0:
                 return f"  Download success! ({out.returncode})"
@@ -188,7 +190,7 @@ class Kur0only(commands.Cog):
                 "rclone/rclone",
                 "copy",
                 fname,
-                f"{target_drive}:/archived youtube vids/",
+                f"{target_drive}:/Kur0sEpicStuff/archived youtube vids/",
                 "--transfers",
                 "20",
                 "--checkers",
@@ -205,15 +207,20 @@ class Kur0only(commands.Cog):
                 "--suffix=2021_12_22_092152",
                 "--suffix-keep-extension",
             ]
-            out, stdout, stderr = await subprocess_runner.run_subprocess(coms)
+            try:
+                out, stdout, stderr = await subprocess_runner.run_subprocess(coms)
+            except subprocess_runner.SubprocessError as e:
+                return str(e).splitlines()[-1]
 
             if out.returncode == 0:
                 return f"Copy to Drive success! ({out.returncode})"
             else:
+                err_msg = stderr.decode("utf-8").splitlines()[-1]
+                print(f"{err_msg=}")
                 try:
-                    error = f"Copy to Drive fail:\n Return code: {out.returncode}\n{stderr.decode()}"
+                    error = f"Copy to Drive fail:\n Return code: {out.returncode}\n{err_msg}"
                 except:
-                    error = f"Copy to Drive fail:\n Return code: {out.returncode}\n{stdout.decode()}"
+                    error = f"Copy to Drive fail:\n Return code: {out.returncode}\n{err_msg}"
                 raise Exception(error)
 
         tasks.append(to_drive())
@@ -232,7 +239,6 @@ class Kur0only(commands.Cog):
             else:
                 print("We gucci, my dude.")
                 vid_id = data["id"]
-                os.remove(fname)
                 post_link = f"https://web.facebook.com/100887555109330/videos/{vid_id}"
                 return (
                     f"{title} has been uploaded!\n"
@@ -243,7 +249,11 @@ class Kur0only(commands.Cog):
         tasks.append(to_fb())
 
         gathered = await asyncio.gather(*tasks)
+
         gathered_str = "\n".join(gathered)
+        os.remove(fname)
+        print(f"{gathered_str=}")
+        print("SENDING------------------------------------------------------------")
         await ctx.send(gathered_str)
         await msg.delete()
 

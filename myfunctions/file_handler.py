@@ -45,7 +45,8 @@ async def send_file(ctx, message, filename, custom_name=None):
         url_enc_filename = quote(filename)
         async with aiohttp.ClientSession() as session:
             async with session.get("https://checkip.amazonaws.com") as resp:
-                ip = await resp.text().strip()
+                ip = await resp.text()
+                ip = ip.strip()
         msg = (
             "File too large, broski <:towashrug:853606191711649812>\n"
             f"The file: {humanize.naturalsize(filesize, binary=True)}\n"
