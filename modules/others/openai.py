@@ -12,25 +12,24 @@ class OpenAI(commands.Cog):
 
     @commands.command()
     async def gpt(self, ctx, *, msg):
+        headers = {"Content-Type": "application/json"}
 
+        data = {"text": msg}
+        print(f"Received '{msg}'")
         async with aiohttp.ClientSession() as session:
-            try:
-                async with session.get(
-                    f"http://jericjan.jprq.live/?msg={urllib.parse.quote(msg)}"
-                ) as r:  # lt -p 1235  -s kur0gpt
-                    if r.status == 200:
-                        # json_body = await r.json()
-                        json_body = await r.text()
-                        await ctx.message.reply(json_body)
-                    else:
-                        await ctx.message.reply(
-                            f"le fail. kur0 pc off maybe. Error: {r.status}"
-                        )
-            except:
-                await ctx.message.reply("le fail. kur0 pc off maybe..")
-
-    # gpt_response = json_body['choices'][0]['message']
-    # await ctx.message.reply(gpt_response)
+            async with session.post(
+                "http://localhost:9875", headers=headers, json=data
+            ) as response:
+                gpt_response = await response.text()
+                if response.status == 200:
+                    await ctx.send(gpt_response)
+                    # Handle successful response here
+                else:
+                    print("response not 200")
+                    print(gpt_response)
+                    await ctx.send(f"ERROR: {gpt_response}")
+                    # Handle error response here
+                    pass
 
 
 def setup(client):
