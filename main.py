@@ -117,6 +117,8 @@ module_paths = (
     "modules.others.vergil",
     "modules.others.google",
     "modules.others.meme",
+    "modules.others.pinglimit",
+    "modules.others.openai",
     "modules.pacifam_only",
     "modules.kur0_only",
     "modules.sus",

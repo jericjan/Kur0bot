@@ -11,7 +11,7 @@ gtts = "^2.2.2"
 pet-pet-gif = "^1.0.1"
 Flask = "^2.0.1"
 python-dateutil = "*"
-yt-dlp = "2023.02.17"
+yt-dlp = "2023.03.04"
 mcrcon = "^0.7.0"
 saucenao-api = {git = "https://github.com/jericjan/saucenao_api.git"}
 aiohttp="<3.8.0"
@@ -34,6 +34,7 @@ darker = "^1.5.1"
 pre-commit = "^2.20.0"
 isort = "^5.10.1"
 jisho-api = "^0.1.8"
+openai = "^0.27.8"
 
 [tool.poetry.dev-dependencies]
 

@@ -150,6 +150,7 @@ class Events(commands.Cog):
         id_list.append(604089691519713300)  # honkai 3rd
         game_names.append("Honkai Impact 3")
         id_list.append(614393437030187008)  # honkai 3
+        game_names.append("Honkai: Star Rail")
         game_names.append("Genshin Impact")
         id_list.append(762434991303950386)  # genshin
         if new_user_activities:
@@ -208,6 +209,9 @@ class Events(commands.Cog):
             return
         msg = message.content.lower()
 
+        if message.channel.id == 1008770625134928054:
+            return  # temp, disabled for #serious-chat
+
         ################SUSSY REPLIES##################
         if message.channel.id == 850380119646142504:  # sus-town
             if any(word in msg for word in sus_words):
@@ -240,7 +244,10 @@ class Events(commands.Cog):
             await self.log("sussy reply", False)
 
         # le strepto
-        if any(word in msg for word in ["feet", "foot", "toe"]):
+        if any(
+            word in msg
+            for word in ["feet", "foot", "toe", "ankle", "heel", "arch", "sole"]
+        ):
             strepto_in_server = await message.guild.getch_member(268188421871108097)
             if strepto_in_server:
                 await message.channel.send("<@268188421871108097>")  # pings strepto
@@ -248,9 +255,14 @@ class Events(commands.Cog):
         # PACIFAM ONLY
         if message.guild.id == 603147860225032192:
             if "dox" in msg:
-                await message.channel.send(
-                    file=disnake.File("videos/professional_doxxers.mp4")
+                choice = random.choice(
+                    [
+                        "videos/professional_doxxers.mp4",
+                        "images/allen_quote.png",
+                        "images/dex_quote.png",
+                    ]
                 )
+                await message.channel.send(file=disnake.File(choice))
             if any(word in msg for word in ["hurensohn", "hurensöhne"]):
                 peeps = ["304268898637709312", "365496659611746304"]
                 await message.channel.send(
@@ -391,6 +403,11 @@ class Events(commands.Cog):
 
         if any(word in msg for word in ["deez", "deez nuts"]):
             await message.channel.send(random.choice(deez_replies), delete_after=3.0)
+
+        if "reaction" in msg:
+            await message.channel.send(
+                "https://tenor.com/view/kronii-hololive-edoman-3d-anime-gif-2423112144377621699"
+            )
 
     def get_full_class_name(self, obj):
         module = obj.__class__.__module__
