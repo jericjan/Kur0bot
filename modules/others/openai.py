@@ -13,12 +13,18 @@ class OpenAI(commands.Cog):
     @commands.command()
     async def gpt(self, ctx, *, msg):
 
+        url = "amongus.com"
+        headers = {
+            "Content-Type": "application/json",
+            "X-RapidAPI-Host": "joebiden.its.not.joever.yet",
+            "X-RapidAPI-Key": "deeznuts123",
+        }
+        data = {"query": msg}
+
         async with aiohttp.ClientSession() as session:
-            url = "https://free-gpt-4-api.meet508.tech/"
-            params = {"text": msg}
-            async with session.get(url, params=params) as response:
-                response_text = await response.text()
-                await ctx.send(response_text)
+            async with session.post(url, headers=headers, json=data) as response:
+                response_data = await response.json()
+                await ctx.send(response_data["response"])
 
 
 def setup(client):
