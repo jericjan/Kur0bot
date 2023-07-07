@@ -12,24 +12,13 @@ class OpenAI(commands.Cog):
 
     @commands.command()
     async def gpt(self, ctx, *, msg):
-        headers = {"Content-Type": "application/json"}
 
-        data = {"text": msg}
-        print(f"Received '{msg}'")
         async with aiohttp.ClientSession() as session:
-            async with session.post(
-                "http://localhost:9875", headers=headers, json=data
-            ) as response:
-                gpt_response = await response.text()
-                if response.status == 200:
-                    await ctx.send(gpt_response)
-                    # Handle successful response here
-                else:
-                    print("response not 200")
-                    print(gpt_response)
-                    await ctx.send(f"ERROR: {gpt_response}")
-                    # Handle error response here
-                    pass
+            url = "https://free-gpt-4-api.meet508.tech/"
+            params = {"text": msg}
+            async with session.get(url, params=params) as response:
+                response_text = await response.text()
+                await ctx.send(response_text)
 
 
 def setup(client):
