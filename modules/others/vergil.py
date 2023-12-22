@@ -75,6 +75,9 @@ class Vergil(commands.Cog):
         # videowriter
         res = (w, h)
         fourcc = cv2.VideoWriter_fourcc(*"mp4v")
+
+        os.makedirs(f"{base_dir}{random_uuid}/", exist_ok=True)
+
         out = cv2.VideoWriter(
             f"{base_dir}{random_uuid}/{file_prefix}_1.mp4", fourcc, fps, res
         )
@@ -90,8 +93,6 @@ class Vergil(commands.Cog):
         # grab one frame for dimens (not needed cuz static)
         # _, frame = cap.read()
         # h, w = frame.shape[:2]
-
-        os.makedirs(f"{base_dir}{random_uuid}/", exist_ok=True)
 
         # resizes user's image and makes copy w/o filters
         image = cv2.resize(user_image, res)
