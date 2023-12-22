@@ -1,3 +1,4 @@
+import os
 import urllib.parse
 
 import aiohttp
@@ -13,11 +14,11 @@ class OpenAI(commands.Cog):
     @commands.command()
     async def gpt(self, ctx, *, msg):
 
-        url = "amongus.com"
+        url = os.getenv("GPT_RAPIDAPI_URL")
         headers = {
             "Content-Type": "application/json",
-            "X-RapidAPI-Host": "joebiden.its.not.joever.yet",
-            "X-RapidAPI-Key": "deeznuts123",
+            "X-RapidAPI-Host": os.getenv("GPT_RAPIDAPI_HOST"),
+            "X-RapidAPI-Key": os.getenv("GPT_RAPIDAPI_KEY"),
         }
         data = {"query": msg}
 

@@ -115,6 +115,7 @@ module_paths = (
     "modules.others.hall_of_shame",
     "modules.others.getosumap",
     "modules.others.vergil",
+    "modules.others.this",
     "modules.others.google",
     "modules.others.meme",
     "modules.others.pinglimit",

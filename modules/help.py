@@ -277,6 +277,17 @@ class Help(commands.Cog):
         )
         await ctx.send(embed=em)
 
+    @help.command(aliases=["tt"])
+    @commands.bot_has_permissions(embed_links=True)
+    async def tiktok(self, ctx):
+        em = disnake.Embed(
+            title="Tiktok TTS",
+            description="Reads text in the tiktok voice in VC or as a file.",
+        )
+        em.add_field(name="**Syntax**", value="k.tiktok <message>")
+        em.add_field(name="**Aliases**", value=",".join(ctx.command.aliases))
+        await ctx.send(embed=em)
+
     @help.command()
     @commands.bot_has_permissions(embed_links=True)
     async def badapple(self, ctx):
@@ -1043,6 +1054,37 @@ class Help(commands.Cog):
             inline=False,
         )
         await ctx.send(embed=em)
+
+    @help.command(aliases=["this"])
+    @commands.bot_has_permissions(embed_links=True)
+    async def thisrighthere(self, ctx):
+        em = disnake.Embed(
+            title="This right here...",
+            description="Creates a video saying appreciating an image sent by a user.",
+        )
+        em.add_field(name="**Syntax**", value="k.this <image>", inline=False)
+        em.add_field(name="**Aliases**", value=",".join(ctx.command.aliases))
+        await ctx.send(embed=em)
+
+    @help.command()
+    @commands.bot_has_permissions(embed_links=True)
+    async def jisho(self, ctx):
+        em = disnake.Embed(
+            title="Jisho dictionary",
+            description="Searches through the Jisho database given a Japanese word",
+        )
+        em.add_field(name="**Example**", value="k.jisho 草", inline=False)
+        em.add_field(name="**Aliases**", value=",".join(ctx.command.aliases))
+        await ctx.send(embed=em)
+
+    @help.command()
+    @commands.bot_has_permissions(embed_links=True)
+    async def gpt(self, ctx):
+        em = disnake.Embed(
+            title="GPT",
+            description="Simple AI chat. Doesn't remember shit.",
+        )
+        em.add_field(name="**Syntax**", value="k.gpt <message>", inline=False)
 
 def setup(client):
     client.add_cog(Help(client))
