@@ -48,15 +48,16 @@ class Vergil(commands.Cog):
         start_time = time.time()
         link = await msg_link_grabber.grab_link(ctx, link)
         print(link)
-
+        base_dir = "videos/vergil_greenscreen/"
+        h, w = 480, 854
+        fps = 30.0
         # unique uuid
         random_uuid = uuid.uuid4()
 
         # open up video
         vergil_status = await ctx.send("Getting motivated...")
-        cap = cv2.VideoCapture(
-            "videos/vergil_greenscreen/vergil_%06d.png", cv2.CAP_IMAGES
-        )
+
+        cap = cv2.VideoCapture(base_dir + "vergil_%06d.png", cv2.CAP_IMAGES)
         async with aiohttp.ClientSession() as session:
             async with session.get(link) as resp:
                 byte_content = await resp.read()
@@ -65,25 +66,20 @@ class Vergil(commands.Cog):
         # grab one frame for dimens (not needed cuz static)
         # _, frame = cap.read()
         # h, w = frame.shape[:2]
-        h, w = 480, 854
 
         # videowriter
         res = (w, h)
         fourcc = cv2.VideoWriter_fourcc(*"mp4v")
 
-        os.makedirs(f"videos/vergil_greenscreen/{random_uuid}/", exist_ok=True)
-        out = cv2.VideoWriter(
-            f"videos/vergil_greenscreen/{random_uuid}/vergil_1.mp4", fourcc, 30.0, res
-        )
+        os.makedirs(f"{base_dir}{random_uuid}/", exist_ok=True)
+        out = cv2.VideoWriter(f"{base_dir}{random_uuid}/vergil_1.mp4", fourcc, fps, res)
 
         # resizes user's image and makes copy w/o filters
         image = cv2.resize(user_image, res)
         pre_filtered_image = image.copy()
 
         # add cut remnant+cracked effect
-        remnant = cv2.imread(
-            "videos/vergil_greenscreen/vergil_remnant.png", cv2.IMREAD_UNCHANGED
-        )
+        remnant = cv2.imread(f"{base_dir}vergil_remnant.png", cv2.IMREAD_UNCHANGED)
         image = self.transparent_paste(image, remnant)
 
         # converts to RGBA and makes copy w/ filters
@@ -143,9 +139,7 @@ class Vergil(commands.Cog):
                     shift -= 0.25
 
                     # right side
-                    right_mask = cv2.imread(
-                        "videos/vergil_greenscreen/imagecut_right.png", 0
-                    )
+                    right_mask = cv2.imread(f"{base_dir}imagecut_right.png", 0)
                     right_cut = cv2.bitwise_and(image, image, mask=right_mask)
                     # Creating a translation matrix
                     translation_matrix = np.float32(
@@ -157,9 +151,7 @@ class Vergil(commands.Cog):
                     )
 
                     # left side
-                    left_mask = cv2.imread(
-                        "videos/vergil_greenscreen/imagecut_left.png", 0
-                    )
+                    left_mask = cv2.imread(f"{base_dir}imagecut_left.png", 0)
                     left_cut = cv2.bitwise_and(image, image, mask=left_mask)
                     # Creating a translation matrix
                     translation_matrix = np.float32(
@@ -202,14 +194,14 @@ class Vergil(commands.Cog):
         await vergil_status.edit(
             content="<:motivated1:991217157100818534><:motivated2:991217292761382912><:motivated3:991217345345368074>\nApproaching..."
         )
-        vid1 = f"videos/vergil_greenscreen/{random_uuid}/vergil_1.mp4"
-        vid1_h264 = f"videos/vergil_greenscreen/{random_uuid}/vergil_1_h264.mp4"
-        vid1_ts = f"videos/vergil_greenscreen/{random_uuid}/vergil_1.ts"
-        vid2 = "videos/vergil_greenscreen/vergil_smol.mp4"
-        vid2_ts = "videos/vergil_greenscreen/vergil_smol.ts"
-        vid3 = f"videos/vergil_greenscreen/{random_uuid}/vergil_3.mp4"
-        vid4 = f"videos/vergil_greenscreen/{random_uuid}/vergil_4.mp4"
-        vergil_audio = "videos/vergil_greenscreen/vergil_full.m4a"
+        vid1 = f"{base_dir}{random_uuid}/vergil_1.mp4"
+        vid1_h264 = f"{base_dir}{random_uuid}/vergil_1_h264.mp4"
+        vid1_ts = f"{base_dir}{random_uuid}/vergil_1.ts"
+        vid2 = f"{base_dir}vergil_smol.mp4"
+        vid2_ts = f"{base_dir}vergil_smol.ts"
+        vid3 = f"{base_dir}{random_uuid}/vergil_3.mp4"
+        vid4 = f"{base_dir}{random_uuid}/vergil_4.mp4"
+        vergil_audio = f"{base_dir}vergil_full.m4a"
         vcodec = "h264"
 
         coms = [
@@ -306,7 +298,7 @@ class Vergil(commands.Cog):
             log += f"Sent file:\t{time.time()-mid_time:.2f}\n"
         log += f"Vergil arrived in {time.time()-start_time:.2f} seconds\n"
         await ctx.send(log)
-        shutil.rmtree(f"videos/vergil_greenscreen/{random_uuid}/")
+        shutil.rmtree(f"{base_dir}{random_uuid}/")
 
     @commands.command()
     async def quickvergil(self, ctx, link=None):

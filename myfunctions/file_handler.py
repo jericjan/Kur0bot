@@ -20,16 +20,22 @@ async def send_file(ctx, message, filename, custom_name=None):
     else:
         clean_name = filename.replace(",", "")
 
-    boost_size_limits = [8388608, 8388608, 52428800, 104857600]
+    def bytes_to_mebibytes(data):
+        if isinstance(data, list):
+            return [bytes * 1024 * 1024 for bytes in data]
+        else:
+            return data * 1024 * 1024
+
+    boost_size_limits = bytes_to_mebibytes([25, 25, 50, 100])
     if ctx.guild is not None:
         boosts = ctx.guild.premium_tier
         try:
             limit = boost_size_limits[boosts]
         except:
             print("Couldn't find boosts")
-            limit = 8388608
+            limit = bytes_to_mebibytes(25)
     else:
-        limit = 8388608
+        limit = bytes_to_mebibytes(25)
     if isinstance(filename, io.BytesIO):
         filesize = filename.getbuffer().nbytes
     else:

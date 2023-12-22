@@ -1020,7 +1020,7 @@ multidict = ">=4.0"
 
 [[package]]
 name = "yt-dlp"
-version = "2023.3.4"
+version = "2023.7.6"
 description = "A youtube-dl fork with additional features and patches"
 category = "main"
 optional = false
@@ -1049,7 +1049,7 @@ testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "flake8 
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "b1f32aa8445c3b7fc18ee38164dc539a70ff5fdb0a1401f609a2468cc030c8fa"
+content-hash = "4183b0297c33d92bc7d86a39f9393a1410327000b16cec83786cd02d3effee00"
 
 [metadata.files]
 aiohttp = [
@@ -2162,8 +2162,8 @@ yarl = [
     {file = "yarl-1.8.1.tar.gz", hash = "sha256:af887845b8c2e060eb5605ff72b6f2dd2aab7a761379373fd89d314f4752abbf"},
 ]
 yt-dlp = [
-    {file = "yt-dlp-2023.3.4.tar.gz", hash = "sha256:265d5da97a76c15d7d9a4088a67b78acd5dcf6f8cfd8257c52f581ff996ff515"},
-    {file = "yt_dlp-2023.3.4-py2.py3-none-any.whl", hash = "sha256:40ca421407ce07c8fd700854fd978d58526ec6fff3468caa34ff1c7333b8dc34"},
+    {file = "yt-dlp-2023.7.6.tar.gz", hash = "sha256:cb58373869c8ccb5034746f91cfccd6d25ea697090dfd6f93e9034d51eb4aed2"},
+    {file = "yt_dlp-2023.7.6-py2.py3-none-any.whl", hash = "sha256:b33b3f68751f33dd8290f1f61f7a011679b3b512aa223df3bff496688bc0bd19"},
 ]
 zipp = [
     {file = "zipp-3.9.0-py3-none-any.whl", hash = "sha256:972cfa31bc2fedd3fa838a51e9bc7e64b7fb725a8c00e7431554311f180e9980"},

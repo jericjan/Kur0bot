@@ -343,16 +343,22 @@ class Help(commands.Cog):
         em = disnake.Embed(
             title="Download a YT Video", description="Download a YouTube of your choice"
         )
-        em.add_field(name="**Syntax**", value="k.download <url>")
+        em.add_field(name="**Syntax**", value="k.download <url> [--audio]")
+        em.add_field(
+            name="**Flags**",
+            value="`--audio` - will download only the audio of a video",
+        )
         await ctx.send(embed=em)
 
     @help.command()
     @commands.bot_has_permissions(embed_links=True)
     async def botansneeze(self, ctx):
         em = disnake.Embed(
-            title="Botan Sneeze", description="because fuck you, have a botan sneeze"
+            title="Botan Sneeze",
+            description="because fuck you, have a botan sneeze",
+            inline=False,
         )
-        em.add_field(name="**Syntax**", value="k.botansneeze [loop]")
+        em.add_field(name="**Syntax**", value="k.botansneeze [loop]", inline=False)
         await ctx.send(embed=em)
 
     @help.command()
