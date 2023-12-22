@@ -1,10 +1,7 @@
-import asyncio
-import concurrent.futures
 import os
 import shutil
 import time
 import uuid
-from functools import partial, wraps
 
 import aiohttp
 import cv2
@@ -13,8 +10,203 @@ import numpy as np
 from disnake.ext import commands
 
 from myfunctions import msg_link_grabber, subprocess_runner
-from myfunctions.async_wrapper import async_wrap
+from myfunctions.greenscreen import GreenScreener, GreenScreenerHandler
 
+
+class VergilGreenScreener(GreenScreener):
+    def __init__(self, image, cap, out, base_dir):
+        super().__init__(image, cap, out)
+        self.base_dir = base_dir
+
+        self.shift = 10
+        self.saved_position = 0
+        self.blue = 5
+        self.num_rows, self.num_cols = None, None
+        # creates the background behind the slices. first tuple is size, second is color
+        self.solid_background = np.full((480, 854, 4), (63, 57, 54, 255), np.uint8)
+
+        self.pre_filtered_image = image.copy()
+
+        # add cut remnant+cracked effect
+        remnant = cv2.imread(f"{base_dir}vergil_remnant.png", cv2.IMREAD_UNCHANGED)
+        image = self.transparent_paste(image, remnant)
+
+        # converts to RGBA and makes copy w/ filters
+        image = cv2.cvtColor(image, cv2.COLOR_BGR2BGRA)
+        self.post_filtered_image = image.copy()
+
+    def loop_extras(self):
+        if (
+            self.frame < 16
+        ):  # use img w/o filters before frame 17. it's 1 frame less for some reason
+            self.image = self.pre_filtered_image.copy()
+        else:  # use the image w/ filters after frame 17
+            image = self.post_filtered_image.copy()
+
+            # creating blue
+            blue_img = np.full((480, 854, 4), (self.blue, 0, 0, 255), np.uint8)
+
+            # eases in blue
+            if self.blue < 50:
+                self.blue += 5
+
+            # converts to RGBA (already done)
+            # image = cv2.cvtColor(image, cv2.COLOR_BGR2BGRA)
+
+            # adding blue to img
+            image = cv2.add(image, blue_img)
+
+            # The number of pixels
+            if any([self.num_rows, self.num_cols]) == False:
+                self.num_rows, self.num_cols = image.shape[:2]
+
+            # controls the movement of the slices
+            self.saved_position = self.saved_position + self.shift
+            self.shift -= 0.25
+
+            # right side
+            right_mask = cv2.imread(f"{self.base_dir}imagecut_right.png", 0)
+            right_cut = cv2.bitwise_and(image, image, mask=right_mask)
+            # Creating a translation matrix
+            translation_matrix = np.float32(
+                [[1, 0, self.saved_position], [0, 1, self.saved_position]]
+            )
+            # Image translation
+            img_left = cv2.warpAffine(
+                right_cut, translation_matrix, (self.num_cols, self.num_rows)
+            )
+
+            # left side
+            left_mask = cv2.imread(f"{self.base_dir}imagecut_left.png", 0)
+            left_cut = cv2.bitwise_and(image, image, mask=left_mask)
+            # Creating a translation matrix
+            translation_matrix = np.float32(
+                [[1, 0, -self.saved_position], [0, 1, -self.saved_position]]
+            )
+            # Image translation
+            img_right = cv2.warpAffine(
+                left_cut, translation_matrix, (self.num_cols, self.num_rows)
+            )
+
+            actual_solid_background = self.solid_background.copy()
+            # combines the two sliced images
+            cuts = cv2.addWeighted(img_left, 1, img_right, 1, 0.0)
+
+            # adding the background
+            self.image = self.transparent_paste(actual_solid_background, cuts)
+
+
+class VergilGreenScreenerHandler(GreenScreenerHandler):
+    def __init__(
+        self, ctx, link, base_dir, height, width, fps, final_filename, file_prefix
+    ):
+        super().__init__(
+            ctx, link, base_dir, height, width, fps, final_filename, file_prefix
+        )
+
+    async def start(self):
+        vergil_status = await self.ctx.send("Getting motivated...")
+        await self.generate_user_img()
+        g_screener = VergilGreenScreener(self.image, self.cap, self.out, self.base_dir)
+        self.log("Pre stuff")
+        await g_screener.start()
+        self.log("Green screening done", mid=True)
+
+        self.cap.release()
+        self.out.release()
+
+        await vergil_status.edit(
+            content="<:motivated1:991217157100818534><:motivated2:991217292761382912><:motivated3:991217345345368074>\nApproaching..."
+        )
+
+        final_filepath = await self.ffmpeg_stuff()
+
+        await vergil_status.edit(
+            content="", file=disnake.File(final_filepath, filename=self.final_filename)
+        )
+        self.log("Sent file", mid=True)
+        self.log_str += f"Vergil arrived in {time.time()-self.start_time:.2f} seconds\n"
+        await self.ctx.send(self.log_str)
+        shutil.rmtree(f"{self.base_dir}{self.random_uuid}/")
+
+    async def ffmpeg_stuff(self):
+        # vid1 - the greenscreen part
+        # vid2 - the vid that plays after
+        # vid3 - combined 1 and 2
+        vid1 = self.vid1
+        vid1_h264 = f"{self.base_dir}{self.random_uuid}/{self.file_prefix}_1_h264.mp4"
+        vid1_ts = f"{self.base_dir}{self.random_uuid}/{self.file_prefix}_1.ts"
+        vid2 = f"{self.base_dir}{self.file_prefix}_smol.mp4"
+        vid2_ts = f"{self.base_dir}{self.file_prefix}_smol.ts"
+        vid3 = f"{self.base_dir}{self.random_uuid}/{self.file_prefix}_3.mp4"
+        vergil_audio = f"{self.base_dir}{self.file_prefix}_full.m4a"
+        vcodec = "h264"
+
+        coms = [
+            "ffmpeg",
+            "-i",
+            vid1,
+            "-vcodec",
+            vcodec,
+            "-preset",
+            "veryfast",
+            "-crf",
+            "28",
+            vid1_h264,
+        ]
+        out, stdout, stderr = await subprocess_runner.run_subprocess(coms)
+        self.log("Converted to H264", mid=True)
+
+        coms = [
+            "ffmpeg",
+            "-i",
+            vid1_h264,
+            "-c",
+            "copy",
+            "-bsf:v",
+            "h264_mp4toannexb",
+            "-f",
+            "mpegts",
+            vid1_ts,
+        ]
+        out, stdout, stderr = await subprocess_runner.run_subprocess(coms)
+        self.log("Converted to MPEG-TS", mid=True)
+
+        if not os.path.exists(vid2_ts):
+            coms = [
+                "ffmpeg",
+                "-i",
+                vid2,
+                "-c",
+                "copy",
+                "-bsf:v",
+                "h264_mp4toannexb",
+                "-f",
+                "mpegts",
+                vid2_ts,
+            ]
+            out, stdout, stderr = await subprocess_runner.run_subprocess(coms)
+            self.log("(2) Converted to MPEG-TS", mid=True)
+
+        coms = [
+            "ffmpeg",
+            "-i",
+            f"concat:{vid1_ts}|{vid2_ts}",
+            "-i",
+            vergil_audio,
+            "-c",
+            "copy",
+            "-bsf:a",
+            "aac_adtstoasc",
+            "-map",
+            "0:v:0",
+            "-map",
+            "1:a:0",
+            vid3,
+        ]
+        out, stdout, stderr = await subprocess_runner.run_subprocess(coms)
+        self.log("Concatenatted vods", mid=True)
+        return vid3
 
 class Vergil(commands.Cog):
     def __init__(self, client):
@@ -33,280 +225,21 @@ class Vergil(commands.Cog):
         bg[0:h, 0:w] = composite
         return bg
 
-    # def async_wrap(self, func):
-    # @wraps(func)
-    # async def run(*args, loop=None, executor=None, **kwargs):
-    # if loop is None:
-    # loop = asyncio.get_event_loop()
-    # pfunc = partial(func, *args, **kwargs)
-    # return await loop.run_in_executor(executor, pfunc)
-    # return run
-
     @commands.command()
     async def vergil(self, ctx, link=None):
-        debug_mode = False
-        start_time = time.time()
         link = await msg_link_grabber.grab_link(ctx, link)
         print(link)
-
-        # unique uuid
-        random_uuid = uuid.uuid4()
-
-        # open up video
-        vergil_status = await ctx.send("Getting motivated...")
-        cap = cv2.VideoCapture(
-            "videos/vergil_greenscreen/vergil_%06d.png", cv2.CAP_IMAGES
+        g_screen_han = VergilGreenScreenerHandler(
+            ctx,
+            link,
+            "videos/vergil_greenscreen/",
+            480,
+            854,
+            30.0,
+            "vergil status.mp4",
+            "vergil",
         )
-        async with aiohttp.ClientSession() as session:
-            async with session.get(link) as resp:
-                byte_content = await resp.read()
-        user_image = cv2.imdecode(np.array(bytearray(byte_content), dtype=np.uint8), -1)
-
-        # grab one frame for dimens (not needed cuz static)
-        # _, frame = cap.read()
-        # h, w = frame.shape[:2]
-        h, w = 480, 854
-
-        # videowriter
-        res = (w, h)
-        fourcc = cv2.VideoWriter_fourcc(*"mp4v")
-
-        os.makedirs(f"videos/vergil_greenscreen/{random_uuid}/", exist_ok=True)
-        out = cv2.VideoWriter(
-            f"videos/vergil_greenscreen/{random_uuid}/vergil_1.mp4", fourcc, 30.0, res
-        )
-
-        # resizes user's image and makes copy w/o filters
-        image = cv2.resize(user_image, res)
-        pre_filtered_image = image.copy()
-
-        # add cut remnant+cracked effect
-        remnant = cv2.imread(
-            "videos/vergil_greenscreen/vergil_remnant.png", cv2.IMREAD_UNCHANGED
-        )
-        image = self.transparent_paste(image, remnant)
-
-        # converts to RGBA and makes copy w/ filters
-        image = cv2.cvtColor(image, cv2.COLOR_BGR2BGRA)
-        post_filtered_image = image.copy()
-        log = ""
-        if debug_mode:
-            log += f"Pre stuff:\t{time.time()-start_time:.2f}\n"
-        mid_time = time.time()
-
-        @async_wrap
-        def do_greenscreen():
-            frame = 0
-            done = False
-            shift = 10
-            saved_position = 0
-            blue = 5
-            num_rows, num_cols = None, None
-            # creates the background behind the slices. first tuple is size, second is color
-            solid_background = np.full((480, 854, 4), (63, 57, 54, 255), np.uint8)
-            while not done:
-                ret, img = cap.read()
-                if not ret:
-                    done = True
-                    continue
-
-                # i can't rember why i made it resize to the same size but i did
-                # vergil = cv2.resize(img, res)
-                vergil = img
-
-                if (
-                    frame < 16
-                ):  # use img w/o filters before frame 17. it's 1 frame less for some reason
-                    image = pre_filtered_image.copy()
-                else:  # use the image w/ filters after frame 17
-                    image = post_filtered_image.copy()
-
-                    # creating blue
-                    blue_img = np.full((480, 854, 4), (blue, 0, 0, 255), np.uint8)
-
-                    # eases in blue
-                    if blue < 50:
-                        blue += 5
-
-                    # converts to RGBA (already done)
-                    # image = cv2.cvtColor(image, cv2.COLOR_BGR2BGRA)
-
-                    # adding blue to img
-                    image = cv2.add(image, blue_img)
-
-                    # The number of pixels
-                    if any([num_rows, num_cols]) == False:
-                        num_rows, num_cols = image.shape[:2]
-
-                    # controls the movement of the slices
-                    saved_position = saved_position + shift
-                    shift -= 0.25
-
-                    # right side
-                    right_mask = cv2.imread(
-                        "videos/vergil_greenscreen/imagecut_right.png", 0
-                    )
-                    right_cut = cv2.bitwise_and(image, image, mask=right_mask)
-                    # Creating a translation matrix
-                    translation_matrix = np.float32(
-                        [[1, 0, saved_position], [0, 1, saved_position]]
-                    )
-                    # Image translation
-                    img_left = cv2.warpAffine(
-                        right_cut, translation_matrix, (num_cols, num_rows)
-                    )
-
-                    # left side
-                    left_mask = cv2.imread(
-                        "videos/vergil_greenscreen/imagecut_left.png", 0
-                    )
-                    left_cut = cv2.bitwise_and(image, image, mask=left_mask)
-                    # Creating a translation matrix
-                    translation_matrix = np.float32(
-                        [[1, 0, -saved_position], [0, 1, -saved_position]]
-                    )
-                    # Image translation
-                    img_right = cv2.warpAffine(
-                        left_cut, translation_matrix, (num_cols, num_rows)
-                    )
-
-                    actual_solid_background = solid_background.copy()
-                    # combines the two sliced images
-                    cuts = cv2.addWeighted(img_left, 1, img_right, 1, 0.0)
-
-                    # adding the background
-                    image = self.transparent_paste(actual_solid_background, cuts)
-                # adds vergil
-                image = self.transparent_paste(image, vergil)
-
-                # save
-                out.write(image)
-                frame += 1
-            print(f"Reached {frame} frames")
-
-        await do_greenscreen()
-        # CAN'T FIGURE THIS OUT. BEST USED FOR CPU-BOUND OPERATIONS
-        # do_greenscreen = partial(self.do_greenscreen, cap, pre_filtered_image, post_filtered_image, out)
-        # loop = asyncio.get_event_loop()
-        # loop = self.client.loop
-        # with concurrent.futures.ProcessPoolExecutor() as pool:
-        # result = await loop.run_in_executor(
-        # pool, do_greenscreen)
-
-        if debug_mode:
-            log += f"Green screening done:\t{time.time()-mid_time:.2f}\n"
-        mid_time = time.time()
-        # close caps
-        cap.release()
-        out.release()
-        await vergil_status.edit(
-            content="<:motivated1:991217157100818534><:motivated2:991217292761382912><:motivated3:991217345345368074>\nApproaching..."
-        )
-        vid1 = f"videos/vergil_greenscreen/{random_uuid}/vergil_1.mp4"
-        vid1_h264 = f"videos/vergil_greenscreen/{random_uuid}/vergil_1_h264.mp4"
-        vid1_ts = f"videos/vergil_greenscreen/{random_uuid}/vergil_1.ts"
-        vid2 = "videos/vergil_greenscreen/vergil_smol.mp4"
-        vid2_ts = "videos/vergil_greenscreen/vergil_smol.ts"
-        vid3 = f"videos/vergil_greenscreen/{random_uuid}/vergil_3.mp4"
-        vid4 = f"videos/vergil_greenscreen/{random_uuid}/vergil_4.mp4"
-        vergil_audio = "videos/vergil_greenscreen/vergil_full.m4a"
-        vcodec = "h264"
-
-        coms = [
-            "ffmpeg",
-            "-i",
-            vid1,
-            "-vcodec",
-            vcodec,
-            "-preset",
-            "veryfast",
-            "-crf",
-            "28",
-            vid1_h264,
-        ]
-        out, stdout, stderr = await subprocess_runner.run_subprocess(coms)
-        if debug_mode:
-            log += f"Converted to H264:\t{time.time()-mid_time:.2f}\n"
-        mid_time = time.time()
-
-        coms = [
-            "ffmpeg",
-            "-i",
-            vid1_h264,
-            "-c",
-            "copy",
-            "-bsf:v",
-            "h264_mp4toannexb",
-            "-f",
-            "mpegts",
-            vid1_ts,
-        ]
-        out, stdout, stderr = await subprocess_runner.run_subprocess(coms)
-        if debug_mode:
-            log += f"Converted to MPEG-TS:\t{time.time()-mid_time:.2f}\n"
-        mid_time = time.time()
-
-        if not os.path.exists(vid2_ts):
-            coms = [
-                "ffmpeg",
-                "-i",
-                vid2,
-                "-c",
-                "copy",
-                "-bsf:v",
-                "h264_mp4toannexb",
-                "-f",
-                "mpegts",
-                vid2_ts,
-            ]
-            out, stdout, stderr = await subprocess_runner.run_subprocess(coms)
-            log += (
-                f"(2) Converted to MPEG-TS: {time.time()-mid_time:.2f} seconds passed\n"
-            )
-            mid_time = time.time()
-
-        coms = [
-            "ffmpeg",
-            "-i",
-            f"concat:{vid1_ts}|{vid2_ts}",
-            "-c",
-            "copy",
-            "-bsf:a",
-            "aac_adtstoasc",
-            vid3,
-        ]
-        out, stdout, stderr = await subprocess_runner.run_subprocess(coms)
-        if debug_mode:
-            log += f"Concatenatted vods:\t{time.time()-mid_time:.2f}\n"
-        mid_time = time.time()
-
-        coms = [
-            "ffmpeg",
-            "-i",
-            vid3,
-            "-i",
-            vergil_audio,
-            "-c",
-            "copy",
-            "-map",
-            "0:v:0",
-            "-map",
-            "1:a:0",
-            vid4,
-        ]
-        out, stdout, stderr = await subprocess_runner.run_subprocess(coms)
-        if debug_mode:
-            log += f"Added audio:\t{time.time()-mid_time:.2f}\n"
-        mid_time = time.time()
-
-        await vergil_status.edit(
-            content="", file=disnake.File(vid4, filename="vergil status.mp4")
-        )
-        if debug_mode:
-            log += f"Sent file:\t{time.time()-mid_time:.2f}\n"
-        log += f"Vergil arrived in {time.time()-start_time:.2f} seconds\n"
-        await ctx.send(log)
-        shutil.rmtree(f"videos/vergil_greenscreen/{random_uuid}/")
+        await g_screen_han.start()
 
     @commands.command()
     async def quickvergil(self, ctx, link=None):

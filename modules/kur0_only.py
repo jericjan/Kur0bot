@@ -174,7 +174,11 @@ class Kur0only(commands.Cog):
         title, filename, info_result = gathered[1]        
         fname1 = glob.glob(f"{glob.escape(filename)}.*")
         for i in fname1:
-            if not i.endswith(".srt") and not i.endswith(".json"):
+            if (
+                not i.endswith(".srt")
+                and not i.endswith(".json")
+                and not i.endswith("json.part")
+            ):
                 fname = i
             else:
                 os.remove(i)
@@ -226,8 +230,9 @@ class Kur0only(commands.Cog):
         tasks.append(to_drive())
 
         async def to_fb():
-            url = f"https://graph-video.facebook.com/v8.0/100887555109330/videos?access_token={access_token}&limit=10"
+            url = f"https://graph-video.facebook.com/v17.0/100887555109330/videos?access_token={access_token}&limit=10"
             data = aiohttp.FormData()
+            print(f"filename is {fname}")
             data.add_field("file", open(fname, mode="rb"), filename="vid.mp4")
             data.add_field("description", f"{title}\n(NOT MINE) Source: {fixed_link}")
             async with aiohttp.ClientSession() as session:

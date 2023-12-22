@@ -98,7 +98,7 @@ class Download(commands.Cog):
     @commands.command(name="download")
     @commands.bot_has_permissions(manage_messages=True)
     async def p_download(
-        self, ctx, link=None
+        self, ctx, link=None, audio_only=None
     ):  # reddit, facebook, instagram, tiktok, yt
         link = await msg_link_grabber.grab_link(ctx, link)
         if "reddit.com" in link or "v.redd.it" in link:
@@ -374,37 +374,94 @@ class Download(commands.Cog):
                 file_handler.delete_file(file)
         # yt links usually
         else:
-            message = await ctx.send("Downloading...")
-            coms = ["yt-dlp", "-f", "b", "--no-warnings", link]
-            coms2 = ["yt-dlp", "-f", "b", "--get-filename", "--no-warnings", link]
-            print(shjoin(coms))
-            print(shjoin(coms2))
-            proc = await asyncio.create_subprocess_exec(  # reads stdout live
-                *coms, stdout=subprocess.PIPE, stderr=subprocess.STDOUT
-            )
-            while proc.returncode is None:
-                line = await proc.stdout.readline()
-                if not line:
-                    break
-                print(line.decode("utf-8"))
-                self.pbar_list.append(line.decode("utf-8"))
-                asyncio.ensure_future(self.updatebar(message))
-                await asyncio.sleep(1)
-            if proc.returncode != 0:
-                response = await proc.stdout.read()
-                response = response.decode("utf-8")
-                if response:
-                    await message.edit(content=response)
-                await ctx.send("epic fail <a:trollplane:934777423881445436>")
-                return
-            await message.edit(content="Almost there...")
-            out2, stdout, stderr = await subprocess_runner.run_subprocess(coms2)
-            try:
-                filename = stdout.decode("utf-8").split("\n")[0]
-                await file_handler.send_file(ctx, message, filename)
-            except Exception as e:
-                await ctx.send(e)
-            file_handler.delete_file(filename)
+            if audio_only != None:
+                if not audio_only.startswith("--audio"):
+                    await ctx.send(
+                        "Homie, you accidentally added an extra argument... Unless you were trying to download audio only? Just type `--audio` after the link."
+                    )
+                else:
+                    message = await ctx.send("Downloading...")
+                    coms = [
+                        "yt-dlp",
+                        "-f",
+                        "251",
+                        "-x",
+                        "--audio-format",
+                        "mp3",
+                        "--no-warnings",
+                        link,
+                    ]
+                    coms2 = [
+                        "yt-dlp",
+                        "-x",
+                        "-f",
+                        "251",
+                        "--get-filename",
+                        "--output",
+                        "%(title)s [%(id)s].mp3",
+                        "--no-warnings",
+                        link,
+                    ]
+                    print(shjoin(coms))
+                    print(shjoin(coms2))
+                    proc = await asyncio.create_subprocess_exec(  # reads stdout live
+                        *coms, stdout=subprocess.PIPE, stderr=subprocess.STDOUT
+                    )
+                    while proc.returncode is None:
+                        line = await proc.stdout.readline()
+                        if not line:
+                            break
+                        print(line.decode("utf-8"))
+                        self.pbar_list.append(line.decode("utf-8"))
+                        asyncio.ensure_future(self.updatebar(message))
+                        await asyncio.sleep(1)
+                    if proc.returncode != 0:
+                        response = await proc.stdout.read()
+                        response = response.decode("utf-8")
+                        if response:
+                            await message.edit(content=response)
+                        await ctx.send("epic fail <a:trollplane:934777423881445436>")
+                        return
+                    await message.edit(content="Almost there...")
+                    out2, stdout, stderr = await subprocess_runner.run_subprocess(coms2)
+                    try:
+                        filename = stdout.decode("utf-8").split("\n")[0]
+                        await file_handler.send_file(ctx, message, filename)
+                    except Exception as e:
+                        await ctx.send(e)
+                    file_handler.delete_file(filename)
+            else:  # audio_only == None
+                message = await ctx.send("Downloading...")
+                coms = ["yt-dlp", "-f", "b", "--no-warnings", link]
+                coms2 = ["yt-dlp", "-f", "b", "--get-filename", "--no-warnings", link]
+                print(shjoin(coms))
+                print(shjoin(coms2))
+                proc = await asyncio.create_subprocess_exec(  # reads stdout live
+                    *coms, stdout=subprocess.PIPE, stderr=subprocess.STDOUT
+                )
+                while proc.returncode is None:
+                    line = await proc.stdout.readline()
+                    if not line:
+                        break
+                    print(line.decode("utf-8"))
+                    self.pbar_list.append(line.decode("utf-8"))
+                    asyncio.ensure_future(self.updatebar(message))
+                    await asyncio.sleep(1)
+                if proc.returncode != 0:
+                    response = await proc.stdout.read()
+                    response = response.decode("utf-8")
+                    if response:
+                        await message.edit(content=response)
+                    await ctx.send("epic fail <a:trollplane:934777423881445436>")
+                    return
+                await message.edit(content="Almost there...")
+                out2, stdout, stderr = await subprocess_runner.run_subprocess(coms2)
+                try:
+                    filename = stdout.decode("utf-8").split("\n")[0]
+                    await file_handler.send_file(ctx, message, filename)
+                except Exception as e:
+                    await ctx.send(e)
+                file_handler.delete_file(filename)
 
 
 def setup(client):

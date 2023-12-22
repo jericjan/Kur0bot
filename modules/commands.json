@@ -44,7 +44,8 @@
 	"hallofshame",
 	"getosumap",
 	"google",
-	"meme"
+	"meme",
+	"gpt"	
   ],
   "reactions": [
     "fmega",
@@ -96,7 +97,8 @@
   "translate": [
 	"nihongo",
 	"eigo",
-	"doitsu"
+	"doitsu",
+	"jisho"
   ],
   "queue": [
   "queue",
@@ -107,7 +109,8 @@
   ],
   "greenscreen": [
 	"vergil",
-	"quickvergil"
+	"quickvergil",
+	"thisrighthere"
   ],
   "not moosic": [
 	"play",
@@ -115,8 +118,9 @@
 	"nowplaying",
 	"skip"
   ],  
-  "TTS": [
-    "just do ] while in VC (\"k.help tts\" for more info)"
+  "TTS (two versions)": [
+    "just do ] while in VC (\"k.help tts\" for more info)",
+	"tiktok"
   ],
   "hidden": [
     "addoffline",

@@ -1,3 +1,4 @@
+import os
 import urllib.parse
 
 import aiohttp
@@ -12,24 +13,19 @@ class OpenAI(commands.Cog):
 
     @commands.command()
     async def gpt(self, ctx, *, msg):
-        headers = {"Content-Type": "application/json"}
 
-        data = {"text": msg}
-        print(f"Received '{msg}'")
+        url = os.getenv("GPT_RAPIDAPI_URL")
+        headers = {
+            "Content-Type": "application/json",
+            "X-RapidAPI-Host": os.getenv("GPT_RAPIDAPI_HOST"),
+            "X-RapidAPI-Key": os.getenv("GPT_RAPIDAPI_KEY"),
+        }
+        data = {"query": msg}
+
         async with aiohttp.ClientSession() as session:
-            async with session.post(
-                "http://localhost:9875", headers=headers, json=data
-            ) as response:
-                gpt_response = await response.text()
-                if response.status == 200:
-                    await ctx.send(gpt_response)
-                    # Handle successful response here
-                else:
-                    print("response not 200")
-                    print(gpt_response)
-                    await ctx.send(f"ERROR: {gpt_response}")
-                    # Handle error response here
-                    pass
+            async with session.post(url, headers=headers, json=data) as response:
+                response_data = await response.json()
+                await ctx.send(response_data["response"])
 
 
 def setup(client):

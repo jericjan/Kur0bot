@@ -409,6 +409,9 @@ class Events(commands.Cog):
                 "https://tenor.com/view/kronii-hololive-edoman-3d-anime-gif-2423112144377621699"
             )
 
+        if "crazy" in msg:
+            await message.channel.send("Crazy?")
+
     def get_full_class_name(self, obj):
         module = obj.__class__.__module__
         if module is None or module == str.__class__.__module__:
