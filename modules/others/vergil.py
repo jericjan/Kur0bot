@@ -42,23 +42,46 @@ class Vergil(commands.Cog):
     # return await loop.run_in_executor(executor, pfunc)
     # return run
 
+    class GreenScreener:
+        def __init__(self, attribute1, attribute2):
+            self.attribute1 = attribute1
+            self.attribute2 = attribute2
+
+        def method1(self):
+            # Method 1 implementation
+            pass
+
+        def method2(self):
+            # Method 2 implementation
+            pass
+
     @commands.command()
     async def vergil(self, ctx, link=None):
         debug_mode = False
         start_time = time.time()
         link = await msg_link_grabber.grab_link(ctx, link)
         print(link)
+
         base_dir = "videos/vergil_greenscreen/"
         h, w = 480, 854
         fps = 30.0
         final_filename = "vergil status.mp4"
+        file_prefix = "vergil"
         # unique uuid
         random_uuid = uuid.uuid4()
+
+        cap = cv2.VideoCapture(f"{base_dir}{file_prefix}_%06d.png", cv2.CAP_IMAGES)
+
+        # videowriter
+        res = (w, h)
+        fourcc = cv2.VideoWriter_fourcc(*"mp4v")
+        out = cv2.VideoWriter(
+            f"{base_dir}{random_uuid}/{file_prefix}_1.mp4", fourcc, fps, res
+        )
 
         # open up video
         vergil_status = await ctx.send("Getting motivated...")
 
-        cap = cv2.VideoCapture(base_dir + "vergil_%06d.png", cv2.CAP_IMAGES)
         async with aiohttp.ClientSession() as session:
             async with session.get(link) as resp:
                 byte_content = await resp.read()
@@ -68,15 +91,12 @@ class Vergil(commands.Cog):
         # _, frame = cap.read()
         # h, w = frame.shape[:2]
 
-        # videowriter
-        res = (w, h)
-        fourcc = cv2.VideoWriter_fourcc(*"mp4v")
-
         os.makedirs(f"{base_dir}{random_uuid}/", exist_ok=True)
-        out = cv2.VideoWriter(f"{base_dir}{random_uuid}/vergil_1.mp4", fourcc, fps, res)
 
         # resizes user's image and makes copy w/o filters
         image = cv2.resize(user_image, res)
+
+        # vergil-specific VV======================================================
         pre_filtered_image = image.copy()
 
         # add cut remnant+cracked effect
@@ -86,6 +106,8 @@ class Vergil(commands.Cog):
         # converts to RGBA and makes copy w/ filters
         image = cv2.cvtColor(image, cv2.COLOR_BGR2BGRA)
         post_filtered_image = image.copy()
+        # vergil-specific ^^^^^================================================
+
         log = ""
         if debug_mode:
             log += f"Pre stuff:\t{time.time()-start_time:.2f}\n"
@@ -197,15 +219,17 @@ class Vergil(commands.Cog):
         )
 
         # Final stuff
+        # vid1 - the greenscreen part
+        # vid2 - the vid that plays after
+        # vid3 - combined 1 and 2
 
-        vid1 = f"{base_dir}{random_uuid}/vergil_1.mp4"
-        vid1_h264 = f"{base_dir}{random_uuid}/vergil_1_h264.mp4"
-        vid1_ts = f"{base_dir}{random_uuid}/vergil_1.ts"
-        vid2 = f"{base_dir}vergil_smol.mp4"
-        vid2_ts = f"{base_dir}vergil_smol.ts"
-        vid3 = f"{base_dir}{random_uuid}/vergil_3.mp4"
-        vid4 = f"{base_dir}{random_uuid}/vergil_4.mp4"
-        vergil_audio = f"{base_dir}vergil_full.m4a"
+        vid1 = f"{base_dir}{random_uuid}/{file_prefix}_1.mp4"
+        vid1_h264 = f"{base_dir}{random_uuid}/{file_prefix}_1_h264.mp4"
+        vid1_ts = f"{base_dir}{random_uuid}/{file_prefix}_1.ts"
+        vid2 = f"{base_dir}{file_prefix}_smol.mp4"
+        vid2_ts = f"{base_dir}{file_prefix}_smol.ts"
+        vid3 = f"{base_dir}{random_uuid}/{file_prefix}_3.mp4"
+        vergil_audio = f"{base_dir}{file_prefix}_full.m4a"
         vcodec = "h264"
 
         coms = [
@@ -265,10 +289,16 @@ class Vergil(commands.Cog):
             "ffmpeg",
             "-i",
             f"concat:{vid1_ts}|{vid2_ts}",
+            "-i",
+            vergil_audio,
             "-c",
             "copy",
             "-bsf:a",
             "aac_adtstoasc",
+            "-map",
+            "0:v:0",
+            "-map",
+            "1:a:0",
             vid3,
         ]
         out, stdout, stderr = await subprocess_runner.run_subprocess(coms)
@@ -276,27 +306,27 @@ class Vergil(commands.Cog):
             log += f"Concatenatted vods:\t{time.time()-mid_time:.2f}\n"
         mid_time = time.time()
 
-        coms = [
-            "ffmpeg",
-            "-i",
-            vid3,
-            "-i",
-            vergil_audio,
-            "-c",
-            "copy",
-            "-map",
-            "0:v:0",
-            "-map",
-            "1:a:0",
-            vid4,
-        ]
-        out, stdout, stderr = await subprocess_runner.run_subprocess(coms)
-        if debug_mode:
-            log += f"Added audio:\t{time.time()-mid_time:.2f}\n"
-        mid_time = time.time()
+        # coms = [
+        # "ffmpeg",
+        # "-i",
+        # vid3,
+        # "-i",
+        # vergil_audio,
+        # "-c",
+        # "copy",
+        # "-map",
+        # "0:v:0",
+        # "-map",
+        # "1:a:0",
+        # vid4,
+        # ]
+        # out, stdout, stderr = await subprocess_runner.run_subprocess(coms)
+        # if debug_mode:
+        # log += f"Added audio:\t{time.time()-mid_time:.2f}\n"
+        # mid_time = time.time()
 
         await vergil_status.edit(
-            content="", file=disnake.File(vid4, filename=final_filename)
+            content="", file=disnake.File(vid3, filename=final_filename)
         )
         if debug_mode:
             log += f"Sent file:\t{time.time()-mid_time:.2f}\n"
