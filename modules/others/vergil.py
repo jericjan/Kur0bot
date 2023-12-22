@@ -51,6 +51,7 @@ class Vergil(commands.Cog):
         base_dir = "videos/vergil_greenscreen/"
         h, w = 480, 854
         fps = 30.0
+        final_filename = "vergil status.mp4"
         # unique uuid
         random_uuid = uuid.uuid4()
 
@@ -194,6 +195,9 @@ class Vergil(commands.Cog):
         await vergil_status.edit(
             content="<:motivated1:991217157100818534><:motivated2:991217292761382912><:motivated3:991217345345368074>\nApproaching..."
         )
+
+        # Final stuff
+
         vid1 = f"{base_dir}{random_uuid}/vergil_1.mp4"
         vid1_h264 = f"{base_dir}{random_uuid}/vergil_1_h264.mp4"
         vid1_ts = f"{base_dir}{random_uuid}/vergil_1.ts"
@@ -292,7 +296,7 @@ class Vergil(commands.Cog):
         mid_time = time.time()
 
         await vergil_status.edit(
-            content="", file=disnake.File(vid4, filename="vergil status.mp4")
+            content="", file=disnake.File(vid4, filename=final_filename)
         )
         if debug_mode:
             log += f"Sent file:\t{time.time()-mid_time:.2f}\n"
