@@ -237,20 +237,20 @@ graph = ["objgraph (>=1.7.2)"]
 
 [[package]]
 name = "disnake"
-version = "2.6.0"
+version = "2.9.1"
 description = "A Python wrapper for the Discord API"
 category = "main"
 optional = false
-python-versions = ">=3.8.0"
+python-versions = ">=3.8"
 
 [package.dependencies]
-aiohttp = ">=3.7.0,<3.9.0"
+aiohttp = ">=3.7.0,<4.0"
 
 [package.extras]
 discord = ["discord-disnake"]
-docs = ["docutils (>=0.17)", "sphinx (>=5.1.1,<5.2.0)", "sphinxcontrib-trio (>=1.1.2,<1.2.0)", "sphinx-hoverxref (==1.1.3)", "sphinx-autobuild (>=2021.3,<2022.0)", "sphinxcontrib-towncrier (==0.2.1a0)", "towncrier (==21.9.0)"]
+docs = ["sphinx (==7.0.1)", "sphinxcontrib-trio (>=1.1.2,<1.2.0)", "sphinx-hoverxref (==1.3.0)", "sphinx-autobuild (>=2021.3,<2022.0)", "sphinxcontrib-towncrier (==0.3.2a0)", "towncrier (==23.6.0)", "sphinx-notfound-page (==0.8.3)"]
 speed = ["orjson (>=3.6,<4.0)", "aiodns (>=1.1)", "brotli", "cchardet"]
-voice = ["PyNaCl (>=1.3.0,<1.5)"]
+voice = ["PyNaCl (>=1.3.0,<1.6)"]
 
 [[package]]
 name = "distlib"
@@ -1049,7 +1049,7 @@ testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "flake8 
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "4183b0297c33d92bc7d86a39f9393a1410327000b16cec83786cd02d3effee00"
+content-hash = "15e716a994039322ee9ca165d9d86c50d03ef9a75dfb19401614e275c7e11796"
 
 [metadata.files]
 aiohttp = [
@@ -1330,8 +1330,8 @@ dill = [
     {file = "dill-0.3.5.1.tar.gz", hash = "sha256:d75e41f3eff1eee599d738e76ba8f4ad98ea229db8b085318aa2b3333a208c86"},
 ]
 disnake = [
-    {file = "disnake-2.6.0-py3-none-any.whl", hash = "sha256:d50c8aa7eac22bf46dd3ce1735225c7f140399343d641ffa968af5b6674c4c29"},
-    {file = "disnake-2.6.0.tar.gz", hash = "sha256:c6082b6ee57ee4d60ee8e9d1221110a384b26fa83808bede8a718ebf13cca3eb"},
+    {file = "disnake-2.9.1-py3-none-any.whl", hash = "sha256:d2c772f4275ef3cd06775b32d3ffe97271d0df239f37880940a9ec73aa3739f6"},
+    {file = "disnake-2.9.1.tar.gz", hash = "sha256:b6b33ba95c9d220f64fb17413d0c0ffd89708dc30510e9900a1d9990b69b929f"},
 ]
 distlib = [
     {file = "distlib-0.3.6-py2.py3-none-any.whl", hash = "sha256:f35c4b692542ca110de7ef0bea44d73981caeb34ca0b9b6b2e6d7790dda8f80e"},
