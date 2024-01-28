@@ -412,6 +412,12 @@ class Events(commands.Cog):
         if "crazy" in msg:
             await message.channel.send("Crazy?")
 
+        if "wah" in msg:
+            await message.channel.send(file=disnake.File("videos/wah.mp4"))
+
+        if "balls" in msg:
+            await message.channel.send(file=disnake.File("videos/the_balls.mp4"))
+
     def get_full_class_name(self, obj):
         module = obj.__class__.__module__
         if module is None or module == str.__class__.__module__:
