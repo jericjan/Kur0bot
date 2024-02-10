@@ -55,7 +55,7 @@ class Resize(commands.Cog):
         file_type, file_ext = content_type.split("/")
         if file_type == "video" or file_ext == "gif":
             message = await ctx.send("Resizing video...")
-            filename = link.split("/")[-1]
+            filename = link.split("/")[-1].split("?")[0]
             regex = re.findall(r".+(?=\.)", filename)
             if regex:
                 filename = regex[0]
@@ -101,7 +101,7 @@ class Resize(commands.Cog):
             message = await ctx.send("Resizing...")
             bruh = await self.foo(link, width, height)
             bruh.seek(0)
-            filename = link.split("/")[-1]
+            filename = link.split("/")[-1].split("?")[0]
             await file_handler.send_file(ctx, message, bruh, filename)
             bruh.close()
 
