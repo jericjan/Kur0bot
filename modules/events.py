@@ -264,7 +264,7 @@ class Events(commands.Cog):
                 )
                 await message.channel.send(file=disnake.File(choice))
             if any(word in msg for word in ["hurensohn", "hurensöhne"]):
-                peeps = ["304268898637709312", "365496659611746304"]
+                peeps = ["304268898637709312", "1200519236834041898"]
                 await message.channel.send(
                     f"<@{random.choice(peeps)}>"
                 )  # pings strepto

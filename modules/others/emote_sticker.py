@@ -142,14 +142,10 @@ class EmoteSticker(commands.Cog):
         avi_guild = self.client.get_guild(603147860225032192)
         while avi_guild == None:
             pass
-        admin = disnake.utils.get(avi_guild.roles, name="Admin")
-        moderator = disnake.utils.get(avi_guild.roles, name="Moderator")
-        avilon = disnake.utils.get(avi_guild.roles, name="Avilon")
-        roles = [admin, moderator, avilon]
-        if (
-            any(role in roles for role in ctx.author.roles)
-            or ctx.author.id == 396892407884546058
-        ):
+        has_expr_perms = ctx.channel.permissions_for(
+            ctx.author
+        ).manage_guild_expressions
+        if has_expr_perms:
             link = await msg_link_grabber.grab_link(ctx, link)
             print(link)
             if re.match(r"https:\/\/cdn.discordapp.com\/emojis\/\d+", link):
@@ -236,19 +232,10 @@ class EmoteSticker(commands.Cog):
             await ctx.send("No more free slots :(")
         else:
             await ctx.send(f"{free_slots} slots left :)")
-            avi_guild = self.client.get_guild(603147860225032192)
-            while avi_guild == None:
-                pass
-            else:
-                admin = disnake.utils.get(avi_guild.roles, name="Admin")
-                moderator = disnake.utils.get(avi_guild.roles, name="Moderator")
-                avilon = disnake.utils.get(avi_guild.roles, name="Avilon")
-            roles = [admin, moderator, avilon]
-            if (
-                any(role in roles for role in ctx.author.roles)
-                or ctx.author.id == 396892407884546058
-            ):
-
+            has_expr_perms = ctx.channel.permissions_for(
+                ctx.author
+            ).manage_guild_expressions
+            if has_expr_perms:
                 link = await msg_link_grabber.grab_link(ctx, link)
                 print(link)
                 file, width, height = await self.sticker_resize(link)
