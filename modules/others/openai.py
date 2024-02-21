@@ -24,8 +24,12 @@ class OpenAI(commands.Cog):
 
         async with aiohttp.ClientSession() as session:
             async with session.post(url, headers=headers, json=data) as response:
-                response_data = await response.json()
-                await ctx.send(response_data["response"])
+                try:
+                    response_data = await response.json()
+                    await ctx.send(response_data["response"])
+                except Exception as e:
+                    txt_data = await response.text()
+                    await ctx.send(txt_data)
 
 
 def setup(client):

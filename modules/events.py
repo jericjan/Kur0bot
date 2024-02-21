@@ -253,7 +253,8 @@ class Events(commands.Cog):
                 await message.channel.send("<@268188421871108097>")  # pings strepto
 
         # PACIFAM ONLY
-        if message.guild.id == 603147860225032192:
+        pacifam_servers = [603147860225032192, 938255956247183451]
+        if any([message.guild.id == x for x in pacifam_servers]):
             if "dox" in msg:
                 choice = random.choice(
                     [

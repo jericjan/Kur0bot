@@ -43,6 +43,41 @@ class GoogleSearch(commands.Cog):
         await paginator.send(ctx)
         # await ctx.send(embed=em)
 
+    @commands.command()
+    @commands.bot_has_permissions(embed_links=True)
+    async def image(self, ctx, *, search_query):
+        api_key = os.getenv("SERPAPI_KEY")
+
+        async with aiohttp.ClientSession() as session:
+            async with session.get(
+                f"https://serpapi.com/search.json?q={search_query}&engine=google_images&ijn=0&api_key={api_key}"
+            ) as resp:
+                response = await resp.json()
+                if resp.status != 200:
+                    await ctx.send(response)
+                    return
+        img_results = response.get("images_results")
+        links = [x.get("link") for x in img_results]
+        thumbnails = [x.get("thumbnail") for x in img_results]
+        titles = [x.get("title") for x in img_results]
+
+        def embed_with_img(embed, img_url):
+            embed.set_image(url=img_url)
+            return embed
+
+        embed_list = [
+            embed_with_img(
+                disnake.Embed(
+                    title="le images",
+                    description=f"[{title}]({link})",
+                ),
+                thumb,
+            )
+            for link, thumb, title in zip(links, thumbnails, titles)
+        ]
+        paginator = ButtonPaginator(segments=embed_list)
+        await paginator.send(ctx)
+
 
 def setup(client):
     client.add_cog(GoogleSearch(client))
