@@ -139,9 +139,6 @@ class EmoteSticker(commands.Cog):
             await ctx.send("No more free animated slots :(")
         else:
             await ctx.send(f"{animated_free_slots} animated slots left :)")
-        avi_guild = self.client.get_guild(603147860225032192)
-        while avi_guild == None:
-            pass
         has_expr_perms = ctx.channel.permissions_for(
             ctx.author
         ).manage_guild_expressions

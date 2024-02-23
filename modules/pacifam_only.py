@@ -15,7 +15,7 @@ class PacifamOnly(commands.Cog):
 
     @commands.command()
     async def addoffline(self, ctx, username):
-        avi_guild = self.client.get_guild(603147860225032192)
+        avi_guild = self.client.get_guild(938255956247183451)
         while avi_guild == None:
             pass
         else:
@@ -53,7 +53,7 @@ class PacifamOnly(commands.Cog):
 
     @commands.command()
     async def viewoffline(self, ctx):
-        avi_guild = self.client.get_guild(603147860225032192)
+        avi_guild = self.client.get_guild(938255956247183451)
         while avi_guild == None:
             pass
         else:
@@ -80,7 +80,7 @@ class PacifamOnly(commands.Cog):
 
     @commands.command()
     async def removeoffline(self, ctx, username):
-        avi_guild = self.client.get_guild(603147860225032192)
+        avi_guild = self.client.get_guild(938255956247183451)
         while avi_guild == None:
             pass
         else:
@@ -118,7 +118,7 @@ class PacifamOnly(commands.Cog):
 
     @commands.command()
     async def viewmods(self, ctx):
-        if ctx.guild.id == 603147860225032192:
+        if ctx.guild.id == 938255956247183451:
             ftp = FTP(host="us28.pebblehost.com")
             ftp.login(user=os.getenv("PEBBLE_EMAIL"), passwd=os.getenv("PEBBLE_PASS"))
             modlist = list(ftp.mlsd("/mods/"))

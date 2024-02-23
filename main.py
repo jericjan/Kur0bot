@@ -291,6 +291,7 @@ async def open_url(url):
 
 
 @client.command()
+@commands.is_owner()
 async def sched(ctx, url):
     sched_ch = client.get_guild(603147860225032192).get_channel(879702977898741770)
     messages = await sched_ch.history(limit=200).flatten()

@@ -1,13 +1,16 @@
-from disnake.ext import commands
-import disnake
-import os
+import asyncio
 import glob
 import json
-from lorem.text import TextLorem
+import os
+from io import BytesIO
+
 import aiohttp
+import disnake
+from disnake.ext import commands
 from dotenv import load_dotenv
-from myfunctions import subprocess_runner
-import asyncio
+from lorem.text import TextLorem
+
+from myfunctions import file_handler, subprocess_runner
 
 
 class Kur0only(commands.Cog):
@@ -118,6 +121,48 @@ class Kur0only(commands.Cog):
     async def send(self, ctx, ch_id: disnake.TextChannel, *, msg):
         await ch_id.send(msg)
         await ctx.send("Done!")
+
+    class AttachmentBulker:
+        def __init__(self, ctx, threshold):
+            self.ctx = ctx
+            self.threshold = threshold
+            self.counter = 0
+            self.msgs = ""
+
+        async def send(self, msg):
+            print("Method to call multiple times")
+            self.counter += 1
+            self.msgs += msg + "\n"
+            if self.counter >= self.threshold:
+                await ctx.send(self.msgs)
+                self.msgs = ""
+
+    @commands.command()
+    @commands.is_owner()
+    async def attachments(self, ctx, start=0):
+        count = 0
+        att_bulker = AttachmentBulker(ctx, 5)
+        with open("paci_media.txt", encoding="utf-8") as f:
+            for line in f:
+                count += 1
+                if count < start:
+                    continue
+                msg = await att_bulker.send(f"#{count}: {line.split('?')[0]}")
+                # new_url = msg.content.replace("amp;","")
+                # for x in msg.attachments:
+                # print("0 "+ x.url)
+
+                # for x in msg.embeds:
+                # print("1 "+x.url)
+                # async with aiohttp.ClientSession() as session:
+                # async with session.get(new_url) as response:
+                # if response.status == 200:
+                # # Read the response content as bytes
+                # content = await response.read()
+                # content = BytesIO(content)
+                # await ctx.send(file=disnake.File(content))
+                # else:
+                # await ctx.send(f"Failed to download {new_url}: {response.status}")
 
 
 def setup(client):

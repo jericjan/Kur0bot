@@ -72,58 +72,10 @@ class Events(commands.Cog):
             f"\033[92m{(time.time() - self.start_time):.2f}s - We have logged in as {self.client.user}\033[0m"
         )
         await self.log("Bot started", False)
-        avi_guild = self.client.get_guild(603147860225032192)
-        while avi_guild == None:
-            avi_guild = self.client.get_guild(603147860225032192)
-        else:
-            print(avi_guild)
-            avibot = avi_guild.get_member(855897776125640704)
-            while avibot == None:
-                avibot = avi_guild.get_member(855897776125640704)
-            else:
-                if avibot.status is disnake.Status.offline:
-                    print("avibot ded")
-                    await self.log("avi bot ded", False)
-                    vc = self.client.get_guild(603147860225032192).get_channel(
-                        887717074191937667
-                    )
-                    await vc.edit(name="AviBot: dead")
-                if avibot.status is disnake.Status.online:
-                    print("avi bot bac")
-                    await self.log("avi bot bac", False)
-
-                    vc = self.client.get_guild(603147860225032192).get_channel(
-                        887717074191937667
-                    )
-                    await vc.edit(name="AviBot: alive")
 
     @commands.Cog.listener()
     async def on_member_update(self, before, after):
-        if (
-            before.status is disnake.Status.online
-            and after.status is disnake.Status.offline
-            and after.guild == self.client.get_guild(603147860225032192)
-        ):
-            if after.id == 855897776125640704:
-                print(after.id)
-                print("avi bot ded")
-                await self.log("avi bot ded", False)
-                vc = self.client.get_guild(603147860225032192).get_channel(
-                    887717074191937667
-                )
-                await vc.edit(name="AviBot: dead")
-        elif (
-            before.status is disnake.Status.offline
-            and after.status is disnake.Status.online
-        ):
-            if after.id == 855897776125640704:
-                print(after.id)
-                print("avi bot bac")
-                await self.log("avi bot bac", False)
-                vc = self.client.get_guild(603147860225032192).get_channel(
-                    887717074191937667
-                )
-                await vc.edit(name="AviBot: alive")
+        pass
 
     @commands.Cog.listener()
     async def on_presence_update(self, before, after):
