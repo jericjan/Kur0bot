@@ -93,18 +93,25 @@ class Events(commands.Cog):
         new_user_activities = after.activities
         id_list = []
         game_names = []
+
         game_names.append("Mobile Legends: Bang Bang")
         id_list.append(588739191433723914)  # mobile_legends
+
         game_names.append("League of Legends")
         id_list.append(401518684763586560)  # league
+
         game_names.append("Honkai Impact 3rd")
         game_names.append("honka donka badonkers")
         id_list.append(604089691519713300)  # honkai 3rd
         game_names.append("Honkai Impact 3")
         id_list.append(614393437030187008)  # honkai 3
+
         game_names.append("Honkai: Star Rail")
+
         game_names.append("Genshin Impact")
         id_list.append(762434991303950386)  # genshin
+
+        game_names.append("Destiny 2")
         if new_user_activities:
             for activity in new_user_activities:
                 if str(activity.type) == "ActivityType.playing" and after.bot == False:
