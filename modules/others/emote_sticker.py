@@ -177,20 +177,20 @@ class EmoteSticker(commands.Cog):
             except:
                 pass
             try:
-                print(f"1 - file is a {type(file)}")
+                print(f"file is a {type(file)}")
                 await ctx.guild.create_custom_emoji(name=title, image=file)
-                print("2")
+
                 await ctx.send("Emoji uploaded!", delete_after=3.0)
-                print("3")
+
                 emoji = disnake.utils.get(self.client.emojis, name=title)
-                print("4")
+
                 await ctx.send(str(emoji))
-                print("5")
+
             except Exception as e:
                 await ctx.send(f"Something failed. Oof.\n{e}")
                 raise e
         else:
-            await ctx.send("Only Avi/Admins/Mods can use this command")
+            await ctx.send("Only Admins/Mods can use this command")
 
     @run_in_executor
     def sticker_resize(self, link):  # Your wrapper for async use
@@ -244,7 +244,7 @@ class EmoteSticker(commands.Cog):
                 await ctx.send("Sticker uploaded!", delete_after=3.0)
                 await ctx.send(stickers=[sticker])
             else:
-                await ctx.send("Only Avi/Admins/Mods can use this command")
+                await ctx.send("Only Admins/Mods can use this command")
 
 
 def setup(client):

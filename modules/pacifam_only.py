@@ -49,7 +49,7 @@ class PacifamOnly(commands.Cog):
             await ctx.send("Done!")
 
         else:
-            await ctx.send("Only Avi/Admins/Mods can use this command")
+            await ctx.send("Only Admins/Mods can use this command")
 
     @commands.command()
     async def viewoffline(self, ctx):
@@ -76,7 +76,7 @@ class PacifamOnly(commands.Cog):
                 f"Players added to the offline list are: {', '.join(config['main']['forcedOfflinePlayers'])}"
             )
         else:
-            await ctx.send("Only Avi/Admins/Mods can use this command")
+            await ctx.send("Only Admins/Mods can use this command")
 
     @commands.command()
     async def removeoffline(self, ctx, username):
@@ -114,7 +114,7 @@ class PacifamOnly(commands.Cog):
             await ctx.send("Done!")
 
         else:
-            await ctx.send("Only Avi/Admins/Mods can use this command")
+            await ctx.send("Only Admins/Mods can use this command")
 
     @commands.command()
     async def viewmods(self, ctx):

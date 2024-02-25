@@ -33,7 +33,8 @@ class Loaders(commands.Cog):
             except KeyError as e:
                 await ctx.send(f"Could not find module")
                 return
-        await ctx.send(f"{name} reloaded!")
+        await ctx.message.delete()
+        await ctx.send(f"{name} reloaded!", delete_after=3.0)
 
     @commands.slash_command(name="reload")
     @commands.is_owner()
