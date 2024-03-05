@@ -120,6 +120,7 @@ module_paths = (
     "modules.others.meme",
     "modules.others.pinglimit",
     "modules.others.openai",
+    "modules.others.height",
     "modules.pacifam_only",
     "modules.kur0_only",
     "modules.sus",
