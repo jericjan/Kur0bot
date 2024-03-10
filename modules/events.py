@@ -1,16 +1,19 @@
-from disnake.ext import commands
-import disnake
-import time
+import asyncio
+import difflib
+import json
+import os
 import random
 import re
 import subprocess
-import json
-import asyncio
-from gtts import gTTS
-import difflib
+import time
 from datetime import datetime
+from pathlib import Path
+
+import disnake
+import numpy
 import pytz
-import os
+from disnake.ext import commands
+from gtts import gTTS
 
 from myfunctions.async_wrapper import async_wrap
 
@@ -353,10 +356,29 @@ class Events(commands.Cog):
                     tzinfo=pytz.timezone("Etc/GMT+12"),
                 )
                 epoch = int(thursday.timestamp())
-                epoch = f"Walter Wednesday ends <t:{epoch}:R>"
-                await message.channel.send(
-                    epoch, file=disnake.File("videos/wednesday.mp4")
+
+                wed_vids = [
+                    Path("videos/mococo") / x
+                    for x in [
+                        "mococo_wednesday.mp4",
+                        "mococo_679.mp4",
+                        "fuwamoco_tsunami.mp4",
+                        "bau_city.mp4",
+                        "fuwamoco_family_ties.mp4",
+                        "fuwamoco_silent_hill.mp4",
+                    ]
+                ] + [Path('"videos/wednesday.mp4"')]
+
+                wed_choice = numpy.random.choice(
+                    wed_vids, p=[0.8, 0.037, 0.037, 0.037, 0.037, 0.037, 0.015]
                 )
+
+                if wed_choice.parent.name == "mococo":
+                    epoch = f"Mococo Wednesday ends <t:{epoch}:R>"
+                else:
+                    epoch = f"Moco... SIKE! Walter Wednesday ends <t:{epoch}:R>"
+
+                await message.channel.send(epoch, file=disnake.File(str(wed_choice)))
 
         if any(word in msg for word in ["10:49pm", "10:49 pm", "10 49 pm", "10 49pm"]):
             await message.channel.send(file=disnake.File("videos/10_49_pm.mp4"))
