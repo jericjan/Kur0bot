@@ -121,6 +121,7 @@ module_paths = (
     "modules.others.pinglimit",
     "modules.others.openai",
     "modules.others.height",
+    "modules.others.currency",
     "modules.pacifam_only",
     "modules.kur0_only",
     "modules.sus",

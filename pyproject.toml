@@ -35,6 +35,8 @@ pre-commit = "^2.20.0"
 isort = "^5.10.1"
 jisho-api = "^0.1.8"
 openai = "^0.27.8"
+g4f = {version = "^0.2.3", extras = ["all"]}
+nest-asyncio = "^1.6.0"
 
 [tool.poetry.dev-dependencies]
 

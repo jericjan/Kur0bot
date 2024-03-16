@@ -3,34 +3,40 @@ import urllib.parse
 
 import aiohttp
 import disnake
+import g4f
+import nest_asyncio
 import openai
 from disnake.ext import commands
+from g4f.client import Client
 
 
 class OpenAI(commands.Cog):
     def __init__(self, client):
         self.client = client
+        nest_asyncio.apply()
+
 
     @commands.command()
     async def gpt(self, ctx, *, msg):
 
-        url = os.getenv("GPT_RAPIDAPI_URL")
-        headers = {
-            "Content-Type": "application/json",
-            "X-RapidAPI-Host": os.getenv("GPT_RAPIDAPI_HOST"),
-            "X-RapidAPI-Key": os.getenv("GPT_RAPIDAPI_KEY"),
-        }
-        data = {"query": msg}
+        def split_long_string(long_string, chunk_size=2000):
+            return [
+                long_string[i : i + chunk_size]
+                for i in range(0, len(long_string), chunk_size)
+            ]
 
-        async with aiohttp.ClientSession() as session:
-            async with session.post(url, headers=headers, json=data) as response:
-                try:
-                    response_data = await response.json()
-                    await ctx.send(response_data["response"])
-                except Exception as e:
-                    txt_data = await response.text()
-                    await ctx.send(txt_data)
+        async with ctx.channel.typing():
 
+            client = Client()
+            response = client.chat.completions.create(
+                model="meta-llama/Llama-2-70b-chat-hf",
+                provider=g4f.Provider.DeepInfra,
+                messages=[{"role": "user", "content": msg}],
+            )
+            gpt_msg = response.choices[0].message.content
+            splitted = split_long_string(gpt_msg)
+            for split in splitted:
+                await ctx.send(split)
 
 def setup(client):
     client.add_cog(OpenAI(client))

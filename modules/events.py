@@ -171,7 +171,7 @@ class Events(commands.Cog):
             return
         msg = message.content.lower()
 
-        if message.channel.id == 1008770625134928054:
+        if message.channel.id == 1203784333341491302:
             return  # temp, disabled for #serious-chat
 
         ################SUSSY REPLIES##################
@@ -399,6 +399,12 @@ class Events(commands.Cog):
 
         if "balls" in msg:
             await message.channel.send(file=disnake.File("videos/the_balls.mp4"))
+
+        if "fuck you tatsu" in msg:
+            async for x in message.channel.history(limit=10):
+                if x.author.id == 172002275412279296:
+                    await x.delete()
+                    break
 
     def get_full_class_name(self, obj):
         module = obj.__class__.__module__
