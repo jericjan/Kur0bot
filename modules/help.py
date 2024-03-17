@@ -1096,37 +1096,35 @@ class Help(commands.Cog):
     @help.command(aliases=["convert"])
     @commands.bot_has_permissions(embed_links=True)
     async def currency(self, ctx):
-        em = EmbedMaker(
+        async with EmbedMaker(
             ctx,
             "Currency Converter",
-            "Converts currencies.\nCheck [here](https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies.json) for what currencies I support.",
-        )
-        em.add_syntax("k.currency <base currency> <target currency> <value>")
-        em.add_example("k.curency usd php 100")
-        em.show_aliases()
-        await em.send()
+            "Converts currencies.\n"
+            "Check [here](https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies.json) for what currencies I support.",
+        ) as em:
+            em.add_syntax("k.currency <base currency> <target currency> <value>")
+            em.add_example("k.curency usd php 100")
+            em.show_aliases()
 
     @help.command()
     @commands.bot_has_permissions(embed_links=True)
     async def height(self, ctx):
-        em = EmbedMaker(
+        async with EmbedMaker(
             ctx,
             "Height convert",
             "Converts height from cm to foot-inches and vice versa",
-        )
-        em.add_syntax("k.height <height>")
-        em.add_example("k.height 100cm\nk.height 5'3\"")
-        await em.send()
+        ) as em:
+            em.add_syntax("k.height <height>")
+            em.add_example("k.height 100cm\nk.height 5'3\"")
 
     @help.command()
     @commands.bot_has_permissions(embed_links=True)
     async def image(self, ctx):
-        em = EmbedMaker(
+        async with EmbedMaker(
             ctx, "Image searcher", "Searches for images. Uses the SerpApi API."
-        )
-        em.add_syntax("k.image <query>")
-        em.add_example("k.image amogus")
-        await em.send()
+        ) as em:
+            em.add_syntax("k.image <query>")
+            em.add_example("k.image amogus")
 
 
 class EmbedMaker:
@@ -1137,6 +1135,12 @@ class EmbedMaker:
             description=desc,
         )
 
+    async def __aenter__(self):
+        return self
+
+    async def __aexit__(self, exc_type, exc, tb):
+        await self.ctx.send(embed=self.em)
+
     def add_syntax(self, syntax, inline=False):
         self.em.add_field(name="**Syntax**", value=syntax, inline=inline)
 
@@ -1145,9 +1149,6 @@ class EmbedMaker:
 
     def show_aliases(self):
         self.em.add_field(name="**Aliases**", value=",".join(self.ctx.command.aliases))
-
-    async def send(self):
-        await self.ctx.send(embed=self.em)
 
 
 def setup(client):
