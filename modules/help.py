@@ -1040,58 +1040,49 @@ class Help(commands.Cog):
     @help.command()
     @commands.bot_has_permissions(embed_links=True)
     async def google(self, ctx):
-        em = disnake.Embed(
-            title="Google Search",
-            description="Searches Google and sends back results as an embed.",
-        )
-        em.add_field(name="**Syntax**", value=r"k.google <search_query>", inline=False)
-        await ctx.send(embed=em)
+        async with EmbedMaker(
+            ctx, "Google Search", "Searches Google and sends back results as an embed."
+        ) as em:
+            em.add_syntax(r"k.google <search_query>")
 
     @help.command()
     @commands.bot_has_permissions(embed_links=True)
     async def meme(self, ctx):
-        em = disnake.Embed(
-            title="Meme Generator",
-            description="Make a quick meme with this command",
-        )
-        em.add_field(
-            name="**Syntax**",
-            value=r"k.meme <top_text> <bottom_text> <img_url/reply to a message>",
-            inline=False,
-        )
-        await ctx.send(embed=em)
+        async with EmbedMaker(
+            ctx, "Meme Generator", "Make a quick meme with this command"
+        ) as em:
+            em.add_syntax(
+                r"k.meme <top_text> <bottom_text> <img_url/reply to a message>"
+            )
 
     @help.command(aliases=["this"])
     @commands.bot_has_permissions(embed_links=True)
     async def thisrighthere(self, ctx):
-        em = disnake.Embed(
-            title="This right here...",
-            description="Creates a video saying appreciating an image sent by a user.",
-        )
-        em.add_field(name="**Syntax**", value="k.this <image>", inline=False)
-        em.add_field(name="**Aliases**", value=",".join(ctx.command.aliases))
-        await ctx.send(embed=em)
+        async with EmbedMaker(
+            ctx,
+            "This right here...",
+            "Creates a video saying appreciating an image sent by a user.",
+        ) as em:
+            em.add_syntax("k.this <image>")
+            em.show_aliases()
 
     @help.command()
     @commands.bot_has_permissions(embed_links=True)
     async def jisho(self, ctx):
-        em = disnake.Embed(
-            title="Jisho dictionary",
-            description="Searches through the Jisho database given a Japanese word",
-        )
-        em.add_field(name="**Example**", value="k.jisho 草", inline=False)
-        em.add_field(name="**Aliases**", value=",".join(ctx.command.aliases))
-        await ctx.send(embed=em)
+        async with EmbedMaker(
+            ctx,
+            "Jisho dictionary",
+            "Searches through the Jisho database given a Japanese word",
+        ) as em:
+            em.add_example("k.jisho 草")
 
     @help.command()
     @commands.bot_has_permissions(embed_links=True)
     async def gpt(self, ctx):
-        em = disnake.Embed(
-            title="GPT",
-            description="Simple AI chat. Doesn't remember shit.",
-        )
-        em.add_field(name="**Syntax**", value="k.gpt <message>", inline=False)
-        await ctx.send(embed=em)
+        async with EmbedMaker(
+            ctx, "GPT", "Simple AI chat. Doesn't remember shit."
+        ) as em:
+            em.add_syntax("k.gpt <message>")
 
     @help.command(aliases=["convert"])
     @commands.bot_has_permissions(embed_links=True)
