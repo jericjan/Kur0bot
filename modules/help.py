@@ -1,7 +1,13 @@
-from disnake.ext import commands
-import disnake
+"""
+help command stuff. inline means they fields remain on the same line. check here for example:
+https://discordjs.guide/popular-topics/embeds.html#embed-preview
+"""
+
 import json
 import os
+
+import disnake
+from disnake.ext import commands
 
 
 class Help(commands.Cog):
@@ -10,7 +16,7 @@ class Help(commands.Cog):
     async def help(self, ctx):
         em = disnake.Embed(
             title="Commands",
-            description="Here are my sussy commands!\nUse __**k.help <command>**__ for more info on that command.",
+            description="Here are my sussy commands!\nUse __**k.help <command>**__ for more info on that command.\n<> means required, [] means optional",
         )
 
         with open("modules/commands.json") as f:
@@ -1085,6 +1091,64 @@ class Help(commands.Cog):
             description="Simple AI chat. Doesn't remember shit.",
         )
         em.add_field(name="**Syntax**", value="k.gpt <message>", inline=False)
+        await ctx.send(embed=em)
+
+    @help.command(aliases=["convert"])
+    @commands.bot_has_permissions(embed_links=True)
+    async def currency(self, ctx):
+        em = EmbedMaker(
+            ctx,
+            "Currency Converter",
+            "Converts currencies.\nCheck [here](https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies.json) for what currencies I support.",
+        )
+        em.add_syntax("k.currency <base currency> <target currency> <value>")
+        em.add_example("k.curency usd php 100")
+        em.show_aliases()
+        await em.send()
+
+    @help.command()
+    @commands.bot_has_permissions(embed_links=True)
+    async def height(self, ctx):
+        em = EmbedMaker(
+            ctx,
+            "Height convert",
+            "Converts height from cm to foot-inches and vice versa",
+        )
+        em.add_syntax("k.height <height>")
+        em.add_example("k.height 100cm\nk.height 5'3\"")
+        await em.send()
+
+    @help.command()
+    @commands.bot_has_permissions(embed_links=True)
+    async def image(self, ctx):
+        em = EmbedMaker(
+            ctx, "Image searcher", "Searches for images. Uses the SerpApi API."
+        )
+        em.add_syntax("k.image <query>")
+        em.add_example("k.image amogus")
+        await em.send()
+
+
+class EmbedMaker:
+    def __init__(self, ctx, title, desc):
+        self.ctx = ctx
+        self.em = disnake.Embed(
+            title=title,
+            description=desc,
+        )
+
+    def add_syntax(self, syntax, inline=False):
+        self.em.add_field(name="**Syntax**", value=syntax, inline=inline)
+
+    def add_example(self, ex, inline=False):
+        self.em.add_field(name="**Example**", value=ex, inline=inline)
+
+    def show_aliases(self):
+        self.em.add_field(name="**Aliases**", value=",".join(self.ctx.command.aliases))
+
+    async def send(self):
+        await self.ctx.send(embed=self.em)
+
 
 def setup(client):
     client.add_cog(Help(client))

@@ -44,8 +44,11 @@
 	"hallofshame",
 	"getosumap",
 	"google",
+	"image",
 	"meme",
-	"gpt"	
+	"gpt",
+	"height",
+	"currency"
   ],
   "reactions": [
     "fmega",
@@ -150,6 +153,8 @@
 	"getosumap3",
 	"getosumap2",
 	"send",
-	"editmsg"
+	"editmsg",
+	"attachments",
+	"pinglimit"
   ]
 }
