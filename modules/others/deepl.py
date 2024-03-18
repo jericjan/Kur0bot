@@ -105,5 +105,15 @@ class DeepL_commands(commands.Cog):
             )
         paginator = ButtonPaginator(segments=embed_list)
         await paginator.send(ctx)
+
+    @commands.command()
+    async def say(self, ctx, *, text=None):
+        await ctx.message.delete()
+        if text:
+            await ctx.send(text)
+        else:
+            await ctx.send("There's no text!")
+
+
 def setup(client):
     client.add_cog(DeepL_commands(client))
