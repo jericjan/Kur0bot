@@ -411,15 +411,17 @@ class Events(commands.Cog):
                 "https://cdn.discordapp.com/attachments/809247468084133898/1219821713752330351/GJCNx-HaIAAlZiz.png"
             )
 
-        im_pattern = re.compile(r"(i'm|im|i am) (\w+)")
+        # im_pattern = re.compile(r"\b(i'm|im|i am) (\w+)")
+        im_pattern = re.compile(r"\b(?:i'm|im|i am)(.*?)(?=(?:i'm|im|i am|$|\n))")
 
         if im_pattern.search(msg):
             results = im_pattern.findall(msg)
-            names = [x[1] for x in results]
-            msg = ""
-            for x in names:
-                msg += f"hi {x}, i'm kur0 sus bot! <a:trollplant:934777423881445436>\n"
-            await message.channel.send(msg)
+            results = [f"**{x.strip()}**" for x in results]
+            names = " AKA ".join(results)
+            response = (
+                f"hi {names}, i'm kur0 sus bot! <a:trollplant:934777423881445436>\n"
+            )
+            await message.channel.send(response)
 
     def get_full_class_name(self, obj):
         module = obj.__class__.__module__
