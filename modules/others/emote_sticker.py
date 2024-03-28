@@ -14,6 +14,12 @@ class EmoteSticker(commands.Cog):
     def __init__(self, client):
         self.client = client
 
+    def has_guild_exp_perms(self, ctx):
+        has_expr_perms = ctx.channel.permissions_for(
+            ctx.author
+        ).manage_guild_expressions
+        return has_expr_perms
+
     @commands.command(aliases=["e"])
     @commands.bot_has_permissions(manage_webhooks=True, manage_messages=True)
     async def emote(self, ctx, *message):
@@ -139,10 +145,8 @@ class EmoteSticker(commands.Cog):
             await ctx.send("No more free animated slots :(")
         else:
             await ctx.send(f"{animated_free_slots} animated slots left :)")
-        has_expr_perms = ctx.channel.permissions_for(
-            ctx.author
-        ).manage_guild_expressions
-        if has_expr_perms:
+
+        if self.has_guild_exp_perms(ctx):
             link = await msg_link_grabber.grab_link(ctx, link)
             print(link)
             if re.match(r"https:\/\/cdn.discordapp.com\/emojis\/\d+", link):
@@ -192,6 +196,49 @@ class EmoteSticker(commands.Cog):
         else:
             await ctx.send("Only Admins/Mods can use this command")
 
+    @commands.command(aliases=["re"])
+    @commands.bot_has_permissions(manage_emojis=True, manage_messages=True)
+    async def removeemote(self, ctx, emote: disnake.Emoji):
+
+        if emote.guild.id != ctx.guild.id:
+            raise commands.EmojiNotFound(emote.name)
+
+        if self.has_guild_exp_perms(ctx):
+            await ctx.send(f"Deleting {str(emote)}... Goodbye old friend! 😢")
+            await emote.delete()
+        else:
+            await ctx.send("No can do. You ain't got the perms fo' that!")
+
+    @commands.command(aliases=["rs"])
+    @commands.bot_has_permissions(manage_emojis=True, manage_messages=True)
+    async def removesticker(self, ctx, sticker: disnake.GuildSticker):
+
+        if sticker.guild.id != ctx.guild.id:
+            raise commands.GuildStickerNotFound(sticker.name)
+
+        if self.has_guild_exp_perms(ctx):
+            await ctx.send(
+                f"Deleting this sticker... One last look before you go. Goodbye old friend! 😢"
+            )
+            await ctx.send(stickers=[sticker])
+            await sticker.delete()
+        else:
+            await ctx.send("No can do. You ain't got the perms fo' that!")
+
+    @removeemote.error
+    @removesticker.error
+    async def removeemote_error(self, ctx, error):
+        name = error.argument
+        ctx._ignore_me_ = True
+        if isinstance(error, commands.EmojiNotFound):
+            await ctx.send(
+                f"dang, i can't find the {name} emoji, pardner. can't delete that which ain't exist. truth."
+            )
+        elif isinstance(error, commands.GuildStickerNotFound):
+            await ctx.send(
+                f"dang, i can't find the {name} sticker, pardner. can't delete that which ain't exist. truth."
+            )
+
     @run_in_executor
     def sticker_resize(self, link):  # Your wrapper for async use
         response = requests.get(link)  # threaded
@@ -229,10 +276,7 @@ class EmoteSticker(commands.Cog):
             await ctx.send("No more free slots :(")
         else:
             await ctx.send(f"{free_slots} slots left :)")
-            has_expr_perms = ctx.channel.permissions_for(
-                ctx.author
-            ).manage_guild_expressions
-            if has_expr_perms:
+            if self.has_guild_exp_perms(ctx):
                 link = await msg_link_grabber.grab_link(ctx, link)
                 print(link)
                 file, width, height = await self.sticker_resize(link)
