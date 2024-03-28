@@ -122,6 +122,7 @@ module_paths = (
     "modules.others.openai",
     "modules.others.height",
     "modules.others.currency",
+    "modules.others.kill",
     "modules.pacifam_only",
     "modules.kur0_only",
     "modules.sus",

@@ -367,7 +367,7 @@ class Events(commands.Cog):
                         "fuwamoco_family_ties.mp4",
                         "fuwamoco_silent_hill.mp4",
                     ]
-                ] + [Path('"videos/wednesday.mp4"')]
+                ] + [Path("videos/wednesday.mp4")]
 
                 wed_choice = numpy.random.choice(
                     wed_vids, p=[0.8, 0.037, 0.037, 0.037, 0.037, 0.037, 0.015]
@@ -400,11 +400,16 @@ class Events(commands.Cog):
         if "balls" in msg:
             await message.channel.send(file=disnake.File("videos/the_balls.mp4"))
 
-        if "fuck you tatsu" in msg:
+        if any(word in msg for word in ["fuck you tatsu", "fuck off tatsu"]):
             async for x in message.channel.history(limit=10):
                 if x.author.id == 172002275412279296:
                     await x.delete()
                     break
+
+        if "jdon my soul" in msg:
+            await message.channel.send(
+                "https://cdn.discordapp.com/attachments/809247468084133898/1219821713752330351/GJCNx-HaIAAlZiz.png"
+            )
 
     def get_full_class_name(self, obj):
         module = obj.__class__.__module__
@@ -415,6 +420,9 @@ class Events(commands.Cog):
     ################################ON_COMMAND_ERROR#############
     @commands.Cog.listener()
     async def on_command_error(self, ctx, error):
+        if hasattr(ctx, "_ignore_me_"):
+            return
+
         def full_error(err):
             return f"{self.get_full_class_name(err)}: {err}"
 
