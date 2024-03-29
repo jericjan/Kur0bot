@@ -412,15 +412,22 @@ class Events(commands.Cog):
             )
 
         # im_pattern = re.compile(r"\b(i'm|im|i am) (\w+)")
-        im_pattern = re.compile(r"\b(?:i'm|im|i am)(.*?)(?=(?:i'm|im|i am|$|\n))")
+        im_pattern = re.compile(
+            r"\b(?:i'm|im|i am) (.*?)(?=\b(?:i'm|im|i am|$|\n|\.|\,))"
+        )
 
         if im_pattern.search(msg):
             results = im_pattern.findall(msg)
-            results = [f"**{x.strip()}**" for x in results]
+            results = [f"**{x.strip()}**" for x in results if x.strip() != ""]
             names = " AKA ".join(results)
-            response = (
-                f"hi {names}, i'm kur0 sus bot! <a:trollplant:934777423881445436>\n"
-            )
+            if len(results) == 0:
+                response = (
+                    "You're WHAT? What the fuck are you trying to say, you doofus."
+                )
+            else:
+                response = (
+                    f"hi {names}, i'm kur0 sus bot! <a:trollplant:934777423881445436>\n"
+                )
             await message.channel.send(response)
 
     def get_full_class_name(self, obj):
