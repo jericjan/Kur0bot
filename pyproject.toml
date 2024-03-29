@@ -28,7 +28,7 @@ lorem = "^0.1.1"
 translators = "^5.2.2"
 opencv-python = "^4.6.0"
 ffmpegcv = "^0.2.3"
-pymongo = {extras = ["srv"], version = "3.12.3"}
+pymongo = "^4.6.3"
 pipdeptree = "^2.3.1"
 darker = "^1.5.1"
 pre-commit = "^2.20.0"
@@ -37,6 +37,7 @@ jisho-api = "^0.1.8"
 openai = "^0.27.8"
 g4f = {version = "^0.2.3", extras = ["all"]}
 nest-asyncio = "^1.6.0"
+motor = "^3.4.0"
 
 [tool.poetry.dev-dependencies]
 

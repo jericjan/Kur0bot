@@ -6,7 +6,7 @@ import random
 import re
 import subprocess
 import time
-from datetime import datetime
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 import disnake
@@ -413,22 +413,72 @@ class Events(commands.Cog):
 
         # im_pattern = re.compile(r"\b(i'm|im|i am) (\w+)")
         im_pattern = re.compile(
-            r"\b(?:i'm|im|i am) (.*?)(?=\b(?:i'm|im|i am|$|\n|\.|\,))"
+            r"\b(?:i'm|im|i am) (.*?)(?=\b(?:i'm|im|i am|$|\n|\.|\,)\b)"
         )
 
+        trollplant = "<a:trollplant:934777423881445436>"
+
         if im_pattern.search(msg):
-            results = im_pattern.findall(msg)
-            results = [f"**{x.strip()}**" for x in results if x.strip() != ""]
-            names = " AKA ".join(results)
-            if len(results) == 0:
-                response = (
-                    "You're WHAT? What the fuck are you trying to say, you doofus."
-                )
+
+            motor = self.client.get_cog("MotorDbManager")
+            victim_db = await motor.get_collection_for_server(
+                "dad_joke_victims", message.guild.id
+            )
+
+            async def new_victim():
+                user_list = [x for x in message.guild.members if x.bot == False]
+                victim_id = random.choice(user_list).id
+                victim_notified = False
+
+                print(f"New victim is: {victim_id}")
+                if victim_id == message.author.id:
+                    await message.channel.send(
+                        f"Hey there {message.author.mention}, you appear to be my latest victim for today! {trollplant*3}"
+                    )
+                    victim_notified = True
+
+                user_dic = {"user_id": victim_id, "notified": victim_notified}
+                await victim_db.insert_one()
+                return user_dic
+
+            if await victim_db.count_documents({}) == 0:
+                victim = await new_victim()
             else:
-                response = (
-                    f"hi {names}, i'm kur0 sus bot! <a:trollplant:934777423881445436>\n"
-                )
-            await message.channel.send(response)
+                victim = await motor.get_latest_doc(victim_db)
+                victim_id = victim["user_id"]
+
+                print(f"Existing victim id is: {victim_id}")
+                time_since = victim["_id"].generation_time
+                time_difference = datetime.now(timezone.utc) - time_since
+                if time_difference >= timedelta(hours=24):
+                    print("New victim time!")
+                    victim = await new_victim()
+
+            respond_with_dad_joke = numpy.random.choice([True, False], p=[0.1, 0.9])
+
+            if respond_with_dad_joke or message.author.id == victim["user_id"]:
+
+                if (
+                    message.author.id == victim["user_id"]
+                    and victim["notified"] == False
+                ):
+                    await message.channel.send(
+                        f"Yo {message.author.mention}, you're a little late but, you're my latest victim for today! {trollplant*3}"
+                    )
+                    await victim_db.update_one(
+                        {"_id": victim["_id"]}, {"$set": {"notified": True}}
+                    )
+
+                results = im_pattern.findall(msg)
+                results = [f"**{x.strip()}**" for x in results if x.strip() != ""]
+                names = " AKA ".join(results)
+                if len(results) == 0:
+                    response = (
+                        "You're WHAT? What the fuck are you trying to say, you doofus."
+                    )
+                else:
+                    response = f"hi {names}, i'm kur0 sus bot! {trollplant}"
+                await message.channel.send(response)
 
     def get_full_class_name(self, obj):
         module = obj.__class__.__module__

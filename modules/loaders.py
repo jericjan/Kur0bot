@@ -1,5 +1,6 @@
 import importlib
 import sys
+from types import ModuleType
 
 from disnake.ext import commands
 
@@ -21,6 +22,17 @@ class Loaders(commands.Cog):
     # self.client.add_cog(modules.events.Events( self.client, self.start_time, self.log))
     # else:
     # self.client.reload_extension(name)
+
+    # def rreload(self, module):
+    # """Recursively reload modules."""
+    # try:
+    # importlib.reload(module)
+    # except Exception as e:
+    # print(f"Could not find module: {module}")
+    # for attribute_name in dir(module):
+    # attribute = getattr(module, attribute_name)
+    # if type(attribute) is ModuleType:
+    # self.rreload(attribute)
 
     @commands.command(name="reload", aliases=["refresh"])
     @commands.is_owner()

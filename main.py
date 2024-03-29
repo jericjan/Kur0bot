@@ -127,6 +127,7 @@ module_paths = (
     "modules.kur0_only",
     "modules.sus",
     "modules.tasks",
+    "myfunctions.motor",
 )
 
 for module in module_paths:

@@ -1,3 +1,5 @@
+# goofy ahh synchronous mongodb function, will be replacing with motor.py
+
 from pymongo import MongoClient
 import os
 
