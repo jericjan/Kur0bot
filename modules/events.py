@@ -411,10 +411,23 @@ class Events(commands.Cog):
                 "https://cdn.discordapp.com/attachments/809247468084133898/1219821713752330351/GJCNx-HaIAAlZiz.png"
             )
 
-        # im_pattern = re.compile(r"\b(i'm|im|i am) (\w+)")
         im_pattern = re.compile(
-            r"\b(?:i'm|im|i am) (.*?)(?=\b(?:i'm|im|i am|$|\n|\.|\,)\b)"
+            r"\b(i(?:‘|’|')m|im|i am) (.*?)(?=(?:\b\1\b|$|\n|\.|,|\?|!))"
         )
+        """ 
+        It should match like this:
+        i‘m dead. [dead]
+        i’m dead! [dead]
+        i'm dead? [dead]
+        i'm dead; or maybe not [dead; or maybe not]
+        i'm killing myself, rn i am sad [killing myself] [sad]
+        i'm dead [dead]
+        im impressed [impressed]
+        im him [him]
+        imposter []
+        jimmy []
+        """
+
 
         trollplant = "<a:trollplant:934777423881445436>"
 
@@ -438,7 +451,7 @@ class Events(commands.Cog):
                     victim_notified = True
 
                 user_dic = {"user_id": victim_id, "notified": victim_notified}
-                await victim_db.insert_one()
+                await victim_db.insert_one(user_dic)
                 return user_dic
 
             if await victim_db.count_documents({}) == 0:
@@ -470,7 +483,7 @@ class Events(commands.Cog):
                     )
 
                 results = im_pattern.findall(msg)
-                results = [f"**{x.strip()}**" for x in results if x.strip() != ""]
+                results = [f"**{x[1].strip()}**" for x in results if x[1].strip() != ""]
                 names = " AKA ".join(results)
                 if len(results) == 0:
                     response = (
