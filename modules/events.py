@@ -346,7 +346,7 @@ class Events(commands.Cog):
             tz_day_list = get_days(show_date=False)
 
             if "Wednesday" in tz_day_list:
-                day_ends = get_boundary("end")
+                day_ends = get_boundary("end", weekday="thursday")
                 epoch = to_timestamp(day_ends)
 
                 wed_vids = [

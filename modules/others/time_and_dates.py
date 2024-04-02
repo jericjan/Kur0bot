@@ -29,22 +29,36 @@ class TimeAndDates(commands.Cog):
         )
         return tz_day_list
 
-    def get_date_boundary(self, mode):
+    def get_date_boundary(self, mode, weekday=None):
         """
         bad code but pls run get_current_days() first to update those vars
         """
-        if mode == "end":
+        days = [
+            "monday",
+            "tuesday",
+            "wednesday",
+            "thursday",
+            "friday",
+            "saturday",
+            "sunday",
+        ]
+
+        if weekday and weekday not in days:
+            raise Exception("invalid weekday given")
+
+        addend = ((days.index(weekday) - self.last_tz.weekday()) % 7) if weekday else 1
+        if mode == "end":  # UTC-12
             return datetime(
                 self.last_tz.year,
                 self.last_tz.month,
-                self.last_tz.day + 1,
+                self.last_tz.day + addend,
                 tzinfo=pytz.timezone("Etc/GMT+12"),
             )
-        elif mode == "start":
+        elif mode == "start":  # UTC+14
             return datetime(
                 self.first_tz.year,
                 self.first_tz.month,
-                self.first_tz.day + 1,
+                self.first_tz.day + addend,
                 tzinfo=pytz.timezone("Etc/GMT-14"),
             )
         else:
