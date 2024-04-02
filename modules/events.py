@@ -338,24 +338,12 @@ class Events(commands.Cog):
                 await message.channel.send(file=disnake.File("videos/friday.webm"))
 
         if "wednesday" in msg:
-            tz_str_list = [
-                "Etc/GMT+12",
-                "Etc/GMT-14",
-                "Etc/GMT-12",
-            ]  # signs are opposite for some reason
-            tz_day_list = [
-                datetime.now(pytz.timezone(x)).strftime("%A") for x in tz_str_list
-            ]
+            time_and_dates = self.client.get_cog("TimeAndDates")
+            tz_day_list = time_and_dates.get_current_days(show_date=False)
 
             if "Wednesday" in tz_day_list:
-                today = datetime.now(pytz.timezone("Etc/GMT+12"))
-                thursday = datetime(
-                    today.year,
-                    today.month,
-                    today.day + ((3 - today.weekday()) % 7),
-                    tzinfo=pytz.timezone("Etc/GMT+12"),
-                )
-                epoch = int(thursday.timestamp())
+                day_ends = time_and_dates.get_date_boundary("end")
+                epoch = time_and_dates.tz_to_discord_timestamp(day_ends)
 
                 wed_vids = [
                     Path("videos/mococo") / x
@@ -374,9 +362,9 @@ class Events(commands.Cog):
                 )
 
                 if wed_choice.parent.name == "mococo":
-                    epoch = f"Mococo Wednesday ends <t:{epoch}:R>"
+                    epoch = f"Mococo Wednesday ends {epoch}"
                 else:
-                    epoch = f"Moco... SIKE! Walter Wednesday ends <t:{epoch}:R>"
+                    epoch = f"Moco... SIKE! Walter Wednesday ends {epoch}"
 
                 await message.channel.send(epoch, file=disnake.File(str(wed_choice)))
 
