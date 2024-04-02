@@ -7,6 +7,7 @@ import re
 import subprocess
 import time
 from datetime import datetime, timedelta, timezone
+from operator import attrgetter
 from pathlib import Path
 
 import disnake
@@ -338,12 +339,15 @@ class Events(commands.Cog):
                 await message.channel.send(file=disnake.File("videos/friday.webm"))
 
         if "wednesday" in msg:
-            time_and_dates = self.client.get_cog("TimeAndDates")
-            tz_day_list = time_and_dates.get_current_days(show_date=False)
+            get_days, get_boundary, to_timestamp = attrgetter(
+                "get_current_days", "get_date_boundary", "tz_to_discord_timestamp"
+            )(self.client.get_cog("TimeAndDates"))
+
+            tz_day_list = get_days(show_date=False)
 
             if "Wednesday" in tz_day_list:
-                day_ends = time_and_dates.get_date_boundary("end")
-                epoch = time_and_dates.tz_to_discord_timestamp(day_ends)
+                day_ends = get_boundary("end")
+                epoch = to_timestamp(day_ends)
 
                 wed_vids = [
                     Path("videos/mococo") / x
