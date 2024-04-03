@@ -175,13 +175,22 @@ class Events(commands.Cog):
         if message.channel.id == 1203784333341491302:
             return  # temp, disabled for #serious-chat
 
+        motor = self.client.get_cog("MotorDbManager")
+        stats_coll = motor.get_collection_for_server("stats", message.guild.id)
+
         ################SUSSY REPLIES##################
         if message.channel.id == 850380119646142504:  # sus-town
             if any(word in msg for word in sus_words):
                 for x in range(3):
+                    await motor.inc_user_stat(
+                        stats_coll, message.author.id, "Sussy replies", 1
+                    )
                     await message.channel.send(random.choice(sus_replies))
         else:
             if any(word in msg for word in sus_words):
+                await motor.inc_user_stat(
+                    stats_coll, message.author.id, "Sussy replies", 1
+                )
                 if self.client.sus_on == False:
                     await message.channel.send(
                         random.choice(sus_replies), delete_after=3.0
@@ -191,18 +200,22 @@ class Events(commands.Cog):
                     await message.channel.send(random.choice(sus_replies))
                     await self.log("sussy reply", False)
         if "amgus" in msg:
+            await motor.inc_user_stat(stats_coll, message.author.id, "Sussy replies", 1)
             await message.channel.send(random.choice(sugma_replies), delete_after=3.0)
             await self.log("sussy reply", False)
         if "amogus" in msg:
+            await motor.inc_user_stat(stats_coll, message.author.id, "Sussy replies", 1)
             await message.channel.send(random.choice(sugoma_replies), delete_after=3.0)
             await self.log("sussy reply", False)
         if "sushi" in msg:
+            await motor.inc_user_stat(stats_coll, message.author.id, "Sussy replies", 1)
             await message.channel.send(
                 "remove the hi from sushi. what do you get? <:sus:850628234746920971>",
                 delete_after=3.0,
             )
             await self.log("sussy reply", False)
         if "pog" in msg:
+            await motor.inc_user_stat(stats_coll, message.author.id, "Sussy replies", 1)
             await message.channel.send("poggusus", delete_after=3.0)
             await self.log("sussy reply", False)
 
@@ -213,6 +226,9 @@ class Events(commands.Cog):
         ):
             strepto_in_server = await message.guild.getch_member(268188421871108097)
             if strepto_in_server:
+                await motor.inc_user_stat(
+                    stats_coll, message.author.id, "Feet-related", 1
+                )
                 await message.channel.send("<@268188421871108097>")  # pings strepto
 
         # PACIFAM ONLY
@@ -226,9 +242,11 @@ class Events(commands.Cog):
                         "images/dex_quote.png",
                     ]
                 )
+                await motor.inc_user_stat(stats_coll, message.author.id, "Doxx", 1)
                 await message.channel.send(file=disnake.File(choice))
             if any(word in msg for word in ["hurensohn", "hurensöhne"]):
                 peeps = ["304268898637709312", "1200519236834041898"]
+                await motor.inc_user_stat(stats_coll, message.author.id, "Hurensohn", 1)
                 await message.channel.send(
                     f"<@{random.choice(peeps)}>"
                 )  # pings strepto
@@ -336,6 +354,9 @@ class Events(commands.Cog):
             day = curr_time.strftime("%A")
             if day == "Friday":
                 print("It is Friday... in California. SHOOT!")
+                await motor.inc_user_stat(
+                    stats_coll, message.author.id, "Friday in California", 1
+                )
                 await message.channel.send(file=disnake.File("videos/friday.webm"))
 
         if "wednesday" in msg:
@@ -367,38 +388,56 @@ class Events(commands.Cog):
 
                 if wed_choice.parent.name == "mococo":
                     epoch = f"Mococo Wednesday ends {epoch}"
+                    await motor.inc_user_stat(
+                        stats_coll, message.author.id, "Wednesday.Mococo", 1
+                    )
                 else:
                     epoch = f"Moco... SIKE! Walter Wednesday ends {epoch}"
+                    await motor.inc_user_stat(
+                        stats_coll, message.author.id, "Wednesday.Walter", 1
+                    )
 
                 await message.channel.send(epoch, file=disnake.File(str(wed_choice)))
 
         if any(word in msg for word in ["10:49pm", "10:49 pm", "10 49 pm", "10 49pm"]):
+            await motor.inc_user_stat(stats_coll, message.author.id, "10:49 pm", 1)
             await message.channel.send(file=disnake.File("videos/10_49_pm.mp4"))
 
         if any(word in msg for word in ["deez", "deez nuts"]):
+            await motor.inc_user_stat(stats_coll, message.author.id, "Deez Nuts", 1)
             await message.channel.send(random.choice(deez_replies), delete_after=3.0)
 
         if "reaction" in msg:
+            await motor.inc_user_stat(
+                stats_coll, message.author.id, "Kronii Reaction", 1
+            )
             await message.channel.send(
                 "https://tenor.com/view/kronii-hololive-edoman-3d-anime-gif-2423112144377621699"
             )
 
         if "crazy" in msg:
+            await motor.inc_user_stat(stats_coll, message.author.id, "Crazy", 1)
             await message.channel.send("Crazy?")
 
         if "wah" in msg:
+            await motor.inc_user_stat(stats_coll, message.author.id, "Wah", 1)
             await message.channel.send(file=disnake.File("videos/wah.mp4"))
 
         if "balls" in msg:
+            await motor.inc_user_stat(stats_coll, message.author.id, "The Balls", 1)
             await message.channel.send(file=disnake.File("videos/the_balls.mp4"))
 
         if any(word in msg for word in ["fuck you tatsu", "fuck off tatsu"]):
             async for x in message.channel.history(limit=10):
                 if x.author.id == 172002275412279296:
+                    await motor.inc_user_stat(
+                        stats_coll, message.author.id, "Tatsu bot murders", 1
+                    )
                     await x.delete()
                     break
 
         if "jdon my soul" in msg:
+            await motor.inc_user_stat(stats_coll, message.author.id, "JdonMySoul", 1)
             await message.channel.send(
                 "https://cdn.discordapp.com/attachments/809247468084133898/1219821713752330351/GJCNx-HaIAAlZiz.png"
             )
@@ -424,9 +463,7 @@ class Events(commands.Cog):
         trollplant = "<a:trollplant:934777423881445436>"
 
         if im_pattern.search(msg):
-
-            motor = self.client.get_cog("MotorDbManager")
-            victim_db = await motor.get_collection_for_server(
+            victim_db = motor.get_collection_for_server(
                 "dad_joke_victims", message.guild.id
             )
 
@@ -483,6 +520,9 @@ class Events(commands.Cog):
                     )
                 else:
                     response = f"hi {names}, i'm kur0 sus bot! {trollplant}"
+                await motor.inc_user_stat(
+                    stats_coll, message.author.id, "Im Sus Bot", 1
+                )
                 await message.channel.send(response)
 
     def get_full_class_name(self, obj):
