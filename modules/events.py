@@ -477,6 +477,9 @@ class Events(commands.Cog):
                     await message.channel.send(
                         f"Hey there {message.author.mention}, you appear to be my latest victim for today! {trollplant*3}"
                     )
+                    await motor.inc_user_stat(
+                        stats_coll, message.author.id, "Victimized", 1
+                    )
                     victim_notified = True
 
                 user_dic = {"user_id": victim_id, "notified": victim_notified}
@@ -506,6 +509,9 @@ class Events(commands.Cog):
                 ):
                     await message.channel.send(
                         f"Yo {message.author.mention}, you're a little late but, you're my latest victim for today! {trollplant*3}"
+                    )
+                    await motor.inc_user_stat(
+                        stats_coll, message.author.id, "Victimized", 1
                     )
                     await victim_db.update_one(
                         {"_id": victim["_id"]}, {"$set": {"notified": True}}
