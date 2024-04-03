@@ -40,7 +40,9 @@
     "gif2",
     "resize",
 	"uploademote",
+	"removeemote",
 	"uploadsticker",
+	"removesticker",
 	"hallofshame",
 	"getosumap",
 	"google",
@@ -48,7 +50,11 @@
 	"meme",
 	"gpt",
 	"height",
-	"currency"
+	"currency",
+	"stats",
+	"kill",
+	"day",
+	"say"
   ],
   "reactions": [
     "fmega",

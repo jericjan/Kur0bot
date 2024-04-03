@@ -78,24 +78,27 @@ class Kur0only(commands.Cog):
             await msg.edit(embed=embed)
             await ctx.message.delete()
 
-    @commands.command()
-    @commands.is_owner()
-    async def checkhelp(self, ctx):
-        f = open("modules/commands.json")
-        data = json.load(f)
-        f.close()
+    def get_public_commands(self):
+        with open("modules/commands.json") as f:
+            data = json.load(f)
+
         hidden_commands = data["hidden"]
-        comm_list = []
+        self.comm_list = []  # list of public commands IN commands.json
         for i in data:
             if i == "hidden":
                 pass
             else:
-                comm_list += data[i]
+                self.comm_list += data[i]
 
-        public_commandss = [
+        return [
             c.name for c in self.client.commands if c.name not in hidden_commands
-        ]
-        diffcomms = [c for c in public_commandss if c not in comm_list]
+        ]  # list of public commands IN the bot
+
+    @commands.command()
+    @commands.is_owner()
+    async def checkhelp(self, ctx):
+        public_commandss = self.get_public_commands()
+        diffcomms = [c for c in public_commandss if c not in self.comm_list]
         diffcomms_joined = "\n".join(diffcomms)
         await ctx.send(f"Commands missing in help command are:\n{diffcomms_joined}")
         commands_with_help_msg = [
@@ -109,7 +112,9 @@ class Kur0only(commands.Cog):
         ]
         print(aliases)
         diffcomms2 = [
-            c for c in comm_list if c not in commands_with_help_msg and c not in aliases
+            c
+            for c in self.comm_list
+            if c not in commands_with_help_msg and c not in aliases
         ]
         diffcomms2_joined = "\n".join(diffcomms2)
         await ctx.send(f"Commands without help commands are:\n{diffcomms2_joined}")

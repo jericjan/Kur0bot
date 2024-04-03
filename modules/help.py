@@ -11,9 +11,32 @@ from disnake.ext import commands
 
 
 class Help(commands.Cog):
+    def __init__(self, client):
+        self.client = client
+
     @commands.group(invoke_without_command=True)
     @commands.bot_has_permissions(embed_links=True)
-    async def help(self, ctx):
+    async def help(self, ctx, extra=None):
+        """
+        General help command. If invalid subcommand is given, it will go in `extra`
+        """
+
+        if extra:
+            public_comms = self.client.get_cog("Kur0only").get_public_commands()
+            for comm in public_comms:
+                comm = self.client.get_command(comm)
+                for alias in comm.aliases:
+                    if alias == extra:  # found the command with matching alias
+                        command = self.client.get_command(f"help {comm.name}")
+                        ctx.command = command
+                        ctx.invoked_subcommand = command
+                        await self.client.invoke(ctx)
+                        return
+            await ctx.send(
+                "Brother, I don't think I've ever heard of that command before."
+            )
+            return
+
         em = disnake.Embed(
             title="Commands",
             description="Here are my sussy commands!\nUse __**k.help <command>**__ for more info on that command.\n<> means required, [] means optional",
@@ -1041,7 +1064,10 @@ class Help(commands.Cog):
     @commands.bot_has_permissions(embed_links=True)
     async def google(self, ctx):
         async with EmbedMaker(
-            ctx, "Google Search", "Searches Google and sends back results as an embed."
+            ctx,
+            "Google Search",
+            "Searches Google and sends back results as an embed.",
+            self.client,
         ) as em:
             em.add_syntax(r"k.google <search_query>")
 
@@ -1049,7 +1075,7 @@ class Help(commands.Cog):
     @commands.bot_has_permissions(embed_links=True)
     async def meme(self, ctx):
         async with EmbedMaker(
-            ctx, "Meme Generator", "Make a quick meme with this command"
+            ctx, "Meme Generator", "Make a quick meme with this command", self.client
         ) as em:
             em.add_syntax(
                 r"k.meme <top_text> <bottom_text> <img_url/reply to a message>"
@@ -1062,6 +1088,7 @@ class Help(commands.Cog):
             ctx,
             "This right here...",
             "Creates a video saying appreciating an image sent by a user.",
+            self.client,
         ) as em:
             em.add_syntax("k.this <image>")
             em.show_aliases()
@@ -1073,6 +1100,7 @@ class Help(commands.Cog):
             ctx,
             "Jisho dictionary",
             "Searches through the Jisho database given a Japanese word",
+            self.client,
         ) as em:
             em.add_example("k.jisho 草")
 
@@ -1080,7 +1108,7 @@ class Help(commands.Cog):
     @commands.bot_has_permissions(embed_links=True)
     async def gpt(self, ctx):
         async with EmbedMaker(
-            ctx, "GPT", "Simple AI chat. Doesn't remember shit."
+            ctx, "GPT", "Simple AI chat. Doesn't remember shit.", self.client
         ) as em:
             em.add_syntax("k.gpt <message>")
 
@@ -1092,6 +1120,7 @@ class Help(commands.Cog):
             "Currency Converter",
             "Converts currencies.\n"
             "Check [here](https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies.json) for what currencies I support.",
+            self.client,
         ) as em:
             em.add_syntax("k.currency <base currency> <target currency> <value>")
             em.add_example("k.curency usd php 100")
@@ -1104,6 +1133,7 @@ class Help(commands.Cog):
             ctx,
             "Height convert",
             "Converts height from cm to foot-inches and vice versa",
+            self.client,
         ) as em:
             em.add_syntax("k.height <height>")
             em.add_example("k.height 100cm\nk.height 5'3\"")
@@ -1112,15 +1142,76 @@ class Help(commands.Cog):
     @commands.bot_has_permissions(embed_links=True)
     async def image(self, ctx):
         async with EmbedMaker(
-            ctx, "Image searcher", "Searches for images. Uses the SerpApi API."
+            ctx,
+            "Image searcher",
+            "Searches for images. Uses the SerpApi API.",
+            self.client,
         ) as em:
             em.add_syntax("k.image <query>")
             em.add_example("k.image amogus")
 
+    @help.command()
+    @commands.bot_has_permissions(embed_links=True)
+    async def day(self, ctx):
+        async with EmbedMaker(
+            ctx,
+            "Day boundaries",
+            "Tells you when the current day ends or the next one starts for all timezones",
+            self.client,
+        ) as em:
+            pass
+
+    @help.command()
+    @commands.bot_has_permissions(embed_links=True)
+    async def say(self, ctx):
+        async with EmbedMaker(
+            ctx, "Say", "Makes the bot say things. That's it.", self.client
+        ) as em:
+            em.add_syntax("k.say stuff")
+
+    @help.command()
+    @commands.bot_has_permissions(embed_links=True)
+    async def stats(self, ctx):
+        async with EmbedMaker(
+            ctx,
+            "Kur0bot Stats",
+            "Gives you stats for certain things a user has done that are related to the bot",
+            self.client,
+        ) as em:
+            em.add_syntax("k.stats <user> (leave blank to get your own stats)")
+            em.add_example("k.stats Kur0")
+
+    @help.command()
+    @commands.bot_has_permissions(embed_links=True)
+    async def kill(self, ctx):
+        async with EmbedMaker(
+            ctx, "KILL", "Murderizes someone. Just try it.", self.client
+        ) as em:
+            em.add_syntax("k.ill Kur0")
+            em.show_aliases(auto=True)
+
+    @help.command()
+    @commands.bot_has_permissions(embed_links=True)
+    async def removesticker(self, ctx):
+        async with EmbedMaker(
+            ctx, "Remove sticker", "Removes a sticker.", self.client
+        ) as em:
+            em.add_syntax("k.rs <sticker_name>")
+            em.show_aliases(auto=True)
+
+    @help.command()
+    @commands.bot_has_permissions(embed_links=True)
+    async def removeemote(self, ctx):
+        async with EmbedMaker(
+            ctx, "Remove emote", "Removes an emote.", self.client
+        ) as em:
+            em.add_syntax("k.re <emote_name>")
+            em.show_aliases(auto=True)
 
 class EmbedMaker:
-    def __init__(self, ctx, title, desc):
+    def __init__(self, ctx, title, desc, client=False):
         self.ctx = ctx
+        self.client = client
         self.em = disnake.Embed(
             title=title,
             description=desc,
@@ -1138,8 +1229,23 @@ class EmbedMaker:
     def add_example(self, ex, inline=False):
         self.em.add_field(name="**Example**", value=ex, inline=inline)
 
-    def show_aliases(self):
-        self.em.add_field(name="**Aliases**", value=",".join(self.ctx.command.aliases))
+    def show_aliases(self, auto=False):
+        """
+        need to rewrite this.
+        """
+        if auto:
+            if self.client is None:
+                raise Exception(
+                    "self.client not provided when show_aliases() is auto mode!"
+                )
+            self.em.add_field(
+                name="**Aliases**",
+                value=",".join(self.client.get_command(self.ctx.command.name).aliases),
+            )
+        else:
+            self.em.add_field(
+                name="**Aliases**", value=",".join(self.ctx.command.aliases)
+            )
 
 
 def setup(client):
