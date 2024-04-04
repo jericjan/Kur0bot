@@ -38,6 +38,7 @@ openai = "^0.27.8"
 g4f = {version = "^0.2.3", extras = ["all"]}
 nest-asyncio = "^1.6.0"
 motor = "^3.4.0"
+pylint = "^3.1.0"
 
 [tool.poetry.dev-dependencies]
 

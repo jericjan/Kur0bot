@@ -4,9 +4,26 @@ import disnake
 from disnake.ext import commands
 
 
+class UserStat:
+    def __init__(self, client, guild_id, author_id):
+        motor = client.get_cog("MotorDbManager")
+        self.stats_coll = motor.get_collection_for_server("stats", guild_id)
+        self.author_id = author_id
+
+    async def increment(self, stat_name, inc_amount):
+        await self.stats_coll.update_one(
+            {"user_id": self.author_id},
+            {"$inc": {f"stats.{stat_name}": inc_amount}},
+            upsert=True,
+        )
+
+
 class Stats(commands.Cog):
     def __init__(self, client):
         self.client = client
+
+    def get_user(self, guild_id, author_id):
+        return UserStat(self.client, guild_id, author_id)
 
     @commands.command()
     async def stats(self, ctx, user: disnake.User = None):
