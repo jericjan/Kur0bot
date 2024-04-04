@@ -1,39 +1,37 @@
-import time
-
-start_time = time.time()
-
-import disnake
-
-print(f"Running Disnake {disnake.__version__}")
-
 import asyncio
 import atexit
 import logging
 import os
 import signal
 import threading
+import time
 from datetime import datetime, timedelta
 
 import aiohttp
+import dateutil.parser as dp
+import disnake
 import pytz
 import requests
+from disnake import Webhook
 from disnake.ext import commands
+from dotenv import load_dotenv
 
 from keep_alive import keep_alive
+from running_check import check
+
+start_time = time.time()
+print(f"Running Disnake {disnake.__version__}")
 
 logging.getLogger("asyncio").setLevel(logging.DEBUG)
 
-
-from dotenv import load_dotenv
 
 load_dotenv()
 print(f"Asyncio Debug Mode: {os.getenv('PYTHONASYNCIODEBUG')}")
 
 def goodbye(a=None, b=None):
     print("Exiting...")
-    f = open("log.txt", "a")
-    f.write("Exiting...\n")
-    f.close()
+    with open("log.txt", "a", encoding="utf-8") as f:
+        f.write("Exiting...\n")
 
 
 atexit.register(goodbye)
@@ -67,18 +65,17 @@ client = commands.Bot(command_prefix="k.", intents=intents, activity=game)
 client.remove_command("help")
 
 
-async def log(text, printText=None):
+async def log(text, print_text=None):
     tz = pytz.timezone("Asia/Manila")
     curr_time = datetime.now(tz)
     clean_time = curr_time.strftime("%m/%d/%Y %I:%M %p")
     final = f"{clean_time} - {text}\n"
-    if printText == False:
+    if not print_text:
         pass
     else:
         print(final)
-    f = open("log.txt", "a")
-    f.write(final)
-    f.close()
+    with open("log.txt", "a", encoding="utf-8") as f:
+        f.write(final)
 
 
 client.start_time = start_time
@@ -140,12 +137,11 @@ print(f"{(time.time() - start_time):.2f}s - Done!")
 
 @client.before_invoke
 async def common(ctx):
-    text = f'k.{ctx.invoked_with} | {ctx.author.name}#{ctx.author.discriminator} | "{ctx.guild.name}" - "{ctx.channel.name}"'
+    text = (
+        f"k.{ctx.invoked_with} | {ctx.author.name}#{ctx.author.discriminator} | "
+        f'"{ctx.guild.name}" - "{ctx.channel.name}"'
+    )
     await log(str(text))
-
-
-import dateutil.parser as dp
-from disnake import Webhook
 
 
 @client.command()
@@ -161,7 +157,7 @@ async def stream(ctx, link, noembed=None):
         wrong = True
 
     print(idd)
-    if wrong != True:
+    if not wrong:
         params = {
             "part": "liveStreamingDetails,snippet",
             "key": os.getenv("YT_API_KEY"),
@@ -195,13 +191,16 @@ async def stream(ctx, link, noembed=None):
         channelid = r["items"][0]["snippet"]["channelId"]
         parsed_t = dp.parse(isotime)
         t_in_seconds = parsed_t.timestamp()
-        reltime = f"<t:{str(t_in_seconds).split('.')[0]}:R>"
+        reltime = f"<t:{str(t_in_seconds).split('.', maxsplit=1)[0]}:R>"
         dttime = datetime.strptime(isotime, "%Y-%m-%dT%H:%M:%S%z")
-        f = open("list.txt", "a")  # add stream url and time to list.txt
-        f.write(f"{link} {parsed_t.strftime('%a %b %d %Y %H:%M:%S')}\n")
-        f.close()
-        a_file = open("list.txt", "r")  # reads list.txt
-        a_file.close()
+        with open(
+            "list.txt", "a", encoding="utf-8"
+        ) as f:  # add stream url and time to list.txt
+            f.write(f"{link} {parsed_t.strftime('%a %b %d %Y %H:%M:%S')}\n")
+
+        # a_file = open("list.txt", "r")
+        # a_file.close()
+        # ^^why did i have this? i'm reading the file then doing nothing???
 
         params2 = {
             "part": "snippet",
@@ -224,14 +223,16 @@ async def stream(ctx, link, noembed=None):
         if noembed != "noembed":
             async with aiohttp.ClientSession() as session:
                 webhook = Webhook.from_url(
-                    "https://discord.com/api/webhooks/880667610323234877/oc31FGZ3SPfu7BCru4iOd2ULJAvyOdMi1SOaqNF58sHKBknFbdhK5zfqSZhxS4NZF9pU",
+                    "https://discord.com/api/webhooks/880667610323234877/oc31FGZ3SPfu7BCru4iOd2ULJA"
+                    "vyOdMi1SOaqNF58sHKBknFbdhK5zfqSZhxS4NZF9pU",
                     session=session,
                 )
                 await webhook.send(embed=e)
         else:
             async with aiohttp.ClientSession() as session:
                 webhook = Webhook.from_url(
-                    "https://discord.com/api/webhooks/880667610323234877/oc31FGZ3SPfu7BCru4iOd2ULJAvyOdMi1SOaqNF58sHKBknFbdhK5zfqSZhxS4NZF9pU",
+                    "https://discord.com/api/webhooks/880667610323234877/oc31FGZ3SPfu7BCru4iOd2ULJA"
+                    "vyOdMi1SOaqNF58sHKBknFbdhK5zfqSZhxS4NZF9pU",
                     session=session,
                 )
                 await webhook.send(f"{reltime} **{author}** - [{title}](<{link}>)")
@@ -245,10 +246,10 @@ async def stream(ctx, link, noembed=None):
 
 
 async def clear_list(url):
-    a_file = open("list.txt", "r")
-    lines = a_file.read().splitlines()
-    a_file.close()
-    with open("list.txt", "w+") as r:
+    with open("list.txt", "r", encoding="utf-8") as a_file:
+        lines = a_file.read().splitlines()
+
+    with open("list.txt", "w+", encoding="utf-8") as r:
         for i in lines:
             if i.split(" ")[0] != url:
                 r.write(f"{i}\n")
@@ -256,20 +257,19 @@ async def clear_list(url):
 
 async def open_url(url):
     print(f"{url} is starting!")
-    f = open("log.txt", "a")
-    f.write(f"open_url running {url}\n")
-    f.close()
+    with open("log.txt", "a", encoding="utf-8") as f:
+        f.write(f"open_url running {url}\n")
 
     avi_guild = client.get_guild(603147860225032192)
-    while avi_guild == None:
+    while avi_guild is None:
         avi_guild = client.get_guild(603147860225032192)
         await asyncio.sleep(1)
-    else:
-        print("got guild!")
-        sched_ch = avi_guild.get_channel(879702977898741770)
-        print("got channel!")
-        messages = await sched_ch.history(limit=200).flatten()
-        print("got messages")
+
+    print("got guild!")
+    sched_ch = avi_guild.get_channel(879702977898741770)
+    print("got channel!")
+    messages = await sched_ch.history(limit=200).flatten()
+    print("got messages")
 
     count = 0
     for msg in messages:
@@ -339,25 +339,26 @@ async def run_at(dt, coro, url):
     now = datetime.now()
     nowstr = now.strftime("%m/%d/%Y %H:%M:%S")
     print(f"{url} is scheduled!")
-    f = open("log.txt", "a")
-    f.write(f"{url} - scheduled at {nowstr}\n")
-    f.close()
+    with open("log.txt", "a", encoding="utf-8") as f:
+        f.write(f"{url} - scheduled at {nowstr}\n")
     await wait_until(dt)
-    f = open("log.txt", "a")
-    f.write(f"{url} starting!\n")
-    f.close()
+    with open("log.txt", "a", encoding="utf-8") as f:
+        f.write(f"{url} starting!\n")
     return await coro
 
 
 def precheck():
 
     if not os.path.isfile("list.txt"):
-        file = open("list.txt", "w")  # creates txt if doesn't exist
-        file.close()
-    a_file = open("list.txt", "r")  # reads the txt
-    lines = a_file.read().splitlines()
-    a_file.close()
-    with open("list.txt", "w+") as r:
+        with open(
+            "list.txt", "w", encoding="utf-8"
+        ) as file:  # creates txt if doesn't exist
+            pass
+
+    with open("list.txt", "r", encoding="utf-8") as a_file:  # reads the txt
+        lines = a_file.read().splitlines()
+
+    with open("list.txt", "w+", encoding="utf-8") as r:
         for i in lines:
             later = datetime.strptime(i.split(" ", 1)[1], "%a %b %d %Y %H:%M:%S")
             now = datetime.now()
@@ -376,42 +377,17 @@ tcheck = threading.Thread(target=precheck)
 tcheck.start()
 print(f"{(time.time() - start_time):.2f}s - schedules checked!")
 keep_alive()
-isDiscordrunning = False
-
-from running_check import check
 
 proc_id = os.getpid()
 print(f"{(time.time() - start_time):.2f}s - Process ID: {proc_id}")
 asyncio.run(log(f"Process ID: {proc_id}", False))
 check(start_time, proc_id)
 loop = client.loop
-while isDiscordrunning is False:
-    try:
-        print(f"{(time.time() - start_time):.2f}s - Connecting to bot...")
-        loop.run_until_complete(client.start(os.getenv("TOKEN")))
-        print("Setting isDiscordrunning to True")
-        isDiscordrunning = True
-    except KeyboardInterrupt:
-        loop.run_until_complete(client.close())
-        # cancel all tasks lingering
-    except disnake.HTTPException as e:
-        print("nope. not working")
-
-        r = requests.head(url="https://discord.com/api/v1")
-        print(f"{type(e).__name__}: {r.status_code}")
-        if r.status_code == 429:
-            print("Rate limited again lmao")
-        try:
-            minutes = round(int(r.headers["Retry-After"]) / 60)
-            print(f"{minutes} minutes left")
-            print("Trying again in 5 seconds")
-            time.sleep(5)
-            os.system("busybox reboot")
-        except:
-            print("No rate limit")
-            print("Trying again in 5 seconds")
-            time.sleep(5)
-    except:
-        asyncio.run(log("Something went wrong. Exiting..."))
-    finally:
-        loop.close()
+try:
+    print(f"{(time.time() - start_time):.2f}s - Connecting to bot...")
+    loop.run_until_complete(client.start(os.getenv("TOKEN")))
+except KeyboardInterrupt:
+    loop.run_until_complete(client.close())
+    # cancel all tasks lingering
+finally:
+    loop.close()
