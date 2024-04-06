@@ -1,6 +1,7 @@
 # stolen from https://github.com/ErrorNoInternet/disnake-paginator
 # button design from pycord lol
 # slightly modified
+# i should really make this a cog (soon)
 
 import disnake
 
@@ -25,9 +26,9 @@ class ChannelResponseWrapper:
         )
 
     async def edit_message(self, content=None, embed=None, view=None):
-        if content == None:
+        if content is None:
             content = self.sent_message.content
-        if embed == None:
+        if embed is None:
             if len(self.sent_message.embeds) > 0:
                 embed = self.sent_message.embeds[0]
         await self.sent_message.edit(content=content, embed=embed, view=view)
@@ -105,7 +106,7 @@ class ButtonPaginator:
             @disnake.ui.button(
                 label="<<",
                 style=disnake.ButtonStyle.blurple,
-                disabled=True if len(self.embeds) == 1 else False,
+                disabled=len(self.embeds) == 1,
             )
             async def first_button(this, _, button_interaction):
                 if button_interaction.author != this.interaction.author:
@@ -128,7 +129,7 @@ class ButtonPaginator:
             @disnake.ui.button(
                 label="<",
                 style=disnake.ButtonStyle.red,
-                disabled=True if len(self.embeds) == 1 else False,
+                disabled=len(self.embeds) == 1,
             )
             async def previous_button(this, _, button_interaction):
                 if button_interaction.author != this.interaction.author:
@@ -155,7 +156,7 @@ class ButtonPaginator:
             @disnake.ui.button(
                 label=">",
                 style=disnake.ButtonStyle.green,
-                disabled=True if len(self.embeds) == 1 else False,
+                disabled=len(self.embeds) == 1,
             )
             async def next_button(this, _, button_interaction):
                 if button_interaction.author != this.interaction.author:
@@ -173,7 +174,7 @@ class ButtonPaginator:
             @disnake.ui.button(
                 label=">>",
                 style=disnake.ButtonStyle.blurple,
-                disabled=True if len(self.embeds) == 1 else False,
+                disabled=len(self.embeds) == 1,
             )
             async def last_button(this, _, button_interaction):
                 if button_interaction.author != this.interaction.author:

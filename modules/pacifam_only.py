@@ -1,11 +1,11 @@
-from disnake.ext import commands
-import disnake
-from ftplib import FTP
-import os
-import json
 import io
+import json
+import os
 import re
+from ftplib import FTP
 
+import disnake
+from disnake.ext import commands
 from mcrcon import MCRcon
 
 
@@ -16,12 +16,11 @@ class PacifamOnly(commands.Cog):
     @commands.command()
     async def addoffline(self, ctx, username):
         avi_guild = self.client.get_guild(938255956247183451)
-        while avi_guild == None:
+        while avi_guild is None:
             pass
-        else:
-            admin = disnake.utils.get(avi_guild.roles, name="Admin")
-            moderator = disnake.utils.get(avi_guild.roles, name="Moderator")
-            avilon = disnake.utils.get(avi_guild.roles, name="Aweelom")
+        admin = disnake.utils.get(avi_guild.roles, name="Admin")
+        moderator = disnake.utils.get(avi_guild.roles, name="Moderator")
+        avilon = disnake.utils.get(avi_guild.roles, name="Aweelom")
         roles = [admin, moderator, avilon]
         if (
             any(role in roles for role in ctx.author.roles)
@@ -37,8 +36,7 @@ class PacifamOnly(commands.Cog):
             if username.lower() in config["main"]["forcedOfflinePlayers"]:
                 await ctx.send(f"{username} is alreading in the list!")
                 return
-            else:
-                config["main"]["forcedOfflinePlayers"].append(username.lower())
+            config["main"]["forcedOfflinePlayers"].append(username.lower())
             print(config["main"]["forcedOfflinePlayers"])
             dump = json.dumps(config, indent=2).encode("utf-8")
             ftp.storbinary("STOR /mods/EasyAuth/config.json", io.BytesIO(dump))
@@ -54,12 +52,11 @@ class PacifamOnly(commands.Cog):
     @commands.command()
     async def viewoffline(self, ctx):
         avi_guild = self.client.get_guild(938255956247183451)
-        while avi_guild == None:
+        while avi_guild is None:
             pass
-        else:
-            admin = disnake.utils.get(avi_guild.roles, name="Admin")
-            moderator = disnake.utils.get(avi_guild.roles, name="Moderator")
-            avilon = disnake.utils.get(avi_guild.roles, name="Aweelom")
+        admin = disnake.utils.get(avi_guild.roles, name="Admin")
+        moderator = disnake.utils.get(avi_guild.roles, name="Moderator")
+        avilon = disnake.utils.get(avi_guild.roles, name="Aweelom")
         roles = [admin, moderator, avilon]
         if (
             any(role in roles for role in ctx.author.roles)
@@ -73,7 +70,8 @@ class PacifamOnly(commands.Cog):
             config = json.loads(r.getvalue())
             print(config["main"]["forcedOfflinePlayers"])
             await ctx.send(
-                f"Players added to the offline list are: {', '.join(config['main']['forcedOfflinePlayers'])}"
+                f"Players added to the offline list are: "
+                f"{', '.join(config['main']['forcedOfflinePlayers'])}"
             )
         else:
             await ctx.send("Only Admins/Mods can use this command")
@@ -81,12 +79,11 @@ class PacifamOnly(commands.Cog):
     @commands.command()
     async def removeoffline(self, ctx, username):
         avi_guild = self.client.get_guild(938255956247183451)
-        while avi_guild == None:
+        while avi_guild is None:
             pass
-        else:
-            admin = disnake.utils.get(avi_guild.roles, name="Admin")
-            moderator = disnake.utils.get(avi_guild.roles, name="Moderator")
-            avilon = disnake.utils.get(avi_guild.roles, name="Aweelom")
+        admin = disnake.utils.get(avi_guild.roles, name="Admin")
+        moderator = disnake.utils.get(avi_guild.roles, name="Moderator")
+        avilon = disnake.utils.get(avi_guild.roles, name="Aweelom")
         roles = [admin, moderator, avilon]
         if (
             any(role in roles for role in ctx.author.roles)

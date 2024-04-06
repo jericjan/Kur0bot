@@ -25,7 +25,7 @@ class DeepL_commands(commands.Cog):
         result = ts.google(text, to_language="ja")
         await ctx.send(result)
 
-    @commands.command(aliases=["english"])
+    @commands.command(aliases=["english", "tr"])
     async def eigo(self, ctx, *, text=None):
         if text == None:
             if ctx.message.reference is not None:  # message is replying

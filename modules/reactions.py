@@ -36,7 +36,8 @@ class Reactions(commands.Cog):
         if isinstance(ctx.channel, disnake.TextChannel):
             webhook = await ctx.channel.create_webhook(name=ctx.message.author.name)
             await webhook.send(
-                "https://cdn.discordapp.com/attachments/812666547520667669/852875900731392010/tenor.gif",
+                "https://cdn.discordapp.com/attachments/812666547520667669/852875900731392010/"
+                "tenor.gif",
                 username=ctx.message.author.name,
                 avatar_url=ctx.message.author.display_avatar.url,
             )
@@ -45,7 +46,8 @@ class Reactions(commands.Cog):
                 name=ctx.message.author.name
             )
             await webhook.send(
-                "https://cdn.discordapp.com/attachments/812666547520667669/852875900731392010/tenor.gif",
+                "https://cdn.discordapp.com/attachments/812666547520667669/"
+                "852875900731392010/tenor.gif",
                 username=ctx.message.author.name,
                 avatar_url=ctx.message.author.display_avatar.url,
                 thread=ctx.channel,

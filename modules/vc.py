@@ -59,7 +59,7 @@ class Vc(commands.Cog):
 
             print(f"run_queue exception: {get_full_class_name(e)}: {e}")
 
-    async def vcplay(self, ctx, a, loop=None, isRandom=None, **kwargs):
+    async def vcplay(self, ctx, a, loop=None, is_random=None, **kwargs):
 
         voicestate = ctx.author.voice
         if voicestate:
@@ -68,8 +68,8 @@ class Vc(commands.Cog):
             can_speak = voice_channel.permissions_for(ctx.guild.me).speak
 
         voice = disnake.utils.get(self.client.voice_clients, guild=ctx.guild)
-        if voicestate != None:
-            if voice == None:
+        if voicestate is not None:
+            if voice is None:
                 if can_connect and can_speak:
                     voice = await voice_channel.connect()
                 else:
@@ -81,25 +81,30 @@ class Vc(commands.Cog):
                     raise commands.BotMissingPermissions(missing_perms)
             if loop == "loop":
 
-                def loop():
-                    if isRandom == True:
+                def loop_func():
+                    if is_random:
                         b = random.choice(a)
                         voice.play(
-                            disnake.FFmpegPCMAudio(source=b), after=lambda e: loop()
+                            disnake.FFmpegPCMAudio(source=b),
+                            after=lambda e: loop_func(),
                         )
                     else:
 
                         voice.play(
-                            disnake.FFmpegPCMAudio(source=a), after=lambda e: loop()
+                            disnake.FFmpegPCMAudio(source=a),
+                            after=lambda e: loop_func(),
                         )
 
-                loop()
+                loop_func()
             else:
-                if isRandom == True:
+                if is_random:
                     a = random.choice(a)
 
                 if "music_bot" in kwargs:
-                    before_options = "-reconnect 1 -reconnect_at_eof 0 -reconnect_streamed 1 -reconnect_delay_max 10 -copy_unknown"
+                    before_options = (
+                        "-reconnect 1 -reconnect_at_eof 0 -reconnect_streamed 1 "
+                        "-reconnect_delay_max 10 -copy_unknown"
+                    )
                     voice.play(
                         disnake.FFmpegPCMAudio(source=a, before_options=before_options),
                         after=lambda e: asyncio.run_coroutine_threadsafe(
@@ -114,7 +119,7 @@ class Vc(commands.Cog):
                         fp.seek(0)
                         print(f"temp file is {fp.name}")
                         pcm_audio = disnake.FFmpegPCMAudio(source=fp.name)
-                        magic = pcm_audio.read()  # doesn't work without this
+                        pcm_audio.read()  # doesn't work without this
                         voice.play(pcm_audio)
                 else:
                     voice.play(disnake.FFmpegPCMAudio(source=a))
@@ -125,7 +130,7 @@ class Vc(commands.Cog):
                 delete_after=3,
             )
 
-            if isRandom == True:
+            if is_random:
                 a = random.choice(a)
             print(f"playing {a}")
 
@@ -136,7 +141,7 @@ class Vc(commands.Cog):
                 print(f"filename is: {filename}")
                 if a.split("/")[1] == "mgr":
                     speaker = a.split("/")[-2]
-                    with open("modules/mgr_users.json") as f:
+                    with open("modules/mgr_users.json", encoding="utf-8") as f:
                         mgr_json = json.load(f)
                     if speaker in mgr_json:
                         if isinstance(ctx.channel, disnake.TextChannel):
@@ -188,7 +193,7 @@ class Vc(commands.Cog):
 
             await ctx.send(file=disnake.File(a, filename=filename))
         # Delete command after the audio is done playing.
-        if not "dont_delete" in kwargs:
+        if "dont_delete" not in kwargs:
             await ctx.message.delete()
 
     @commands.command()
@@ -325,7 +330,8 @@ class Vc(commands.Cog):
     async def kira(self, ctx, loop=None):
         await self.vcplay(
             ctx,
-            "sounds/Killer (Yoshikage Kira's Theme) - Jojo's Bizarre Adventure Part 4_ Diamond Is Unbreakable.mp3",
+            "sounds/Killer (Yoshikage Kira's Theme) - Jojo's Bizarre Adventure Part 4_ "
+            "Diamond Is Unbreakable.mp3",
             loop,
         )
 
@@ -449,7 +455,7 @@ class Vc(commands.Cog):
     async def mgr(self, ctx, *, name):
         loop = None
         matches = []
-        for root, dirs, files in os.walk("sounds/mgr/", topdown=False):
+        for root, _dirs, files in os.walk("sounds/mgr/", topdown=False):
             for x in files:
                 if any(word in x for word in [name]):
                     matches.append(os.path.join(root, x))
@@ -464,7 +470,8 @@ class Vc(commands.Cog):
             else:
                 nl = "\n"
                 msg = await ctx.send(
-                    f"{len(matches)} matches. Pick a number. YOU HAVE 10 SECONDS!!!\n`{nl.join(numbered_mgr_files)}`"
+                    f"{len(matches)} matches. Pick a number. YOU HAVE 10 SECONDS!!!\n"
+                    f"`{nl.join(numbered_mgr_files)}`"
                 )
 
                 def check(m):
@@ -556,7 +563,7 @@ class Vc(commands.Cog):
             return
         # loop = asyncio.get_running_loop()
         voice = disnake.utils.get(self.client.voice_clients, guild=ctx.guild)
-        if voice == None:
+        if voice is None:
             voice_channel = ctx.author.voice.channel
             voice = await voice_channel.connect()
         if not voice.is_playing() and not ctx.guild.id in self.temp_servers_playing:
@@ -575,7 +582,7 @@ class Vc(commands.Cog):
                 "--no-warnings",
                 url,
             ]
-            proc, stdout, stderr = await subprocess_runner.run_subprocess(coms)
+            _proc, stdout, _stderr = await subprocess_runner.run_subprocess(coms)
             title = stdout.decode("utf-8").splitlines()[0]
             try:
                 self.temp_servers_playing[ctx.guild.id] += 1
@@ -652,8 +659,7 @@ class Vc(commands.Cog):
 
     @commands.command(aliases=["ultrakill"])
     async def sam(self, ctx, *, msg):
-        id = uuid.uuid4()
-        file_path = f"sam/{id}.wav"
+        file_path = f"sam/{uuid.uuid4()}.wav"
         coms = ["sam/sam", "-wav", file_path, msg]
         try:
             await asyncio.wait_for(subprocess_runner.run_subprocess(coms), timeout=10)
@@ -679,7 +685,8 @@ class Vc(commands.Cog):
     async def tiktok(self, ctx, *, msg):
         if len(msg) > 300:
             await ctx.send(
-                f"Shortening text to 300 characters. It's beyond my control. <:towashrug:853606191711649812>"
+                "Shortening text to 300 characters. It's beyond my control. "
+                "<:towashrug:853606191711649812>"
             )
             msg = msg[:300]
         json_data = {
@@ -692,10 +699,9 @@ class Vc(commands.Cog):
                 json_resp = await response.json()
         base64_data = json_resp["data"]
         if base64_data is None:
-            await ctx.send(f"There was an error. i dunno.")
+            await ctx.send("There was an error. i dunno.")
             return
-        else:
-            raw_bytes = base64.b64decode(base64_data)
+        raw_bytes = base64.b64decode(base64_data)
         with BytesIO(raw_bytes) as file_obj:
             await self.vcplay(
                 ctx, file_obj, file_obj=True, custom_name="tiktok_voice.mp3"

@@ -1,6 +1,5 @@
 import importlib
 import sys
-from types import ModuleType
 
 from disnake.ext import commands
 
@@ -11,39 +10,17 @@ class Loaders(commands.Cog):
         self.start_time = self.client.start_time
         self.log = self.client.log
 
-    # def reload_module(self, name):
-    # if name == "events":
-    # try:
-    # self.client.get_cog("Events").cog_unload()
-    # self.client.remove_cog("Events")
-    # except:
-    # print("epic failure")
-    # importlib.reload(modules.events)
-    # self.client.add_cog(modules.events.Events( self.client, self.start_time, self.log))
-    # else:
-    # self.client.reload_extension(name)
-
-    # def rreload(self, module):
-    # """Recursively reload modules."""
-    # try:
-    # importlib.reload(module)
-    # except Exception as e:
-    # print(f"Could not find module: {module}")
-    # for attribute_name in dir(module):
-    # attribute = getattr(module, attribute_name)
-    # if type(attribute) is ModuleType:
-    # self.rreload(attribute)
 
     @commands.command(name="reload", aliases=["refresh"])
     @commands.is_owner()
     async def p_reload(self, ctx, name):
         try:
             self.client.reload_extension(name)
-        except commands.ExtensionNotLoaded as e:
+        except commands.ExtensionNotLoaded:
             try:
                 importlib.reload(sys.modules[name])
-            except KeyError as e:
-                await ctx.send(f"Could not find module")
+            except KeyError:
+                await ctx.send("Could not find module")
                 return
         await ctx.message.delete()
         await ctx.send(f"{name} reloaded!", delete_after=3.0)

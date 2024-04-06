@@ -1,5 +1,3 @@
-import json
-
 import disnake
 from disnake.ext import commands
 
@@ -69,5 +67,7 @@ class Stats(commands.Cog):
             description=final,
         )
         await ctx.send(embed=em)
+
+
 def setup(client):
     client.add_cog(Stats(client))

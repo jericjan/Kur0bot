@@ -1,16 +1,10 @@
-import asyncio
-import glob
 import json
-import os
-from io import BytesIO
 
 import aiohttp
 import disnake
 from disnake.ext import commands
 from dotenv import load_dotenv
 from lorem.text import TextLorem
-
-from myfunctions import file_handler, subprocess_runner
 
 
 class AttachmentBulker:
@@ -37,6 +31,7 @@ class AttachmentBulker:
 class Kur0only(commands.Cog):
     def __init__(self, client):
         self.client = client
+        self.comm_list = []
 
     @commands.command()
     @commands.is_owner()
@@ -59,10 +54,10 @@ class Kur0only(commands.Cog):
 
     @commands.command()
     @commands.is_owner()
-    async def editembed(self, ctx, id: int, title, description):
+    async def editembed(self, ctx, msg_id: int, title, description):
         if description.startswith("https"):
             print("description is url")
-            msg = await ctx.fetch_message(id)
+            msg = await ctx.fetch_message(msg_id)
             async with aiohttp.ClientSession() as session:
                 async with session.get(
                     f"https://quiet-sun-6d6e.cantilfrederick.workers.dev/?{description}"
@@ -73,13 +68,13 @@ class Kur0only(commands.Cog):
             await ctx.message.delete()
         else:
             print("description is text")
-            msg = await ctx.fetch_message(id)
+            msg = await ctx.fetch_message(msg_id)
             embed = disnake.Embed(title=title, description=description)
             await msg.edit(embed=embed)
             await ctx.message.delete()
 
     def get_public_commands(self):
-        with open("modules/commands.json") as f:
+        with open("modules/commands.json", encoding="utf-8") as f:
             data = json.load(f)
 
         hidden_commands = data["hidden"]
@@ -122,7 +117,7 @@ class Kur0only(commands.Cog):
     @commands.command()
     @commands.is_owner()
     async def ytbypass(self, ctx, text):
-        letters = [char for char in text]
+        letters = list(text)
         count = len(letters)
         lorem = TextLorem(wsep=" ", srange=(count, count))
         lorem_list = lorem.sentence().split(" ")
@@ -158,24 +153,8 @@ class Kur0only(commands.Cog):
                 count += 1
                 if count < start:
                     continue
-                msg = await att_bulker.send(f"Part 2 #{count}: {line.split('?')[0]}")
+                await att_bulker.send(f"Part 2 #{count}: {line.split('?')[0]}")
             await att_bulker.clean()
-            # new_url = msg.content.replace("amp;","")
-            # for x in msg.attachments:
-            # print("0 "+ x.url)
-
-            # for x in msg.embeds:
-            # print("1 "+x.url)
-            # async with aiohttp.ClientSession() as session:
-            # async with session.get(new_url) as response:
-            # if response.status == 200:
-            # # Read the response content as bytes
-            # content = await response.read()
-            # content = BytesIO(content)
-            # await ctx.send(file=disnake.File(content))
-            # else:
-            # await ctx.send(f"Failed to download {new_url}: {response.status}")
-
 
 def setup(client):
     client.add_cog(Kur0only(client))

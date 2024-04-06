@@ -39,10 +39,11 @@ class Help(commands.Cog):
 
         em = disnake.Embed(
             title="Commands",
-            description="Here are my sussy commands!\nUse __**k.help <command>**__ for more info on that command.\n<> means required, [] means optional",
+            description="Here are my sussy commands!\nUse __**k.help <command>**__ for more info "
+            "on that command.\n<> means required, [] means optional",
         )
 
-        with open("modules/commands.json") as f:
+        with open("modules/commands.json", encoding="utf-8") as f:
             data = json.load(f)
             for i in data:
                 if i == "hidden":
@@ -82,7 +83,8 @@ class Help(commands.Cog):
     async def on(self, ctx):
         em = disnake.Embed(
             title="On",
-            description="Enables permanent sus mode. Sus replies do not get deleted within 3 seconds.",
+            description="Enables permanent sus mode. "
+            "Sus replies do not get deleted within 3 seconds.",
         )
         await ctx.send(embed=em)
 
@@ -109,7 +111,8 @@ class Help(commands.Cog):
     async def bulk(self, ctx):
         em = disnake.Embed(
             title="Bulk",
-            description="Sends sus messages in bulk.\nOnly usable in channels named `sus-town` <:sus:850628234746920971>",
+            description="Sends sus messages in bulk.\nOnly usable in channels named `sus-town` "
+            "<:sus:850628234746920971>",
         )
         em.add_field(name="**Syntax**", value="k.bulk <number>")
         await ctx.send(embed=em)
@@ -156,7 +159,8 @@ class Help(commands.Cog):
     async def getemotes(self, ctx):
         em = disnake.Embed(
             title="Get Emotes!",
-            description="Sends all emotes that this bot has. It has emotes for all servers it's in.",
+            description="Sends all emotes that this bot has. "
+            "It has emotes for all servers it's in.",
         )
         em.add_field(name="**Aliases**", value=",".join(ctx.command.aliases))
         await ctx.send(embed=em)
@@ -322,7 +326,8 @@ class Help(commands.Cog):
     async def badapple(self, ctx):
         em = disnake.Embed(
             title="Bad Apple but in custom emotes",
-            description="Sends 80 animated emotes that all make up the Bad Apple PV (Only works on PC)",
+            description="Sends 80 animated emotes that all make up the Bad Apple PV (Only works on "
+            "PC)",
         )
         em.add_field(name="**Emotes by:**", value="https://github.com/gohjoseph")
         await ctx.send(embed=em)
@@ -332,7 +337,8 @@ class Help(commands.Cog):
     async def clip(self, ctx):
         em = disnake.Embed(
             title="Clip a YT Video",
-            description="clips a YouTube video given the start and end times (HH:MM:SS)\n**SLOWER** than `fastclip` but accurate",
+            description="clips a YouTube video given the start and end times (HH:MM:SS)\n**SLOWER**"
+            " than `fastclip` but accurate",
         )
         em.add_field(
             name="**Syntax**", value="k.clip <url> <start time> <end time> <filename>"
@@ -348,7 +354,9 @@ class Help(commands.Cog):
     async def fastclip(self, ctx):
         em = disnake.Embed(
             title="Quickly clip a YT Video",
-            description="clips a YouTube video given the start and end times (HH:MM:SS)\n**FASTER** than `clip` but will start at the nearest keyframe, so it'll start a couple seconds earlier than the given timestamp",
+            description="clips a YouTube video given the start and end times (HH:MM:SS)\n**FASTER**"
+            " than `clip` but will start at the nearest keyframe, so it'll start a couple seconds "
+            "earlier than the given timestamp",
         )
         em.add_field(
             name="**Syntax**",
@@ -356,7 +364,8 @@ class Help(commands.Cog):
         )
         em.add_field(
             name="**Example**",
-            value="k.fastclip https://www.youtube.com/watch?v=dQw4w9WgXcQ 00:00:52 00:01:05 filename",
+            value="k.fastclip https://www.youtube.com/watch?v=dQw4w9WgXcQ 00:00:52 00:01:05 "
+            "filename",
         )
         await ctx.send(embed=em)
 
@@ -373,7 +382,8 @@ class Help(commands.Cog):
         )
         em.add_field(
             name="**Example**",
-            value="k.fastclipsub https://www.youtube.com/watch?v=dQw4w9WgXcQ 00:00:52 00:01:05 filename",
+            value="k.fastclipsub https://www.youtube.com/watch?v=dQw4w9WgXcQ 00:00:52 00:01:05 "
+            "filename",
         )
         await ctx.send(embed=em)
 
@@ -396,7 +406,6 @@ class Help(commands.Cog):
         em = disnake.Embed(
             title="Botan Sneeze",
             description="because fuck you, have a botan sneeze",
-            inline=False,
         )
         em.add_field(name="**Syntax**", value="k.botansneeze [loop]", inline=False)
         await ctx.send(embed=em)
@@ -509,7 +518,8 @@ class Help(commands.Cog):
     async def stoploop(self, ctx):
         em = disnake.Embed(
             title="STOP THE LOOP!",
-            description="Sus bot will stop playing if it's playing something in VC that has loop mode enabled.",
+            description="Sus bot will stop playing if it's playing something in VC that has loop "
+            "mode enabled.",
         )
         em.add_field(name="**How loop???**", value="k.commandname loop")
         await ctx.send(embed=em)
@@ -587,7 +597,8 @@ class Help(commands.Cog):
     async def pikamee(self, ctx):
         em = disnake.Embed(
             title="pikamee is insane",
-            description='Plays a clip of Pikamee saying "Pikamee, how are you doing? I feel awesome. I killed everyone but I feel awesome."',
+            description='Plays a clip of Pikamee saying "Pikamee, how are you doing? I feel '
+            'awesome. I killed everyone but I feel awesome."',
         )
         await ctx.send(embed=em)
 
@@ -606,7 +617,8 @@ class Help(commands.Cog):
     async def boowomp(self, ctx):
         em = disnake.Embed(
             title="Boo-womp!",
-            description="Plays the boo-womp sound effect that they play on Spongebob when something sad happens.",
+            description="Plays the boo-womp sound effect that they play on Spongebob when something"
+            " sad happens.",
         )
         em.add_field(name="**Aliases**", value=",".join(ctx.command.aliases))
         await ctx.send(embed=em)
@@ -662,7 +674,8 @@ class Help(commands.Cog):
         em.add_field(name="**Filetypes**", value="mp3\nwav\nogg")
         em.add_field(
             name="**Example**",
-            value="k.clipaudio https://www.youtube.com/watch?v=UIp6_0kct_U 00:00:56 00:01:05 poger mp3",
+            value="k.clipaudio https://www.youtube.com/watch?v=UIp6_0kct_U 00:00:56 00:01:05 poger "
+            "mp3",
         )
         await ctx.send(embed=em)
 
@@ -695,7 +708,8 @@ class Help(commands.Cog):
         )
         em.add_field(
             name="**Syntax**",
-            value="k.lowqual <url>\nUpload video/photo with k.lowqual\nReply to a video/photo message with k.lowqual ",
+            value="k.lowqual <url>\nUpload video/photo with k.lowqual\nReply to a video/photo "
+            "message with k.lowqual ",
         )
         em.add_field(name="**Aliases**", value=",".join(ctx.command.aliases))
         await ctx.send(embed=em)
@@ -705,7 +719,8 @@ class Help(commands.Cog):
     async def when(self, ctx):
         em = disnake.Embed(
             title="When?",
-            description="Tells you exactly when a YT video has been uploaded, or when a stream has started and ended",
+            description="Tells you exactly when a YT video has been uploaded, or when a stream has "
+            "started and ended",
         )
         em.add_field(name="**Syntax**", value="k.when <yt_url>")
         await ctx.send(embed=em)
@@ -715,7 +730,8 @@ class Help(commands.Cog):
     async def checkcomment(self, ctx):
         em = disnake.Embed(
             title="YT Comment Checker",
-            description="Give it a YT comment link and it will keep checking if it exists for the next 5 minutes. If it doesn't exist before then, it will ping you.",
+            description="Give it a YT comment link and it will keep checking if it exists for the "
+            "next 5 minutes. If it doesn't exist before then, it will ping you.",
         )
         em.add_field(name="**Syntax**", value="k.checkcomment <yt_comment_url>")
         await ctx.send(embed=em)
@@ -743,7 +759,8 @@ class Help(commands.Cog):
     async def oldsuperchat(self, ctx):
         em = disnake.Embed(
             title="Superchat! (OLD)",
-            description="Old ver. of k.superchat. It just goes to a [site](https://ytsc.leko.moe/) that creates the image for you. ",
+            description="Old ver. of k.superchat. It just goes to a [site](https://ytsc.leko.moe/) "
+            "that creates the image for you. ",
         )
         em.add_field(
             name="**Syntax**",
@@ -779,7 +796,8 @@ class Help(commands.Cog):
         )
         em.add_field(
             name="**Syntax**",
-            value="k.gif2 <video_url>\nUpload video with k.gif2\nReply to a video with k.gif2 \n\nOptional: you can add include quality (1-100) at the end of the command. Default: 70",
+            value="k.gif2 <video_url>\nUpload video with k.gif2\nReply to a video with k.gif2 \n\n"
+            "Optional: you can add include quality (1-100) at the end of the command. Default: 70",
         )
         em.add_field(name="**Aliases**", value=",".join(ctx.command.aliases))
         await ctx.send(embed=em)
@@ -793,7 +811,8 @@ class Help(commands.Cog):
         )
         em.add_field(
             name="**Syntax**",
-            value="k.resize <width> <height> <link>\nYou can also leave <link> blank and just upload or reply to an image.",
+            value="k.resize <width> <height> <link>\nYou can also leave <link> blank and just "
+            "upload or reply to an image.",
         )
         await ctx.send(embed=em)
 
@@ -823,7 +842,7 @@ class Help(commands.Cog):
         await ctx.send(embed=em)
 
         mgr_list = ""
-        for root, dirs, files in os.walk("sounds/mgr/", topdown=False):
+        for _root, dirs, _files in os.walk("sounds/mgr/", topdown=False):
             for name in dirs:
                 mgr_list += f"**{name}:**\n"
                 mgr_list += "\n".join(
@@ -848,13 +867,16 @@ class Help(commands.Cog):
         )
         em.add_field(
             name="**Syntax**",
-            value="k.uploadsticker <name> <emoji as text> <url>\nUpload image with k.uploadsticker <name> <emoji as text>\nReply to a message with k.uploadsticker <name> <emoji as text>",
+            value="k.uploadsticker <name> <emoji as text> <url>\nUpload image with k.uploadsticker "
+            "<name> <emoji as text>\n"
+            "Reply to a message with k.uploadsticker <name> <emoji as text>",
             inline=False,
         )
         em.add_field(name="**Aliases**", value=",".join(ctx.command.aliases))
         em.add_field(
             name="**Example**",
-            value="k.uploadsticker agony cry https://cdn.discordapp.com/attachments/812666551051747369/983132328945680434/IMG_1963.jpg",
+            value="k.uploadsticker agony cry https://cdn.discordapp.com/attachments/"
+            "812666551051747369/983132328945680434/IMG_1963.jpg",
         )
         await ctx.send(embed=em)
 
@@ -867,13 +889,15 @@ class Help(commands.Cog):
         )
         em.add_field(
             name="**Syntax**",
-            value="k.uploademote <name> <url\emote ID>\nUpload image with k.uploademote <name>\nReply to a message with k.uploademote <name>",
+            value="k.uploademote <name> <url\\emote ID>\nUpload image with k.uploademote <name>\n"
+            "Reply to a message with k.uploademote <name>",
             inline=False,
         )
         em.add_field(name="**Aliases**", value=",".join(ctx.command.aliases))
         em.add_field(
             name="**Example**",
-            value="k.uploademote stuff https://cdn.discordapp.com/attachments/809247468084133898/985504342461280306/stuff.png",
+            value="k.uploademote stuff https://cdn.discordapp.com/attachments/809247468084133898/"
+            "985504342461280306/stuff.png",
         )
         await ctx.send(embed=em)
 
@@ -882,7 +906,8 @@ class Help(commands.Cog):
     async def nihongo(self, ctx):
         em = disnake.Embed(
             title="Translate to Japanese",
-            description="Translate given text to Japanese. Uses Google Translate because I can't get access to the DeepL API because I'm filipino :(",
+            description="Translate given text to Japanese. Uses Google Translate because I can't "
+            "get access to the DeepL API because I'm filipino :(",
         )
         em.add_field(name="**Syntax**", value="k.nihongo <sentence>", inline=False)
         em.add_field(name="**Aliases**", value=",".join(ctx.command.aliases))
@@ -897,7 +922,8 @@ class Help(commands.Cog):
     async def eigo(self, ctx):
         em = disnake.Embed(
             title="Translate to English",
-            description="Translate given text to English. Uses Google Translate because I can't get access to the DeepL API because I'm filipino :(",
+            description="Translate given text to English. Uses Google Translate because I can't get"
+            " access to the DeepL API because I'm filipino :(",
         )
         em.add_field(name="**Syntax**", value="k.eigo <sentence>", inline=False)
         em.add_field(name="**Aliases**", value=",".join(ctx.command.aliases))
@@ -927,13 +953,16 @@ class Help(commands.Cog):
     async def queue(self, ctx):
         em = disnake.Embed(
             title="Queue",
-            description="The server's queue. This was originally made for Karaoke in the pacifam server to keep track of queues but it can be used for anything. For now, the queues are unique to each server and anybody can modify them.",
+            description="The server's queue. This was originally made for Karaoke in the pacifam "
+            "server to keep track of queues but it can be used for anything. For now, the queues "
+            "are unique to each server and anybody can modify them.",
         )
         em.add_field(
             name="**Commands**",
             value="__k.queue__ - shows the server's queue\n\n"
             "__k.addqueue <things separated w/ spaces>__ - adds things to queue\n\n"
-            "__k.insertqueue <name of thing to insert new thing after> <new thing>__ - insert new thing right after an existing thing\n\n"
+            "__k.insertqueue <name of thing to insert new thing after> <new thing>__ - insert new "
+            "thing right after an existing thing\n\n"
             "__k.removequeue <thing>__ - removes thing from queue\n\n"
             "__k.clearqueue__ - clears the queue",
             inline=False,
@@ -945,12 +974,14 @@ class Help(commands.Cog):
     async def vergil(self, ctx):
         em = disnake.Embed(
             title="Vergil Cut Green Screen",
-            description="Give it an image and Vergil will cut through it with his unending\n**ＭＯＴＩＶＡＴＩＯＮ**.",
+            description="Give it an image and Vergil will cut through it with his unending\n"
+            "**ＭＯＴＩＶＡＴＩＯＮ**.",
         )
         em.add_field(
             name="**Commands**",
             value="__k.vergil <image>__ - normal version\n\n"
-            "__k.quickvergil <image>__ - just greenscreen, image doesn't get sliced but a couple seconds faster than above",
+            "__k.quickvergil <image>__ - just greenscreen, image doesn't get sliced but a couple "
+            "seconds faster than above",
             inline=False,
         )
         await ctx.send(embed=em)
@@ -1005,7 +1036,8 @@ class Help(commands.Cog):
         )
         em.add_field(
             name="**Alternative**",
-            value="you can try k.getosumap2 and k.getosumap3 for a different method of grabbing maps.",
+            value="you can try k.getosumap2 and k.getosumap3 for a different method of grabbing "
+            "maps.",
         )
         await ctx.send(embed=em)
 
@@ -1119,7 +1151,9 @@ class Help(commands.Cog):
             ctx,
             "Currency Converter",
             "Converts currencies.\n"
-            "Check [here](https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies.json) for what currencies I support.",
+            "Check [here]"
+            "(https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies.json) "
+            "for what currencies I support.",
             self.client,
         ) as em:
             em.add_syntax("k.currency <base currency> <target currency> <value>")
@@ -1158,7 +1192,7 @@ class Help(commands.Cog):
             "Day boundaries",
             "Tells you when the current day ends or the next one starts for all timezones",
             self.client,
-        ) as em:
+        ):
             pass
 
     @help.command()

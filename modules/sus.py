@@ -1,6 +1,8 @@
-from disnake.ext import commands
-from modules.events import sus_replies
 import random
+
+from disnake.ext import commands
+
+from modules.events import sus_replies
 
 
 class Sus(commands.Cog):
@@ -11,7 +13,7 @@ class Sus(commands.Cog):
     async def bulk(self, ctx, number):
         print(ctx.channel.id)
         if ctx.channel.name == "sus-town":
-            for x in range(int(number)):
+            for _ in range(int(number)):
                 await ctx.send(random.choice(sus_replies))
         else:
             await ctx.send(
