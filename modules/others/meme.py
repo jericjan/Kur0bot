@@ -1,9 +1,12 @@
-from disnake.ext import commands
-import disnake
-from myfunctions import msg_link_grabber
-import aiohttp
-from io import BytesIO
 import re
+import urllib.parse
+from io import BytesIO
+
+import aiohttp
+import disnake
+from disnake.ext import commands
+
+from myfunctions import msg_link_grabber
 
 
 class Meme(commands.Cog):
@@ -13,6 +16,7 @@ class Meme(commands.Cog):
     @commands.command()
     async def meme(self, ctx, top_text, bottom_text, img_url=None):
         img_url = await msg_link_grabber.grab_link(ctx, img_url)
+        img_url = urllib.parse.quote(img_url)
         replacements = {
             "-": "--",
             "_": "__",

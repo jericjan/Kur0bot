@@ -217,7 +217,20 @@ class Events(commands.Cog):
             strepto_in_server = await message.guild.getch_member(268188421871108097)
             if strepto_in_server:
                 await user_stat.increment("Feet-related", 1)
-                await message.channel.send("<@268188421871108097>")  # pings strepto
+
+                days_list = self.client.get_cog("TimeAndDates").get_current_days(
+                    show_date=False
+                )
+
+                strepto_ping = "<@268188421871108097>"
+
+                if "Friday" in days_list:
+                    strepto_ping += (
+                        "\nhttps://cdn.discordapp.com/attachments/809247468084133898/"
+                    )
+                    "1231538142129946715/20240420_183246.png"
+
+                await message.channel.send(strepto_ping)  # pings strepto
 
         # PACIFAM ONLY
         pacifam_servers = [603147860225032192, 938255956247183451]
@@ -454,7 +467,7 @@ class Events(commands.Cog):
                 if victim_id == message.author.id:
                     await message.channel.send(
                         f"Hey there {message.author.mention}, you appear to be my latest victim"
-                        " for today! {trollplant*3}"
+                        f" for today! {trollplant*3}"
                     )
                     await user_stat.increment("Victimized", 1)
                     victim_notified = True
@@ -483,7 +496,7 @@ class Events(commands.Cog):
                 if message.author.id == victim["user_id"] and not victim["notified"]:
                     await message.channel.send(
                         f"Yo {message.author.mention}, you're a little late but, you're my latest"
-                        " victim for today! {trollplant*3}"
+                        f" victim for today! {trollplant*3}"
                     )
                     await user_stat.increment("Victimized", 1)
                     await victim_db.update_one(
