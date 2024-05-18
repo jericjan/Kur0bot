@@ -227,11 +227,24 @@ class Events(commands.Cog):
                 if "Friday" in days_list:
                     strepto_ping += (
                         "\nhttps://cdn.discordapp.com/attachments/809247468084133898/"
+                        "1231538142129946715/20240420_183246.png"
                     )
-                    "1231538142129946715/20240420_183246.png"
 
                 await message.channel.send(strepto_ping)  # pings strepto
 
+        if re.search(r"blue.archive", msg):
+            await user_stat.increment("Blue Archive mentioned", 1)
+            user_id = 480466417884463137
+            kyle_in_server = await message.guild.getch_member(user_id)
+            if kyle_in_server:
+                await message.channel.send(f"<@{user_id}>")
+
+        if re.search(r"(?:fkn|fucking) hell", msg):
+            await user_stat.increment("Hell fucking", 1)
+            user_id = 327595393237909505
+            in_server = await message.guild.getch_member(user_id)
+            if in_server:
+                await message.channel.send(f"They're fucking <@{user_id}>")
         # PACIFAM ONLY
         pacifam_servers = [603147860225032192, 938255956247183451]
         if any(message.guild.id == x for x in pacifam_servers):
@@ -432,6 +445,17 @@ class Events(commands.Cog):
                 "https://cdn.discordapp.com/attachments/809247468084133898/1219821713752330351/GJCN"
                 "x-HaIAAlZiz.png"
             )
+
+        if any(word in msg for word in ["stuff", "🥙"]):
+            await user_stat.increment("Stuff react", 1)
+            emote_server = await self.client.fetch_guild(1034100571667447860)
+            stuff = await emote_server.fetch_emoji(1235625865090437252)
+            await message.add_reaction(stuff)
+
+        if any(word in msg for word in ["cunny", "uoh"]):
+            await user_stat.increment("Cunny react", 1)
+            await message.add_reaction("😭")
+            await message.add_reaction("💢")
 
         im_pattern = re.compile(
             r"\b(i(?:‘|’|')m|im|i am) (.*?)(?=(?:\b\1\b|$|\n|\.|,|\?|!))"
