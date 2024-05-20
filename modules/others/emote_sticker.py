@@ -106,7 +106,7 @@ class EmoteSticker(commands.Cog):
         return inner
 
     @run_in_executor
-    def emote_resize(self, link):  # Your wrapper for async use
+    def emote_resize(self, link, format_type="PNG"):  # Your wrapper for async use
         byteio = io.BytesIO(link)
         im = Image.open(byteio)
         width, height = im.size
@@ -117,7 +117,7 @@ class EmoteSticker(commands.Cog):
         byteio.close()
         byteio2 = io.BytesIO()
         byteio2.seek(0)
-        im.save(byteio2, format="PNG")
+        im.save(byteio2, format=format_type)
         byteio2.seek(0)
         return byteio2, new_width, new_height
 
@@ -171,9 +171,13 @@ class EmoteSticker(commands.Cog):
                 await ctx.send("Invalid link.")
                 return
             # now img contains the bytes of the image, let's create the emoji
-            if link.endswith("gif"):
-                file = img
+            if link.split("?")[0].endswith("gif"):
+                print("a gif")
+                # file = img
+                file, width, height = await self.emote_resize(img, "GIF")
+                await ctx.send(f"New GIF size is: {width}x{height}", delete_after=3.0)
             else:
+                print("not a gif")
                 file, width, height = await self.emote_resize(img)
                 await ctx.send(f"New image size is: {width}x{height}", delete_after=3.0)
             try:

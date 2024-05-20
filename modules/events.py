@@ -245,6 +245,15 @@ class Events(commands.Cog):
             in_server = await message.guild.getch_member(user_id)
             if in_server:
                 await message.channel.send(f"They're fucking <@{user_id}>")
+
+        if all(word in msg for word in ["blue archive", "cunny", "uoh", "sui"]):
+            user_id = 1009325079336853515
+            in_server = await message.guild.getch_member(user_id)
+            if in_server:
+                await user_stat.increment("The Magic Kakuy Spell", 1)
+                await message.channel.send(
+                    f"You've uttered the Magic Kakuy Spell! <@{user_id}> will remember this..."
+                )
         # PACIFAM ONLY
         pacifam_servers = [603147860225032192, 938255956247183451]
         if any(message.guild.id == x for x in pacifam_servers):
