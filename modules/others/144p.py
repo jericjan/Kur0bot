@@ -59,6 +59,7 @@ class lowQual(commands.Cog):
             )
             is not None
         ):
+            filename = filename.split("?")[0]
             # remuxes so it works with troll long videos, magic.
             muxname = re.sub(r"(.+(?=\..+))", r"\g<1>_mux", filename)
             if is_tenor:

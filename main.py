@@ -120,7 +120,7 @@ module_paths = (
     "modules.others.height",
     "modules.others.currency",
     "modules.others.kill",
-    "modules.others.time_and_dates.py",
+    "modules.others.time_and_dates",
     "modules.pacifam_only",
     "modules.kur0_only",
     "modules.sus",
