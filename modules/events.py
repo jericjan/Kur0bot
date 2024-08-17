@@ -210,27 +210,37 @@ class Events(commands.Cog):
                 await self.log("sussy reply", False)
 
         # le strepto
-        if any(
-            word in msg
-            for word in ["feet", "foot", "toe", "ankle", "heel", "arch", "sole"]
-        ):
-            strepto_in_server = await message.guild.getch_member(268188421871108097)
-            if strepto_in_server:
-                await user_stat.increment("Feet-related", 1)
+        if all(message.channel.id != x for x in [1260889287931723839]):
+            if any(
+                word in msg
+                for word in [
+                    "feet",
+                    "foot",
+                    "toe",
+                    "ankle",
+                    "heel",
+                    "arch",
+                    "sole",
+                    "🦶",
+                ]
+            ):
+                strepto_in_server = await message.guild.getch_member(268188421871108097)
+                if strepto_in_server:
+                    await user_stat.increment("Feet-related", 1)
 
-                days_list = self.client.get_cog("TimeAndDates").get_current_days(
-                    show_date=False
-                )
-
-                strepto_ping = "<@268188421871108097>"
-
-                if "Friday" in days_list:
-                    strepto_ping += (
-                        "\nhttps://cdn.discordapp.com/attachments/809247468084133898/"
-                        "1231538142129946715/20240420_183246.png"
+                    days_list = self.client.get_cog("TimeAndDates").get_current_days(
+                        show_date=False
                     )
 
-                await message.channel.send(strepto_ping)  # pings strepto
+                    strepto_ping = "<@268188421871108097>"
+
+                    if "Friday" in days_list:
+                        strepto_ping += (
+                            "\nhttps://cdn.discordapp.com/attachments/809247468084133898/"
+                            "1231538142129946715/20240420_183246.png"
+                        )
+
+                    await message.channel.send(strepto_ping)  # pings strepto
 
         if re.search(r"blue.archive", msg):
             await user_stat.increment("Blue Archive mentioned", 1)
@@ -423,11 +433,12 @@ class Events(commands.Cog):
             await user_stat.increment("Deez Nuts", 1)
             await message.channel.send(random.choice(deez_replies), delete_after=3.0)
 
-        if "reaction" in msg:
-            await user_stat.increment("Kronii Reaction", 1)
-            await message.channel.send(
-                "https://tenor.com/view/kronii-hololive-edoman-3d-anime-gif-2423112144377621699"
-            )
+        if all(message.channel.id != x for x in [1260889287931723839]):
+            if "reaction" in msg:
+                await user_stat.increment("Kronii Reaction", 1)
+                await message.channel.send(
+                    "https://tenor.com/view/kronii-hololive-edoman-3d-anime-gif-2423112144377621699"
+                )
 
         if "crazy" in msg:
             await user_stat.increment("Crazy", 1)
@@ -461,7 +472,7 @@ class Events(commands.Cog):
             stuff = await emote_server.fetch_emoji(1235625865090437252)
             await message.add_reaction(stuff)
 
-        if any(word in msg for word in ["cunny", "uoh"]):
+        if "cunny" in msg or re.search("uo+h", msg):
             await user_stat.increment("Cunny react", 1)
             await message.add_reaction("😭")
             await message.add_reaction("💢")

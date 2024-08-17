@@ -13,6 +13,8 @@ class Currency(commands.Cog):
 
     @commands.command(aliases=["convert"])
     async def currency(self, ctx, conv_from, conv_to, value):
+        conv_from = conv_from.lower()
+        conv_to = conv_to.lower()
         async def currency_exists(currency):
             async with aiohttp.ClientSession() as session:
                 async with session.get(

@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 
 import disnake
 import pytz
@@ -47,20 +47,27 @@ class TimeAndDates(commands.Cog):
             raise Exception("invalid weekday given")
 
         addend = ((days.index(weekday) - self.last_tz.weekday()) % 7) if weekday else 1
+        addend = timedelta(days=addend)
         if mode == "end":  # UTC-12
-            return datetime(
-                self.last_tz.year,
-                self.last_tz.month,
-                self.last_tz.day + addend,
-                tzinfo=pytz.timezone("Etc/GMT+12"),
+            return (self.last_tz + addend).replace(
+                hour=0, minute=0, second=0, microsecond=0
             )
+        #           return datetime(
+        #               self.last_tz.year,
+        #               self.last_tz.month,
+        #               self.last_tz.day + addend,
+        #               tzinfo=pytz.timezone("Etc/GMT+12"),
+        #           )
         elif mode == "start":  # UTC+14
-            return datetime(
-                self.first_tz.year,
-                self.first_tz.month,
-                self.first_tz.day + addend,
-                tzinfo=pytz.timezone("Etc/GMT-14"),
+            return (self.first_tz + addend).replace(
+                hour=0, minute=0, second=0, microsecond=0
             )
+        #           return datetime(
+        #               self.first_tz.year,
+        #               self.first_tz.month,
+        #               self.first_tz.day + addend,
+        #               tzinfo=pytz.timezone("Etc/GMT-14"),
+        #           )
         else:
             raise Exception("wrong mode given!")
 

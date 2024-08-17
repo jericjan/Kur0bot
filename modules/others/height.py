@@ -20,10 +20,10 @@ class Height(commands.Cog):
             return re.search(r"(\d+)'(\d+\.?\d*)\"", x).groups()
 
         def is_cm(x):
-            return re.match(r"\d+\.?\d+cm", x)
+            return re.match(r"(\d+\.?\d+|\d)cm", x)
 
         def get_cm(x):
-            return re.search(r"(\d+\.?\d+)cm", x).group(1)
+            return re.search(r"(\d+\.?\d+|\d)cm", x).group(1)
 
         if is_foot_inch(arg):
             feet, inches = get_foot_inch(arg)
