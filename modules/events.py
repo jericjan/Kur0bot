@@ -284,38 +284,22 @@ class Events(commands.Cog):
                     f"<@{random.choice(peeps)}>"
                 )  # pings strepto
         #############TWITTER LINK GIVER####################
-
-        if "twitter.com" in msg:
-            links = re.findall(r"http.*twitter.com\/.*\/status\/\d*", msg)
-            for i in links:
-                print("twitter link!")
-                await self.log("twitter link!", False)
-                args = ["yt-dlp", "-j", i]
-                print(args)
-                with subprocess.Popen(
-                    args,
-                    stdout=subprocess.PIPE,
-                    stderr=subprocess.PIPE,
-                    stdin=subprocess.PIPE,
-                ) as proc:
-                    stdout_value = proc.stdout.read() + proc.stderr.read()
-                try:
-                    json_list = json.loads(stdout_value)
-                except:
-                    print("Nothing to load as JSON.")
-                    return
-                ext = json_list["ext"]
-                webpageurl = json_list["webpage_url"]
-                print(ext)
-                if ext == "mp4" and "twitter.com" in webpageurl:
-                    m1 = await message.channel.send(
-                        "Beep boop! That is a twitter video!\nImma give direct video link..."
+        twt_links = re.findall(r"(?:https://(?:www\.)?)(?:x|twitter)(?:\.com\S+)", msg)
+        resp = [f"Fixed some twitter links for ya:\n"]
+        for idx, link in enumerate(twt_links):
+            if idx == 0:
+                resp[0] += re.sub(
+                    r"(https://(?:www\.)?)(x|twitter)(?=\.com\S+)", r"\1fixvx", link
+                )
+            else:
+                resp.append(
+                    re.sub(
+                        r"(https://(?:www\.)?)(x|twitter)(?=\.com\S+)", r"\1fixvx", link
                     )
-                    await self.log("twitter video!", False)
-
-                    msg = await message.channel.send(json_list["url"])
-                    await asyncio.sleep(3)
-                    await m1.delete()
+                )
+        if twt_links:
+            for x in resp:
+                await message.channel.send(x)
 
         ######################TEXT TO SPEECH#################
 
@@ -452,12 +436,29 @@ class Events(commands.Cog):
             await user_stat.increment("The Balls", 1)
             await message.channel.send(file=disnake.File("videos/the_balls.mp4"))
 
+        tatsu_id = 172002275412279296
+
         if any(word in msg for word in ["fuck you tatsu", "fuck off tatsu"]):
-            async for x in message.channel.history(limit=10):
-                if x.author.id == 172002275412279296:
+            if message.reference is not None:
+                if message.reference.resolved.author.id == tatsu_id:
                     await user_stat.increment("Tatsu bot murders", 1)
-                    await x.delete()
-                    break
+                    await message.reference.resolved.delete()
+            else:
+                async for x in message.channel.history(limit=10):
+                    if x.author.id == tatsu_id:
+                        await user_stat.increment("Tatsu bot murders", 1)
+                        await x.delete()
+                        break
+
+        if message.reference is not None:
+            if message.reference.resolved.author.id == tatsu_id:
+                gpt_resp = ""
+                while gpt_resp != "True" and gpt_resp != "False":
+                    gpt_msg = f"Is the following phrase offensive? respond ONLY with True or False:\n{message.content}"
+                    gpt_resp = self.client.get_cog("OpenAI").prompt(gpt_msg)
+                if gpt_resp == "True":
+                    await user_stat.increment("Tatsu bot murders", 1)
+                    await message.reference.resolved.delete()
 
         if "jdon my soul" in msg:
             await user_stat.increment("JdonMySoul", 1)

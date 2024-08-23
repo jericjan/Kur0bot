@@ -82,7 +82,7 @@ class MyTasks(commands.Cog):
         else:
             await channel.send(f"yt-dlp needs an update! ({curr_ver} => {latest_ver})")
             _out, _stdout, _stderr = await subprocess_runner.run_subprocess(
-                "poetry", "add", f"yt-dlp=={latest_ver}"
+                ["poetry", "add", f"yt-dlp=={latest_ver}"]
             )
             await channel.send(f"yt-dlp has been updated! ({latest_ver})")
 
