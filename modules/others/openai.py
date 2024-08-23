@@ -15,6 +15,14 @@ class OpenAI(commands.Cog):
         self.client = client
         nest_asyncio.apply()
 
+    def prompt(self, msg):
+        client = Client()
+        response = client.chat.completions.create(
+            model="meta-llama/Llama-2-70b-chat-hf",
+            provider=g4f.Provider.DeepInfra,
+            messages=[{"role": "user", "content": msg}],
+        )
+        return response.choices[0].message.content
 
     @commands.command()
     async def gpt(self, ctx, *, msg):
@@ -26,14 +34,7 @@ class OpenAI(commands.Cog):
             ]
 
         async with ctx.channel.typing():
-
-            client = Client()
-            response = client.chat.completions.create(
-                model="meta-llama/Llama-2-70b-chat-hf",
-                provider=g4f.Provider.DeepInfra,
-                messages=[{"role": "user", "content": msg}],
-            )
-            gpt_msg = response.choices[0].message.content
+            gpt_msg = self.prompt(msg)
             splitted = split_long_string(gpt_msg)
             for split in splitted:
                 await ctx.send(split)
