@@ -170,7 +170,9 @@ class Events(commands.Cog):
             return
         msg = message.content.lower()
 
-        if message.channel.id == 1203784333341491302:
+        if any(
+            message.channel.id == x for x in [1203784333341491302, 1210328711455440926]
+        ):
             return  # temp, disabled for #serious-chat
 
         motor = self.client.get_cog("MotorDbManager")
