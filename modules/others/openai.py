@@ -1,5 +1,6 @@
 import os
 import urllib.parse
+from importlib.metadata import version
 
 import aiohttp
 import disnake
@@ -12,14 +13,15 @@ from g4f.client import Client
 
 class OpenAI(commands.Cog):
     def __init__(self, client):
+        print(f"g4f version is {version('g4f')}")
         self.client = client
         nest_asyncio.apply()
 
     def prompt(self, msg):
         client = Client()
         response = client.chat.completions.create(
-            model="meta-llama/Llama-2-70b-chat-hf",
-            provider=g4f.Provider.DeepInfra,
+            model="meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo",
+            provider=g4f.Provider.DeepInfraChat,
             messages=[{"role": "user", "content": msg}],
         )
         return response.choices[0].message.content

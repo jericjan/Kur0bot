@@ -22,7 +22,7 @@ class DeepL_commands(commands.Cog):
             else:
                 await ctx.send("what am i supposed to translate? try again dawg.")
                 return
-        result = ts.google(text, to_language="ja")
+        result = await self.google_translate(text, "ja")
         await ctx.send(result)
 
     @commands.command(aliases=["english", "tr"])
@@ -41,7 +41,10 @@ class DeepL_commands(commands.Cog):
 
     @async_wrap
     def google_translate(self, text, to_language):
-        return ts.google(text, to_language=to_language)
+        try:
+            return ts.google(text, to_language=to_language)
+        except TypeError:
+            return "I failed lmao"
 
     @commands.command(aliases=["german"])
     async def doitsu(self, ctx, *, text=None):
@@ -55,7 +58,7 @@ class DeepL_commands(commands.Cog):
                 await ctx.send("what am i supposed to translate? try again dawg.")
                 return
 
-        result = ts.google(text, to_language="de")
+        result = await self.google_translate(text, "de")
         await ctx.send(result)
     @async_wrap
     def jisho_word(self, word):

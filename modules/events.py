@@ -280,11 +280,8 @@ class Events(commands.Cog):
                 await user_stat.increment("Doxx", 1)
                 await message.channel.send(file=disnake.File(choice))
             if any(word in msg for word in ["hurensohn", "hurensöhne"]):
-                peeps = ["304268898637709312", "1200519236834041898"]
                 await user_stat.increment("Hurensohn", 1)
-                await message.channel.send(
-                    f"<@{random.choice(peeps)}>"
-                )  # pings strepto
+                await message.channel.send("<@1200519236834041898>")  # pings nana
         #############TWITTER LINK GIVER####################
         twt_links = re.findall(r"(?:https://(?:www\.)?)(?:x|twitter)(?:\.com\S+)", msg)
         resp = [f"Fixed some twitter links for ya:\n"]
@@ -435,8 +432,14 @@ class Events(commands.Cog):
             await message.channel.send(file=disnake.File("videos/wah.mp4"))
 
         if "balls" in msg:
-            await user_stat.increment("The Balls", 1)
-            await message.channel.send(file=disnake.File("videos/the_balls.mp4"))
+            idx, file = random.choice(
+                [(0, "videos/the_balls.mp4"), (1, "videos/testicle-zap.mp4")]
+            )
+            if idx == 0:
+                await user_stat.increment("The Balls", 1)
+            elif idx == 1:
+                await user_stat.increment("Testicle Zap", 1)
+            await message.channel.send(file=disnake.File(file))
 
         tatsu_id = 172002275412279296
 
