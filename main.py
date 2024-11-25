@@ -121,6 +121,7 @@ module_paths = (
     "modules.others.currency",
     "modules.others.kill",
     "modules.others.time_and_dates",
+    "modules.others.dad",
     "modules.pacifam_only",
     "modules.kur0_only",
     "modules.sus",

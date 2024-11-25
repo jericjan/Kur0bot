@@ -177,6 +177,8 @@ class Events(commands.Cog):
 
         motor = self.client.get_cog("MotorDbManager")
 
+        toggles = motor.get_collection_for_server("toggles", message.guild.id)
+
         stats_cog = self.client.get_cog("Stats")
         user_stat = stats_cog.get_user(message.guild.id, message.author.id)
 
@@ -562,8 +564,12 @@ class Events(commands.Cog):
                     )
                 else:
                     response = f"hi {names}, i'm kur0 sus bot! {trollplant}"
-                await user_stat.increment("Im Sus Bot", 1)
-                await message.channel.send(response)
+
+                dad_jokes = await toggles.find_one({"title": "Dad Jokes"})
+
+                if dad_jokes is None or dad_jokes.get("enabled"):
+                    await user_stat.increment("Im Sus Bot", 1)
+                    await message.channel.send(response)
 
     def get_full_class_name(self, obj):
         module = obj.__class__.__module__
