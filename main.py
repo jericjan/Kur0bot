@@ -62,7 +62,13 @@ rlimit.start()
 
 intents = disnake.Intents().all()
 game = disnake.Activity(name="sus gaming | k.help", type=disnake.ActivityType.playing)
-client = commands.Bot(command_prefix="k.", intents=intents, activity=game)
+client = commands.Bot(
+    command_prefix="k.",
+    intents=intents,
+    activity=game,
+    default_install_types=disnake.ApplicationInstallTypes.all(),
+    default_contexts=disnake.InteractionContextTypes.all(),
+)
 client.remove_command("help")
 
 

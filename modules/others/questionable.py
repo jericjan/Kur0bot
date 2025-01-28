@@ -9,7 +9,6 @@ class Questionable(commands.Cog):
         self.client = client
 
     @commands.user_command(name="Segg")
-    @commands.contexts(guild=True, bot_dm=True, private_channel=True)
     async def user_sex(self, inter, user: disnake.User):
         if user == self.client.user:
             channel = (
@@ -56,7 +55,6 @@ class Questionable(commands.Cog):
             await ctx.send(f"{ctx.author.mention} just sexerized {user.mention} 😳")
 
     @commands.user_command(name="Footjob")
-    @commands.contexts(guild=True, bot_dm=True, private_channel=True)
     async def user_footjob(self, inter, user: disnake.User):
         if user == self.client.user:
             desc = f"{inter.author.mention} IS GIVING ME A FOOTJOB??? HELLO HUMAN RESOURCES?? WTFFF??????"
