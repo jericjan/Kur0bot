@@ -6,13 +6,14 @@ import aiohttp
 import disnake
 from disnake.ext import commands
 
-
 class Currency(commands.Cog):
     def __init__(self, client):
         self.client = client
 
-    @commands.command(aliases=["convert"])
-    async def currency(self, ctx, conv_from, conv_to, value):
+    async def currency(self, thing, conv_from, conv_to, value):
+        bridger = self.client.get_cog("Bridger")
+        send_msg = bridger.send_msg
+
         conv_from = conv_from.lower()
         conv_to = conv_to.lower()
         async def currency_exists(currency):
@@ -24,11 +25,12 @@ class Currency(commands.Cog):
             return currency in available_currencies
 
         if conv_from == conv_to:
-            await ctx.send("You can't convert to the same currency!")
+            await send_msg(thing, "You can't convert to the same currency!")
             return
 
         if not await currency_exists(conv_from) or not await currency_exists(conv_to):
-            await ctx.send(
+            await send_msg(
+                thing,
                 "You've given me a currency that doesn't exist. Please check [here](https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies.json) for what currencies I support."
             )
             return
@@ -43,8 +45,26 @@ class Currency(commands.Cog):
                 result = Decimal(value) * rate
                 result = result.quantize(Decimal("1.00")).normalize()
 
-        await ctx.send(f"{value} {conv_from.upper()} is {result} {conv_to.upper()}")
+        await send_msg(
+            thing, f"{value} {conv_from.upper()} is {result} {conv_to.upper()}"
+        )
 
+    @commands.slash_command(name="currency")
+    async def s_currency(self, inter, conv_from: str, conv_to: str, value: str):
+        """
+        Converts currency!!!
+
+        Parameters
+        ----------
+        conv_from: The currency you want to convert from
+        conv_to: The currency you want to convert to
+        value: The value of the curreny you're converting from
+        """
+        await self.currency(inter, conv_from, conv_to, value)
+
+    @commands.command(name="currency", aliases=["convert"])
+    async def p_currency(self, ctx, conv_from, conv_to, value):
+        await self.currency(ctx, conv_from, conv_to, value)
 
 def setup(client):
     client.add_cog(Currency(client))

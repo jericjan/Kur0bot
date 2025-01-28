@@ -6,6 +6,7 @@ import signal
 import threading
 import time
 from datetime import datetime, timedelta
+from pathlib import Path
 
 import aiohttp
 import dateutil.parser as dp
@@ -86,53 +87,25 @@ client.sus_on = False
 
 
 print(f"{(time.time() - start_time):.2f}s - Importing Kur0's modules...")
-module_paths = (
-    "modules.events",
-    "modules.loaders",
-    "modules.vc",
-    "modules.copypasta",
-    "modules.help",
-    "modules.ascii",
-    "modules.reactions",
-    "modules.others.clip",
-    "modules.others.download",
-    "modules.others.emote_sticker",
-    "modules.others.badapple",
-    "modules.others.pet",
-    "modules.others.sauce",
-    "modules.others.144p",
-    "modules.others.when",
-    "modules.others.checkcomment",
-    "modules.others.coinflip",
-    "modules.others.superchat",
-    "modules.others.gif",
-    "modules.others.resize",
-    "modules.others.deepl",
-    "modules.others.karaoke",
-    "modules.others.hall_of_shame",
-    "modules.others.getosumap",
-    "modules.others.vergil",
-    "modules.others.this",
-    "modules.others.google",
-    "modules.others.meme",
-    "modules.others.pinglimit",
-    "modules.others.openai",
-    "modules.others.height",
-    "modules.others.currency",
-    "modules.others.kill",
-    "modules.others.time_and_dates",
-    "modules.others.dad",
-    "modules.pacifam_only",
-    "modules.kur0_only",
-    "modules.sus",
-    "modules.tasks",
-    "modules.stats",
-    "myfunctions.motor",
-)
 
-for module in module_paths:
-    client.load_extension(module)
-    print(f"{(time.time() - start_time):.2f}s - {module} loaded")
+# Files we don't want to load as an extension
+exclude_files = [
+    "modules/paginator.py",
+    "modules/template.py",
+    "myfunctions/file_handler.py",
+    "myfunctions/msg_link_grabber.py",
+    "myfunctions/greenscreen.py",
+    "myfunctions/subprocess_runner.py",
+    "myfunctions/my_db.py",
+    "myfunctions/async_wrapper.py",
+]
+
+for folder in ["modules", "myfunctions"]:
+    for file in Path(folder).rglob("*.py"):
+        if str(file) not in exclude_files:
+            module = str(file.parent).replace("/", ".") + "." + file.stem
+            client.load_extension(module)
+            print(f"{(time.time() - start_time):.2f}s - {module} loaded")
 
 print(f"{(time.time() - start_time):.2f}s - Done!")
 

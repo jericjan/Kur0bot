@@ -283,7 +283,10 @@ class Events(commands.Cog):
                 await message.channel.send(file=disnake.File(choice))
             if any(word in msg for word in ["hurensohn", "hurensöhne"]):
                 await user_stat.increment("Hurensohn", 1)
-                await message.channel.send("<@1200519236834041898>")  # pings nana
+                huren_target = numpy.random.choice(
+                    [1200519236834041898, 304268898637709312], p=[0.6, 0.4]
+                )
+                await message.channel.send(f"<@{huren_target}>")  # pings nana/allen
         #############TWITTER LINK GIVER####################
         twt_links = re.findall(r"(?:https://(?:www\.)?)(?:x|twitter)(?:\.com\S+)", msg)
         resp = [f"Fixed some twitter links for ya:\n"]

@@ -25,6 +25,11 @@ class DeepL_commands(commands.Cog):
         result = await self.google_translate(text, "ja")
         await ctx.send(result)
 
+    @commands.message_command(name="Nihongo")
+    async def msg_nihongo(self, inter, msg: disnake.Message):
+        result = await self.google_translate(msg.content, "ja")
+        await inter.response.send_message(result)
+
     @commands.command(aliases=["english", "tr"])
     async def eigo(self, ctx, *, text=None):
         if text == None:
@@ -38,6 +43,11 @@ class DeepL_commands(commands.Cog):
                 return
         result = await self.google_translate(text, "en")
         await ctx.send(result)
+
+    @commands.message_command(name="Eigo")
+    async def msg_eigo(self, inter, msg: disnake.Message):
+        result = await self.google_translate(msg.content, "en")
+        await inter.response.send_message(result)
 
     @async_wrap
     def google_translate(self, text, to_language):
@@ -60,6 +70,12 @@ class DeepL_commands(commands.Cog):
 
         result = await self.google_translate(text, "de")
         await ctx.send(result)
+
+    @commands.message_command(name="Doitsu")
+    async def msg_doitsu(self, inter, msg: disnake.Message):
+        result = await self.google_translate(msg.content, "de")
+        await inter.response.send_message(result)
+
     @async_wrap
     def jisho_word(self, word):
         return Word.request(word)

@@ -4,7 +4,10 @@
 import asyncio
 import os
 import time
+from datetime import datetime
 from functools import partial, wraps
+from io import BytesIO
+from pathlib import Path
 
 from disnake.ext import commands, tasks
 
@@ -16,11 +19,13 @@ class MyTasks(commands.Cog):
         self.client = client
         self.delete_temp_files.start()
         self.update_ytdlp.start()
+        # self.cycle_banner.start()
         self.saved_time = time.time()
-
+        self.banner_idx = -1
     def cog_unload(self):
         self.delete_temp_files.cancel()
         self.update_ytdlp.cancel()
+        self.cycle_banner.cancel()
 
     def wrap(func):
         @wraps(func)
@@ -89,6 +94,46 @@ class MyTasks(commands.Cog):
     @update_ytdlp.before_loop
     async def before_delete(self):
         print("waiting 2...")
+        await self.client.wait_until_ready()
+
+    def get_current_index(
+        self, start_time: datetime, interval_minutes: int, total_items: int
+    ) -> int:
+        # Calculate the total elapsed time in minutes
+        now = datetime.now()
+        elapsed_minutes = int((now - start_time).total_seconds() / 60)
+
+        # Calculate the current index
+        index = (elapsed_minutes // interval_minutes) % total_items
+        return index
+
+    @tasks.loop(minutes=1)
+    async def cycle_banner(self):
+        banner_root = Path("images/banner_cycle")
+        imgs = ["banner.gif", "image.png", "trmup.jpg"]
+
+        # Random time just to start cycle at 00:00:00
+        fixed_start_time = datetime(2024, 12, 8, 0, 0, 0)
+
+        interval = 15
+        total_items = len(imgs)
+
+        # Get the current index
+        current_index = self.get_current_index(fixed_start_time, interval, total_items)
+        print(f"The current banner index is: {current_index}")
+
+        if self.banner_idx != current_index:
+            with (banner_root / imgs[current_index]).open("rb") as f:
+                banner_bytes = BytesIO(f.read())
+            banner_bytes.seek(0)
+
+            tos = await self.client.fetch_guild(938255956247183451)
+            await tos.edit(banner=banner_bytes.read())
+            self.banner_idx = current_index
+
+    @cycle_banner.before_loop
+    async def before_delete(self):
+        print("waiting 3...")
         await self.client.wait_until_ready()
 
 def setup(client):
