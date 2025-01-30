@@ -104,8 +104,9 @@ class VergilGreenScreenerHandler(GreenScreenerHandler):
             ctx, link, base_dir, height, width, fps, final_filename, file_prefix
         )
 
-    async def start(self):
-        vergil_status = await self.ctx.send("Getting motivated...")
+    async def start(self, slash=False):
+        if not slash:
+            vergil_status = await self.ctx.send("Getting motivated...")
         await self.generate_user_img()
         g_screener = VergilGreenScreener(self.image, self.cap, self.out, self.base_dir)
         self.log("Pre stuff")
@@ -115,18 +116,32 @@ class VergilGreenScreenerHandler(GreenScreenerHandler):
         self.cap.release()
         self.out.release()
 
-        await vergil_status.edit(
-            content="<:motivated1:991217157100818534><:motivated2:991217292761382912><:motivated3:991217345345368074>\nApproaching..."
-        )
+        if not slash:
+            await vergil_status.edit(
+                content="<:motivated1:991217157100818534><:motivated2:991217292761382912><:motivated3:991217345345368074>\nApproaching..."
+            )
 
         final_filepath = await self.ffmpeg_stuff()
 
-        await vergil_status.edit(
-            content="", file=disnake.File(final_filepath, filename=self.final_filename)
-        )
+        if not slash:
+            await vergil_status.edit(
+                content="",
+                file=disnake.File(final_filepath, filename=self.final_filename),
+            )
         self.log("Sent file", mid=True)
         self.log_str += f"Vergil arrived in {time.time()-self.start_time:.2f} seconds\n"
-        await self.ctx.send(self.log_str)
+        if not slash:
+            await self.ctx.send(self.log_str)
+
+        if slash:
+            await self.ctx.edit_original_response(
+                "<:motivated1:991217157100818534><:motivated2:991217292761382912><:motivated3:991217345345368074>",
+                file=disnake.File(final_filepath, filename=self.final_filename),
+            )
+            await self.ctx.followup.send(
+                f"Vergil arrived in {time.time()-self.start_time:.2f} seconds"
+            )
+
         shutil.rmtree(f"{self.base_dir}{self.random_uuid}/")
 
     async def ffmpeg_stuff(self):
@@ -229,17 +244,50 @@ class Vergil(commands.Cog):
     async def vergil(self, ctx, link=None):
         link = await msg_link_grabber.grab_link(ctx, link)
         print(link)
-        g_screen_han = VergilGreenScreenerHandler(
-            ctx,
-            link,
-            "videos/vergil_greenscreen/",
-            480,
-            854,
-            30.0,
-            "vergil status.mp4",
-            "vergil",
-        )
-        await g_screen_han.start()
+        checker = self.client.get_cog("FileTypeChecker")
+        is_img = await checker.is_image(link)
+        if is_img:
+            g_screen_han = VergilGreenScreenerHandler(
+                ctx,
+                link,
+                "videos/vergil_greenscreen/",
+                480,
+                854,
+                30.0,
+                "vergil status.mp4",
+                "vergil",
+            )
+            await g_screen_han.start()
+        else:
+            await inter.edit_original_response("Imbecile! This is no image...")
+
+    @commands.message_command(name="Vergil")
+    async def m_vergil(self, inter, msg: disnake.Message):
+        attachments = msg.attachments
+        await inter.response.defer()
+        if len(attachments) > 0:
+            link = attachments[0].url
+
+            checker = self.client.get_cog("FileTypeChecker")
+            is_img = await checker.is_image(link)
+            if is_img:
+                g_screen_han = VergilGreenScreenerHandler(
+                    inter,
+                    link,
+                    "videos/vergil_greenscreen/",
+                    480,
+                    854,
+                    30.0,
+                    "vergil status.mp4",
+                    "vergil",
+                )
+                await g_screen_han.start(slash=True)
+            else:
+                await inter.edit_original_response("Imbecile! This is no image...")
+        else:
+            await inter.edit_original_response(
+                "Fool! This message has no links in it..."
+            )
 
     @commands.command()
     async def quickvergil(self, ctx, link=None):
