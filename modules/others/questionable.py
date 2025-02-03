@@ -7,6 +7,9 @@ from disnake.ext import commands
 class Questionable(commands.Cog):
     def __init__(self, client):
         self.client = client
+        self.dashboard_db = self.client.get_cog("MotorDbManager").motor_client[
+            "dashboard"
+        ]
 
     @commands.user_command(name="Segg")
     async def user_sex(self, inter, user: disnake.User):
@@ -23,27 +26,39 @@ class Questionable(commands.Cog):
             desc = f"{inter.author.mention} just sexerized {user.mention} 😳"
 
         em = disnake.Embed(title="Sex", description=desc)
-        gifs = [
-            "https://cdn.discordapp.com/attachments/1210367093338415164/1315511944563920947/seg.gif",
-            "https://cdn.discordapp.com/attachments/1210367093338415164/1315516035645837444/seg2.gif",
-            "https://media1.tenor.com/m/1SdB5UVe998AAAAC/kissing.gif",
-            "https://media1.tenor.com/m/hKR4tj_FaGkAAAAC/kiss.gif",
-            "https://media1.tenor.com/m/JmeXszjYcfAAAAAC/huh-fate.gif",
-        ]
-        em.set_image(url=random.choice(gifs))
+        gif = (
+            await self.dashboard_db["sex-gifs"]
+            .aggregate([{"$sample": {"size": 1}}])
+            .to_list(1)
+        )
+        gif = gif[0]["url"]
+        # gifs = [
+        # "https://cdn.discordapp.com/attachments/1210367093338415164/1315511944563920947/seg.gif",
+        # "https://cdn.discordapp.com/attachments/1210367093338415164/1315516035645837444/seg2.gif",
+        # "https://media1.tenor.com/m/1SdB5UVe998AAAAC/kissing.gif",
+        # "https://media1.tenor.com/m/hKR4tj_FaGkAAAAC/kiss.gif",
+        # "https://media1.tenor.com/m/JmeXszjYcfAAAAAC/huh-fate.gif",
+        # ]
+        em.set_image(url=gif)
         await inter.response.send_message(embed=em)
 
     @commands.command()
     async def sex(self, ctx, user: disnake.User):
-        gifs = [
-            "|| https://cdn.discordapp.com/attachments/1210367093338415164/1315511944563920947/seg.gif ||",
-            "|| https://cdn.discordapp.com/attachments/1210367093338415164/1315516035645837444/seg2.gif ||",
-            "|| https://tenor.com/view/kissing-gif-20150608 ||",
-            "https://tenor.com/view/kiss-gif-5739144",
-            "https://tenor.com/view/huh-fate-kaleid-liner-prisma-gif-5739132",
-        ]
+        # gifs = [
+        # "|| https://cdn.discordapp.com/attachments/1210367093338415164/1315511944563920947/seg.gif ||",
+        # "|| https://cdn.discordapp.com/attachments/1210367093338415164/1315516035645837444/seg2.gif ||",
+        # "|| https://tenor.com/view/kissing-gif-20150608 ||",
+        # "https://tenor.com/view/kiss-gif-5739144",
+        # "https://tenor.com/view/huh-fate-kaleid-liner-prisma-gif-5739132",
+        # ]
 
-        await ctx.send(random.choice(gifs))
+        gif = (
+            await self.dashboard_db["sex-gifs"]
+            .aggregate([{"$sample": {"size": 1}}])
+            .to_list(1)
+        )
+        gif = gif[0]["url"]
+        await ctx.send(f"|| {gif} ||")
 
         if user == self.client.user:
             await ctx.send(
@@ -64,23 +79,34 @@ class Questionable(commands.Cog):
             desc = f"{inter.author.mention} gave {user.mention} a footjob!"
 
         em = disnake.Embed(title="Footjob", description=desc)
-        gifs = [
-            "https://cdn.discordapp.com/attachments/1201051292198518846/1315505967470870568/SPOILER_toga-giving-a-footjob.gif",
-            "https://cdn.discordapp.com/attachments/1201051292198518846/1315513265517760592/SPOILER_mafuyu.gif",
-        ]
-        em.set_image(url=random.choice(gifs))
+        # gifs = [
+        # "https://cdn.discordapp.com/attachments/1201051292198518846/1315505967470870568/SPOILER_toga-giving-a-footjob.gif",
+        # "https://cdn.discordapp.com/attachments/1201051292198518846/1315513265517760592/SPOILER_mafuyu.gif",
+        # ]
+        gif = (
+            await self.dashboard_db["footjob-gifs"]
+            .aggregate([{"$sample": {"size": 1}}])
+            .to_list(1)
+        )
+        gif = gif[0]["url"]
+        em.set_image(url=gif)
         await inter.response.send_message(embed=em)
 
     @commands.command()
     async def footjob(self, ctx, user: disnake.User):
-        gifs = [
-            "https://cdn.discordapp.com/attachments/1201051292198518846/1315505967470870568/SPOILER_toga-giving-a-footjob.gif",
-            "https://cdn.discordapp.com/attachments/1201051292198518846/1315513265517760592/SPOILER_mafuyu.gif",
-        ]
+        # gifs = [
+        # "https://cdn.discordapp.com/attachments/1201051292198518846/1315505967470870568/SPOILER_toga-giving-a-footjob.gif",
+        # "https://cdn.discordapp.com/attachments/1201051292198518846/1315513265517760592/SPOILER_mafuyu.gif",
+        # ]
 
-        gifs = [f"|| {x} ||" for x in gifs]
+        gif = (
+            await self.dashboard_db["footjob-gifs"]
+            .aggregate([{"$sample": {"size": 1}}])
+            .to_list(1)
+        )
+        gif = gif[0]["url"]
 
-        await ctx.send(random.choice(gifs))
+        await ctx.send(f"|| {gif} ||")
         if user == self.client.user:
             await ctx.send(
                 f"{ctx.author.mention} IS GIVING ME A FOOTJOB??? HELLO HUMAN RESOURCES?? WTFFF??????"
