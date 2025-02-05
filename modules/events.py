@@ -450,9 +450,10 @@ class Events(commands.Cog):
 
         if any(word in msg for word in ["fuck you tatsu", "fuck off tatsu"]):
             if message.reference is not None:
-                if message.reference.resolved.author.id == tatsu_id:
-                    await user_stat.increment("Tatsu bot murders", 1)
-                    await message.reference.resolved.delete()
+                if message.reference.resolved is not None:
+                    if message.reference.resolved.author.id == tatsu_id:
+                        await user_stat.increment("Tatsu bot murders", 1)
+                        await message.reference.resolved.delete()
             else:
                 async for x in message.channel.history(limit=10):
                     if x.author.id == tatsu_id:
@@ -461,14 +462,15 @@ class Events(commands.Cog):
                         break
 
         if message.reference is not None:
-            if message.reference.resolved.author.id == tatsu_id:
-                gpt_resp = ""
-                while gpt_resp != "True" and gpt_resp != "False":
-                    gpt_msg = f"Is the following phrase offensive? respond ONLY with True or False:\n{message.content}"
-                    gpt_resp = self.client.get_cog("OpenAI").prompt(gpt_msg)
-                if gpt_resp == "True":
-                    await user_stat.increment("Tatsu bot murders", 1)
-                    await message.reference.resolved.delete()
+            if message.reference.resolved is not None:
+                if message.reference.resolved.author.id == tatsu_id:
+                    gpt_resp = ""
+                    while gpt_resp != "True" and gpt_resp != "False":
+                        gpt_msg = f"Is the following phrase offensive? respond ONLY with True or False:\n{message.content}"
+                        gpt_resp = self.client.get_cog("OpenAI").prompt(gpt_msg)
+                    if gpt_resp == "True":
+                        await user_stat.increment("Tatsu bot murders", 1)
+                        await message.reference.resolved.delete()
 
         if "jdon my soul" in msg:
             await user_stat.increment("JdonMySoul", 1)

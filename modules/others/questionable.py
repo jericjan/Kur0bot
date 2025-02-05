@@ -26,12 +26,9 @@ class Questionable(commands.Cog):
             desc = f"{inter.author.mention} just sexerized {user.mention} 😳"
 
         em = disnake.Embed(title="Sex", description=desc)
-        gif = (
-            await self.dashboard_db["sex-gifs"]
-            .aggregate([{"$sample": {"size": 1}}])
-            .to_list(1)
-        )
-        gif = gif[0]["url"]
+        db_man = self.client.get_cog("MotorDbManager")
+        doc = await db_man.get_random(self.dashboard_db["sex-gifs"])
+        url = doc["url"]
         # gifs = [
         # "https://cdn.discordapp.com/attachments/1210367093338415164/1315511944563920947/seg.gif",
         # "https://cdn.discordapp.com/attachments/1210367093338415164/1315516035645837444/seg2.gif",
@@ -39,7 +36,7 @@ class Questionable(commands.Cog):
         # "https://media1.tenor.com/m/hKR4tj_FaGkAAAAC/kiss.gif",
         # "https://media1.tenor.com/m/JmeXszjYcfAAAAAC/huh-fate.gif",
         # ]
-        em.set_image(url=gif)
+        em.set_image(url=url)
         await inter.response.send_message(embed=em)
 
     @commands.command()
@@ -52,13 +49,10 @@ class Questionable(commands.Cog):
         # "https://tenor.com/view/huh-fate-kaleid-liner-prisma-gif-5739132",
         # ]
 
-        gif = (
-            await self.dashboard_db["sex-gifs"]
-            .aggregate([{"$sample": {"size": 1}}])
-            .to_list(1)
-        )
-        gif = gif[0]["url"]
-        await ctx.send(f"|| {gif} ||")
+        db_man = self.client.get_cog("MotorDbManager")
+        doc = await db_man.get_random(self.dashboard_db["sex-gifs"])
+        url = doc["url"]
+        await ctx.send(f"|| {url} ||")
 
         if user == self.client.user:
             await ctx.send(
@@ -83,13 +77,10 @@ class Questionable(commands.Cog):
         # "https://cdn.discordapp.com/attachments/1201051292198518846/1315505967470870568/SPOILER_toga-giving-a-footjob.gif",
         # "https://cdn.discordapp.com/attachments/1201051292198518846/1315513265517760592/SPOILER_mafuyu.gif",
         # ]
-        gif = (
-            await self.dashboard_db["footjob-gifs"]
-            .aggregate([{"$sample": {"size": 1}}])
-            .to_list(1)
-        )
-        gif = gif[0]["url"]
-        em.set_image(url=gif)
+        db_man = self.client.get_cog("MotorDbManager")
+        doc = await db_man.get_random(self.dashboard_db["footjob-gifs"])
+        url = doc["url"]
+        em.set_image(url=url)
         await inter.response.send_message(embed=em)
 
     @commands.command()
@@ -99,14 +90,18 @@ class Questionable(commands.Cog):
         # "https://cdn.discordapp.com/attachments/1201051292198518846/1315513265517760592/SPOILER_mafuyu.gif",
         # ]
 
-        gif = (
-            await self.dashboard_db["footjob-gifs"]
-            .aggregate([{"$sample": {"size": 1}}])
-            .to_list(1)
-        )
-        gif = gif[0]["url"]
+        db_man = self.client.get_cog("MotorDbManager")
+        doc = await db_man.get_random(self.dashboard_db["footjob-gifs"])
+        url = doc["url"]
 
-        await ctx.send(f"|| {gif} ||")
+        # gif = (
+        # await self.dashboard_db["footjob-gifs"]
+        # .aggregate([{"$sample": {"size": 1}}])
+        # .to_list(1)
+        # )
+        # gif = gif[0]["url"]
+
+        await ctx.send(f"|| {url} ||")
         if user == self.client.user:
             await ctx.send(
                 f"{ctx.author.mention} IS GIVING ME A FOOTJOB??? HELLO HUMAN RESOURCES?? WTFFF??????"

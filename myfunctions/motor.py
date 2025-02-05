@@ -1,4 +1,5 @@
 import os
+import random
 
 import pymongo
 from disnake.ext import commands
@@ -37,6 +38,13 @@ class MotorDbManager(commands.Cog):
         await coll.update_one(
             {"user_id": usr_id}, {"$inc": {f"stats.{stat_key}": inc_value}}, upsert=True
         )
+
+    async def get_random(self, coll):
+        """Fucky way because sample aggregation is weird for small data"""
+        gif_count = await coll.count_documents({})
+        chosen_idx = random.randint(1, gif_count)
+        limited_list = await coll.find({}).to_list(chosen_idx)
+        return limited_list[-1]
 
     # def merge_dicts(self, dict1, dict2):
     # merged_dict = dict(dict1.items() | dict2.items())
