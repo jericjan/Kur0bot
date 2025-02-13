@@ -213,38 +213,7 @@ class Events(commands.Cog):
                 await message.channel.send(response, delete_after=3.0)
                 await self.log("sussy reply", False)
 
-        # le strepto
-        if all(message.channel.id != x for x in [1260889287931723839]):
-            if any(
-                word in msg
-                for word in [
-                    "feet",
-                    "foot",
-                    "toe",
-                    "ankle",
-                    "heel",
-                    "arch",
-                    "sole",
-                    "🦶",
-                ]
-            ):
-                strepto_in_server = await message.guild.getch_member(268188421871108097)
-                if strepto_in_server:
-                    await user_stat.increment("Feet-related", 1)
 
-                    days_list = self.client.get_cog("TimeAndDates").get_current_days(
-                        show_date=False
-                    )
-
-                    strepto_ping = "<@268188421871108097>"
-
-                    if "Friday" in days_list:
-                        strepto_ping += (
-                            "\nhttps://cdn.discordapp.com/attachments/809247468084133898/"
-                            "1231538142129946715/20240420_183246.png"
-                        )
-
-                    await message.channel.send(strepto_ping)  # pings strepto
 
         if re.search(r"blue.archive", msg):
             await user_stat.increment("Blue Archive mentioned", 1)
@@ -271,6 +240,7 @@ class Events(commands.Cog):
         # PACIFAM ONLY
         pacifam_servers = [603147860225032192, 938255956247183451]
         if any(message.guild.id == x for x in pacifam_servers):
+
             if "dox" in msg:
                 choice = random.choice(
                     [
@@ -281,12 +251,49 @@ class Events(commands.Cog):
                 )
                 await user_stat.increment("Doxx", 1)
                 await message.channel.send(file=disnake.File(choice))
+
             if any(word in msg for word in ["hurensohn", "hurensöhne"]):
                 await user_stat.increment("Hurensohn", 1)
                 huren_target = numpy.random.choice(
                     [1200519236834041898, 304268898637709312], p=[0.6, 0.4]
                 )
                 await message.channel.send(f"<@{huren_target}>")  # pings nana/allen
+
+            # le strepto
+            if all(message.channel.id != x for x in [1260889287931723839]):
+                if any(
+                    word in msg
+                    for word in [
+                        "feet",
+                        "foot",
+                        "toe",
+                        "ankle",
+                        "heel",
+                        "arch",
+                        "sole",
+                        "🦶",
+                    ]
+                ):
+                    strepto_in_server = await message.guild.getch_member(
+                        268188421871108097
+                    )
+                    if strepto_in_server:
+                        await user_stat.increment("Feet-related", 1)
+
+                        days_list = self.client.get_cog(
+                            "TimeAndDates"
+                        ).get_current_days(show_date=False)
+
+                        strepto_ping = "<@268188421871108097>"
+
+                        if "Friday" in days_list:
+                            strepto_ping += (
+                                "\nhttps://cdn.discordapp.com/attachments/809247468084133898/"
+                                "1231538142129946715/20240420_183246.png"
+                            )
+
+                        await message.channel.send(strepto_ping)  # pings strepto
+
         #############TWITTER LINK GIVER####################
         twt_links = re.findall(r"(?:https://(?:www\.)?)(?:x|twitter)(?:\.com\S+)", msg)
         resp = [f"Fixed some twitter links for ya:\n"]
