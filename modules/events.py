@@ -4,12 +4,14 @@ import json
 import os
 import random
 import re
+import socket
 import subprocess
 import time
 from datetime import datetime, timedelta, timezone
 from operator import attrgetter
 from pathlib import Path
 
+import aiohttp
 import disnake
 import numpy
 import pytz
@@ -581,6 +583,49 @@ class Events(commands.Cog):
 
                 await user_stat.increment("Im Sus Bot", 1)
                 await message.channel.send(response)
+
+        ####### FACEBOOK SHARE WARNING ###########
+        match = re.search(r"https:\S+facebook.com\/share\/.\/\S+", msg)
+        if match:
+            channel_link = message.channel.jump_url
+            url = match.group()
+            await message.delete()
+
+            headers = {
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36",
+                "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
+                "Accept-Language": "en-US,en;q=0.5",
+                "Accept-Encoding": "gzip, deflate, br, zstd",
+                "Connection": "keep-alive",
+                "Upgrade-Insecure-Requests": "1",
+                "Sec-Fetch-Dest": "document",
+                "Sec-Fetch-Mode": "navigate",
+                "Sec-Fetch-Site": "same-origin",
+                "Sec-Fetch-User": "?1",
+                "Cache-Control": "max-age=0",
+                "Referer": url,
+            }
+            jar = aiohttp.CookieJar(unsafe=True)
+            conn = aiohttp.TCPConnector(family=socket.AF_INET)
+
+            async with aiohttp.ClientSession(
+                headers=headers, cookie_jar=jar, connector=conn
+            ) as session:
+                async with session.get(url, allow_redirects=False) as resp:
+                    loc = resp.headers.get("Location")
+                    if loc:
+                        clean_url = loc
+                        print(resp.headers)
+                    else:
+                        clean_url = "NO link lamo it broke"
+                        print(resp.headers)
+                        print(resp.status)
+
+            await message.author.send(
+                f"Woah partner. That's a risky FB link there in {channel_link}. "
+                "It can actually doxx you. I've deleted it for ya though. "
+                f"Here's a clean version of that link:\n{clean_url}"
+            )
 
     def get_full_class_name(self, obj):
         module = obj.__class__.__module__
