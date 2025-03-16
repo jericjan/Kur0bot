@@ -77,19 +77,19 @@ class MyTasks(commands.Cog):
         _out, stdout, _stderr = await subprocess_runner.run_subprocess(
             "poetry show -l | grep yt-dlp", shell=True
         )
-        channel = self.client.get_channel(976064150935576596)
+        # channel = self.client.get_channel(976064150935576596)
         resp = stdout.decode("utf-8")
         clean_list = [x for x in resp.split(" ") if x != ""]
         curr_ver = clean_list[1]
         latest_ver = clean_list[2]
         if curr_ver == latest_ver:
-            await channel.send(f"yt-dlp is up to date! ({curr_ver})")
+            print(f"yt-dlp is up to date! ({curr_ver})")
         else:
-            await channel.send(f"yt-dlp needs an update! ({curr_ver} => {latest_ver})")
+            print(f"yt-dlp needs an update! ({curr_ver} => {latest_ver})")
             _out, _stdout, _stderr = await subprocess_runner.run_subprocess(
                 ["poetry", "add", f"yt-dlp=={latest_ver}"]
             )
-            await channel.send(f"yt-dlp has been updated! ({latest_ver})")
+            print(f"yt-dlp has been updated! ({latest_ver})")
 
     @update_ytdlp.before_loop
     async def before_delete(self):

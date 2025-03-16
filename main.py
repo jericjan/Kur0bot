@@ -106,7 +106,9 @@ exclude_files = [
     "myfunctions/async_wrapper.py",
 ]
 
-for folder in ["modules", "myfunctions"]:
+os.chdir("/app")
+print(f"Current in {Path.cwd()}")
+for folder in ["myfunctions", "modules"]:
     for file in Path(folder).rglob("*.py"):
         if str(file) not in exclude_files:
             module = str(file.parent).replace("/", ".") + "." + file.stem
@@ -362,7 +364,7 @@ keep_alive()
 proc_id = os.getpid()
 print(f"{(time.time() - start_time):.2f}s - Process ID: {proc_id}")
 asyncio.run(log(f"Process ID: {proc_id}", False))
-check(start_time, proc_id)
+# check(start_time, proc_id)  # Old code from replit days
 loop = client.loop
 try:
     print(f"{(time.time() - start_time):.2f}s - Connecting to bot...")
