@@ -709,7 +709,6 @@ class Clip(commands.Cog):
             return
 
         message = await ctx.send("Fetching url...")
-        coms = ["yt-dlp", "-g", "-f", f"{id}+{id2}", link]
         startsplit = start.split(":")
         shour = startsplit[0]
         sminute = startsplit[1]
@@ -745,7 +744,9 @@ class Clip(commands.Cog):
                 )
                 + timedelta(seconds=30)
             )
-        out, stdout, stderr = await subprocess_runner.run_subprocess(coms)
+        out, stdout, stderr = await subprocess_runner.run_subprocess([
+            "yt-dlp", "-g", "-f", f"{id}+{id2}", link
+        ])
         dirlinks = stdout.decode("utf-8").split("\n")
         vid = dirlinks[0]
         if seconds < 30:
@@ -943,7 +944,6 @@ class Clip(commands.Cog):
             return
 
         message = await ctx.send("Fetching url...")
-        coms = ["yt-dlp", "-g", "-f", "251", link]
         startsplit = start.split(":")
         shour = startsplit[0]
         sminute = startsplit[1]
@@ -970,7 +970,9 @@ class Clip(commands.Cog):
         result2 = timedelta(
             hours=int(ehour), minutes=int(eminute), seconds=int(esecond)
         ) - timedelta(hours=int(shour), minutes=int(sminute), seconds=int(ssecond))
-        out, stdout, stderr = await subprocess_runner.run_subprocess(coms)
+        out, stdout, stderr = await subprocess_runner.run_subprocess([
+            "yt-dlp", "-g", "-f", "251", link
+        ])
         dirlinks = stdout.decode("utf-8").split("\n")
         vid = dirlinks[0]
         if seconds < 30:
@@ -1050,16 +1052,6 @@ class Clip(commands.Cog):
         if os.path.isfile(f"{filename}.mp4"):
             os.remove(f"{filename}.mp4")
         message = await ctx.send("Fetching url...")
-        coms = [
-            "yt-dlp",
-            "-g",
-            "-f",
-            "b",
-            "--no-warnings",
-            "--youtube-skip-dash-manifest",
-            "--no-warnings",
-            link,
-        ]
         startsplit = start.split(":")
         shour = startsplit[0]
         sminute = startsplit[1]
@@ -1085,7 +1077,16 @@ class Clip(commands.Cog):
         result2 = timedelta(
             hours=int(ehour), minutes=int(eminute), seconds=int(esecond)
         ) - timedelta(hours=int(shour), minutes=int(sminute), seconds=int(ssecond))
-        out, stdout, stderr = await subprocess_runner.run_subprocess(coms)
+        out, stdout, stderr = await subprocess_runner.run_subprocess([
+            "yt-dlp",
+            "-g",
+            "-f",
+            "b",
+            "--no-warnings",
+            "--youtube-skip-dash-manifest",
+            "--no-warnings",
+            link,
+        ])
         dirlinks = stdout.decode("utf-8").split("\n")
         vid = dirlinks[0]
         if seconds < 30:
@@ -1162,15 +1163,6 @@ class Clip(commands.Cog):
     @commands.bot_has_permissions(manage_messages=True)
     async def fastclip3(self, ctx, link, start, end, filename):
         message = await ctx.send("Fetching url...")
-        coms = [
-            "yt-dlp",
-            "-g",
-            "-f",
-            "b",
-            "--youtube-skip-dash-manifest",
-            "--no-warnings",
-            link,
-        ]
         startsplit = start.split(":")
         shour = startsplit[0]
         sminute = startsplit[1]
@@ -1197,7 +1189,15 @@ class Clip(commands.Cog):
         result2 = timedelta(
             hours=int(ehour), minutes=int(eminute), seconds=int(esecond)
         ) - timedelta(hours=int(shour), minutes=int(sminute), seconds=int(ssecond))
-        out, stdout, stderr = await subprocess_runner.run_subprocess(coms)
+        out, stdout, stderr = await subprocess_runner.run_subprocess([
+            "yt-dlp",
+            "-g",
+            "-f",
+            "b",
+            "--youtube-skip-dash-manifest",
+            "--no-warnings",
+            link,
+        ])
         dirlinks = stdout.decode("utf-8").split("\n")
         vid = dirlinks[0]
         if seconds < 30:
@@ -1243,15 +1243,6 @@ class Clip(commands.Cog):
     @commands.bot_has_permissions(manage_messages=True)
     async def fastclip2(self, ctx, link, start, end, filename):
         message = await ctx.send("Fetching url...")
-        coms = [
-            "yt-dlp",
-            "-g",
-            "-f",
-            "b",
-            "--youtube-skip-dash-manifest",
-            "--no-warnings",
-            link,
-        ]
         startsplit = start.split(":")
         shour = startsplit[0]
         sminute = startsplit[1]
@@ -1266,7 +1257,15 @@ class Clip(commands.Cog):
         result2 = timedelta(
             hours=int(ehour), minutes=int(eminute), seconds=int(esecond)
         ) - timedelta(hours=int(shour), minutes=int(sminute), seconds=int(ssecond))
-        out, stdout, stderr = await subprocess_runner.run_subprocess(coms)
+        out, stdout, stderr = await subprocess_runner.run_subprocess([
+            "yt-dlp",
+            "-g",
+            "-f",
+            "b",
+            "--youtube-skip-dash-manifest",
+            "--no-warnings",
+            link,
+        ])
         dirlinks = stdout.decode("utf-8").split("\n")
         vid = dirlinks[0]
         coms = [
