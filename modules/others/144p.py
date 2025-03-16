@@ -64,14 +64,14 @@ class lowQual(commands.Cog):
             muxname = re.sub(r"(.+(?=\..+))", r"\g<1>_mux", filename)
             if is_tenor:
                 coms = [
-                    "ffmpeg-git/ffmpeg",
+                    "ffmpeg",
                     "-i",
                     link,
                     muxname,
                 ]
             else:
                 coms = [
-                    "ffmpeg-git/ffmpeg",
+                    "ffmpeg",
                     "-i",
                     link,
                     "-c:v",
@@ -258,7 +258,8 @@ class lowQual(commands.Cog):
         elif re.search(r".+\.jpg|.+\.jpeg|.+\.png|.+\.webp", filename) is not None:
             filename = filename.split("?")[0]
             tempname = re.sub(r"(.+(?=\..+))", r"\g<1>01", filename)
-            coms = [
+            message = await ctx.send("Downscaling...")
+            out, stdout, stderr = await subprocess_runner.run_subprocess([
                 "ffmpeg",
                 "-i",
                 link,
@@ -267,11 +268,10 @@ class lowQual(commands.Cog):
                 "-b:v",
                 "15000",
                 tempname,
-            ]
-            message = await ctx.send("Downscaling...")
-            out, stdout, stderr = await subprocess_runner.run_subprocess(coms)
+            ])
 
-            coms = [
+            await message.edit(content="Upscaling...")
+            out, stdout, stderr = await subprocess_runner.run_subprocess([
                 "ffmpeg",
                 "-i",
                 tempname,
@@ -279,9 +279,7 @@ class lowQual(commands.Cog):
                 # "scale=-2:1080:flags=neighbor",
                 "scale=-2:1080",
                 filename,
-            ]
-            await message.edit(content="Upscaling...")
-            out, stdout, stderr = await subprocess_runner.run_subprocess(coms)
+            ])
             file_handler.delete_file(tempname)
         else:
             await ctx.send(

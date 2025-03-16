@@ -8,6 +8,8 @@ from datetime import datetime
 from functools import partial, wraps
 from io import BytesIO
 from pathlib import Path
+import aiohttp
+import re
 
 from disnake.ext import commands, tasks
 
@@ -74,14 +76,23 @@ class MyTasks(commands.Cog):
 
     @tasks.loop(hours=24)
     async def update_ytdlp(self):
+        print("Checking yt-dlp version...")
         _out, stdout, _stderr = await subprocess_runner.run_subprocess(
-            "poetry show -l | grep yt-dlp", shell=True
+            "poetry show yt-dlp", shell=True
         )
         # channel = self.client.get_channel(976064150935576596)
         resp = stdout.decode("utf-8")
-        clean_list = [x for x in resp.split(" ") if x != ""]
-        curr_ver = clean_list[1]
-        latest_ver = clean_list[2]
+        try:
+            curr_ver = re.search(r"(version +: )(\S+)", resp).group(2)
+        except:
+            print("Could not find yt-dlp version.")
+            return
+
+        async with aiohttp.ClientSession() as session:
+            async with session.get("https://pypi.org/pypi/yt-dlp/json") as resp:
+                data = await resp.json()
+        latest_ver = data.get("info", {}).get("version")
+
         if curr_ver == latest_ver:
             print(f"yt-dlp is up to date! ({curr_ver})")
         else:
