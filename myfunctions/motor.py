@@ -23,7 +23,7 @@ class MotorDbManager(commands.Cog):
                 await self.motor_client.admin.command("ping")
                 print("MongoDB connection success!")
             except Exception as e:
-                print(e)
+                print(f"Tried to ping MongoDB but got this error instead: \n{e}")
         else:
             print("MotorDB already started")
 

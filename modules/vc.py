@@ -500,7 +500,7 @@ class Vc(commands.Cog):
         start_time = time.time()
         tasks = []
 
-        coms = [
+        tasks.append(subprocess_runner.run_subprocess([
             "yt-dlp",
             "-f",
             "bestaudio",
@@ -508,11 +508,10 @@ class Vc(commands.Cog):
             "--force-ipv4",
             "--no-warnings",
             url,
-        ]
-        tasks.append(subprocess_runner.run_subprocess(coms))
+        ]))
 
         if title is None:
-            coms = [
+            tasks.append(subprocess_runner.run_subprocess([
                 "yt-dlp",
                 "-f",
                 "bestaudio",
@@ -520,8 +519,7 @@ class Vc(commands.Cog):
                 "--force-ipv4",
                 "--no-warnings",
                 url,
-            ]
-            tasks.append(subprocess_runner.run_subprocess(coms))
+            ]))
 
         gathered = await asyncio.gather(*tasks)
         direct_url = gathered[0][1].decode("utf-8").splitlines()[0]
@@ -573,7 +571,7 @@ class Vc(commands.Cog):
                 ctx.guild.id
             ] = 0  # temporarily adds to this dict to let bot now the server is playing music
         else:
-            coms = [
+            _proc, stdout, _stderr = await subprocess_runner.run_subprocess([
                 "yt-dlp",
                 "-f",
                 "bestaudio",
@@ -581,8 +579,7 @@ class Vc(commands.Cog):
                 "--force-ipv4",
                 "--no-warnings",
                 url,
-            ]
-            _proc, stdout, _stderr = await subprocess_runner.run_subprocess(coms)
+            ])
             title = stdout.decode("utf-8").splitlines()[0]
             try:
                 self.temp_servers_playing[ctx.guild.id] += 1
@@ -659,26 +656,10 @@ class Vc(commands.Cog):
 
     @commands.command(aliases=["ultrakill"])
     async def sam(self, ctx, *, msg):
-        file_path = f"sam/{uuid.uuid4()}.wav"
-        coms = ["sam/sam", "-wav", file_path, msg]
-        try:
-            await asyncio.wait_for(subprocess_runner.run_subprocess(coms), timeout=10)
-        except asyncio.TimeoutError:
-            coms = "ps -aef | grep sam/sam | awk '{print $2}' | xargs kill -9 $1"
-            try:
-                await subprocess_runner.run_subprocess(coms, shell=True)
-            except subprocess_runner.SubprocessError:
-                pass
-            await ctx.send("Timed out. I can't do it :(")
-        except subprocess_runner.SubprocessError as e:
-            if e.err == 1:
-                await ctx.send("I don't wtf you want me to say. Try again.")
-            elif e.err == -6:
-                await ctx.send(
-                    "Whoops. That's a little too much text, buckaroo. Try again."
-                )
-            else:
-                await ctx.send(f"Error ({e.err}): {e.message}"[:2000])
+        file_path = f"sam/{uuid.uuid4()}.wav"        
+        await subprocess_runner.run_subprocess([
+            "node", "sam/bundle.js", "--wav", file_path, msg
+        ])
         await self.vcplay(ctx, file_path, delete_file=True, custom_name="sam.wav")
 
     @commands.command(aliases=["tt"])

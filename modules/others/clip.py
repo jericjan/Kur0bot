@@ -35,15 +35,6 @@ class Clip(commands.Cog):
         end = end.replace(";", ":")
 
         message = await ctx.send("Fetching url...")
-        coms = [
-            "yt-dlp",
-            "-g",
-            "-f",
-            "b",
-            "--youtube-skip-dash-manifest",
-            "--no-warnings",
-            link,
-        ]
         startsplit = start.split(":")
         shour = startsplit[0]
         sminute = startsplit[1]
@@ -79,7 +70,15 @@ class Clip(commands.Cog):
                 )
                 + timedelta(seconds=30)
             )
-        out, stdout, stderr = await subprocess_runner.run_subprocess(coms)
+        out, stdout, stderr = await subprocess_runner.run_subprocess([
+            "yt-dlp",
+            "-g",
+            "-f",
+            "b",
+            "--youtube-skip-dash-manifest",
+            "--no-warnings",
+            link,
+        ])
         dirlinks = stdout.decode("utf-8").split("\n")
         vid = dirlinks[0]
         if vid.endswith("index.m3u8"):
@@ -193,7 +192,7 @@ class Clip(commands.Cog):
 
         # remuxes so keyframes work, magic.
         coms = [
-            "ffmpeg-git/ffmpeg",
+            "ffmpeg",
             "-i",
             f"{filename}_temp0.mp4",
             "-c:v",
@@ -340,15 +339,6 @@ class Clip(commands.Cog):
             return
 
         message = await ctx.send("Fetching url...")
-        coms = [
-            "yt-dlp",
-            "-g",
-            "-f",
-            "b",
-            "--youtube-skip-dash-manifest",
-            "--no-warnings",
-            link,
-        ]
         startsplit = start.split(":")
         shour = startsplit[0]
         sminute = startsplit[1]
@@ -384,7 +374,15 @@ class Clip(commands.Cog):
                 )
                 + timedelta(seconds=30)
             )
-        out, stdout, stderr = await subprocess_runner.run_subprocess(coms)
+        out, stdout, stderr = await subprocess_runner.run_subprocess([
+            "yt-dlp",
+            "-g",
+            "-f",
+            "b",
+            "--youtube-skip-dash-manifest",
+            "--no-warnings",
+            link,
+        ])
         dirlinks = stdout.decode("utf-8").split("\n")
         vid = dirlinks[0]
 
@@ -483,7 +481,7 @@ class Clip(commands.Cog):
 
         # remuxes so keyframes work, magic.
         coms = [
-            "ffmpeg-git/ffmpeg",
+            "ffmpeg",
             "-i",
             f"{filename}_temp0.mp4",
             "-c:v",

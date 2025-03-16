@@ -102,16 +102,13 @@ class Download(commands.Cog):
     ):  # reddit, facebook, instagram, tiktok, yt
         link = await msg_link_grabber.grab_link(ctx, link)
         if "reddit.com" in link or "v.redd.it" in link:
-            cookiecoms = [
+            cookieproc, stdout, stderr = await subprocess_runner.run_subprocess([
                 "gpg",
                 "--pinentry-mode=loopback",
                 "--passphrase",
                 os.getenv("ENCRYPTPASSPHRASE"),
                 "cookies/seventina.gpg",
-            ]
-            cookieproc, stdout, stderr = await subprocess_runner.run_subprocess(
-                cookiecoms
-            )
+            ])
             message = await ctx.send("Downloading...")
             coms = [
                 "yt-dlp",
@@ -202,16 +199,13 @@ class Download(commands.Cog):
         elif "facebook.com" in link:
             message = await ctx.send("Downloading...")
             # encypted with `gpg -c --pinentry-mode=loopback --passphrase 'pass' your-file.txt`
-            cookiecoms = [
+            cookieproc, stdout, stderr = await subprocess_runner.run_subprocess([
                 "gpg",
                 "--pinentry-mode=loopback",
                 "--passphrase",
                 os.getenv("ENCRYPTPASSPHRASE"),
                 "cookies/iofifteen.gpg",
-            ]
-            cookieproc, stdout, stderr = await subprocess_runner.run_subprocess(
-                cookiecoms
-            )
+            ])
             coms = [
                 "yt-dlp",
                 "-f",
@@ -303,16 +297,13 @@ class Download(commands.Cog):
             file_handler.delete_file(filename)
         elif "instagram.com" and "/stories/" in link:
             message = await ctx.send("Downloading...")
-            cookiecoms = [
+            cookieproc, stdout, stderr = await subprocess_runner.run_subprocess([
                 "gpg",
                 "--pinentry-mode=loopback",
                 "--passphrase",
                 os.getenv("ENCRYPTPASSPHRASE"),
                 "cookies/morbius.gpg",
-            ]
-            cookieproc, stdout, stderr = await subprocess_runner.run_subprocess(
-                cookiecoms
-            )
+            ])
             coms = [
                 "yt-dlp",
                 "-f",

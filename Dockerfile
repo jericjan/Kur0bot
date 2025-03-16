@@ -26,6 +26,6 @@ COPY --from=builder ${VIRTUAL_ENV} ${VIRTUAL_ENV}
 COPY . ./app/
 
 RUN apt-get -y update
-RUN apt-get -y install git
+RUN apt-get -y install git ffmpeg gpg nodejs
 
 CMD ["python", "-u", "app/main.py"]
