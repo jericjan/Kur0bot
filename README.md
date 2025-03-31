@@ -25,21 +25,24 @@ To do list:
 - replace synchronous requests with asyncio w/ aiohttp.ClientSession()
 - use asynchronous database for storing user data
 
-Notes:
+# Environment variables:
+- `TOKEN`: Discord bot token
+- `YT_API_KEY`: YouTube API key
+- `PEBBLE_EMAIL`: Pebblehost email
+- `PEBBLE_PASS`: Pebblehost pass
+- `RCON_PASS`: Minecraft RCON thing
+- `ENCRYPTPASSPHRASE`: Passphrase for encrypting cookies
+- `SAUCENAO_KEY`: SauceNAO API key
+- `PORT`: Port used for the mini Flask server that temporarily hosts files that are too large to send via Discord
+- `OSU_ID`: osu! client ID
+- `OSU_SECRET`: osu! client secret
+- `MONGO_DB_PASS`: MongoDB connection pass (You should prolly also change the rest of the connection url in `myfunctions/motor.py`)
+- `CUSTOM_SEARCH_KEY`: Google customsearch API key
+- `PYTHONASYNCIODEBUG`: Asyncio debug mode (1 or 0)
+- `SERPAPI_KEY`: Serpapi API key
 
-- in root folder, there is folder `ffmpeg-git` that contains latest release of git master from https://johnvansickle.com/ffmpeg/
-
-- in root folder, there is folder `rclone` which contains rclone inside
-
-
-environment variables:
--  "TOKEN":
--  "YT_API_KEY":
- - "PEBBLE_EMAIL": 
- - "PEBBLE_PASS": 
- - "RCON_PASS": 
--  "RCLONE_CONFIG_URL": 
--  "FB_ACCESS_TOKEN": 
--  "ENCRYPTPASSPHRASE": 
--  "SAUCENAO_KEY": 
-- "RSA_KEY":
+# Docker instructions
+1. Build the image `docker build -t image-name-here .`
+2. Change the `image` in `docker-compose.yml` to match your chosen image name
+3. Create an `.env` file in the project folder and fill it in with those env vars (good luck)
+3. Run `docker-compose run -d map-files`
