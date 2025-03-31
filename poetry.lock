@@ -1135,7 +1135,7 @@ multidict = ">=4.0"
 
 [[package]]
 name = "yt-dlp"
-version = "2025.2.19"
+version = "2025.3.27"
 description = "A feature-rich command-line audio/video downloader"
 category = "main"
 optional = false
@@ -1143,12 +1143,12 @@ python-versions = ">=3.9"
 
 [package.extras]
 build = ["build", "hatchling", "pip", "setuptools (>=71.0.2)", "wheel"]
-curl-cffi = ["curl-cffi (>=0.5.10,<0.6.0 || >=0.7.0,<0.7.2)", "curl-cffi (==0.5.10)"]
+curl-cffi = ["curl-cffi (>=0.5.10,<0.6.0 || >=0.10.0,<0.11)"]
 default = ["brotli", "brotlicffi", "certifi", "mutagen", "pycryptodomex", "requests (>=2.32.2,<3)", "urllib3 (>=1.26.17,<3)", "websockets (>=13.0)"]
-dev = ["autopep8 (>=2.0,<3.0)", "pre-commit", "pytest-rerunfailures (>=14.0,<15.0)", "pytest (>=8.1,<9.0)", "ruff (>=0.9.0,<0.10.0)"]
+dev = ["autopep8 (>=2.0,<3.0)", "pre-commit", "pytest-rerunfailures (>=14.0,<15.0)", "pytest (>=8.1,<9.0)", "ruff (>=0.11.0,<0.12.0)"]
 pyinstaller = ["pyinstaller (>=6.11.1)"]
 secretstorage = ["cffi", "secretstorage"]
-static-analysis = ["autopep8 (>=2.0,<3.0)", "ruff (>=0.9.0,<0.10.0)"]
+static-analysis = ["autopep8 (>=2.0,<3.0)", "ruff (>=0.11.0,<0.12.0)"]
 test = ["pytest-rerunfailures (>=14.0,<15.0)", "pytest (>=8.1,<9.0)"]
 
 [[package]]
@@ -1166,7 +1166,7 @@ testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "flake8 
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.9,<4.0"
-content-hash = "7f65051d63a6e59c15901021ec8b830d328a2c585db1edede936e980e79a924f"
+content-hash = "3e83a3a8e96119ccab05e304051b3210f32d323cb9527ffd2d2e5842c0801cf2"
 
 [metadata.files]
 aiohttp = [
@@ -2265,8 +2265,8 @@ yarl = [
     {file = "yarl-1.8.1.tar.gz", hash = "sha256:af887845b8c2e060eb5605ff72b6f2dd2aab7a761379373fd89d314f4752abbf"},
 ]
 yt-dlp = [
-    {file = "yt_dlp-2025.2.19-py3-none-any.whl", hash = "sha256:3ed218eaeece55e9d715afd41abc450dc406ee63bf79355169dfde312d38fdb8"},
-    {file = "yt_dlp-2025.2.19.tar.gz", hash = "sha256:f33ca76df2e4db31880f2fe408d44f5058d9f135015b13e50610dfbe78245bea"},
+    {file = "yt_dlp-2025.3.27-py3-none-any.whl", hash = "sha256:bef4105af0f25c13c1a505daf46142af45d9312dc2c3553651db083e6860e641"},
+    {file = "yt_dlp-2025.3.27.tar.gz", hash = "sha256:30cb078f803b539b2a66521c5ec86d328c07f74aeca9440069e58619c299cf15"},
 ]
 zipp = [
     {file = "zipp-3.9.0-py3-none-any.whl", hash = "sha256:972cfa31bc2fedd3fa838a51e9bc7e64b7fb725a8c00e7431554311f180e9980"},
