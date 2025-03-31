@@ -26,11 +26,12 @@ COPY --from=builder ${VIRTUAL_ENV} ${VIRTUAL_ENV}
 COPY . ./app/
 
 RUN apt-get -y update
-RUN apt-get -y install git ffmpeg gpg nodejs mono-devel xz-utils
+RUN apt-get -y install --no-install-recommends ffmpeg gpg nodejs mono-runtime xz-utils
 
 ADD https://github.com/arcusmaximus/YTSubConverter/releases/download/1.6.3/YTSubConverter-Linux.tar.xz /app/ytsubconverter/a.tar.xz
-RUN tar -xf /app/ytsubconverter/a.tar.xz -C /app/ytsubconverter
-RUN rm /app/ytsubconverter/a.tar.xz
-
+RUN tar -xf /app/ytsubconverter/a.tar.xz -C /app/ytsubconverter && \
+rm /app/ytsubconverter/a.tar.xz && \
+apt-get purge -y --auto-remove xz-utils && \
+rm -rf /var/lib/apt/lists/*
 
 CMD ["python", "-u", "app/main.py"]
