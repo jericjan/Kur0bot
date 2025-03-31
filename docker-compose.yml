@@ -3,9 +3,10 @@ services:
     image: kur0bot  # Replace with your Docker image name
     entrypoint: ["/bin/sh", "-c", "sleep infinity"]
   map-files:
-    image: kur0bot  # Replace with your Docker image name
+    image: kur0shite/kur0bot  # Replace with your Docker image name
     volumes:
       - ./modules:/app/modules
       - ./myfunctions:/app/myfunctions
       - ./pyproject.toml:/app/pyproject.toml
       - ./poetry.lock:/app/poetry.lock
+      - ./.env:/app/.env
