@@ -106,7 +106,7 @@ exclude_files = [
     "myfunctions/async_wrapper.py",
 ]
 
-for folder in ["modules", "myfunctions"]:
+for folder in ["myfunctions", "modules"]:
     for file in Path(folder).rglob("*.py"):
         if str(file) not in exclude_files:
             module = str(file.parent).replace("/", ".") + "." + file.stem

@@ -7,9 +7,9 @@ from disnake.ext import commands
 class Questionable(commands.Cog):
     def __init__(self, client):
         self.client = client
-        self.dashboard_db = self.client.get_cog("MotorDbManager").motor_client[
-            "dashboard"
-        ]
+
+    def get_dashboard_category(self, name):
+        return self.client.get_cog("MotorDbManager").motor_client["dashboard"][name]
 
     @commands.user_command(name="Segg")
     async def user_sex(self, inter, user: disnake.User):
@@ -27,7 +27,7 @@ class Questionable(commands.Cog):
 
         em = disnake.Embed(title="Sex", description=desc)
         db_man = self.client.get_cog("MotorDbManager")
-        doc = await db_man.get_random(self.dashboard_db["sex-gifs"])
+        doc = await db_man.get_random(self.get_dashboard_category("sex-gifs"))
         url = doc["url"]
         # gifs = [
         # "https://cdn.discordapp.com/attachments/1210367093338415164/1315511944563920947/seg.gif",
@@ -50,7 +50,7 @@ class Questionable(commands.Cog):
         # ]
 
         db_man = self.client.get_cog("MotorDbManager")
-        doc = await db_man.get_random(self.dashboard_db["sex-gifs"])
+        doc = await db_man.get_random(self.get_dashboard_category("sex-gifs"))
         url = doc["url"]
         await ctx.send(f"|| {url} ||")
 
@@ -78,7 +78,7 @@ class Questionable(commands.Cog):
         # "https://cdn.discordapp.com/attachments/1201051292198518846/1315513265517760592/SPOILER_mafuyu.gif",
         # ]
         db_man = self.client.get_cog("MotorDbManager")
-        doc = await db_man.get_random(self.dashboard_db["footjob-gifs"])
+        doc = await db_man.get_random(self.get_dashboard_category("footjob-gifs"))
         url = doc["url"]
         em.set_image(url=url)
         await inter.response.send_message(embed=em)
@@ -91,7 +91,7 @@ class Questionable(commands.Cog):
         # ]
 
         db_man = self.client.get_cog("MotorDbManager")
-        doc = await db_man.get_random(self.dashboard_db["footjob-gifs"])
+        doc = await db_man.get_random(self.get_dashboard_category("footjob-gifs"))
         url = doc["url"]
 
         # gif = (
