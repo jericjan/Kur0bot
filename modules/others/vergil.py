@@ -311,7 +311,7 @@ class Vergil(commands.Cog):
 
         # videowriter
         res = (w, h)
-        fourcc = cv2.VideoWriter_fourcc(*"mp4v")
+        fourcc = cv2.VideoWriter.fourcc(*"mp4v")
         random_uuid = uuid.uuid4()
         os.makedirs(f"videos/vergil_greenscreen/{random_uuid}/", exist_ok=True)
         out = cv2.VideoWriter(

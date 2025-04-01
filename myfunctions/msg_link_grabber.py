@@ -1,4 +1,8 @@
-async def grab_link(ctx, link):
+from typing import TYPE_CHECKING, Any, Optional
+if TYPE_CHECKING:
+    from disnake.ext import commands
+
+async def grab_link(ctx: commands.Context[Any], link: Optional[str] = None):
     if link == None:
         print(ctx.message.attachments)  # a list
         print(ctx.message.reference)
@@ -8,6 +12,9 @@ async def grab_link(ctx, link):
         elif ctx.message.reference is not None:  # message is replying
             print("is reply")
             id = ctx.message.reference.message_id
+            if id is None:
+                print("Message reference has no ID")
+                return
             msg = await ctx.channel.fetch_message(id)
             if msg.attachments:  # if replied has image
                 link = msg.attachments[0].url

@@ -5,10 +5,12 @@ import pymongo
 from disnake.ext import commands
 from motor.motor_asyncio import AsyncIOMotorClient
 from pymongo.server_api import ServerApi
-
+from typing import TYPE_CHECKING, Any
+if TYPE_CHECKING:
+    from motor.motor_asyncio import AsyncIOMotorCollection
 
 class MotorDbManager(commands.Cog):
-    def __init__(self, client):
+    def __init__(self, client: commands.Bot):
         self.client = client
 
         self.motor_client = False
@@ -27,23 +29,19 @@ class MotorDbManager(commands.Cog):
         else:
             print("MotorDB already started")
 
-    def get_collection_for_server(self, db_name, guild_id):
-        return self.motor_client[str(db_name)][str(guild_id)]
+    def get_collection_for_server(self, db_name: str, guild_id: str):
+        if not isinstance(self.motor_client, bool):
+            return self.motor_client[str(db_name)][str(guild_id)]
 
-    async def get_latest_doc(self, collec):
-        res = await collec.find().sort("_id", pymongo.DESCENDING).to_list(length=1)
+    async def get_latest_doc(self, collec: AsyncIOMotorCollection):
+        res: list[Any]  = await collec.find().sort("_id", pymongo.DESCENDING).to_list(length=1)  # type: ignore
         return res[0]
 
-    async def inc_user_stat(self, coll, usr_id, stat_key, inc_value):
-        await coll.update_one(
-            {"user_id": usr_id}, {"$inc": {f"stats.{stat_key}": inc_value}}, upsert=True
-        )
-
-    async def get_random(self, coll):
+    async def get_random(self, coll: AsyncIOMotorCollection):
         """Fucky way because sample aggregation is weird for small data"""
         gif_count = await coll.count_documents({})
         chosen_idx = random.randint(1, gif_count)
-        limited_list = await coll.find({}).to_list(chosen_idx)
+        limited_list: list[Any] = await coll.find({}).to_list(chosen_idx)  # type: ignore
         return limited_list[-1]
 
     # def merge_dicts(self, dict1, dict2):
@@ -51,5 +49,5 @@ class MotorDbManager(commands.Cog):
     # return merged_dict
 
 
-def setup(client):
+def setup(client: commands.Bot):
     client.add_cog(MotorDbManager(client))

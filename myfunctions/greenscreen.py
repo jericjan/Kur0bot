@@ -1,18 +1,20 @@
 import os
 import shutil
 import time
+from typing import Any
 import uuid
 
 import aiohttp
 import cv2
 import disnake
+from disnake.ext import commands
 import numpy as np
 
 from myfunctions import subprocess_runner
 
 
 class GreenScreener:
-    def __init__(self, image, cap, out):
+    def __init__(self, image: cv2.typing.MatLike, cap: cv2.VideoCapture, out: cv2.VideoWriter):
         # place custom init vars here
         self.image = image
         self.cap = cap
@@ -44,7 +46,7 @@ class GreenScreener:
     def loop_extras(self):
         pass
 
-    def transparent_paste(self, bg, fg):
+    def transparent_paste(self, bg: cv2.typing.MatLike, fg: cv2.typing.MatLike) -> cv2.typing.MatLike:
         bg = bg[:, :, :3]
         alpha_channel = fg[:, :, 3] / 255  # convert from 0-255 to 0.0-1.0
         overlay_colors = fg[:, :, :3]
@@ -60,7 +62,7 @@ class GreenScreener:
 
 class GreenScreenerHandler:
     def __init__(
-        self, ctx, link, base_dir, height, width, fps, final_filename, file_prefix
+        self, ctx: commands.Context[Any], link: str, base_dir: str, height: int, width: int, fps: float, final_filename: str, file_prefix: str
     ):
         self.ctx = ctx
         self.debug_mode = False
@@ -73,7 +75,6 @@ class GreenScreenerHandler:
         # unique uuid
         self.random_uuid = uuid.uuid4()
 
-        self.image = None
         self.mid_time = None
 
         self.cap = cv2.VideoCapture(
@@ -81,8 +82,8 @@ class GreenScreenerHandler:
         )
 
         # videowriter
-        self.res = (width, height)
-        fourcc = cv2.VideoWriter_fourcc(*"mp4v")
+        self.res: cv2.typing.Size = (width, height)
+        fourcc = cv2.VideoWriter.fourcc(*"mp4v")
 
         os.makedirs(f"{base_dir}{self.random_uuid}/", exist_ok=True)
 
@@ -92,8 +93,8 @@ class GreenScreenerHandler:
 
     async def start(self):
         vergil_status = await self.ctx.send("Getting ready...")
-        await self.generate_user_img()
-        g_screener = GreenScreener(self.image, self.cap, self.out)
+        image = await self.generate_user_img()
+        g_screener = GreenScreener(image, self.cap, self.out)  # type: ignore
         self.log("Pre stuff")
         await g_screener.start()
         self.log("Green screening done", mid=True)
@@ -143,7 +144,7 @@ class GreenScreenerHandler:
             "1:a:0",
             vid1_h264,
         ]
-        out, stdout, stderr = await subprocess_runner.run_subprocess(coms)
+        await subprocess_runner.run_subprocess(coms)
         self.log("Converted to H264", mid=True)
 
         return vid1_h264
@@ -153,12 +154,12 @@ class GreenScreenerHandler:
             async with session.get(self.link) as resp:
                 byte_content = await resp.read()
         user_image = cv2.imdecode(np.array(bytearray(byte_content), dtype=np.uint8), -1)
-        self.image = cv2.resize(user_image, self.res)
+        return cv2.resize(user_image, self.res)
 
-    def log(self, msg, mid=False):
+    def log(self, msg: str, mid: bool =False):
         if self.debug_mode:
             if mid == False:
                 self.log_str += f"{msg}:\t{time.time()-self.start_time:.2f}\n"
-            else:
+            elif self.mid_time is not None:
                 self.log_str += f"{msg}:\t{time.time()-self.mid_time:.2f}\n"
         self.mid_time = time.time()

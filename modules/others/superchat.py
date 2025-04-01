@@ -1,3 +1,4 @@
+from typing import Any, Optional
 from disnake.ext import commands
 import disnake
 import os
@@ -231,7 +232,7 @@ class Superchat(commands.Cog):
 
     @commands.command(aliases=["akasupa", "supacha"])
     @commands.bot_has_permissions(manage_messages=True)
-    async def superchat(self, ctx, amount=None, *, message=None):
+    async def superchat(self, ctx: commands.Context[Any], amount: Optional[str] = None, *, message: Optional[str] = None):
         if ctx.message.attachments:  # if there are attachments
             attachment_type = ctx.message.attachments[0].content_type
             print(f"attachment is {attachment_type}")
