@@ -8,12 +8,13 @@ from aiolimiter import AsyncLimiter
 from datetime import datetime, timedelta
 from myfunctions import msg_link_grabber, subprocess_runner, file_handler
 from shlex import join as shjoin
+from typing import Any
 
 limiter = AsyncLimiter(1, 1)
 
 
 class lowQual(commands.Cog):
-    def __init__(self, client):
+    def __init__(self, client: commands.Bot):
         self.client = client
         self.pbar_list = []
 
@@ -30,7 +31,7 @@ class lowQual(commands.Cog):
 
     @commands.command(aliases=["shitify", "pixelize"])
     @commands.bot_has_permissions(manage_messages=True)
-    async def lowqual(self, ctx, link=None):
+    async def lowqual(self, ctx: commands.Context[Any], link=None):
         link = await msg_link_grabber.grab_link(ctx, link)
         print(link)
 
@@ -290,5 +291,5 @@ class lowQual(commands.Cog):
         file_handler.delete_file(filename)
 
 
-def setup(client):
+def setup(client: commands.Bot):
     client.add_cog(lowQual(client))

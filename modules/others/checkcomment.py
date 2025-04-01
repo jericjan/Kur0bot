@@ -6,11 +6,11 @@ from urllib.request import urlopen
 
 import aiohttp
 from disnake.ext import commands
-
+from typing import Any
 
 class CheckComment(commands.Cog):
     @commands.command()
-    async def checkcomment(self, ctx, link):
+    async def checkcomment(self, ctx: commands.Context[Any], link):
         comment_start_time = time.time()
         comment_end_time = comment_start_time + (60 * 5)
         community_comment = False
@@ -118,5 +118,5 @@ class CheckComment(commands.Cog):
             )
 
 
-def setup(client):
+def setup(client: commands.Bot):
     client.add_cog(CheckComment(client))

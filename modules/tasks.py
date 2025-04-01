@@ -17,7 +17,7 @@ from myfunctions import subprocess_runner
 
 
 class MyTasks(commands.Cog):
-    def __init__(self, client):
+    def __init__(self, client: commands.Bot):
         self.client = client
         self.delete_temp_files.start()
         self.update_ytdlp.start()
@@ -147,5 +147,5 @@ class MyTasks(commands.Cog):
         print("waiting 3...")
         await self.client.wait_until_ready()
 
-def setup(client):
+def setup(client: commands.Bot):
     client.add_cog(MyTasks(client))

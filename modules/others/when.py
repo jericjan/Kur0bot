@@ -5,7 +5,7 @@ import dateutil.parser as dp
 from disnake.ext import commands
 
 from myfunctions import msg_link_grabber
-
+from typing import Any
 
 class When(commands.Cog):
     async def grab_msg_time(self, msg):
@@ -13,7 +13,7 @@ class When(commands.Cog):
         return time.strftime("%b %-d, %Y - %I:%M:%S.%f %p %Z")
 
     @commands.command()
-    async def when(self, ctx, link=None):
+    async def when(self, ctx: commands.Context[Any], link=None):
         try:
             link = await msg_link_grabber.grab_link(ctx, link)
         except:
@@ -87,5 +87,5 @@ class When(commands.Cog):
                     f"Stream started at {epoch_stream_start}\nStream ended at {epoch_stream_end}\nStream was schedule to start at {epoch_stream_schedule}"
                 )
 
-def setup(client):
+def setup(client: commands.Bot):
     client.add_cog(When(client))

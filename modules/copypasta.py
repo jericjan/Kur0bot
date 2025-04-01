@@ -1,10 +1,10 @@
 from disnake.ext import commands
 import asyncio
-
+from typing import Any
 
 class Copypasta(commands.Cog):
     @commands.command()
-    async def glasses(self, ctx):
+    async def glasses(self, ctx: commands.Context[Any]):
         await ctx.send(
             "Glasses are really versatile. First, you can have glasses-wearing girls take them off"
             " and suddenly become beautiful, or have girls wearing glasses flashing those cute"
@@ -22,14 +22,14 @@ class Copypasta(commands.Cog):
         )
 
     @commands.command()
-    async def nene(self, ctx):
+    async def nene(self, ctx: commands.Context[Any]):
         await ctx.send(
             "Super Hyper Ultra Ultimate Deluxe Perfect Amazing Shining God 東方不敗 Master Ginga"
             " Victory Strong Cute Beautiful Galaxy Baby 無限 無敵 無双 NENECHI"
         )
 
     @commands.command()
-    async def nenelong(self, ctx):
+    async def nenelong(self, ctx: commands.Context[Any]):
         await ctx.send(
             "Super Hyper Ultra Ultimate Deluxe Perfect Amazing Shining God 東方不敗 Master Ginga"
             " Victory Strong Cute Beautiful Galaxy Baby 無限 無敵 無双 Nenechi, with 5 Hololive"
@@ -79,7 +79,7 @@ class Copypasta(commands.Cog):
         )
 
     @commands.command()
-    async def megasus(self, ctx):
+    async def megasus(self, ctx: commands.Context[Any]):
         await ctx.send(
             "I can't fucking believe this. Pink from 'Among Us' ruined my marriage.\n\nA couple"
             " months ago, my wife said she was going out for a ladies' night. She asked me to take"
@@ -139,7 +139,7 @@ class Copypasta(commands.Cog):
         )
 
     @commands.command()
-    async def stopamongus(self, ctx):
+    async def stopamongus(self, ctx: commands.Context[Any]):
         await ctx.send(
             "STOP POSTING ABOUT AMONG US! I'M TIRED OF SEEING IT! MY FRIENDS ON TIKTOK SEND ME"
             " MEMES, ON DISCORD IT'S FUCKING MEMES! I was in a server, right? and ALL OF THE"
@@ -151,7 +151,7 @@ class Copypasta(commands.Cog):
         )
 
     @commands.command()
-    async def confession(self, ctx):
+    async def confession(self, ctx: commands.Context[Any]):
         await ctx.send(
             "Fubuki! Fubuki FUBUKI FUBUKIIIIiiiiIIIIIIiiiiaaAAAaaAAa!!! UhUUUHHHHhhHHH! Unh!"
             " Uhhhhhh! FUBUKI FUBUKI FUBUKIIIIiiiiiaaaAAAuuUUUuh!!! Ah-Kunkakunka! Kunkakunka!"
@@ -174,7 +174,7 @@ class Copypasta(commands.Cog):
 
     @commands.command()
     @commands.bot_has_permissions(manage_messages=True)
-    async def wristworld(self, ctx):
+    async def wristworld(self, ctx: commands.Context[Any]):
         message = await ctx.send(
             "You’ve seen Miku on stage, but what about your wrist?"
         )
@@ -197,5 +197,5 @@ class Copypasta(commands.Cog):
         await ctx.message.delete()
 
 
-def setup(client):
+def setup(client: commands.Bot):
     client.add_cog(Copypasta(client))

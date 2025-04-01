@@ -11,12 +11,13 @@ from aiolimiter import AsyncLimiter
 import re
 from myfunctions import msg_link_grabber, file_handler, subprocess_runner
 import os
+from typing import Any
 
 limiter = AsyncLimiter(1, 1)
 
 
 class Resize(commands.Cog):
-    def __init__(self, client):
+    def __init__(self, client: commands.Bot):
         self.client = client
 
     def run_in_executor(f):
@@ -47,7 +48,7 @@ class Resize(commands.Cog):
 
     @commands.command()
     @commands.bot_has_permissions(manage_messages=True)
-    async def resize(self, ctx, width, height, link=None, algorithm=None):
+    async def resize(self, ctx: commands.Context[Any], width, height, link=None, algorithm=None):
         link = await msg_link_grabber.grab_link(ctx, link)
         async with aiohttp.ClientSession() as session:
             async with session.get(link) as r:
@@ -106,5 +107,5 @@ class Resize(commands.Cog):
             bruh.close()
 
 
-def setup(client):
+def setup(client: commands.Bot):
     client.add_cog(Resize(client))

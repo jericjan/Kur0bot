@@ -13,12 +13,13 @@ import shutil
 import time
 import shlex
 from myfunctions import msg_link_grabber, subprocess_runner, file_handler
+from typing import Any
 
 limiter = AsyncLimiter(1, 1)
 
 
 class Gif(commands.Cog):
-    def __init__(self, client):
+    def __init__(self, client: commands.Bot):
         self.client = client
         self.pbar_list = []
 
@@ -36,7 +37,7 @@ class Gif(commands.Cog):
 
     @commands.command(aliases=["vid2gif", "gifify"])
     @commands.bot_has_permissions(manage_messages=True)
-    async def gif(self, ctx, link=None):
+    async def gif(self, ctx: commands.Context[Any], link=None):
         link = await msg_link_grabber.grab_link(ctx, link)
         print(link)
 
@@ -129,7 +130,7 @@ class Gif(commands.Cog):
 
     @commands.command(aliases=["vid2gif2", "gifify2"])
     @commands.bot_has_permissions(manage_messages=True)
-    async def gif2(self, ctx, link=None, quality=None):
+    async def gif2(self, ctx: commands.Context[Any], link=None, quality=None):
         uuid_id = uuid.uuid4()
         if link:
             if (
@@ -282,5 +283,5 @@ class Gif(commands.Cog):
             )
 
 
-def setup(client):
+def setup(client: commands.Bot):
     client.add_cog(Gif(client))

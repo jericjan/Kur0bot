@@ -5,10 +5,10 @@ import disnake
 from disnake.ext import commands
 from dotenv import load_dotenv
 from lorem.text import TextLorem
-
+from typing import Any
 
 class AttachmentBulker:
-    def __init__(self, ctx, threshold):
+    def __init__(self, ctx: commands.Context[Any], threshold):
         self.ctx = ctx
         self.threshold = threshold
         self.counter = 0
@@ -29,13 +29,13 @@ class AttachmentBulker:
             self.msgs = ""
             self.counter = 0
 class Kur0only(commands.Cog):
-    def __init__(self, client):
+    def __init__(self, client: commands.Bot):
         self.client = client
         self.comm_list = []
 
     @commands.command()
     @commands.is_owner()
-    async def makeembed(self, ctx, title, description):
+    async def makeembed(self, ctx: commands.Context[Any], title, description):
         if description.startswith("https"):
             print("description is url")
             async with aiohttp.ClientSession() as session:
@@ -54,7 +54,7 @@ class Kur0only(commands.Cog):
 
     @commands.command()
     @commands.is_owner()
-    async def editembed(self, ctx, msg_id: int, title, description):
+    async def editembed(self, ctx: commands.Context[Any], msg_id: int, title, description):
         if description.startswith("https"):
             print("description is url")
             msg = await ctx.fetch_message(msg_id)
@@ -91,7 +91,7 @@ class Kur0only(commands.Cog):
 
     @commands.command()
     @commands.is_owner()
-    async def checkhelp(self, ctx):
+    async def checkhelp(self, ctx: commands.Context[Any]):
         public_commandss = self.get_public_commands()
         diffcomms = [c for c in public_commandss if c not in self.comm_list]
         diffcomms_joined = "\n".join(diffcomms)
@@ -116,7 +116,7 @@ class Kur0only(commands.Cog):
 
     @commands.command()
     @commands.is_owner()
-    async def ytbypass(self, ctx, text):
+    async def ytbypass(self, ctx: commands.Context[Any], text):
         letters = list(text)
         count = len(letters)
         lorem = TextLorem(wsep=" ", srange=(count, count))
@@ -127,25 +127,25 @@ class Kur0only(commands.Cog):
 
     @commands.command()
     @commands.is_owner()
-    async def dotenv(self, ctx):
+    async def dotenv(self, ctx: commands.Context[Any]):
         load_dotenv(override=True)
         await ctx.send("env variables reloaded!")
 
     @commands.command()
     @commands.is_owner()
-    async def editmsg(self, ctx, msg_id: disnake.Message, *, msg):
+    async def editmsg(self, ctx: commands.Context[Any], msg_id: disnake.Message, *, msg):
         await msg_id.edit(content=msg)
         await ctx.send("Done!")
 
     @commands.command()
     @commands.is_owner()
-    async def send(self, ctx, ch_id: disnake.TextChannel, *, msg):
+    async def send(self, ctx: commands.Context[Any], ch_id: disnake.TextChannel, *, msg):
         await ch_id.send(msg)
         await ctx.send("Done!")
 
     @commands.command()
     @commands.is_owner()
-    async def attachments(self, ctx, start=0):
+    async def attachments(self, ctx: commands.Context[Any], start=0):
         count = 0
         att_bulker = AttachmentBulker(ctx, 5)
         with open("paci_media_2.txt", encoding="utf-8") as f:
@@ -156,5 +156,5 @@ class Kur0only(commands.Cog):
                 await att_bulker.send(f"Part 2 #{count}: {line.split('?')[0]}")
             await att_bulker.clean()
 
-def setup(client):
+def setup(client: commands.Bot):
     client.add_cog(Kur0only(client))

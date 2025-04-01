@@ -7,11 +7,11 @@ import re
 import aiohttp
 
 from myfunctions import msg_link_grabber
-
+from typing import Any
 
 class Sauce(commands.Cog):
     @commands.command()
-    async def altsauce(self, ctx, link=None):
+    async def altsauce(self, ctx: commands.Context[Any], link=None):
         link = await msg_link_grabber.grab_link(ctx, link)
         print(link)
         api_key = os.getenv("SAUCENAO_KEY")
@@ -80,7 +80,7 @@ class Sauce(commands.Cog):
         await paginator.send(ctx)
 
     @commands.command(aliases=["findsauce", "getsauce"])
-    async def sauce(self, ctx, link=None):
+    async def sauce(self, ctx: commands.Context[Any], link=None):
 
         link = await msg_link_grabber.grab_link(ctx, link)
         print(link)
@@ -135,5 +135,5 @@ class Sauce(commands.Cog):
         await paginator.send(ctx)
 
 
-def setup(client):
+def setup(client: commands.Bot):
     client.add_cog(Sauce(client))

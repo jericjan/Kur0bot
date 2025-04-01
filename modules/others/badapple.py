@@ -1,19 +1,19 @@
 from disnake.ext import commands
 import disnake
 import asyncio
-
+from typing import Any
 
 class Badapple(commands.Cog):
-    def __init__(self, client):
+    def __init__(self, client: commands.Bot):
         self.client = client
 
-    def getemote(self, ctx, name):
+    def getemote(self, ctx: commands.Context[Any], name):
         return disnake.utils.get(self.client.emojis, name=name)
 
     @commands.command()
     @commands.cooldown(1.0, 60.0, commands.BucketType.guild)
     @commands.bot_has_permissions(manage_webhooks=True, manage_messages=True)
-    async def badapple(self, ctx, *, message=None):
+    async def badapple(self, ctx: commands.Context[Any], *, message=None):
         list1 = []
         list2 = []
         list3 = []
@@ -108,5 +108,5 @@ class Badapple(commands.Cog):
         await ctx.message.delete()
 
 
-def setup(client):
+def setup(client: commands.Bot):
     client.add_cog(Badapple(client))

@@ -3,10 +3,10 @@ from datetime import datetime, timedelta
 import disnake
 import pytz
 from disnake.ext import commands
-
+from typing import Any
 
 class TimeAndDates(commands.Cog):
-    def __init__(self, client):
+    def __init__(self, client: commands.Bot):
         self.client = client
 
     def remove_dupes(self, x):
@@ -75,7 +75,7 @@ class TimeAndDates(commands.Cog):
         return f"<t:{int(tz.timestamp())}:R>"
 
     @commands.command()
-    async def day(self, ctx):
+    async def day(self, ctx: commands.Context[Any]):
         tz_day_list = self.get_current_days()
         day_ends = self.get_date_boundary("end")
         day_starts = self.get_date_boundary("start")
@@ -93,5 +93,5 @@ class TimeAndDates(commands.Cog):
         )
 
 
-def setup(client):
+def setup(client: commands.Bot):
     client.add_cog(TimeAndDates(client))

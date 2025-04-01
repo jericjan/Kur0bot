@@ -5,14 +5,14 @@ from jisho_api.word import Word
 
 from modules.paginator import ButtonPaginator
 from myfunctions.async_wrapper import async_wrap
-
+from typing import Any
 
 class DeepL_commands(commands.Cog):
-    def __init__(self, client):
+    def __init__(self, client: commands.Bot):
         self.client = client
 
     @commands.command(aliases=["japanese"])
-    async def nihongo(self, ctx, *, text=None):
+    async def nihongo(self, ctx: commands.Context[Any], *, text=None):
         if text == None:
             if ctx.message.reference is not None:  # message is replying
                 print("is reply")
@@ -31,7 +31,7 @@ class DeepL_commands(commands.Cog):
         await inter.response.send_message(result)
 
     @commands.command(aliases=["english", "tr"])
-    async def eigo(self, ctx, *, text=None):
+    async def eigo(self, ctx: commands.Context[Any], *, text=None):
         if text == None:
             if ctx.message.reference is not None:  # message is replying
                 print("is reply")
@@ -57,7 +57,7 @@ class DeepL_commands(commands.Cog):
             return "I failed lmao"
 
     @commands.command(aliases=["german"])
-    async def doitsu(self, ctx, *, text=None):
+    async def doitsu(self, ctx: commands.Context[Any], *, text=None):
         if text == None:
             if ctx.message.reference is not None:  # message is replying
                 print("is reply")
@@ -81,7 +81,7 @@ class DeepL_commands(commands.Cog):
         return Word.request(word)
 
     @commands.command()
-    async def jisho(self, ctx, query=None):
+    async def jisho(self, ctx: commands.Context[Any], query=None):
         if query is None:
             replied_msg = ctx.message.reference
             if replied_msg is not None:  # message is replying
@@ -126,7 +126,7 @@ class DeepL_commands(commands.Cog):
         await paginator.send(ctx)
 
     @commands.command()
-    async def say(self, ctx, *, text=None):
+    async def say(self, ctx: commands.Context[Any], *, text=None):
         await ctx.message.delete()
         if text:
             await ctx.send(text)
@@ -134,5 +134,5 @@ class DeepL_commands(commands.Cog):
             await ctx.send("There's no text!")
 
 
-def setup(client):
+def setup(client: commands.Bot):
     client.add_cog(DeepL_commands(client))

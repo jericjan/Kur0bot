@@ -1,6 +1,6 @@
 import disnake
 from disnake.ext import commands
-from typing import TYPE_CHECKING, cast
+from typing import TYPE_CHECKING, cast, Any
 if TYPE_CHECKING:
     from myfunctions.motor import MotorDbManager
 
@@ -10,7 +10,7 @@ class DadJokes(commands.Cog):
 
     @commands.command()
     @commands.has_permissions(administrator=True)
-    async def dad(self, ctx):
+    async def dad(self, ctx: commands.Context[Any]):
         motor = cast(
             "MotorDbManager",
             self.client.get_cog("MotorDbManager")
@@ -32,5 +32,5 @@ class DadJokes(commands.Cog):
             await ctx.send(f"Dad jokes have been disabled")
 
 
-def setup(client):
+def setup(client: commands.Bot):
     client.add_cog(DadJokes(client))

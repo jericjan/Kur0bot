@@ -2,14 +2,14 @@ import asyncio
 
 import disnake
 from disnake.ext import commands
-
+from typing import Any
 
 class Pinglimit(commands.Cog):
-    def __init__(self, client):
+    def __init__(self, client: commands.Bot):
         self.client = client
 
     @commands.command()
-    async def pinglimit(self, ctx):
+    async def pinglimit(self, ctx: commands.Context[Any]):
         start = 9
         end = 11
 
@@ -23,5 +23,5 @@ class Pinglimit(commands.Cog):
             await asyncio.sleep(3)
 
 
-def setup(client):
+def setup(client: commands.Bot):
     client.add_cog(Pinglimit(client))

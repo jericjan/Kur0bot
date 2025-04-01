@@ -1,14 +1,14 @@
 from disnake.ext import commands
 
 import random
-
+from typing import Any
 
 class Coinflip(commands.Cog):
-    def __init__(self, client):
+    def __init__(self, client: commands.Bot):
         self.client = client
 
     @commands.command(aliases=["flip"])
-    async def coinflip(self, ctx, *, input):
+    async def coinflip(self, ctx: commands.Context[Any], *, input):
         input1 = input.lower()
         print(f"input is {input1}")
         choices = ["heads", "tails"]
@@ -22,5 +22,5 @@ class Coinflip(commands.Cog):
             await ctx.send(f"It's {result}! You lose!")
 
 
-def setup(client):
+def setup(client: commands.Bot):
     client.add_cog(Coinflip(client))

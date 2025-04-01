@@ -15,7 +15,7 @@ limiter = AsyncLimiter(1, 1)
 
 
 class Download(commands.Cog):
-    def __init__(self, client):
+    def __init__(self, client: commands.Bot):
         self.client = client
         self.pbar_list = []
 
@@ -455,5 +455,5 @@ class Download(commands.Cog):
                 file_handler.delete_file(filename)
 
 
-def setup(client):
+def setup(client: commands.Bot):
     client.add_cog(Download(client))

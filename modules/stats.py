@@ -1,6 +1,6 @@
 import disnake
 from disnake.ext import commands
-from typing import TYPE_CHECKING, cast
+from typing import TYPE_CHECKING, cast, Any
 if TYPE_CHECKING:
     from myfunctions.motor import MotorDbManager
 
@@ -22,14 +22,14 @@ class UserStat:
 
 
 class Stats(commands.Cog):
-    def __init__(self, client):
+    def __init__(self, client: commands.Bot):
         self.client = client
 
     def get_user(self, guild_id, author_id):
         return UserStat(self.client, guild_id, author_id)
 
     @commands.command()
-    async def stats(self, ctx, user: disnake.User = None):
+    async def stats(self, ctx: commands.Context[Any], user: disnake.User = None):
         if not user:
             user = ctx.author
 
@@ -77,5 +77,5 @@ class Stats(commands.Cog):
         await ctx.send(embed=em)
 
 
-def setup(client):
+def setup(client: commands.Bot):
     client.add_cog(Stats(client))

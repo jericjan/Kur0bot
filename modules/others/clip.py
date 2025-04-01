@@ -7,12 +7,12 @@ import math
 import os
 import subprocess
 from myfunctions import subprocess_runner, file_handler
-
+from typing import Any
 
 class Clip(commands.Cog):
     @commands.command()
     @commands.bot_has_permissions(manage_messages=True)
-    async def fastclip(self, ctx, link, start, end, *, filename):
+    async def fastclip(self, ctx: commands.Context[Any], link, start, end, *, filename):
         start = start.strip(" ")
         end = end.strip(" ")
         filename = filename.replace(" ", "_")
@@ -326,7 +326,7 @@ class Clip(commands.Cog):
     ############################################################################
     @commands.command()
     @commands.bot_has_permissions(manage_messages=True)
-    async def fastclipsub(self, ctx, link, start, end, *, filename):
+    async def fastclipsub(self, ctx: commands.Context[Any], link, start, end, *, filename):
         filename = filename.replace(" ", "_")
         if (
             re.match("\d{2}:\d{2}:\d{2}", start) != None
@@ -696,7 +696,7 @@ class Clip(commands.Cog):
 
     @commands.command()
     @commands.bot_has_permissions(manage_messages=True)
-    async def idclip(self, ctx, link, start, end, filename, id, id2):
+    async def idclip(self, ctx: commands.Context[Any], link, start, end, filename, id, id2):
 
         if (
             re.match("\d{2}:\d{2}:\d{2}", start) != None
@@ -926,7 +926,7 @@ class Clip(commands.Cog):
 
     @commands.command()
     @commands.bot_has_permissions(manage_messages=True)
-    async def clipaudio(self, ctx, link, start, end, filename, filetype=None):
+    async def clipaudio(self, ctx: commands.Context[Any], link, start, end, filename, filetype=None):
         if filetype not in ["mp3", "wav", "ogg"]:
             await ctx.send(
                 "Missing or no filetype provided. I can do mp3, wav, and ogg."
@@ -1035,7 +1035,7 @@ class Clip(commands.Cog):
 
     @commands.command()
     @commands.bot_has_permissions(manage_messages=True)
-    async def clip(self, ctx, link, start, end, filename):
+    async def clip(self, ctx: commands.Context[Any], link, start, end, filename):
 
         if (
             re.match("\d{2}:\d{2}:\d{2}", start) != None
@@ -1161,7 +1161,7 @@ class Clip(commands.Cog):
 
     @commands.command()
     @commands.bot_has_permissions(manage_messages=True)
-    async def fastclip3(self, ctx, link, start, end, filename):
+    async def fastclip3(self, ctx: commands.Context[Any], link, start, end, filename):
         message = await ctx.send("Fetching url...")
         startsplit = start.split(":")
         shour = startsplit[0]
@@ -1241,7 +1241,7 @@ class Clip(commands.Cog):
 
     @commands.command()
     @commands.bot_has_permissions(manage_messages=True)
-    async def fastclip2(self, ctx, link, start, end, filename):
+    async def fastclip2(self, ctx: commands.Context[Any], link, start, end, filename):
         message = await ctx.send("Fetching url...")
         startsplit = start.split(":")
         shour = startsplit[0]
@@ -1302,5 +1302,5 @@ class Clip(commands.Cog):
         file_handler.delete_file(f"{filename}.mp4")
 
 
-def setup(client):
+def setup(client: commands.Bot):
     client.add_cog(Clip(client))

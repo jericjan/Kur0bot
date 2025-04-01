@@ -5,7 +5,7 @@ import uuid
 import aiohttp
 import disnake
 from disnake.ext import commands
-from typing import TYPE_CHECKING, cast
+from typing import TYPE_CHECKING, cast, Any
 if TYPE_CHECKING:
     from modules.others.emote_sticker import EmoteSticker
 
@@ -14,7 +14,7 @@ class Kill(commands.Cog):
         self.client = client
 
     @commands.command(aliases=["ill"])
-    async def kill(self, ctx, *, target_user: disnake.Member):
+    async def kill(self, ctx: commands.Context[Any], *, target_user: disnake.Member):
 
         if ctx.author.id == target_user.id:
             await ctx.send(
@@ -58,7 +58,7 @@ class Kill(commands.Cog):
             await temp_emoji.delete()
 
     @kill.error
-    async def mem_error(self, ctx, error):
+    async def mem_error(self, ctx: commands.Context[Any], error):
         if isinstance(error, commands.MemberNotFound):
             name = error.argument
 
@@ -73,5 +73,5 @@ class Kill(commands.Cog):
             ctx._ignore_me_ = True
 
 
-def setup(client):
+def setup(client: commands.Bot):
     client.add_cog(Kill(client))
