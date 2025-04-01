@@ -1,17 +1,14 @@
-import asyncio
 import difflib
 import json
 import os
 import random
 import re
-import socket
-import subprocess
 import time
+from typing import TYPE_CHECKING, cast
 from datetime import datetime, timedelta, timezone
 from operator import attrgetter
 from pathlib import Path
 
-import aiohttp
 import disnake
 import numpy
 import pytz
@@ -19,6 +16,9 @@ from disnake.ext import commands
 from gtts import gTTS
 
 from myfunctions.async_wrapper import async_wrap
+
+if TYPE_CHECKING:
+    from myfunctions.motor import MotorDbManager
 
 sus_words = [
     "amongus",
@@ -60,7 +60,7 @@ deez_replies = [
 
 
 class Events(commands.Cog):
-    def __init__(self, client):
+    def __init__(self, client: commands.Bot):
         self.client = client
         self.start_time = self.client.start_time
         self.log = self.client.log
@@ -177,7 +177,7 @@ class Events(commands.Cog):
         ):
             return  # temp, disabled for #serious-chat
 
-        motor = self.client.get_cog("MotorDbManager")
+        motor = cast("MotorDbManager", self.client.get_cog("MotorDbManager"))
 
         toggles = motor.get_collection_for_server("toggles", message.guild.id)
 

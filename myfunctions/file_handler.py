@@ -1,41 +1,42 @@
 import io
 import os
+from typing import Any, Optional, Union
 from urllib.parse import quote
 
 import aiohttp
 import disnake
 import humanize
+from disnake.ext import commands
 
-
-def delete_file(filename):
+def delete_file(filename: str):
     if os.path.exists(filename):
         os.remove(filename)
     else:
         print(f"Could not delete {filename}. File not Found.")
 
 
-async def send_file(ctx, message, filename, custom_name=None):
+async def send_file(ctx: commands.Context[Any], message: disnake.Message, filename: str, custom_name: Optional[str] = None):
     if custom_name:
         clean_name = custom_name
     else:
         clean_name = filename.replace(",", "")
 
-    def bytes_to_mebibytes(data):
+    def bytes_to_mebibytes(data: Union[list[int], int]):
         if isinstance(data, list):
             return [bytes * 1024 * 1024 for bytes in data]
         else:
             return data * 1024 * 1024
 
-    boost_size_limits = bytes_to_mebibytes([25, 25, 50, 100])
+    boost_size_limits: list[int] = bytes_to_mebibytes([25, 25, 50, 100])  # type: ignore
     if ctx.guild is not None:
         boosts = ctx.guild.premium_tier
         try:
             limit = boost_size_limits[boosts]
         except:
             print("Couldn't find boosts")
-            limit = bytes_to_mebibytes(25)
+            limit: int = bytes_to_mebibytes(25)  # type: ignore
     else:
-        limit = bytes_to_mebibytes(25)
+        limit: int = bytes_to_mebibytes(25)  # type: ignore
     if isinstance(filename, io.BytesIO):
         filesize = filename.getbuffer().nbytes
     else:
@@ -45,7 +46,7 @@ async def send_file(ctx, message, filename, custom_name=None):
         try:
             await ctx.send(file=disnake.File(filename, filename=clean_name))
         except Exception as e:
-            await ctx.send(e)
+            await ctx.send(f"Failed to send: {e}")
     else:
         os.rename(filename, f"temp/{filename}")
         url_enc_filename = quote(filename)

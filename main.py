@@ -20,7 +20,7 @@ from dotenv import load_dotenv
 
 import disnake.ext
 from keep_alive import keep_alive
-from typing import Any, Union, Literal, Coroutine
+from typing import Any, Optional, Literal, Coroutine
 
 start_time = time.time()
 print(f"Running Disnake {disnake.__version__}")
@@ -74,7 +74,7 @@ client = commands.Bot(
 client.remove_command("help")
 
 
-async def log(text: str, print_text: Union[bool, None] =None):
+async def log(text: str, print_text: Optional[bool] = None):
     tz = pytz.timezone("Asia/Manila")
     curr_time = datetime.now(tz)
     clean_time = curr_time.strftime("%m/%d/%Y %I:%M %p")
@@ -131,7 +131,7 @@ async def common(ctx: disnake.ext.commands.Context[Any]):
 
 
 @client.command()
-async def stream(ctx: disnake.ext.commands.Context[Any], link: str, noembed: Union[Literal['noembed'], None]=None):
+async def stream(ctx: disnake.ext.commands.Context[Any], link: str, noembed: Optional[Literal['noembed']] = None):
     idd = None
     if link.startswith("https://youtu.be"):
         idd = link.split("/")[-1].split("?")[0]
