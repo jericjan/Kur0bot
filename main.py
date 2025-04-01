@@ -11,14 +11,16 @@ from pathlib import Path
 import aiohttp
 import dateutil.parser as dp
 import disnake
+import disnake.ext.commands
 import pytz
 import requests
 from disnake import Webhook
 from disnake.ext import commands
 from dotenv import load_dotenv
 
+import disnake.ext
 from keep_alive import keep_alive
-from running_check import check
+from typing import Any, Union, Literal, Coroutine
 
 start_time = time.time()
 print(f"Running Disnake {disnake.__version__}")
@@ -29,18 +31,18 @@ logging.getLogger("asyncio").setLevel(logging.DEBUG)
 load_dotenv()
 print(f"Asyncio Debug Mode: {os.getenv('PYTHONASYNCIODEBUG')}")
 
-def goodbye(a=None, b=None):
+def goodbye(a=None, b=None):  # type: ignore
     print("Exiting...")
     with open("log.txt", "a", encoding="utf-8") as f:
         f.write("Exiting...\n")
 
 
-atexit.register(goodbye)
-signal.signal(signal.SIGTERM, goodbye)
-signal.signal(signal.SIGINT, goodbye)
+atexit.register(goodbye)  # type: ignore
+signal.signal(signal.SIGTERM, goodbye)  # type: ignore
+signal.signal(signal.SIGINT, goodbye)  # type: ignore
 # signal.signal(signal.SIGKILL, goodbye)
 # signal.signal(signal.SIGSTOP, goodbye)
-signal.signal(signal.SIGHUP, goodbye)
+signal.signal(signal.SIGHUP, goodbye)  # type: ignore
 
 
 def rate_limit_check():
@@ -72,7 +74,7 @@ client = commands.Bot(
 client.remove_command("help")
 
 
-async def log(text, print_text=None):
+async def log(text: str, print_text: Union[bool, None] =None):
     tz = pytz.timezone("Asia/Manila")
     curr_time = datetime.now(tz)
     clean_time = curr_time.strftime("%m/%d/%Y %I:%M %p")
@@ -85,11 +87,9 @@ async def log(text, print_text=None):
         f.write(final)
 
 
-client.start_time = start_time
-client.log = log
-
-
-client.sus_on = False
+client.start_time = start_time  # type: ignore
+client.log = log  # type: ignore
+client.sus_on = False  # type: ignore
 
 
 print(f"{(time.time() - start_time):.2f}s - Importing Kur0's modules...")
@@ -119,116 +119,125 @@ print(f"{(time.time() - start_time):.2f}s - Done!")
 
 
 @client.before_invoke
-async def common(ctx):
+async def common(ctx: disnake.ext.commands.Context[Any]):
     text = (
-        f"k.{ctx.invoked_with} | {ctx.author.name}#{ctx.author.discriminator} | "
-        f'"{ctx.guild.name}" - "{ctx.channel.name}"'
+        f"k.{ctx.invoked_with} | {ctx.author.name}#{ctx.author.discriminator}"
     )
+    if ctx.guild:
+        text += f'| "{ctx.guild.name}"'
+    if not isinstance(ctx.channel, disnake.channel.DMChannel):
+        text += f' - "{ctx.channel.name}"'
     await log(str(text))
 
 
 @client.command()
-async def stream(ctx, link, noembed=None):
+async def stream(ctx: disnake.ext.commands.Context[Any], link: str, noembed: Union[Literal['noembed'], None]=None):
+    idd = None
     if link.startswith("https://youtu.be"):
         idd = link.split("/")[-1].split("?")[0]
-        wrong = False
     elif link.startswith("https://www.youtube.com/"):
         idd = link.split("=")[1].split("&")[0]
-        wrong = False
     else:
         await ctx.send("Not a YT link!", delete_after=3.0)
-        wrong = True
+        return
+    
+    if idd:
+        print(idd)
 
-    print(idd)
-    if not wrong:
-        params = {
-            "part": "liveStreamingDetails,snippet",
-            "key": os.getenv("YT_API_KEY"),
-            "id": idd,
-        }
+    yt_key = os.getenv("YT_API_KEY")
+    if yt_key is None:
+        # TODO: make this DRY
+        await ctx.send("This command does not work cuz the dev forgot to specify the YT_API_KEY")
+        return
 
-        url = "https://www.googleapis.com/youtube/v3/videos"
-        async with aiohttp.ClientSession() as session:
-            async with session.get(url, params=params) as resp:
-                r = await resp.json()
-        isotime = r["items"][0]["liveStreamingDetails"]["scheduledStartTime"]
-        title = r["items"][0]["snippet"]["title"]
-        author = r["items"][0]["snippet"]["channelTitle"]
+    params = {
+        "part": "liveStreamingDetails,snippet",
+        "key": yt_key,
+        "id": idd,
+    }
+
+    url = "https://www.googleapis.com/youtube/v3/videos"
+    async with aiohttp.ClientSession() as session:
+        async with session.get(url, params=params) as resp:
+            r = await resp.json()
+    isotime = r["items"][0]["liveStreamingDetails"]["scheduledStartTime"]
+    title = r["items"][0]["snippet"]["title"]
+    author = r["items"][0]["snippet"]["channelTitle"]
+    try:
+        thumbnail = r["items"][0]["snippet"]["thumbnails"]["maxres"]["url"]
+    except Exception:
         try:
-            thumbnail = r["items"][0]["snippet"]["thumbnails"]["maxres"]["url"]
+            thumbnail = r["items"][0]["snippet"]["thumbnails"]["standard"]["url"]
         except Exception:
             try:
-                thumbnail = r["items"][0]["snippet"]["thumbnails"]["standard"]["url"]
+                thumbnail = r["items"][0]["snippet"]["thumbnails"]["high"]["url"]
             except Exception:
                 try:
-                    thumbnail = r["items"][0]["snippet"]["thumbnails"]["high"]["url"]
+                    thumbnail = r["items"][0]["snippet"]["thumbnails"]["medium"][
+                        "url"
+                    ]
                 except Exception:
-                    try:
-                        thumbnail = r["items"][0]["snippet"]["thumbnails"]["medium"][
-                            "url"
-                        ]
-                    except Exception:
-                        thumbnail = r["items"][0]["snippet"]["thumbnails"]["default"][
-                            "url"
-                        ]
-        channelid = r["items"][0]["snippet"]["channelId"]
-        parsed_t = dp.parse(isotime)
-        t_in_seconds = parsed_t.timestamp()
-        reltime = f"<t:{str(t_in_seconds).split('.', maxsplit=1)[0]}:R>"
-        dttime = datetime.strptime(isotime, "%Y-%m-%dT%H:%M:%S%z")
-        with open(
-            "list.txt", "a", encoding="utf-8"
-        ) as f:  # add stream url and time to list.txt
-            f.write(f"{link} {parsed_t.strftime('%a %b %d %Y %H:%M:%S')}\n")
+                    thumbnail = r["items"][0]["snippet"]["thumbnails"]["default"][
+                        "url"
+                    ]
+    channelid = r["items"][0]["snippet"]["channelId"]
+    parsed_t = dp.parse(isotime)
+    t_in_seconds = parsed_t.timestamp()
+    reltime = f"<t:{str(t_in_seconds).split('.', maxsplit=1)[0]}:R>"
+    dttime = datetime.strptime(isotime, "%Y-%m-%dT%H:%M:%S%z")
+    with open(
+        "list.txt", "a", encoding="utf-8"
+    ) as f:  # add stream url and time to list.txt
+        f.write(f"{link} {parsed_t.strftime('%a %b %d %Y %H:%M:%S')}\n")
 
-        # a_file = open("list.txt", "r")
-        # a_file.close()
-        # ^^why did i have this? i'm reading the file then doing nothing???
+    # a_file = open("list.txt", "r")
+    # a_file.close()
+    # ^^why did i have this? i'm reading the file then doing nothing???
 
-        params2 = {
-            "part": "snippet",
-            "key": os.getenv("YT_API_KEY"),
-            "id": channelid,
-        }
+    params2: dict[str, Any] = {
+        "part": "snippet",
+        "key": yt_key,
+        "id": channelid,
+    }
 
-        url = "https://www.googleapis.com/youtube/v3/channels"
+    url = "https://www.googleapis.com/youtube/v3/channels"
+    async with aiohttp.ClientSession() as session:
+        async with session.get(url, params=params2) as resp:
+            r2 = await resp.json()
+    pfp = r2["items"][0]["snippet"]["thumbnails"]["default"]["url"]
+    e = disnake.Embed(title=title, timestamp=dttime, description=reltime, url=link)
+    e.set_author(
+        name=author,
+        icon_url=pfp,
+        url=f"https://www.youtube.com/channel/{channelid}",
+    )
+    e.set_image(url=thumbnail)
+    if noembed != "noembed":
         async with aiohttp.ClientSession() as session:
-            async with session.get(url, params=params2) as resp:
-                r2 = await resp.json()
-        pfp = r2["items"][0]["snippet"]["thumbnails"]["default"]["url"]
-        e = disnake.Embed(title=title, timestamp=dttime, description=reltime, url=link)
-        e.set_author(
-            name=author,
-            icon_url=pfp,
-            url=f"https://www.youtube.com/channel/{channelid}",
-        )
-        e.set_image(url=thumbnail)
-        if noembed != "noembed":
-            async with aiohttp.ClientSession() as session:
-                webhook = Webhook.from_url(
-                    "https://discord.com/api/webhooks/880667610323234877/oc31FGZ3SPfu7BCru4iOd2ULJA"
-                    "vyOdMi1SOaqNF58sHKBknFbdhK5zfqSZhxS4NZF9pU",
-                    session=session,
-                )
-                await webhook.send(embed=e)
-        else:
-            async with aiohttp.ClientSession() as session:
-                webhook = Webhook.from_url(
-                    "https://discord.com/api/webhooks/880667610323234877/oc31FGZ3SPfu7BCru4iOd2ULJA"
-                    "vyOdMi1SOaqNF58sHKBknFbdhK5zfqSZhxS4NZF9pU",
-                    session=session,
-                )
-                await webhook.send(f"{reltime} **{author}** - [{title}](<{link}>)")
-        await ctx.message.delete()
-        try:
-            client.loop.create_task(
-                run_at(parsed_t.replace(tzinfo=None), open_url(link), link)
+            webhook = Webhook.from_url(
+                "https://discord.com/api/webhooks/880667610323234877/oc31FGZ3SPfu7BCru4iOd2ULJA"
+                "vyOdMi1SOaqNF58sHKBknFbdhK5zfqSZhxS4NZF9pU",
+                session=session,
             )
-        except Exception as e:
-            await ctx.send(f"Error: {e}")
+            await webhook.send(embed=e)
+    else:
+        async with aiohttp.ClientSession() as session:
+            webhook = Webhook.from_url(
+                "https://discord.com/api/webhooks/880667610323234877/oc31FGZ3SPfu7BCru4iOd2ULJA"
+                "vyOdMi1SOaqNF58sHKBknFbdhK5zfqSZhxS4NZF9pU",
+                session=session,
+            )
+            await webhook.send(f"{reltime} **{author}** - [{title}](<{link}>)")
+    await ctx.message.delete()
+    try:
+        client.loop.create_task(
+            run_at(parsed_t.replace(tzinfo=None), open_url(link), link)
+        )
+    except Exception as e:
+        await ctx.send(f"Error: {e}")
 
 
-async def clear_list(url):
+async def clear_list(url: str):
     with open("list.txt", "r", encoding="utf-8") as a_file:
         lines = a_file.read().splitlines()
 
@@ -238,7 +247,7 @@ async def clear_list(url):
                 r.write(f"{i}\n")
 
 
-async def open_url(url):
+async def open_url(url: str):
     print(f"{url} is starting!")
     with open("log.txt", "a", encoding="utf-8") as f:
         f.write(f"open_url running {url}\n")
@@ -249,21 +258,24 @@ async def open_url(url):
         await asyncio.sleep(1)
 
     print("got guild!")
-    sched_ch = avi_guild.get_channel(879702977898741770)
+    sched_ch: disnake.TextChannel = avi_guild.get_channel(879702977898741770)  # type: ignore
     print("got channel!")
+    if sched_ch is None:
+        print("channel not found")
+        return
     messages = await sched_ch.history(limit=200).flatten()
     print("got messages")
 
     count = 0
     for msg in messages:
         if msg.reference is not None and not msg.is_system():
-
-            msg_id = int(msg.reference.message_id)
-            msgg = await sched_ch.fetch_message(msg_id)
-            for i in msgg.embeds:
-                if i.url == url:
-                    print(i.url)
-                    count += 1
+            if msg.reference.message_id is not None:
+                msg_id = int(msg.reference.message_id)
+                msgg = await sched_ch.fetch_message(msg_id)
+                for i in msgg.embeds:
+                    if i.url == url:
+                        print(i.url)
+                        count += 1
     print(f"{count} times")
 
     if count == 0:
@@ -280,30 +292,34 @@ async def open_url(url):
 
 @client.command()
 @commands.is_owner()
-async def sched(ctx, url):
-    sched_ch = client.get_guild(603147860225032192).get_channel(879702977898741770)
+async def sched(ctx: disnake.ext.commands.Context[Any], url: str):
+    if guild := client.get_guild(603147860225032192):
+        sched_ch: disnake.TextChannel = guild.get_channel(879702977898741770)  # type: ignore
+    else:
+        print("guild not found")
+        return
     messages = await sched_ch.history(limit=200).flatten()
 
     count = 0
     for msg in messages:
         if msg.reference is not None and not msg.is_system():
-
-            msg_id = int(msg.reference.message_id)
-            msgg = await sched_ch.fetch_message(msg_id)
-            for i in msgg.embeds:
-                if i.url == url:
-                    print(i.url)
-                    count += 1
+            if msg.reference.message_id is not None:
+                msg_id = int(msg.reference.message_id)
+                msgg = await sched_ch.fetch_message(msg_id)
+                for i in msgg.embeds:
+                    if i.url == url:
+                        print(i.url)
+                        count += 1
     print(f"{count} times")
 
 
 @client.command()
-async def tasks(ctx):
+async def tasks(ctx: disnake.ext.commands.Context[Any]):
     client.loop.set_debug(True)
 
 
 @client.command()
-async def ping(ctx):
+async def ping(ctx: disnake.ext.commands.Context[Any]):
     start_time = time.time()
     msg = await ctx.send(f"My ping is {round (client.latency * 1000)}ms")
     send_time = (time.time() - start_time) * 1000
@@ -312,13 +328,13 @@ async def ping(ctx):
     )
 
 
-async def wait_until(dt):
+async def wait_until(dt: datetime):
     # sleep until the specified datetime
     now = datetime.now()
     await asyncio.sleep((dt - now).total_seconds())
 
 
-async def run_at(dt, coro, url):
+async def run_at(dt: datetime, coro: Coroutine[Any, Any, None], url: str):
     now = datetime.now()
     nowstr = now.strftime("%m/%d/%Y %H:%M:%S")
     print(f"{url} is scheduled!")
@@ -335,7 +351,7 @@ def precheck():
     if not os.path.isfile("list.txt"):
         with open(
             "list.txt", "w", encoding="utf-8"
-        ) as file:  # creates txt if doesn't exist
+        ) as _:  # creates txt if doesn't exist
             pass
 
     with open("list.txt", "r", encoding="utf-8") as a_file:  # reads the txt
@@ -368,7 +384,10 @@ asyncio.run(log(f"Process ID: {proc_id}", False))
 loop = client.loop
 try:
     print(f"{(time.time() - start_time):.2f}s - Connecting to bot...")
-    loop.run_until_complete(client.start(os.getenv("TOKEN")))
+    if token := os.getenv("TOKEN"):
+        loop.run_until_complete(client.start(token))
+    else:
+        print("You have no TOKEN in your .env file")
 except KeyboardInterrupt:
     loop.run_until_complete(client.close())
     # cancel all tasks lingering

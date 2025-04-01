@@ -8,5 +8,7 @@ services:
       - ./modules:/app/modules
       - ./myfunctions:/app/myfunctions
       - ./pyproject.toml:/app/pyproject.toml
+      - ./main.py:/app/main.py
+      - ./keep_alive.py:/app/keep_alive.py
       - ./poetry.lock:/app/poetry.lock
       - ./.env:/app/.env
