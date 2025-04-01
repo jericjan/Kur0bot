@@ -11,6 +11,9 @@ from disnake.ext import commands
 
 from myfunctions import msg_link_grabber, subprocess_runner
 from myfunctions.greenscreen import GreenScreener, GreenScreenerHandler
+from typing import TYPE_CHECKING, cast
+if TYPE_CHECKING:
+    from myfunctions.filetype import FileTypeChecker
 
 
 class VergilGreenScreener(GreenScreener):
@@ -224,7 +227,7 @@ class VergilGreenScreenerHandler(GreenScreenerHandler):
         return vid3
 
 class Vergil(commands.Cog):
-    def __init__(self, client):
+    def __init__(self, client: commands.Bot):
         self.client = client
 
     def transparent_paste(self, bg, fg):
@@ -244,7 +247,10 @@ class Vergil(commands.Cog):
     async def vergil(self, ctx, link=None):
         link = await msg_link_grabber.grab_link(ctx, link)
         print(link)
-        checker = self.client.get_cog("FileTypeChecker")
+        checker = cast(
+            "FileTypeChecker",
+            self.client.get_cog("FileTypeChecker")
+        )
         is_img = await checker.is_image(link)
         if is_img:
             g_screen_han = VergilGreenScreenerHandler(
@@ -268,7 +274,10 @@ class Vergil(commands.Cog):
         if len(attachments) > 0:
             link = attachments[0].url
 
-            checker = self.client.get_cog("FileTypeChecker")
+            checker = cast(
+                "FileTypeChecker",
+                self.client.get_cog("FileTypeChecker")
+            )
             is_img = await checker.is_image(link)
             if is_img:
                 g_screen_han = VergilGreenScreenerHandler(

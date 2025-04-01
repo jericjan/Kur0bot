@@ -5,10 +5,12 @@ import uuid
 import aiohttp
 import disnake
 from disnake.ext import commands
-
+from typing import TYPE_CHECKING, cast
+if TYPE_CHECKING:
+    from modules.others.emote_sticker import EmoteSticker
 
 class Kill(commands.Cog):
-    def __init__(self, client):
+    def __init__(self, client: commands.Bot):
         self.client = client
 
     @commands.command(aliases=["ill"])
@@ -32,7 +34,10 @@ class Kill(commands.Cog):
             async with session.get(target_pfp.url) as response:
                 img = await response.read()
 
-        emote_sticker = self.client.get_cog("EmoteSticker")
+        emote_sticker = cast(
+            "EmoteSticker",
+            self.client.get_cog("EmoteSticker")
+        )
         file, width, height = await emote_sticker.emote_resize(img)
 
         try:

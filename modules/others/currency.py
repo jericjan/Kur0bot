@@ -5,13 +5,20 @@ from decimal import Decimal
 import aiohttp
 import disnake
 from disnake.ext import commands
+from typing import TYPE_CHECKING, cast
+
+if TYPE_CHECKING:
+    from myfunctions.command_bridge import Bridger
 
 class Currency(commands.Cog):
-    def __init__(self, client):
+    def __init__(self, client: commands.Bot):
         self.client = client
 
     async def currency(self, thing, conv_from, conv_to, value):
-        bridger = self.client.get_cog("Bridger")
+        bridger = cast(
+            "Bridger",
+            self.client.get_cog("Bridger")
+        )
         send_msg = bridger.send_msg
 
         conv_from = conv_from.lower()

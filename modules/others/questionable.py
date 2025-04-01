@@ -2,14 +2,21 @@ import random
 
 import disnake
 from disnake.ext import commands
-
+from typing import TYPE_CHECKING, cast
+if TYPE_CHECKING:
+    from myfunctions.motor import MotorDbManager
 
 class Questionable(commands.Cog):
-    def __init__(self, client):
+    def __init__(self, client: commands.Bot):
         self.client = client
 
-    def get_dashboard_category(self, name):
-        return self.client.get_cog("MotorDbManager").motor_client["dashboard"][name]
+    def get_dashboard_category(self, name: str):
+        db_man = cast(
+            "MotorDbManager", 
+            self.client.get_cog("MotorDbManager")
+        )
+        if not isinstance(db_man.motor_client, bool):
+            return db_man.motor_client["dashboard"][name]
         
     @commands.user_command(name="Segg")
     async def user_sex(self, inter, user: disnake.User):
@@ -26,7 +33,10 @@ class Questionable(commands.Cog):
             desc = f"{inter.author.mention} just sexerized {user.mention} 😳"
 
         em = disnake.Embed(title="Sex", description=desc)
-        db_man = self.client.get_cog("MotorDbManager")
+        db_man = cast(
+            "MotorDbManager", 
+            self.client.get_cog("MotorDbManager")
+        )
         doc = await db_man.get_random(self.get_dashboard_category("sex-gifs"))
         url = doc["url"]
         # gifs = [
@@ -49,7 +59,10 @@ class Questionable(commands.Cog):
         # "https://tenor.com/view/huh-fate-kaleid-liner-prisma-gif-5739132",
         # ]
 
-        db_man = self.client.get_cog("MotorDbManager")
+        db_man = cast(
+            "MotorDbManager", 
+            self.client.get_cog("MotorDbManager")
+        )
         doc = await db_man.get_random(self.get_dashboard_category("sex-gifs"))
         url = doc["url"]
         await ctx.send(f"|| {url} ||")
@@ -77,7 +90,10 @@ class Questionable(commands.Cog):
         # "https://cdn.discordapp.com/attachments/1201051292198518846/1315505967470870568/SPOILER_toga-giving-a-footjob.gif",
         # "https://cdn.discordapp.com/attachments/1201051292198518846/1315513265517760592/SPOILER_mafuyu.gif",
         # ]
-        db_man = self.client.get_cog("MotorDbManager")
+        db_man = cast(
+            "MotorDbManager", 
+            self.client.get_cog("MotorDbManager")
+        )
         doc = await db_man.get_random(self.get_dashboard_category("footjob-gifs"))
         url = doc["url"]
         em.set_image(url=url)
@@ -90,7 +106,10 @@ class Questionable(commands.Cog):
         # "https://cdn.discordapp.com/attachments/1201051292198518846/1315513265517760592/SPOILER_mafuyu.gif",
         # ]
 
-        db_man = self.client.get_cog("MotorDbManager")
+        db_man = cast(
+            "MotorDbManager", 
+            self.client.get_cog("MotorDbManager")
+        )
         doc = await db_man.get_random(self.get_dashboard_category("footjob-gifs"))
         url = doc["url"]
 

@@ -9,6 +9,9 @@ import os
 import disnake
 from disnake.ext import commands
 
+from typing import TYPE_CHECKING, cast
+if TYPE_CHECKING:
+    from modules.kur0_only import Kur0only
 
 class Help(commands.Cog):
     def __init__(self, client):
@@ -22,7 +25,11 @@ class Help(commands.Cog):
         """
 
         if extra:
-            public_comms = self.client.get_cog("Kur0only").get_public_commands()
+            public_comms = cast(
+                "Kur0only", 
+                self.client.get_cog("Kur0only")
+            ).get_public_commands()
+            
             for comm in public_comms:
                 comm = self.client.get_command(comm)
                 for alias in comm.aliases:

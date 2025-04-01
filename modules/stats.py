@@ -1,10 +1,15 @@
 import disnake
 from disnake.ext import commands
-
+from typing import TYPE_CHECKING, cast
+if TYPE_CHECKING:
+    from myfunctions.motor import MotorDbManager
 
 class UserStat:
-    def __init__(self, client, guild_id, author_id):
-        motor = client.get_cog("MotorDbManager")
+    def __init__(self, client: commands.Bot, guild_id, author_id):
+        motor = cast(
+            "MotorDbManager", 
+            client.get_cog("MotorDbManager")
+        )
         self.stats_coll = motor.get_collection_for_server("stats", guild_id)
         self.author_id = author_id
 
@@ -28,7 +33,10 @@ class Stats(commands.Cog):
         if not user:
             user = ctx.author
 
-        motor = self.client.get_cog("MotorDbManager")
+        motor = cast(
+            "MotorDbManager", 
+            self.client.get_cog("MotorDbManager")
+        )
         stats_coll = motor.get_collection_for_server("stats", ctx.guild.id)
         user_doc = await stats_coll.find_one({"user_id": user.id})
 
