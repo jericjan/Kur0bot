@@ -1,4 +1,5 @@
 import asyncio
+from typing import Any
 
 from disnake.ext import commands
 
@@ -6,7 +7,7 @@ from disnake.ext import commands
 class Ascii(commands.Cog):
     @commands.command()
     @commands.bot_has_permissions(manage_messages=True)
-    async def fortnite(self, ctx):
+    async def fortnite(self, ctx: commands.Context[Any]):
         message = await ctx.send(
             "⠀⠀⠀⠀⣀⣤\n"
             "⠀⠀⠀⠀⣿⠿⣶\n"
@@ -232,5 +233,5 @@ class Ascii(commands.Cog):
         await ctx.message.delete()
 
 
-def setup(client):
+def setup(client: commands.Bot):
     client.add_cog(Ascii(client))

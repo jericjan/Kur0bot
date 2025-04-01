@@ -2,7 +2,7 @@ import random
 
 import disnake
 from disnake.ext import commands
-from typing import TYPE_CHECKING, cast
+from typing import TYPE_CHECKING, cast, Any
 if TYPE_CHECKING:
     from myfunctions.motor import MotorDbManager
 
@@ -50,7 +50,7 @@ class Questionable(commands.Cog):
         await inter.response.send_message(embed=em)
 
     @commands.command()
-    async def sex(self, ctx, user: disnake.User):
+    async def sex(self, ctx: commands.Context[Any], user: disnake.User):
         # gifs = [
         # "|| https://cdn.discordapp.com/attachments/1210367093338415164/1315511944563920947/seg.gif ||",
         # "|| https://cdn.discordapp.com/attachments/1210367093338415164/1315516035645837444/seg2.gif ||",
@@ -100,7 +100,7 @@ class Questionable(commands.Cog):
         await inter.response.send_message(embed=em)
 
     @commands.command()
-    async def footjob(self, ctx, user: disnake.User):
+    async def footjob(self, ctx: commands.Context[Any], user: disnake.User):
         # gifs = [
         # "https://cdn.discordapp.com/attachments/1201051292198518846/1315505967470870568/SPOILER_toga-giving-a-footjob.gif",
         # "https://cdn.discordapp.com/attachments/1201051292198518846/1315513265517760592/SPOILER_mafuyu.gif",
@@ -133,5 +133,5 @@ class Questionable(commands.Cog):
             await ctx.send(f"{ctx.author.mention} gave {user.mention} a footjob!")
 
 
-def setup(client):
+def setup(client: commands.Bot):
     client.add_cog(Questionable(client))

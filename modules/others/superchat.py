@@ -16,18 +16,19 @@ import functools
 from aiolimiter import AsyncLimiter
 import shlex
 from myfunctions import file_handler
+from typing import Any
 
 limiter = AsyncLimiter(1, 1)
 
 
 class Superchat(commands.Cog):
-    def __init__(self, client):
+    def __init__(self, client: commands.Bot):
         self.client = client
         self.pbar_list = []
 
     @commands.command(aliases=["oldakasupa", "oldsupacha"])
     @commands.bot_has_permissions(manage_webhooks=True, manage_messages=True)
-    async def oldsuperchat(self, ctx, amount, *, message):
+    async def oldsuperchat(self, ctx: commands.Context[Any], amount, *, message):
 
         await ctx.message.delete()
 
@@ -309,5 +310,5 @@ class Superchat(commands.Cog):
         bruh.close()
 
 
-def setup(client):
+def setup(client: commands.Bot):
     client.add_cog(Superchat(client))

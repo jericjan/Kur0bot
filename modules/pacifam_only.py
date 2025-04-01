@@ -7,14 +7,14 @@ from ftplib import FTP
 import disnake
 from disnake.ext import commands
 from mcrcon import MCRcon
-
+from typing import Any
 
 class PacifamOnly(commands.Cog):
-    def __init__(self, client):
+    def __init__(self, client: commands.Bot):
         self.client = client
 
     @commands.command()
-    async def addoffline(self, ctx, username):
+    async def addoffline(self, ctx: commands.Context[Any], username):
         avi_guild = self.client.get_guild(938255956247183451)
         while avi_guild is None:
             pass
@@ -50,7 +50,7 @@ class PacifamOnly(commands.Cog):
             await ctx.send("Only Admins/Mods can use this command")
 
     @commands.command()
-    async def viewoffline(self, ctx):
+    async def viewoffline(self, ctx: commands.Context[Any]):
         avi_guild = self.client.get_guild(938255956247183451)
         while avi_guild is None:
             pass
@@ -77,7 +77,7 @@ class PacifamOnly(commands.Cog):
             await ctx.send("Only Admins/Mods can use this command")
 
     @commands.command()
-    async def removeoffline(self, ctx, username):
+    async def removeoffline(self, ctx: commands.Context[Any], username):
         avi_guild = self.client.get_guild(938255956247183451)
         while avi_guild is None:
             pass
@@ -114,7 +114,7 @@ class PacifamOnly(commands.Cog):
             await ctx.send("Only Admins/Mods can use this command")
 
     @commands.command()
-    async def viewmods(self, ctx):
+    async def viewmods(self, ctx: commands.Context[Any]):
         if ctx.guild.id == 938255956247183451:
             ftp = FTP(host="us28.pebblehost.com")
             ftp.login(user=os.getenv("PEBBLE_EMAIL"), passwd=os.getenv("PEBBLE_PASS"))
@@ -132,5 +132,5 @@ class PacifamOnly(commands.Cog):
             await ctx.send("Only usable in the pacifam server")
 
 
-def setup(client):
+def setup(client: commands.Bot):
     client.add_cog(PacifamOnly(client))

@@ -11,7 +11,7 @@ from disnake.ext import commands
 
 from myfunctions import msg_link_grabber, subprocess_runner
 from myfunctions.greenscreen import GreenScreener, GreenScreenerHandler
-from typing import TYPE_CHECKING, cast
+from typing import TYPE_CHECKING, cast, Any
 if TYPE_CHECKING:
     from myfunctions.filetype import FileTypeChecker
 
@@ -244,7 +244,7 @@ class Vergil(commands.Cog):
         return bg
 
     @commands.command()
-    async def vergil(self, ctx, link=None):
+    async def vergil(self, ctx: commands.Context[Any], link=None):
         link = await msg_link_grabber.grab_link(ctx, link)
         print(link)
         checker = cast(
@@ -299,7 +299,7 @@ class Vergil(commands.Cog):
             )
 
     @commands.command()
-    async def quickvergil(self, ctx, link=None):
+    async def quickvergil(self, ctx: commands.Context[Any], link=None):
         start_time = time.time()
         link = await msg_link_grabber.grab_link(ctx, link)
         print(link)
@@ -433,5 +433,5 @@ class Vergil(commands.Cog):
         await ctx.send(f"Vergil arrived in {end:.2f} seconds")
         shutil.rmtree(f"videos/vergil_greenscreen/{random_uuid}/")
 
-def setup(client):
+def setup(client: commands.Bot):
     client.add_cog(Vergil(client))

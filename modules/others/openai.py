@@ -9,10 +9,10 @@ import nest_asyncio
 import openai
 from disnake.ext import commands
 from g4f.client import Client
-
+from typing import Any
 
 class OpenAI(commands.Cog):
-    def __init__(self, client):
+    def __init__(self, client: commands.Bot):
         print(f"g4f version is {version('g4f')}")
         self.client = client
         nest_asyncio.apply()
@@ -27,7 +27,7 @@ class OpenAI(commands.Cog):
         return response.choices[0].message.content
 
     @commands.command()
-    async def gpt(self, ctx, *, msg):
+    async def gpt(self, ctx: commands.Context[Any], *, msg):
 
         def split_long_string(long_string, chunk_size=2000):
             return [
@@ -41,5 +41,5 @@ class OpenAI(commands.Cog):
             for split in splitted:
                 await ctx.send(split)
 
-def setup(client):
+def setup(client: commands.Bot):
     client.add_cog(OpenAI(client))

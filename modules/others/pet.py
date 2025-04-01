@@ -4,12 +4,12 @@ import aiohttp
 import disnake
 from disnake.ext import commands
 from petpetgif import petpet
-
+from typing import Any
 
 class Pet(commands.Cog):
     @commands.command()
     @commands.bot_has_permissions(manage_webhooks=True)
-    async def pet(self, ctx, url):
+    async def pet(self, ctx: commands.Context[Any], url):
         if ctx.message.mentions.__len__() > 0:
             for user in ctx.message.mentions:
                 async with aiohttp.ClientSession() as session:
@@ -71,5 +71,5 @@ class Pet(commands.Cog):
             await webhook.delete()
 
 
-def setup(client):
+def setup(client: commands.Bot):
     client.add_cog(Pet(client))

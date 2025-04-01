@@ -7,14 +7,14 @@ import re
 import json
 import dateutil.parser as dp
 from html.parser import HTMLParser
-
+from typing import Any
 
 class GetOsuMap(commands.Cog):
-    def __init__(self, client):
+    def __init__(self, client: commands.Bot):
         self.client = client
 
     @commands.command(aliases=["getmap", "getosu"])
-    async def getosumap(self, ctx, *, user: disnake.Member):
+    async def getosumap(self, ctx: commands.Context[Any], *, user: disnake.Member):
         activities = user.activities
         if activities:
             activity_count = len(activities)
@@ -110,7 +110,7 @@ class GetOsuMap(commands.Cog):
             await ctx.send(f"{user.name} is not doing anything...")
 
     @commands.command(aliases=["getmap2", "getosu2"])
-    async def getosumap2(self, ctx, user):
+    async def getosumap2(self, ctx: commands.Context[Any], user):
 
         API_URL = "https://osu.ppy.sh/api/v2"
         TOKEN_URL = "https://osu.ppy.sh/oauth/token"
@@ -158,7 +158,7 @@ class GetOsuMap(commands.Cog):
         await ctx.send(embed=em)
 
     @commands.command(aliases=["getmap3", "getosu3"])
-    async def getosumap3(self, ctx, user):
+    async def getosumap3(self, ctx: commands.Context[Any], user):
         url = f"https://osu.ppy.sh/u/{user}"
         async with aiohttp.ClientSession() as session:
             async with session.get(url) as resp:
@@ -194,5 +194,5 @@ class GetOsuMap(commands.Cog):
         await ctx.send(embed=em)
 
 
-def setup(client):
+def setup(client: commands.Bot):
     client.add_cog(GetOsuMap(client))

@@ -1,14 +1,14 @@
 from disnake.ext import commands
 import disnake
 import json
-
+from typing import Any
 
 class Hall_Of_Shame(commands.Cog):
-    def __init__(self, client):
+    def __init__(self, client: commands.Bot):
         self.client = client
 
     @commands.command()
-    async def hallofshame(self, ctx, channel=None):
+    async def hallofshame(self, ctx: commands.Context[Any], channel=None):
         hall_of_shame_json = json.load(open("modules/others/hall_of_shame_ids.json"))
         if channel == None:
             await ctx.send("Give the channel ID for the hall of shame.")
@@ -36,5 +36,5 @@ class Hall_Of_Shame(commands.Cog):
             f.write(json.dumps(hall_of_shame_json))
 
 
-def setup(client):
+def setup(client: commands.Bot):
     client.add_cog(Hall_Of_Shame(client))

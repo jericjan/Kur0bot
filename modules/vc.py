@@ -14,19 +14,20 @@ from tempfile import NamedTemporaryFile
 import aiohttp
 import disnake
 from disnake.ext import commands
+from typing import Any
 
 from myfunctions import subprocess_runner
 from myfunctions.my_db import get_db
 
 
 class Vc(commands.Cog):
-    def __init__(self, client):
+    def __init__(self, client: commands.Bot):
         self.client = client
         self.dbname = get_db("music_queue")
         self.temp_servers_playing = {}
         self.song_now_playing = {}
 
-    async def run_queue(self, ctx):
+    async def run_queue(self, ctx: commands.Context[Any]):
         try:
             server_queue = self.dbname[str(ctx.guild.id)]
             music_queue = server_queue.find().sort("epoch_time", 1)
@@ -59,7 +60,7 @@ class Vc(commands.Cog):
 
             print(f"run_queue exception: {get_full_class_name(e)}: {e}")
 
-    async def vcplay(self, ctx, a, loop=None, is_random=None, **kwargs):
+    async def vcplay(self, ctx: commands.Context[Any], a, loop=None, is_random=None, **kwargs):
 
         voicestate = ctx.author.voice
         if voicestate:
@@ -198,7 +199,7 @@ class Vc(commands.Cog):
 
     @commands.command()
     @commands.bot_has_permissions(manage_messages=True)
-    async def join(self, ctx):
+    async def join(self, ctx: commands.Context[Any]):
         voicestate = ctx.author.voice
         if voicestate:
             voice_channel = ctx.author.voice.channel
@@ -232,7 +233,7 @@ class Vc(commands.Cog):
 
     @commands.command()
     @commands.bot_has_permissions(manage_messages=True)
-    async def stop(self, ctx):
+    async def stop(self, ctx: commands.Context[Any]):
         voice_client = ctx.message.guild.voice_client
         if voice_client.is_playing():
             voice_client.stop()
@@ -245,7 +246,7 @@ class Vc(commands.Cog):
 
     @commands.command()
     @commands.bot_has_permissions(manage_messages=True)
-    async def stoploop(self, ctx):
+    async def stoploop(self, ctx: commands.Context[Any]):
         await ctx.guild.voice_client.disconnect()
         voice_channel = ctx.author.voice.channel
         await voice_channel.connect()
@@ -254,7 +255,7 @@ class Vc(commands.Cog):
 
     @commands.command()
     @commands.bot_has_permissions(manage_messages=True)
-    async def leave(self, ctx):
+    async def leave(self, ctx: commands.Context[Any]):
         if ctx.voice_client:  # If the bot is in a voice channel
             await ctx.guild.voice_client.disconnect()  # Leave the channel
             await ctx.send("Sus bot has left the call.", delete_after=3.0)
@@ -267,67 +268,67 @@ class Vc(commands.Cog):
 
     @commands.command()
     @commands.bot_has_permissions(manage_messages=True)
-    async def letsgo(self, ctx, loop=None):
+    async def letsgo(self, ctx: commands.Context[Any], loop=None):
         await self.vcplay(ctx, "sounds/vibez-lets-go.mp3", loop)
 
     @commands.command()
     @commands.bot_has_permissions(manage_messages=True)
-    async def vtubus(self, ctx, loop=None):
+    async def vtubus(self, ctx: commands.Context[Any], loop=None):
         await self.vcplay(ctx, "sounds/vtubus.mp3", loop)
 
     @commands.command()
     @commands.bot_has_permissions(manage_messages=True)
-    async def giorno(self, ctx, loop=None):
+    async def giorno(self, ctx: commands.Context[Any], loop=None):
         await self.vcplay(ctx, "sounds/giorno theme.mp3", loop)
 
     @commands.command()
     @commands.bot_has_permissions(manage_messages=True)
-    async def ding(self, ctx, loop=None):
+    async def ding(self, ctx: commands.Context[Any], loop=None):
         await self.vcplay(
             ctx, "sounds/DING DING DING DING DING DING DING DI DI DING.mp3", loop
         )
 
     @commands.command()
     @commands.bot_has_permissions(manage_messages=True)
-    async def yodayo(self, ctx, loop=None):
+    async def yodayo(self, ctx: commands.Context[Any], loop=None):
         await self.vcplay(ctx, "sounds/Nakiri Ayame's yo dayo_.mp3", loop)
 
     @commands.command()
     @commands.bot_has_permissions(manage_messages=True)
-    async def yodazo(self, ctx, loop=None):
+    async def yodazo(self, ctx: commands.Context[Any], loop=None):
         await self.vcplay(ctx, "sounds/Yo Dazo!.mp3", loop)
 
     @commands.command()
     @commands.bot_has_permissions(manage_messages=True)
-    async def jonathan(self, ctx, loop=None):
+    async def jonathan(self, ctx: commands.Context[Any], loop=None):
         await self.vcplay(
             ctx, "sounds/Jonathan's theme but its only the BEST part.mp3", loop
         )
 
     @commands.command()
     @commands.bot_has_permissions(manage_messages=True)
-    async def joseph(self, ctx, loop=None):
+    async def joseph(self, ctx: commands.Context[Any], loop=None):
         await self.vcplay(
             ctx, "sounds/Joseph's theme but only the good part (1).mp3", loop
         )
 
     @commands.command()
     @commands.bot_has_permissions(manage_messages=True)
-    async def jotaro(self, ctx, loop=None):
+    async def jotaro(self, ctx: commands.Context[Any], loop=None):
         await self.vcplay(
             ctx, "sounds/Jotaro’s theme but it’s only the good part.mp3", loop
         )
 
     @commands.command()
     @commands.bot_has_permissions(manage_messages=True)
-    async def josuke(self, ctx, loop=None):
+    async def josuke(self, ctx: commands.Context[Any], loop=None):
         await self.vcplay(
             ctx, "sounds/Josuke theme but it's only the good part.mp3", loop
         )
 
     @commands.command()
     @commands.bot_has_permissions(manage_messages=True)
-    async def kira(self, ctx, loop=None):
+    async def kira(self, ctx: commands.Context[Any], loop=None):
         await self.vcplay(
             ctx,
             "sounds/Killer (Yoshikage Kira's Theme) - Jojo's Bizarre Adventure Part 4_ "
@@ -337,122 +338,122 @@ class Vc(commands.Cog):
 
     @commands.command()
     @commands.bot_has_permissions(manage_messages=True)
-    async def pillarmen(self, ctx, loop=None):
+    async def pillarmen(self, ctx: commands.Context[Any], loop=None):
         await self.vcplay(
             ctx, "sounds/Jojo's Bizarre Adventure- Awaken(Pillar Men Theme).mp3", loop
         )
 
     @commands.command()
     @commands.bot_has_permissions(manage_messages=True)
-    async def boom(self, ctx, loop=None):
+    async def boom(self, ctx: commands.Context[Any], loop=None):
         await self.vcplay(ctx, "sounds/boom.mp3", loop)
 
     @commands.command(aliases=["ogei"])
     @commands.bot_has_permissions(manage_messages=True)
-    async def ogey(self, ctx, loop=None):
+    async def ogey(self, ctx: commands.Context[Any], loop=None):
         await self.vcplay(ctx, "sounds/ogey.mp3", loop)
 
     @commands.command()
     @commands.bot_has_permissions(manage_messages=True)
-    async def rrat(self, ctx, loop=None):
+    async def rrat(self, ctx: commands.Context[Any], loop=None):
         await self.vcplay(ctx, "sounds/rrat.mp3", loop)
 
     @commands.command()
     @commands.bot_has_permissions(manage_messages=True)
-    async def fart(self, ctx, loop=None):
+    async def fart(self, ctx: commands.Context[Any], loop=None):
         await self.vcplay(ctx, "sounds/fart.mp3", loop)
 
     @commands.command()
     @commands.bot_has_permissions(manage_messages=True)
-    async def mogumogu(self, ctx, loop=None):
+    async def mogumogu(self, ctx: commands.Context[Any], loop=None):
         await self.vcplay(ctx, "sounds/mogu.mp3", loop)
 
     @commands.command()
     @commands.bot_has_permissions(manage_messages=True)
-    async def bababooey(self, ctx, loop=None):
+    async def bababooey(self, ctx: commands.Context[Any], loop=None):
         await self.vcplay(ctx, "sounds/bababooey.mp3", loop)
 
     @commands.command()
     @commands.bot_has_permissions(manage_messages=True)
-    async def dog(self, ctx, loop=None):
+    async def dog(self, ctx: commands.Context[Any], loop=None):
         await self.vcplay(ctx, "sounds/dog.mp3", loop)
 
     @commands.command()
     @commands.bot_has_permissions(manage_messages=True)
-    async def totsugeki(self, ctx, loop=None):
+    async def totsugeki(self, ctx: commands.Context[Any], loop=None):
         may_sounds = ["sounds/totsugeki_7UWR0L4.mp3", "sounds/totsugeki-may-2.mp3"]
         await self.vcplay(ctx, may_sounds, loop, True)
 
     @commands.command(aliases=["bong"])
     @commands.bot_has_permissions(manage_messages=True)
-    async def tacobell(self, ctx, loop=None):
+    async def tacobell(self, ctx: commands.Context[Any], loop=None):
         await self.vcplay(ctx, "sounds/tacobell.mp3", loop)
 
     @commands.command(aliases=["amogus"])
     @commands.bot_has_permissions(manage_messages=True)
-    async def amongus(self, ctx, loop=None):
+    async def amongus(self, ctx: commands.Context[Any], loop=None):
         await self.vcplay(ctx, "sounds/amongus.mp3", loop)
 
     @commands.command(aliases=["classtrial"])
     @commands.bot_has_permissions(manage_messages=True)
-    async def danganronpa(self, ctx, loop=None):
+    async def danganronpa(self, ctx: commands.Context[Any], loop=None):
         await self.vcplay(ctx, "sounds/danganronpa.mp3", loop)
 
     @commands.command()
     @commands.bot_has_permissions(manage_messages=True)
-    async def botansneeze(self, ctx, loop=None):
+    async def botansneeze(self, ctx: commands.Context[Any], loop=None):
         await self.vcplay(ctx, "sounds/botansneeze.mp3", loop)
 
     @commands.command()
     @commands.bot_has_permissions(manage_messages=True)
-    async def water(self, ctx, loop=None):
+    async def water(self, ctx: commands.Context[Any], loop=None):
         await self.vcplay(ctx, "sounds/water.mp3", loop)
 
     @commands.command()
     @commands.bot_has_permissions(manage_messages=True)
-    async def necoarc(self, ctx, loop=None):
+    async def necoarc(self, ctx: commands.Context[Any], loop=None):
         await self.vcplay(ctx, "sounds/necoarc.mp3", loop)
 
     @commands.command()
     @commands.bot_has_permissions(manage_messages=True)
-    async def vsauce(self, ctx, loop=None):
+    async def vsauce(self, ctx: commands.Context[Any], loop=None):
         await self.vcplay(ctx, "sounds/vsauce.mp3", loop)
 
     @commands.command()
     @commands.bot_has_permissions(manage_messages=True)
-    async def gigachad(self, ctx, loop=None):
+    async def gigachad(self, ctx: commands.Context[Any], loop=None):
         await self.vcplay(ctx, "sounds/gigachad.mp3", loop)
 
     @commands.command()
     @commands.bot_has_permissions(manage_messages=True)
-    async def bruh(self, ctx, loop=None):
+    async def bruh(self, ctx: commands.Context[Any], loop=None):
         await self.vcplay(ctx, "sounds/rushiabruh.mp3", loop)
 
     @commands.command()
     @commands.bot_has_permissions(manage_messages=True)
-    async def believeit(self, ctx, loop=None):
+    async def believeit(self, ctx: commands.Context[Any], loop=None):
         believeit_files = os.listdir("sounds/believeit/")
         believeit_files = [f"sounds/believeit/{x}" for x in believeit_files]
         await self.vcplay(ctx, believeit_files, loop, True)
 
     @commands.command()
     @commands.bot_has_permissions(manage_messages=True)
-    async def pikamee(self, ctx, loop=None):
+    async def pikamee(self, ctx: commands.Context[Any], loop=None):
         await self.vcplay(ctx, "sounds/pikamee.mp3", loop)
 
     @commands.command(aliases=["hellskitchen", "violin"])
     @commands.bot_has_permissions(manage_messages=True)
-    async def waterphone(self, ctx, loop=None):
+    async def waterphone(self, ctx: commands.Context[Any], loop=None):
         await self.vcplay(ctx, "sounds/waterphone.mp3", loop)
 
     @commands.command(aliases=["boo-womp"])
     @commands.bot_has_permissions(manage_messages=True)
-    async def boowomp(self, ctx, loop=None):
+    async def boowomp(self, ctx: commands.Context[Any], loop=None):
         await self.vcplay(ctx, "sounds/boowomp.mp3", loop)
 
     @commands.command()
     @commands.bot_has_permissions(manage_webhooks=True, manage_messages=True)
-    async def mgr(self, ctx, *, name):
+    async def mgr(self, ctx: commands.Context[Any], *, name):
         loop = None
         matches = []
         for root, _dirs, files in os.walk("sounds/mgr/", topdown=False):
@@ -496,7 +497,7 @@ class Vc(commands.Cog):
         else:
             await ctx.send("No matches lol.", delete_after=3)
 
-    async def pre_play(self, ctx, url, title=None):
+    async def pre_play(self, ctx: commands.Context[Any], url, title=None):
         start_time = time.time()
         tasks = []
 
@@ -535,7 +536,7 @@ class Vc(commands.Cog):
         self.song_now_playing[ctx.guild.id] = f"[{title}]({url})"
         print(f"playing sent: {(time.time()-start_time):.2f}")
 
-    def there_is_queue(self, ctx):
+    def there_is_queue(self, ctx: commands.Context[Any]):
         server_queue = self.dbname[str(ctx.guild.id)]
         music_queue = server_queue.find().sort("epoch_time", 1)
         music_queue = "\n".join([f"[{x['title']}]({x['url']})" for x in music_queue])
@@ -544,7 +545,7 @@ class Vc(commands.Cog):
         return False
 
     @commands.command(aliases=["p"])
-    async def play(self, ctx, url=None):
+    async def play(self, ctx: commands.Context[Any], url=None):
         if url is None:
             if self.there_is_queue(ctx):
                 asyncio.run_coroutine_threadsafe(self.run_queue(ctx), self.client.loop)
@@ -594,7 +595,7 @@ class Vc(commands.Cog):
 
     @commands.command(aliases=["mq"])
     @commands.bot_has_permissions(embed_links=True)
-    async def mqueue(self, ctx):
+    async def mqueue(self, ctx: commands.Context[Any]):
         server_queue = self.dbname[str(ctx.guild.id)]
         music_queue = server_queue.find().sort("epoch_time", 1)
         music_queue = "\n".join([f"[{x['title']}]({x['url']})" for x in music_queue])
@@ -606,7 +607,7 @@ class Vc(commands.Cog):
 
     @commands.command(aliases=["np"])
     @commands.bot_has_permissions(embed_links=True)
-    async def nowplaying(self, ctx):
+    async def nowplaying(self, ctx: commands.Context[Any]):
         try:
             np = self.song_now_playing[ctx.guild.id]
         except KeyError:
@@ -631,7 +632,7 @@ class Vc(commands.Cog):
 
     @commands.command(aliases=["s"])
     @commands.bot_has_permissions(embed_links=True)
-    async def skip(self, ctx):
+    async def skip(self, ctx: commands.Context[Any]):
         voice_client = ctx.message.guild.voice_client
         if voice_client.is_playing():
             try:
@@ -655,7 +656,7 @@ class Vc(commands.Cog):
                 await ctx.send("Nothing is playing rn bruh. can't skip shit")
 
     @commands.command(aliases=["ultrakill"])
-    async def sam(self, ctx, *, msg):
+    async def sam(self, ctx: commands.Context[Any], *, msg):
         file_path = f"sam/{uuid.uuid4()}.wav"        
         await subprocess_runner.run_subprocess([
             "node", "sam/bundle.js", "--wav", file_path, msg
@@ -663,7 +664,7 @@ class Vc(commands.Cog):
         await self.vcplay(ctx, file_path, delete_file=True, custom_name="sam.wav")
 
     @commands.command(aliases=["tt"])
-    async def tiktok(self, ctx, *, msg):
+    async def tiktok(self, ctx: commands.Context[Any], *, msg):
         if len(msg) > 300:
             await ctx.send(
                 "Shortening text to 300 characters. It's beyond my control. "
@@ -689,5 +690,5 @@ class Vc(commands.Cog):
             )
 
 
-def setup(client):
+def setup(client: commands.Bot):
     client.add_cog(Vc(client))

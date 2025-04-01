@@ -7,14 +7,14 @@ import disnake
 from disnake.ext import commands
 
 from myfunctions import msg_link_grabber
-
+from typing import Any
 
 class Meme(commands.Cog):
-    def __init__(self, client):
+    def __init__(self, client: commands.Bot):
         self.client = client
 
     @commands.command()
-    async def meme(self, ctx, top_text, bottom_text, img_url=None):
+    async def meme(self, ctx: commands.Context[Any], top_text, bottom_text, img_url=None):
         img_url = await msg_link_grabber.grab_link(ctx, img_url)
         img_url = urllib.parse.quote(img_url)
         replacements = {
@@ -52,5 +52,5 @@ class Meme(commands.Cog):
         await ctx.send(file=disnake.File(BytesIO(pic), filename="meme.png"))
 
 
-def setup(client):
+def setup(client: commands.Bot):
     client.add_cog(Meme(client))

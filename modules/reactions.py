@@ -1,14 +1,14 @@
 from disnake.ext import commands
 import disnake
-
+from typing import Any
 
 class Reactions(commands.Cog):
-    def __init__(self, client):
+    def __init__(self, client: commands.Bot):
         self.client = client
 
     @commands.command()
     @commands.bot_has_permissions(manage_webhooks=True, manage_messages=True)
-    async def fmega(self, ctx):
+    async def fmega(self, ctx: commands.Context[Any]):
         if isinstance(ctx.channel, disnake.TextChannel):
             webhook = await ctx.channel.create_webhook(name=ctx.message.author.name)
             await webhook.send(
@@ -32,7 +32,7 @@ class Reactions(commands.Cog):
 
     @commands.command()
     @commands.bot_has_permissions(manage_webhooks=True, manage_messages=True)
-    async def kotowaru(self, ctx):
+    async def kotowaru(self, ctx: commands.Context[Any]):
         if isinstance(ctx.channel, disnake.TextChannel):
             webhook = await ctx.channel.create_webhook(name=ctx.message.author.name)
             await webhook.send(
@@ -58,7 +58,7 @@ class Reactions(commands.Cog):
 
     @commands.command()
     @commands.bot_has_permissions(manage_webhooks=True, manage_messages=True)
-    async def ascend(self, ctx):
+    async def ascend(self, ctx: commands.Context[Any]):
         if isinstance(ctx.channel, disnake.TextChannel):
             webhook = await ctx.channel.create_webhook(name=ctx.message.author.name)
             await webhook.send(
@@ -82,7 +82,7 @@ class Reactions(commands.Cog):
 
     @commands.command()
     @commands.bot_has_permissions(manage_webhooks=True, manage_messages=True)
-    async def jizz(self, ctx):
+    async def jizz(self, ctx: commands.Context[Any]):
         if isinstance(ctx.channel, disnake.TextChannel):
             webhook = await ctx.channel.create_webhook(name=ctx.message.author.name)
             await webhook.send(
@@ -105,5 +105,5 @@ class Reactions(commands.Cog):
         await ctx.message.delete()
 
 
-def setup(client):
+def setup(client: commands.Bot):
     client.add_cog(Reactions(client))

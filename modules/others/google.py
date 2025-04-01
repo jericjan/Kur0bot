@@ -3,15 +3,15 @@ from disnake.ext import commands
 import disnake
 import os
 from modules.paginator import ButtonPaginator
-
+from typing import Any
 
 class GoogleSearch(commands.Cog):
-    def __init__(self, client):
+    def __init__(self, client: commands.Bot):
         self.client = client
 
     @commands.command()
     @commands.bot_has_permissions(embed_links=True)
-    async def google(self, ctx, *, search_query):
+    async def google(self, ctx: commands.Context[Any], *, search_query):
         api_key = os.getenv("CUSTOM_SEARCH_KEY")
 
         async with aiohttp.ClientSession() as session:
@@ -45,7 +45,7 @@ class GoogleSearch(commands.Cog):
 
     @commands.command()
     @commands.bot_has_permissions(embed_links=True)
-    async def image(self, ctx, *, search_query):
+    async def image(self, ctx: commands.Context[Any], *, search_query):
         api_key = os.getenv("SERPAPI_KEY")
 
         async with aiohttp.ClientSession() as session:
@@ -79,5 +79,5 @@ class GoogleSearch(commands.Cog):
         await paginator.send(ctx)
 
 
-def setup(client):
+def setup(client: commands.Bot):
     client.add_cog(GoogleSearch(client))

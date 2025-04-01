@@ -4,15 +4,15 @@ from decimal import Decimal, getcontext
 
 import disnake
 from disnake.ext import commands
-
+from typing import Any
 
 class Height(commands.Cog):
-    def __init__(self, client):
+    def __init__(self, client: commands.Bot):
         self.client = client
         getcontext().prec = 30
 
     @commands.command()
-    async def height(self, ctx, *, arg):
+    async def height(self, ctx: commands.Context[Any], *, arg):
         def is_foot_inch(x):
             return re.match(r"\d+'\d+\.?\d*\"", x)
 
@@ -42,5 +42,5 @@ class Height(commands.Cog):
             )
 
 
-def setup(client):
+def setup(client: commands.Bot):
     client.add_cog(Height(client))

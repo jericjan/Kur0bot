@@ -2,10 +2,10 @@ import importlib
 import sys
 
 from disnake.ext import commands
-
+from typing import Any
 
 class Loaders(commands.Cog):
-    def __init__(self, client):
+    def __init__(self, client: commands.Bot):
         self.client = client
         self.start_time = self.client.start_time
         self.log = self.client.log
@@ -13,7 +13,7 @@ class Loaders(commands.Cog):
 
     @commands.command(name="reload", aliases=["refresh"])
     @commands.is_owner()
-    async def p_reload(self, ctx, name):
+    async def p_reload(self, ctx: commands.Context[Any], name):
         try:
             self.client.reload_extension(name)
         except commands.ExtensionNotLoaded:
@@ -40,7 +40,7 @@ class Loaders(commands.Cog):
 
     @commands.command(name="load")
     @commands.is_owner()
-    async def p_load(self, ctx, name):
+    async def p_load(self, ctx: commands.Context[Any], name):
         self.client.load_extension(name)
         await ctx.send(f"{name} loaded!")
 
@@ -59,7 +59,7 @@ class Loaders(commands.Cog):
 
     @commands.command(name="unload")
     @commands.is_owner()
-    async def p_unload(self, ctx, name):
+    async def p_unload(self, ctx: commands.Context[Any], name):
         self.client.unload_extension(name)
         await ctx.send(f"{name} unloaded!")
 
@@ -77,5 +77,5 @@ class Loaders(commands.Cog):
         await inter.response.send_message(f"{name} unloaded!", ephemeral=True)
 
 
-def setup(client):
+def setup(client: commands.Bot):
     client.add_cog(Loaders(client))

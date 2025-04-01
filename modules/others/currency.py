@@ -5,7 +5,7 @@ from decimal import Decimal
 import aiohttp
 import disnake
 from disnake.ext import commands
-from typing import TYPE_CHECKING, cast
+from typing import TYPE_CHECKING, cast, Any
 
 if TYPE_CHECKING:
     from myfunctions.command_bridge import Bridger
@@ -70,8 +70,8 @@ class Currency(commands.Cog):
         await self.currency(inter, conv_from, conv_to, value)
 
     @commands.command(name="currency", aliases=["convert"])
-    async def p_currency(self, ctx, conv_from, conv_to, value):
+    async def p_currency(self, ctx: commands.Context[Any], conv_from, conv_to, value):
         await self.currency(ctx, conv_from, conv_to, value)
 
-def setup(client):
+def setup(client: commands.Bot):
     client.add_cog(Currency(client))

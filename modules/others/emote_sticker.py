@@ -8,13 +8,13 @@ import io
 import re
 from PIL import Image
 from myfunctions import msg_link_grabber
-
+from typing import Any
 
 class EmoteSticker(commands.Cog):
-    def __init__(self, client):
+    def __init__(self, client: commands.Bot):
         self.client = client
 
-    def has_guild_exp_perms(self, ctx):
+    def has_guild_exp_perms(self, ctx: commands.Context[Any]):
         has_expr_perms = ctx.channel.permissions_for(
             ctx.author
         ).manage_guild_expressions
@@ -22,7 +22,7 @@ class EmoteSticker(commands.Cog):
 
     @commands.command(aliases=["e"])
     @commands.bot_has_permissions(manage_webhooks=True, manage_messages=True)
-    async def emote(self, ctx, *message):
+    async def emote(self, ctx: commands.Context[Any], *message):
         if len(message) == 0:
             await ctx.send("Give an emoji name.")
             return
@@ -77,7 +77,7 @@ class EmoteSticker(commands.Cog):
         embed_links=True,
         use_external_emojis=True,
     )
-    async def getemotes(self, ctx):
+    async def getemotes(self, ctx: commands.Context[Any]):
         server = ctx.message.guild
         emojis = [str(x) for x in server.emojis]
         message = ""
@@ -202,7 +202,7 @@ class EmoteSticker(commands.Cog):
 
     @commands.command(aliases=["re"])
     @commands.bot_has_permissions(manage_emojis=True, manage_messages=True)
-    async def removeemote(self, ctx, emote: disnake.Emoji):
+    async def removeemote(self, ctx: commands.Context[Any], emote: disnake.Emoji):
 
         if emote.guild.id != ctx.guild.id:
             raise commands.EmojiNotFound(emote.name)
@@ -215,7 +215,7 @@ class EmoteSticker(commands.Cog):
 
     @commands.command(aliases=["rs"])
     @commands.bot_has_permissions(manage_emojis=True, manage_messages=True)
-    async def removesticker(self, ctx, sticker: disnake.GuildSticker):
+    async def removesticker(self, ctx: commands.Context[Any], sticker: disnake.GuildSticker):
 
         if sticker.guild.id != ctx.guild.id:
             raise commands.GuildStickerNotFound(sticker.name)
@@ -231,7 +231,7 @@ class EmoteSticker(commands.Cog):
 
     @removeemote.error
     @removesticker.error
-    async def removeemote_error(self, ctx, error):
+    async def removeemote_error(self, ctx: commands.Context[Any], error):
         name = error.argument
         ctx._ignore_me_ = True
         if isinstance(error, commands.EmojiNotFound):
@@ -295,5 +295,5 @@ class EmoteSticker(commands.Cog):
                 await ctx.send("Only Admins/Mods can use this command")
 
 
-def setup(client):
+def setup(client: commands.Bot):
     client.add_cog(EmoteSticker(client))

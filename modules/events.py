@@ -4,7 +4,7 @@ import os
 import random
 import re
 import time
-from typing import TYPE_CHECKING, cast
+from typing import TYPE_CHECKING, cast, Any
 from datetime import datetime, timedelta, timezone
 from operator import attrgetter
 from pathlib import Path
@@ -612,7 +612,7 @@ class Events(commands.Cog):
 
     ################################ON_COMMAND_ERROR#############
     @commands.Cog.listener()
-    async def on_command_error(self, ctx, error):
+    async def on_command_error(self, ctx: commands.Context[Any], error):
         if hasattr(ctx, "_ignore_me_"):
             return
 
@@ -751,5 +751,5 @@ class Events(commands.Cog):
         await inter.followup.send(f"{self.get_full_class_name(error)}: {error}")
 
 
-def setup(client):
+def setup(client: commands.Bot):
     client.add_cog(Events(client))
