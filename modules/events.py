@@ -19,7 +19,9 @@ from myfunctions.async_wrapper import async_wrap
 
 if TYPE_CHECKING:
     from myfunctions.motor import MotorDbManager
-
+    from modules.stats import Stats
+    from modules.others.time_and_dates import TimeAndDates
+    from modules.others.openai import OpenAI
 sus_words = [
     "amongus",
     "аmongus",
@@ -181,7 +183,7 @@ class Events(commands.Cog):
 
         toggles = motor.get_collection_for_server("toggles", message.guild.id)
 
-        stats_cog = self.client.get_cog("Stats")
+        stats_cog = cast("Stats", self.client.get_cog("Stats"))
         user_stat = stats_cog.get_user(message.guild.id, message.author.id)
 
         ################SUSSY REPLIES##################
@@ -282,9 +284,12 @@ class Events(commands.Cog):
                     if strepto_in_server:
                         await user_stat.increment("Feet-related", 1)
 
-                        days_list = self.client.get_cog(
-                            "TimeAndDates"
-                        ).get_current_days(show_date=False)
+                        time_and_dates = cast(
+                            "TimeAndDates", self.client.get_cog(
+                                "TimeAndDates"
+                            )
+                        )
+                        days_list = time_and_dates.get_current_days(show_date=False)
 
                         strepto_ping = "<@268188421871108097>"
 
@@ -476,7 +481,7 @@ class Events(commands.Cog):
                     gpt_resp = ""
                     while gpt_resp != "True" and gpt_resp != "False":
                         gpt_msg = f"Is the following phrase offensive? respond ONLY with True or False:\n{message.content}"
-                        gpt_resp = self.client.get_cog("OpenAI").prompt(gpt_msg)
+                        gpt_resp = cast("OpenAI", self.client.get_cog("OpenAI")).prompt(gpt_msg)
                     if gpt_resp == "True":
                         await user_stat.increment("Tatsu bot murders", 1)
                         await message.reference.resolved.delete()
