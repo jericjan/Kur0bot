@@ -1,3 +1,5 @@
+from typing import Any
+
 import disnake
 import translators as ts
 from disnake.ext import commands
@@ -5,7 +7,7 @@ from jisho_api.word import Word
 
 from modules.paginator import ButtonPaginator
 from myfunctions.async_wrapper import async_wrap
-from typing import Any
+
 
 class DeepL_commands(commands.Cog):
     def __init__(self, client: commands.Bot):

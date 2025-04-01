@@ -8,6 +8,7 @@ import disnake
 import humanize
 from disnake.ext import commands
 
+
 def delete_file(filename: str):
     if os.path.exists(filename):
         os.remove(filename)

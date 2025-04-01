@@ -1,8 +1,9 @@
 import asyncio
+from typing import Any
 
 import disnake
 from disnake.ext import commands
-from typing import Any
+
 
 class Pinglimit(commands.Cog):
     def __init__(self, client: commands.Bot):

@@ -1,10 +1,11 @@
 from io import BytesIO
+from typing import Any
 
 import aiohttp
 import disnake
 from disnake.ext import commands
 from petpetgif import petpet
-from typing import Any
+
 
 class Pet(commands.Cog):
     @commands.command()

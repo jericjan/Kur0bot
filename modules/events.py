@@ -4,10 +4,10 @@ import os
 import random
 import re
 import time
-from typing import TYPE_CHECKING, cast, Any
 from datetime import datetime, timedelta, timezone
 from operator import attrgetter
 from pathlib import Path
+from typing import TYPE_CHECKING, Any, cast
 
 import disnake
 import numpy
@@ -18,10 +18,10 @@ from gtts import gTTS
 from myfunctions.async_wrapper import async_wrap
 
 if TYPE_CHECKING:
-    from myfunctions.motor import MotorDbManager
-    from modules.stats import Stats
-    from modules.others.time_and_dates import TimeAndDates
     from modules.others.openai import OpenAI
+    from modules.others.time_and_dates import TimeAndDates
+    from modules.stats import Stats
+    from myfunctions.motor import MotorDbManager
 sus_words = [
     "amongus",
     "аmongus",

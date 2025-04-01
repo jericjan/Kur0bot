@@ -1,11 +1,12 @@
 import asyncio
 import uuid
+from typing import TYPE_CHECKING, Any, cast
 
 # from modules.others import emote_sticker
 import aiohttp
 import disnake
 from disnake.ext import commands
-from typing import TYPE_CHECKING, cast, Any
+
 if TYPE_CHECKING:
     from modules.others.emote_sticker import EmoteSticker
 

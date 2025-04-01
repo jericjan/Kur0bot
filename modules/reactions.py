@@ -1,6 +1,8 @@
-from disnake.ext import commands
-import disnake
 from typing import Any
+
+import disnake
+from disnake.ext import commands
+
 
 class Reactions(commands.Cog):
     def __init__(self, client: commands.Bot):

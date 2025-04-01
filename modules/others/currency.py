@@ -1,11 +1,11 @@
 import json
 import re
 from decimal import Decimal
+from typing import TYPE_CHECKING, Any, cast
 
 import aiohttp
 import disnake
 from disnake.ext import commands
-from typing import TYPE_CHECKING, cast, Any
 
 if TYPE_CHECKING:
     from myfunctions.command_bridge import Bridger

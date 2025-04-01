@@ -1,13 +1,16 @@
-from disnake.ext import commands
-from ..paginator import ButtonPaginator
-import disnake
-from saucenao_api import SauceNao
 import os
 import re
+from typing import Any
+
 import aiohttp
+import disnake
+from disnake.ext import commands
+from saucenao_api import SauceNao
 
 from myfunctions import msg_link_grabber
-from typing import Any
+
+from ..paginator import ButtonPaginator
+
 
 class Sauce(commands.Cog):
     @commands.command()

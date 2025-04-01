@@ -2,6 +2,7 @@ import os
 import shutil
 import time
 import uuid
+from typing import TYPE_CHECKING, Any, cast
 
 import aiohttp
 import cv2
@@ -11,7 +12,7 @@ from disnake.ext import commands
 
 from myfunctions import msg_link_grabber, subprocess_runner
 from myfunctions.greenscreen import GreenScreener, GreenScreenerHandler
-from typing import TYPE_CHECKING, cast, Any
+
 if TYPE_CHECKING:
     from myfunctions.filetype import FileTypeChecker
 

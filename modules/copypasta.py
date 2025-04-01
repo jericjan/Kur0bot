@@ -1,6 +1,8 @@
-from disnake.ext import commands
 import asyncio
 from typing import Any
+
+from disnake.ext import commands
+
 
 class Copypasta(commands.Cog):
     @commands.command()

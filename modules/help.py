@@ -5,11 +5,11 @@ https://discordjs.guide/popular-topics/embeds.html#embed-preview
 
 import json
 import os
+from typing import TYPE_CHECKING, Any, cast
 
 import disnake
 from disnake.ext import commands
 
-from typing import TYPE_CHECKING, cast, Any
 if TYPE_CHECKING:
     from modules.kur0_only import Kur0only
 

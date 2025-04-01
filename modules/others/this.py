@@ -1,9 +1,11 @@
+from typing import Any
+
 import disnake
 from disnake.ext import commands
 
 from myfunctions import msg_link_grabber
 from myfunctions.greenscreen import GreenScreener, GreenScreenerHandler
-from typing import Any
+
 
 class ThisRightHere(commands.Cog):
     def __init__(self, client: commands.Bot):

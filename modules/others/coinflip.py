@@ -1,7 +1,8 @@
-from disnake.ext import commands
-
 import random
 from typing import Any
+
+from disnake.ext import commands
+
 
 class Coinflip(commands.Cog):
     def __init__(self, client: commands.Bot):

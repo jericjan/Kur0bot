@@ -1,7 +1,9 @@
-from disnake.ext import commands
-import disnake
 import asyncio
 from typing import Any
+
+import disnake
+from disnake.ext import commands
+
 
 class Badapple(commands.Cog):
     def __init__(self, client: commands.Bot):

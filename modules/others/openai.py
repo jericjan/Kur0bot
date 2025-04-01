@@ -1,6 +1,7 @@
 import os
 import urllib.parse
 from importlib.metadata import version
+from typing import Any
 
 import aiohttp
 import disnake
@@ -9,7 +10,7 @@ import nest_asyncio
 import openai
 from disnake.ext import commands
 from g4f.client import Client
-from typing import Any
+
 
 class OpenAI(commands.Cog):
     def __init__(self, client: commands.Bot):
