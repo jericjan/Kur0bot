@@ -1,9 +1,12 @@
-import aiohttp
-from disnake.ext import commands
-import disnake
 import os
-from modules.paginator import ButtonPaginator
 from typing import Any
+
+import aiohttp
+import disnake
+from disnake.ext import commands
+
+from modules.paginator import ButtonPaginator
+
 
 class GoogleSearch(commands.Cog):
     def __init__(self, client: commands.Bot):

@@ -1,11 +1,12 @@
 import json
+from typing import Any
 
 import aiohttp
 import disnake
 from disnake.ext import commands
 from dotenv import load_dotenv
 from lorem.text import TextLorem
-from typing import Any
+
 
 class AttachmentBulker:
     def __init__(self, ctx: commands.Context[Any], threshold):

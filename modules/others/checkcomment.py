@@ -2,11 +2,12 @@ import asyncio
 import os
 import re
 import time
+from typing import Any
 from urllib.request import urlopen
 
 import aiohttp
 from disnake.ext import commands
-from typing import Any
+
 
 class CheckComment(commands.Cog):
     @commands.command()

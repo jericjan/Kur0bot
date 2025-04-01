@@ -3,8 +3,10 @@
 # slightly modified
 # i should really make this a cog (soon)
 
-import disnake
 from typing import Any
+
+import disnake
+
 
 async def dummy_response(interaction):
     await interaction.response.send_message(

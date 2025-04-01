@@ -1,6 +1,8 @@
-from disnake.ext import commands
 import os
 from typing import Any
+
+from disnake.ext import commands
+
 
 class Karaoke(commands.Cog):
     def __init__(self, client: commands.Bot):

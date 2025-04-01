@@ -1,11 +1,12 @@
 import os
 import random
+from typing import TYPE_CHECKING, Any
 
 import pymongo
 from disnake.ext import commands
 from motor.motor_asyncio import AsyncIOMotorClient
 from pymongo.server_api import ServerApi
-from typing import TYPE_CHECKING, Any
+
 if TYPE_CHECKING:
     from motor.motor_asyncio import AsyncIOMotorCollection
 

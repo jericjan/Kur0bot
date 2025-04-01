@@ -3,11 +3,12 @@ import json
 import os
 import re
 from ftplib import FTP
+from typing import Any
 
 import disnake
 from disnake.ext import commands
 from mcrcon import MCRcon
-from typing import Any
+
 
 class PacifamOnly(commands.Cog):
     def __init__(self, client: commands.Bot):

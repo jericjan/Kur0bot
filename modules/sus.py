@@ -1,7 +1,8 @@
 import random
+from typing import Any
 
 from disnake.ext import commands
-from typing import Any
+
 from modules.events import sus_replies
 
 

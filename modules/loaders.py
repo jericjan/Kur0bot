@@ -1,8 +1,9 @@
 import importlib
 import sys
+from typing import Any
 
 from disnake.ext import commands
-from typing import Any
+
 
 class Loaders(commands.Cog):
     def __init__(self, client: commands.Bot):

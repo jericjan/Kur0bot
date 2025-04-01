@@ -1,11 +1,12 @@
 import os
+from typing import Any
 
 import aiohttp
 import dateutil.parser as dp
 from disnake.ext import commands
 
 from myfunctions import msg_link_grabber
-from typing import Any
+
 
 class When(commands.Cog):
     async def grab_msg_time(self, msg):

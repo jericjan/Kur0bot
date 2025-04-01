@@ -1,8 +1,10 @@
 # goofy ahh synchronous mongodb function, will be replacing with motor.py
 
-from typing import Any
-from pymongo import MongoClient
 import os
+from typing import Any
+
+from pymongo import MongoClient
+
 
 def get_db(db_name: str):
 

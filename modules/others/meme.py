@@ -1,13 +1,14 @@
 import re
 import urllib.parse
 from io import BytesIO
+from typing import Any
 
 import aiohttp
 import disnake
 from disnake.ext import commands
 
 from myfunctions import msg_link_grabber
-from typing import Any
+
 
 class Meme(commands.Cog):
     def __init__(self, client: commands.Bot):

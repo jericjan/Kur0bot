@@ -7,10 +7,12 @@ import threading
 import time
 from datetime import datetime, timedelta
 from pathlib import Path
+from typing import Any, Optional, Literal, Coroutine
 
 import aiohttp
 import dateutil.parser as dp
 import disnake
+import disnake.ext
 import disnake.ext.commands
 import pytz
 import requests
@@ -18,9 +20,7 @@ from disnake import Webhook
 from disnake.ext import commands
 from dotenv import load_dotenv
 
-import disnake.ext
 from keep_alive import keep_alive
-from typing import Any, Optional, Literal, Coroutine
 
 start_time = time.time()
 print(f"Running Disnake {disnake.__version__}")

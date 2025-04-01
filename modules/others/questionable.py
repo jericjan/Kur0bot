@@ -1,8 +1,9 @@
 import random
+from typing import TYPE_CHECKING, Any, cast
 
 import disnake
 from disnake.ext import commands
-from typing import TYPE_CHECKING, cast, Any
+
 if TYPE_CHECKING:
     from myfunctions.motor import MotorDbManager
 
