@@ -7,7 +7,7 @@ import threading
 import time
 from datetime import datetime, timedelta
 from pathlib import Path
-from typing import Any, Optional, Literal, Coroutine
+from typing import Any, Callable, Optional, Literal, Coroutine
 
 import aiohttp
 import dateutil.parser as dp
@@ -57,24 +57,17 @@ def rate_limit_check():
         print(
             f"{(time.time() - start_time):.2f}s - Not rate limited. ({r.status_code})"
         )
-
-
 rlimit = threading.Thread(target=rate_limit_check)
 rlimit.start()
 
-intents = disnake.Intents().all()
-game = disnake.Activity(name="sus gaming | k.help", type=disnake.ActivityType.playing)
-client = commands.Bot(
-    command_prefix="k.",
-    intents=intents,
-    activity=game,
-    default_install_types=disnake.ApplicationInstallTypes.all(),
-    default_contexts=disnake.InteractionContextTypes.all(),
-)
-client.remove_command("help")
+class MyBot(commands.Bot):
+    def __init__(self, start_time: float, log: Callable[..., None], sus_on: bool, *args: Any, **kwargs: Any):
+        super().__init__(*args, **kwargs) 
+        self.start_time = start_time
+        self.log = log
+        self.sus_on = sus_on
 
-
-async def log(text: str, print_text: Optional[bool] = None):
+def log(text: str, print_text: Optional[bool] = None):
     tz = pytz.timezone("Asia/Manila")
     curr_time = datetime.now(tz)
     clean_time = curr_time.strftime("%m/%d/%Y %I:%M %p")
@@ -86,10 +79,19 @@ async def log(text: str, print_text: Optional[bool] = None):
     with open("log.txt", "a", encoding="utf-8") as f:
         f.write(final)
 
-
-client.start_time = start_time  # type: ignore
-client.log = log  # type: ignore
-client.sus_on = False  # type: ignore
+intents = disnake.Intents().all()
+game = disnake.Activity(name="sus gaming | k.help", type=disnake.ActivityType.playing)
+client = MyBot(
+    start_time,
+    log,
+    False,
+    command_prefix="k.",
+    intents=intents,
+    activity=game,
+    default_install_types=disnake.ApplicationInstallTypes.all(),
+    default_contexts=disnake.InteractionContextTypes.all(),
+)
+client.remove_command("help")
 
 
 print(f"{(time.time() - start_time):.2f}s - Importing Kur0's modules...")
@@ -127,7 +129,7 @@ async def common(ctx: disnake.ext.commands.Context[Any]):
         text += f'| "{ctx.guild.name}"'
     if not isinstance(ctx.channel, disnake.channel.DMChannel):
         text += f' - "{ctx.channel.name}"'
-    await log(str(text))
+    log(str(text))
 
 
 @client.command()
@@ -379,7 +381,7 @@ keep_alive()
 
 proc_id = os.getpid()
 print(f"{(time.time() - start_time):.2f}s - Process ID: {proc_id}")
-asyncio.run(log(f"Process ID: {proc_id}", False))
+log(f"Process ID: {proc_id}", False)
 # check(start_time, proc_id)  # Old code from replit days
 loop = client.loop
 try:

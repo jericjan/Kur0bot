@@ -13,7 +13,7 @@ import disnake
 import numpy
 import pytz
 from disnake.ext import commands
-from gtts import gTTS
+from gtts import gTTS  # type: ignore
 
 from myfunctions.async_wrapper import async_wrap
 
@@ -22,6 +22,8 @@ if TYPE_CHECKING:
     from modules.others.time_and_dates import TimeAndDates
     from modules.stats import Stats
     from myfunctions.motor import MotorDbManager
+    from main import MyBot
+    
 sus_words = [
     "amongus",
     "аmongus",
@@ -62,7 +64,7 @@ deez_replies = [
 
 
 class Events(commands.Cog):
-    def __init__(self, client: commands.Bot):
+    def __init__(self, client: "MyBot"):
         self.client = client
         self.start_time = self.client.start_time
         self.log = self.client.log
@@ -74,14 +76,14 @@ class Events(commands.Cog):
             f"\033[92m{(time.time() - self.start_time):.2f}s - We have logged in as "
             f"{self.client.user}\033[0m"
         )
-        await self.log("Bot started", False)
+        self.log("Bot started", False)
 
     @commands.Cog.listener()
-    async def on_member_update(self, before, after):
+    async def on_member_update(self, before: disnake.Member, after: disnake.Member):
         pass
 
     @commands.Cog.listener()
-    async def on_presence_update(self, before, after):
+    async def on_presence_update(self, before: disnake.Member, after: disnake.Member):
         @async_wrap
         def load_json():
             with open("modules/others/hall_of_shame_ids.json", encoding="utf-8") as f:
@@ -89,15 +91,15 @@ class Events(commands.Cog):
             return res
 
         @async_wrap
-        def log_activity(game_id, guild, name, activity_name):
+        def log_activity(game_id: str, guild: disnake.Guild, name: str, activity_name: str):
             with open("activities.txt", "a", encoding="utf-8") as f:
                 f.write(
                     f"({game_id}) [{guild}] {name}: started playing {activity_name}"
                 )
 
         new_user_activities = after.activities
-        id_list = []
-        game_names = []
+        id_list: list[int] = []
+        game_names: list[str] = []
 
         game_names.append("Mobile Legends: Bang Bang")
         id_list.append(588739191433723914)  # mobile_legends
@@ -120,9 +122,9 @@ class Events(commands.Cog):
         if new_user_activities:
             for activity in new_user_activities:
                 if str(activity.type) == "ActivityType.playing" and not after.bot:
-                    try:
+                    if isinstance(activity, disnake.Activity):
                         game_id = activity.application_id
-                    except:
+                    else:
                         game_id = "UNKNOWN"
 
                     await log_activity(game_id, after.guild, after.name, activity.name)
@@ -136,21 +138,27 @@ class Events(commands.Cog):
                             hall_of_shame_embed_id = hall_of_shame_json[
                                 str(after.guild.id)
                             ]["embed-id"]
+                            
                             hall_of_shame_channel = await self.client.fetch_channel(
                                 hall_of_shame_channel_id
                             )
+                            if not isinstance(hall_of_shame_channel, disnake.TextChannel):
+                                print(f"INVALID HALL OF SHAME ID for {str(after.guild.id)}")
+                                return
+                            
                             hall_of_shame = await hall_of_shame_channel.fetch_message(
                                 hall_of_shame_embed_id
                             )
                             if after.guild == hall_of_shame.guild:
                                 em = hall_of_shame.embeds[0]
                                 name_list = [i.name for i in em.fields]
-                                try:
+                                if _ := activity.start:
                                     start_time = (
-                                        f"<t:{round(activity.start.timestamp())}:R>"
+                                        f"<t:{round(_.timestamp())}:R>"
                                     )
-                                except:
+                                else:
                                     start_time = "at an unknown time"
+                                    
                                 value = f"{after.mention} opened **{activity.name}** {start_time}"
                                 name = after.name
                                 if name in name_list:
@@ -169,7 +177,7 @@ class Events(commands.Cog):
                             # )
 
     @commands.Cog.listener()
-    async def on_message(self, message):
+    async def on_message(self, message: disnake.Message):
         if message.author == self.client.user:
             return
         msg = message.content.lower()
@@ -181,10 +189,14 @@ class Events(commands.Cog):
 
         motor = cast("MotorDbManager", self.client.get_cog("MotorDbManager"))
 
-        toggles = motor.get_collection_for_server("toggles", message.guild.id)
+        msg_guild = message.guild
+        # Use User ID if message guild is not available (prolly works?)
+        toggles = (
+            motor.get_collection_for_server("toggles", msg_guild.id  if msg_guild else message.author.id)           
+        )
 
         stats_cog = cast("Stats", self.client.get_cog("Stats"))
-        user_stat = stats_cog.get_user(message.guild.id, message.author.id)
+        user_stat = stats_cog.get_user(msg_guild.id if msg_guild else message.author.id, message.author.id)
 
         ################SUSSY REPLIES##################
         if message.channel.id == 850380119646142504:  # sus-town
@@ -199,10 +211,10 @@ class Events(commands.Cog):
                     await message.channel.send(
                         random.choice(sus_replies), delete_after=3.0
                     )
-                    await self.log("sussy reply", False)
+                    self.log("sussy reply", False)
                 if self.client.sus_on:
                     await message.channel.send(random.choice(sus_replies))
-                    await self.log("sussy reply", False)
+                    self.log("sussy reply", False)
 
         other_sus_dict = {
             "amgus": random.choice(sugma_replies),
@@ -215,7 +227,7 @@ class Events(commands.Cog):
             if target_word in msg:
                 await user_stat.increment("Sussy replies", 1)
                 await message.channel.send(response, delete_after=3.0)
-                await self.log("sussy reply", False)
+                self.log("sussy reply", False)
 
 
 
@@ -323,7 +335,7 @@ class Events(commands.Cog):
 
         if msg.startswith("] "):
             voice_channel = message.author.voice.channel
-            await self.log("] command used", True)
+            self.log("] command used", True)
             tts = gTTS(msg)
             with open("sounds/tts.mp3", "wb") as f:
                 tts.write_to_fp(f)
@@ -336,7 +348,7 @@ class Events(commands.Cog):
                 else:
                     voice.play(disnake.FFmpegPCMAudio(source="sounds/tts.mp3"))
         if msg.startswith("]au "):
-            await self.log("]au command used", True)
+            self.log("]au command used", True)
             voice_channel = message.author.voice.channel
 
             tts = gTTS(msg[3:], lang="en", tld="com.au")
@@ -351,7 +363,7 @@ class Events(commands.Cog):
                 else:
                     voice.play(disnake.FFmpegPCMAudio(source="sounds/tts.mp3"))
         if msg.startswith("]uk "):
-            await self.log("]uk command used", True)
+            self.log("]uk command used", True)
             voice_channel = message.author.voice.channel
 
             tts = gTTS(msg[3:], lang="en", tld="co.uk")
@@ -366,7 +378,7 @@ class Events(commands.Cog):
                 else:
                     voice.play(disnake.FFmpegPCMAudio(source="sounds/tts.mp3"))
         if msg.startswith("]in "):
-            await self.log("]in command used", True)
+            self.log("]in command used", True)
             voice_channel = message.author.voice.channel
 
             tts = gTTS(msg[3:], lang="en", tld="co.in")
@@ -523,7 +535,7 @@ class Events(commands.Cog):
 
 
         trollplant = "<a:trollplant:934777423881445436>"
-
+        
         dad_jokes = await toggles.find_one({"title": "Dad Jokes"})
 
         if (dad_jokes is None or dad_jokes.get("enabled")) and im_pattern.search(msg):
@@ -726,7 +738,7 @@ class Events(commands.Cog):
                     await ctx.send(full_error(error))
             else:
                 await ctx.send(full_error(error))
-            await self.log(error, False)
+            self.log(error, False)
         elif isinstance(error, disnake.ClientException):
             if str(error) == "Already playing audio.":
                 await ctx.send(
@@ -742,7 +754,7 @@ class Events(commands.Cog):
                     print(f"{i}: {getattr(error,i)}\n")
             print(f"invoked command: {ctx.command}")
             await ctx.send(full_error(error))
-        await self.log(error, False)
+        self.log(error, False)
         raise error  # re-raise the error so all the errors will still show up in console
 
     ################################ON_SLASH_COMMAND_ERROR#############
