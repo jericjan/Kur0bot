@@ -1,12 +1,14 @@
 import importlib
 import sys
-from typing import Any
+from typing import Any, TYPE_CHECKING
 
 from disnake.ext import commands
 
+if TYPE_CHECKING:
+    from main import MyBot
 
 class Loaders(commands.Cog):
-    def __init__(self, client: commands.Bot):
+    def __init__(self, client: "MyBot"):
         self.client = client
         self.start_time = self.client.start_time
         self.log = self.client.log

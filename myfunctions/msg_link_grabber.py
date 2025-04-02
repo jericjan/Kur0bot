@@ -3,7 +3,7 @@ from typing import TYPE_CHECKING, Any, Optional
 if TYPE_CHECKING:
     from disnake.ext import commands
 
-async def grab_link(ctx: commands.Context[Any], link: Optional[str] = None):
+async def grab_link(ctx: "commands.Context[Any]", link: Optional[str] = None):
     if link == None:
         print(ctx.message.attachments)  # a list
         print(ctx.message.reference)

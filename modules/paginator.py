@@ -3,10 +3,12 @@
 # slightly modified
 # i should really make this a cog (soon)
 
-from typing import Any
+from typing import Any, TYPE_CHECKING
 
 import disnake
 
+if TYPE_CHECKING:
+    from disnake.ext import commands
 
 async def dummy_response(interaction):
     await interaction.response.send_message(
@@ -37,7 +39,7 @@ class ChannelResponseWrapper:
 
 
 class MessageInteractionWrapper:
-    def __init__(self, ctx: commands.Context[Any]):
+    def __init__(self, ctx: "commands.Context[Any]"):
         self.name = "MessageInteractionWrapper"
         self.id = ctx.message.id
         self.author = ctx.message.author
@@ -198,7 +200,7 @@ class ButtonPaginator:
 
         self.view = PaginatorView
 
-    async def send(self, ctx: commands.Context[Any], ephemeral=False, deferred=False):
+    async def send(self, ctx: "commands.Context[Any]", ephemeral=False, deferred=False):
         interaction = MessageInteractionWrapper(ctx)
         if not deferred:
             await interaction.response.send_message(
