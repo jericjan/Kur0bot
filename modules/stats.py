@@ -4,8 +4,7 @@ import disnake
 from disnake.ext import commands
 
 if TYPE_CHECKING:
-    from myfunctions.motor import MotorDbManager
-
+    from myfunctions.motor import MotorDbManager, StatContents
 class UserStat:
     def __init__(self, client: commands.Bot, guild_id: Union[str, int], author_id: int):
         motor = cast(
@@ -22,9 +21,7 @@ class UserStat:
             upsert=True,
         )
 
-class StatContents(TypedDict):
-    user_id: int
-    stats: dict[str, Any]
+
 
 class Stats(commands.Cog):
     def __init__(self, client: commands.Bot):
@@ -46,7 +43,7 @@ class Stats(commands.Cog):
             "stats", ctx.guild.id if ctx.guild else ctx.author.id
         )
         user_doc = cast(
-            StatContents, 
+            "StatContents", 
             await stats_coll.find_one({"user_id": user.id})
         )
 

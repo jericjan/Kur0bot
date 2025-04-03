@@ -1,7 +1,6 @@
 from datetime import datetime, timedelta
-from typing import Any
+from typing import Any, Literal, Optional
 
-import disnake
 import pytz
 from disnake.ext import commands
 
@@ -10,10 +9,10 @@ class TimeAndDates(commands.Cog):
     def __init__(self, client: commands.Bot):
         self.client = client
 
-    def remove_dupes(self, x):
+    def remove_dupes(self, x: list[str]):
         return list(set(x))
 
-    def get_current_days(self, show_date=True):
+    def get_current_days(self, show_date: bool=True):
         self.last_tz = datetime.now(pytz.timezone("Etc/GMT+12"))
         self.first_tz = datetime.now(pytz.timezone("Etc/GMT-14"))
         other_tz = datetime.now(
@@ -30,7 +29,20 @@ class TimeAndDates(commands.Cog):
         )
         return tz_day_list
 
-    def get_date_boundary(self, mode, weekday=None):
+    def get_date_boundary(
+        self, mode: Literal['start', 'end'],
+        weekday: Optional[
+            Literal[
+                "monday",
+                "tuesday",
+                "wednesday",
+                "thursday",
+                "friday",
+                "saturday",
+                "sunday"
+            ]
+        ] = None
+    ):
         """
         bad code but pls run get_current_days() first to update those vars
         """
@@ -72,7 +84,7 @@ class TimeAndDates(commands.Cog):
         else:
             raise Exception("wrong mode given!")
 
-    def tz_to_discord_timestamp(self, tz):
+    def tz_to_discord_timestamp(self, tz: datetime):
         return f"<t:{int(tz.timestamp())}:R>"
 
     @commands.command()
