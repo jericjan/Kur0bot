@@ -7,7 +7,7 @@ import time
 from datetime import datetime, timedelta, timezone
 from operator import attrgetter
 from pathlib import Path
-from typing import TYPE_CHECKING, Any, cast
+from typing import TYPE_CHECKING, Any, Optional, cast
 
 import disnake
 import numpy
@@ -21,7 +21,7 @@ if TYPE_CHECKING:
     from modules.others.openai import OpenAI
     from modules.others.time_and_dates import TimeAndDates
     from modules.stats import Stats
-    from myfunctions.motor import MotorDbManager
+    from myfunctions.motor import MotorDbManager, ToggleContents, DadJokeVictimContents
     from main import MyBot
     
 sus_words = [
@@ -189,14 +189,13 @@ class Events(commands.Cog):
 
         motor = cast("MotorDbManager", self.client.get_cog("MotorDbManager"))
 
-        msg_guild = message.guild
         # Use User ID if message guild is not available (prolly works?)
         toggles = (
-            motor.get_collection_for_server("toggles", msg_guild.id  if msg_guild else message.author.id)           
+            motor.get_collection_for_server("toggles", message.guild.id  if message.guild else message.author.id)           
         )
 
         stats_cog = cast("Stats", self.client.get_cog("Stats"))
-        user_stat = stats_cog.get_user(msg_guild.id if msg_guild else message.author.id, message.author.id)
+        user_stat = stats_cog.get_user(message.guild.id if message.guild else message.author.id, message.author.id)
 
         ################SUSSY REPLIES##################
         if message.channel.id == 850380119646142504:  # sus-town
@@ -234,84 +233,88 @@ class Events(commands.Cog):
         if re.search(r"blue.archive", msg):
             await user_stat.increment("Blue Archive mentioned", 1)
             user_id = 480466417884463137
-            kyle_in_server = await message.guild.getch_member(user_id)
-            if kyle_in_server:
-                await message.channel.send(f"<@{user_id}>")
+            if message.guild:
+                kyle_in_server = await message.guild.getch_member(user_id)
+                if kyle_in_server:
+                    await message.channel.send(f"<@{user_id}>")
 
         if re.search(r"(?:fkn|fucking) hell", msg):
             await user_stat.increment("Hell fucking", 1)
             user_id = 327595393237909505
-            in_server = await message.guild.getch_member(user_id)
-            if in_server:
-                await message.channel.send(f"They're fucking <@{user_id}>")
+            if message.guild:
+                in_server = await message.guild.getch_member(user_id)
+                if in_server:
+                    await message.channel.send(f"They're fucking <@{user_id}>")
 
-        if all(word in msg for word in ["blue archive", "cunny", "uoh", "sui"]):
-            user_id = 1009325079336853515
-            in_server = await message.guild.getch_member(user_id)
-            if in_server:
-                await user_stat.increment("The Magic Kakuy Spell", 1)
-                await message.channel.send(
-                    f"You've uttered the Magic Kakuy Spell! <@{user_id}> will remember this..."
-                )
+        if message.guild:
+            if all(word in msg for word in ["blue archive", "cunny", "uoh", "sui"]):
+                user_id = 1009325079336853515
+                in_server = await message.guild.getch_member(user_id)
+                if in_server:
+                    await user_stat.increment("The Magic Kakuy Spell", 1)
+                    await message.channel.send(
+                        f"You've uttered the Magic Kakuy Spell! <@{user_id}> will remember this..."
+                    )
         # PACIFAM ONLY
         pacifam_servers = [603147860225032192, 938255956247183451]
-        if any(message.guild.id == x for x in pacifam_servers):
+        if message.guild:
+            if any(message.guild.id == x for x in pacifam_servers):
 
-            if "dox" in msg:
-                choice = random.choice(
-                    [
-                        "videos/professional_doxxers.mp4",
-                        "images/allen_quote.png",
-                        "images/dex_quote.png",
-                    ]
-                )
-                await user_stat.increment("Doxx", 1)
-                await message.channel.send(file=disnake.File(choice))
-
-            if any(word in msg for word in ["hurensohn", "hurensöhne"]):
-                await user_stat.increment("Hurensohn", 1)
-                huren_target = numpy.random.choice(
-                    [1200519236834041898, 304268898637709312], p=[0.6, 0.4]
-                )
-                await message.channel.send(f"<@{huren_target}>")  # pings nana/allen
-
-            # le strepto
-            if all(message.channel.id != x for x in [1260889287931723839]):
-                if any(
-                    word in msg
-                    for word in [
-                        "feet",
-                        "foot",
-                        "toe",
-                        "ankle",
-                        "heel",
-                        "arch",
-                        "sole",
-                        "🦶",
-                    ]
-                ):
-                    strepto_in_server = await message.guild.getch_member(
-                        268188421871108097
+                if "dox" in msg:
+                    choice = random.choice(
+                        [
+                            "videos/professional_doxxers.mp4",
+                            "images/allen_quote.png",
+                            "images/dex_quote.png",
+                        ]
                     )
-                    if strepto_in_server:
-                        await user_stat.increment("Feet-related", 1)
+                    await user_stat.increment("Doxx", 1)
+                    await message.channel.send(file=disnake.File(choice))
 
-                        time_and_dates = cast(
-                            "TimeAndDates", self.client.get_cog(
-                                "TimeAndDates"
-                            )
+                if any(word in msg for word in ["hurensohn", "hurensöhne"]):
+                    await user_stat.increment("Hurensohn", 1)
+                    huren_target = numpy.random.choice(
+                        [1200519236834041898, 304268898637709312], p=[0.6, 0.4]
+                    )
+                    await message.channel.send(f"<@{huren_target}>")  # pings nana/allen
+
+                # le strepto
+                if all(message.channel.id != x for x in [1260889287931723839]):
+                    if any(
+                        word in msg
+                        for word in [
+                            "feet",
+                            "foot",
+                            "toe",
+                            "ankle",
+                            "heel",
+                            "arch",
+                            "sole",
+                            "🦶",
+                        ]
+                    ):
+                        strepto_in_server = await message.guild.getch_member(
+                            268188421871108097
                         )
-                        days_list = time_and_dates.get_current_days(show_date=False)
+                        if strepto_in_server:
+                            await user_stat.increment("Feet-related", 1)
 
-                        strepto_ping = "<@268188421871108097>"
-
-                        if "Friday" in days_list:
-                            strepto_ping += (
-                                "\nhttps://cdn.discordapp.com/attachments/809247468084133898/"
-                                "1231538142129946715/20240420_183246.png"
+                            time_and_dates = cast(
+                                "TimeAndDates", self.client.get_cog(
+                                    "TimeAndDates"
+                                )
                             )
+                            days_list = time_and_dates.get_current_days(show_date=False)
 
-                        await message.channel.send(strepto_ping)  # pings strepto
+                            strepto_ping = "<@268188421871108097>"
+
+                            if "Friday" in days_list:
+                                strepto_ping += (
+                                    "\nhttps://cdn.discordapp.com/attachments/809247468084133898/"
+                                    "1231538142129946715/20240420_183246.png"
+                                )
+
+                            await message.channel.send(strepto_ping)  # pings strepto
 
         #############TWITTER LINK GIVER####################
         twt_links = re.findall(r"(?:https://(?:www\.)?)(?:x|twitter)(?:\.com\S+)", msg)
@@ -332,66 +335,66 @@ class Events(commands.Cog):
                 await message.channel.send(x)
 
         ######################TEXT TO SPEECH#################
+        if isinstance(message.author, disnake.Member) and message.author.voice:
+            if msg.startswith("] "):
+                voice_channel = message.author.voice.channel
+                self.log("] command used", True)
+                tts = gTTS(msg)
+                with open("sounds/tts.mp3", "wb") as f:
+                    tts.write_to_fp(f)  # TODO: this is horrible btw # type: ignore
+                voice = disnake.utils.get(self.client.voice_clients, guild=message.guild)
+                if voice_channel is not None:
 
-        if msg.startswith("] "):
-            voice_channel = message.author.voice.channel
-            self.log("] command used", True)
-            tts = gTTS(msg)
-            with open("sounds/tts.mp3", "wb") as f:
-                tts.write_to_fp(f)
-            voice = disnake.utils.get(self.client.voice_clients, guild=message.guild)
-            if voice_channel is not None:
+                    if voice is None:
+                        vc = await voice_channel.connect()
+                        vc.play(disnake.FFmpegPCMAudio(source="sounds/tts.mp3"))
+                    else:
+                        cast("disnake.VoiceClient", voice).play(disnake.FFmpegPCMAudio(source="sounds/tts.mp3"))
+            if msg.startswith("]au "):
+                self.log("]au command used", True)
+                voice_channel = message.author.voice.channel
 
-                if voice is None:
-                    vc = await voice_channel.connect()
-                    vc.play(disnake.FFmpegPCMAudio(source="sounds/tts.mp3"))
-                else:
-                    voice.play(disnake.FFmpegPCMAudio(source="sounds/tts.mp3"))
-        if msg.startswith("]au "):
-            self.log("]au command used", True)
-            voice_channel = message.author.voice.channel
+                tts = gTTS(msg[3:], lang="en", tld="com.au")
+                with open("sounds/tts.mp3", "wb") as f:
+                    tts.write_to_fp(f)  # type: ignore
+                voice = disnake.utils.get(self.client.voice_clients, guild=message.guild)
+                if voice_channel is not None:
 
-            tts = gTTS(msg[3:], lang="en", tld="com.au")
-            with open("sounds/tts.mp3", "wb") as f:
-                tts.write_to_fp(f)
-            voice = disnake.utils.get(self.client.voice_clients, guild=message.guild)
-            if voice_channel is not None:
+                    if voice is None:
+                        vc = await voice_channel.connect()
+                        vc.play(disnake.FFmpegPCMAudio(source="sounds/tts.mp3"))
+                    else:
+                        cast("disnake.VoiceClient", voice).play(disnake.FFmpegPCMAudio(source="sounds/tts.mp3"))
+            if msg.startswith("]uk "):
+                self.log("]uk command used", True)
+                voice_channel = message.author.voice.channel
 
-                if voice is None:
-                    vc = await voice_channel.connect()
-                    vc.play(disnake.FFmpegPCMAudio(source="sounds/tts.mp3"))
-                else:
-                    voice.play(disnake.FFmpegPCMAudio(source="sounds/tts.mp3"))
-        if msg.startswith("]uk "):
-            self.log("]uk command used", True)
-            voice_channel = message.author.voice.channel
+                tts = gTTS(msg[3:], lang="en", tld="co.uk")
+                with open("sounds/tts.mp3", "wb") as f:
+                    tts.write_to_fp(f)  # type: ignore
+                voice = disnake.utils.get(self.client.voice_clients, guild=message.guild)
+                if voice_channel is not None:
 
-            tts = gTTS(msg[3:], lang="en", tld="co.uk")
-            with open("sounds/tts.mp3", "wb") as f:
-                tts.write_to_fp(f)
-            voice = disnake.utils.get(self.client.voice_clients, guild=message.guild)
-            if voice_channel is not None:
+                    if voice is None:
+                        vc = await voice_channel.connect()
+                        vc.play(disnake.FFmpegPCMAudio(source="sounds/tts.mp3"))
+                    else:
+                        cast("disnake.VoiceClient", voice).play(disnake.FFmpegPCMAudio(source="sounds/tts.mp3"))
+            if msg.startswith("]in "):
+                self.log("]in command used", True)
+                voice_channel = message.author.voice.channel
 
-                if voice is None:
-                    vc = await voice_channel.connect()
-                    vc.play(disnake.FFmpegPCMAudio(source="sounds/tts.mp3"))
-                else:
-                    voice.play(disnake.FFmpegPCMAudio(source="sounds/tts.mp3"))
-        if msg.startswith("]in "):
-            self.log("]in command used", True)
-            voice_channel = message.author.voice.channel
+                tts = gTTS(msg[3:], lang="en", tld="co.in")
+                with open("sounds/tts.mp3", "wb") as f:
+                    tts.write_to_fp(f)  # type: ignore
+                voice = disnake.utils.get(self.client.voice_clients, guild=message.guild)
+                if voice_channel is not None:
 
-            tts = gTTS(msg[3:], lang="en", tld="co.in")
-            with open("sounds/tts.mp3", "wb") as f:
-                tts.write_to_fp(f)
-            voice = disnake.utils.get(self.client.voice_clients, guild=message.guild)
-            if voice_channel is not None:
-
-                if voice is None:
-                    vc = await voice_channel.connect()
-                    vc.play(disnake.FFmpegPCMAudio(source="sounds/tts.mp3"))
-                else:
-                    voice.play(disnake.FFmpegPCMAudio(source="sounds/tts.mp3"))
+                    if voice is None:
+                        vc = await voice_channel.connect()
+                        vc.play(disnake.FFmpegPCMAudio(source="sounds/tts.mp3"))
+                    else:
+                        cast("disnake.VoiceClient", voice).play(disnake.FFmpegPCMAudio(source="sounds/tts.mp3"))
 
         ########################FRIDAY IN CALIFORNIA#########################
         if "friday" in msg:
@@ -426,9 +429,9 @@ class Events(commands.Cog):
                     ]
                 ] + [Path("videos/wednesday.mp4")]
 
-                wed_choice = numpy.random.choice(
-                    wed_vids, p=[0.8, 0.037, 0.037, 0.037, 0.037, 0.037, 0.015]
-                )
+                wed_choice = cast(Path, numpy.random.choice(  # type: ignore
+                    wed_vids, p=[0.8, 0.037, 0.037, 0.037, 0.037, 0.037, 0.015]  # type: ignore
+                ))
 
                 if wed_choice.parent.name == "mococo":
                     epoch = f"Mococo Wednesday ends {epoch}"
@@ -476,7 +479,7 @@ class Events(commands.Cog):
 
         if any(word in msg for word in ["fuck you tatsu", "fuck off tatsu"]):
             if message.reference is not None:
-                if message.reference.resolved is not None:
+                if isinstance(message.reference.resolved, disnake.Message):
                     if message.reference.resolved.author.id == tatsu_id:
                         await user_stat.increment("Tatsu bot murders", 1)
                         await message.reference.resolved.delete()
@@ -488,7 +491,7 @@ class Events(commands.Cog):
                         break
 
         if message.reference is not None:
-            if message.reference.resolved is not None:
+            if isinstance(message.reference.resolved, disnake.Message):
                 if message.reference.resolved.author.id == tatsu_id:
                     gpt_resp = ""
                     while gpt_resp != "True" and gpt_resp != "False":
@@ -536,87 +539,92 @@ class Events(commands.Cog):
 
         trollplant = "<a:trollplant:934777423881445436>"
         
-        dad_jokes = await toggles.find_one({"title": "Dad Jokes"})
-
-        if (dad_jokes is None or dad_jokes.get("enabled")) and im_pattern.search(msg):
-            victim_db = motor.get_collection_for_server(
-                "dad_joke_victims", message.guild.id
+        if message.guild:
+            dad_jokes = cast(
+                Optional["ToggleContents"],
+                await toggles.find_one({"title": "Dad Jokes"})
             )
 
-            async def new_victim():
-                user_list = [x for x in message.guild.members if not x.bot]
-                victim_id = random.choice(user_list).id
-                victim_notified = False
+            if (dad_jokes is None or dad_jokes.get("enabled")) and im_pattern.search(msg):
+                victim_db = motor.get_collection_for_server(
+                    "dad_joke_victims", message.guild.id
+                )
 
-                print(f"New victim is: {victim_id}")
-                if victim_id == message.author.id:
-                    await message.channel.send(
-                        f"Hey there {message.author.mention}, you appear to be my latest victim"
-                        f" for today! {trollplant*3}"
-                    )
-                    await user_stat.increment("Victimized", 1)
-                    victim_notified = True
+                async def new_victim():
+                    assert message.guild is not None
+                    user_list = [x for x in message.guild.members if not x.bot]
+                    victim_id = random.choice(user_list).id
+                    victim_notified = False
 
-                user_dic = {"user_id": victim_id, "notified": victim_notified}
-                await victim_db.insert_one(user_dic)
-                return user_dic
+                    print(f"New victim is: {victim_id}")
+                    if victim_id == message.author.id:
+                        await message.channel.send(
+                            f"Hey there {message.author.mention}, you appear to be my latest victim"
+                            f" for today! {trollplant*3}"
+                        )
+                        await user_stat.increment("Victimized", 1)
+                        victim_notified = True
 
-            if await victim_db.count_documents({}) == 0:
-                victim = await new_victim()
-            else:
-                victim = await motor.get_latest_doc(victim_db)
-                victim_id = victim["user_id"]
+                    user_dic: "DadJokeVictimContents" = {"user_id": victim_id, "notified": victim_notified}
+                    await victim_db.insert_one(user_dic)  # type: ignore
+                    return user_dic
 
-                print(f"Existing victim id is: {victim_id}")
-                time_since = victim["_id"].generation_time
-                time_difference = datetime.now(timezone.utc) - time_since
-                if time_difference >= timedelta(hours=24):
-                    print("New victim time!")
+                if await victim_db.count_documents({}) == 0:
                     victim = await new_victim()
-
-            respond_with_dad_joke = numpy.random.choice([True, False], p=[0.1, 0.9])
-
-            if respond_with_dad_joke or message.author.id == victim["user_id"]:
-
-                if message.author.id == victim["user_id"] and not victim["notified"]:
-                    await message.channel.send(
-                        f"Yo {message.author.mention}, you're a little late but, you're my latest"
-                        f" victim for today! {trollplant*3}"
-                    )
-                    await user_stat.increment("Victimized", 1)
-                    await victim_db.update_one(
-                        {"_id": victim["_id"]}, {"$set": {"notified": True}}
-                    )
-
-                results = im_pattern.findall(msg)
-                results = [f"**{x[1].strip()}**" for x in results if x[1].strip() != ""]
-                names = " AKA ".join(results)
-                if len(results) == 0:
-                    response = (
-                        "You're WHAT? What the fuck are you trying to say, you doofus."
-                    )
                 else:
-                    response = f"hi {names}, i'm kur0 sus bot! {trollplant}"
+                    victim = await motor.get_latest_doc(victim_db)
+                    victim_id = victim["user_id"]
 
-                await user_stat.increment("Im Sus Bot", 1)
-                await message.channel.send(response)
+                    print(f"Existing victim id is: {victim_id}")
+                    time_since = victim["_id"].generation_time
+                    time_difference = datetime.now(timezone.utc) - time_since
+                    if time_difference >= timedelta(hours=24):
+                        print("New victim time!")
+                        victim = await new_victim()
+
+                respond_with_dad_joke = numpy.random.choice([True, False], p=[0.1, 0.9])
+
+                if respond_with_dad_joke or message.author.id == victim["user_id"]:
+
+                    if message.author.id == victim["user_id"] and not victim["notified"]:
+                        await message.channel.send(
+                            f"Yo {message.author.mention}, you're a little late but, you're my latest"
+                            f" victim for today! {trollplant*3}"
+                        )
+                        await user_stat.increment("Victimized", 1)                        
+                        await victim_db.update_one(
+                            {"_id": victim["_id"]}, {"$set": {"notified": True}}  # pyright: ignore [reportTypedDictNotRequiredAccess]
+                        )
+
+                    results = im_pattern.findall(msg)
+                    results = [f"**{x[1].strip()}**" for x in results if x[1].strip() != ""]
+                    names = " AKA ".join(results)
+                    if len(results) == 0:
+                        response = (
+                            "You're WHAT? What the fuck are you trying to say, you doofus."
+                        )
+                    else:
+                        response = f"hi {names}, i'm kur0 sus bot! {trollplant}"
+
+                    await user_stat.increment("Im Sus Bot", 1)
+                    await message.channel.send(response)
 
         ####### FACEBOOK SHARE WARNING ###########
         match = re.search(r"https:\S+facebook.com\/share\/.\/\S+", msg)
         if match:
-            channel_link = message.channel.jump_url
-            url = match.group()
-            await message.delete()
+            if isinstance(message.channel, (disnake.DMChannel, disnake.guild.GuildMessageable)):
+                channel_link = message.channel.jump_url
+                await message.delete()
 
-            await message.author.send(
-                f"Woah partner. That's a risky FB link there in {channel_link}. "
-                "It can actually doxx you. I've deleted it for ya though. "
-                f"Try to use a different version of that link. You can try to just open it in some"
-                " browser and copy it directly from the URL bar. Just make sure it doesn't look"
-                " like: `facebook.com/share/*/******`"
-            )
+                await message.author.send(
+                    f"Woah partner. That's a risky FB link there in {channel_link}. "
+                    "It can actually doxx you. I've deleted it for ya though. "
+                    f"Try to use a different version of that link. You can try to just open it in some"
+                    " browser and copy it directly from the URL bar. Just make sure it doesn't look"
+                    " like: `facebook.com/share/*/******`"
+                )
 
-    def get_full_class_name(self, obj):
+    def get_full_class_name(self, obj: Any):
         module = obj.__class__.__module__
         if module is None or module == str.__class__.__module__:
             return obj.__class__.__name__
@@ -624,11 +632,11 @@ class Events(commands.Cog):
 
     ################################ON_COMMAND_ERROR#############
     @commands.Cog.listener()
-    async def on_command_error(self, ctx: commands.Context[Any], error):
+    async def on_command_error(self, ctx: commands.Context[Any], error: Exception):
         if hasattr(ctx, "_ignore_me_"):
             return
 
-        def full_error(err):
+        def full_error(err: Any):
             return f"{self.get_full_class_name(err)}: {err}"
 
         if isinstance(error, commands.CommandInvokeError):
@@ -650,7 +658,7 @@ class Events(commands.Cog):
                 hidden_commands = data["hidden"]
 
             commandss = [
-                c.name for c in self.client.commands if c.name not in hidden_commands
+                c.name for c in self.client.commands if c.name not in hidden_commands  # type: ignore
             ]
             print(commandss)
             similar = difflib.get_close_matches(err[1], commandss)
@@ -661,16 +669,16 @@ class Events(commands.Cog):
             else:
                 await ctx.send(f"bruh. there's no '{err[1]}' command.")
         elif isinstance(error, commands.MissingRequiredArgument):
-            commands_with_help_msg = [
-                c.name for c in self.client.get_command("help").commands
+            commands_with_help_msg = [  # type: ignore
+                c.name for c in self.client.get_command("help").commands  # type: ignore
             ]
             print("Missing req arg")
             await ctx.send(f"missing argument `{error.param}`, g")
-            command = self.client.get_command(f"help {ctx.command}")
+            command = self.client.get_command(f"help {ctx.command}")  # type: ignore
             ctx.command = command
             ctx.invoked_subcommand = command
-            if ctx.command.name in commands_with_help_msg:
-                await self.client.invoke(ctx)
+            if ctx.command.name in commands_with_help_msg:  # type: ignore
+                await self.client.invoke(ctx)  # type: ignore
 
         elif isinstance(error, commands.NotOwner):
             await ctx.send(
@@ -715,21 +723,21 @@ class Events(commands.Cog):
                         "Doktor, turn off my permission inhibitors! I don't have enough permissions"
                         " to do the thing you want me to do. Yeah, You gotta give me it. ",
                     ]
-                    traceback = error.__traceback__
-                    log_thing = ""
-                    while traceback.tb_next:
-                        filename = traceback.tb_frame.f_code.co_filename
-                        line_no = traceback.tb_lineno
-                        if filename.startswith("/home/kur0/Kur0bot"):
-                            log_thing += f"{filename}:{line_no}\n"
-                            with open(filename, encoding="utf-8") as f:
-                                for pos, line in enumerate(f):
-                                    if pos + 1 == int(line_no):
-                                        log_thing += f"{line}\n"
-                                        break
-                        traceback = traceback.tb_next
-                    message = random.choice(responses)
-                    await ctx.send(f"{message}\n```\n{log_thing}```")
+                    if traceback := error.__traceback__:
+                        log_thing = ""
+                        while traceback.tb_next:
+                            filename = traceback.tb_frame.f_code.co_filename
+                            line_no = traceback.tb_lineno
+                            if filename.startswith("/home/kur0/Kur0bot"):
+                                log_thing += f"{filename}:{line_no}\n"
+                                with open(filename, encoding="utf-8") as f:
+                                    for pos, line in enumerate(f):
+                                        if pos + 1 == int(line_no):
+                                            log_thing += f"{line}\n"
+                                            break
+                            traceback = traceback.tb_next
+                        message = random.choice(responses)
+                        await ctx.send(f"{message}\n```\n{log_thing}```")
                 elif error.code == 50001:  # missing access
                     await ctx.author.send(
                         "Yo dawg. I can't acess that channel/thread. Give me perms bruv."
@@ -752,16 +760,16 @@ class Events(commands.Cog):
             for i in dir(error):
                 if not str(i).startswith("_"):
                     print(f"{i}: {getattr(error,i)}\n")
-            print(f"invoked command: {ctx.command}")
+            print(f"invoked command: {ctx.command}")  # type: ignore
             await ctx.send(full_error(error))
         self.log(error, False)
         raise error  # re-raise the error so all the errors will still show up in console
 
     ################################ON_SLASH_COMMAND_ERROR#############
     @commands.Cog.listener()
-    async def on_slash_command_error(self, inter, error):
+    async def on_slash_command_error(self, inter: disnake.ApplicationCommandInteraction[Any], error: commands.CommandError):
         await inter.followup.send(f"{self.get_full_class_name(error)}: {error}")
 
 
-def setup(client: commands.Bot):
+def setup(client: "MyBot"):
     client.add_cog(Events(client))

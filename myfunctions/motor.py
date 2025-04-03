@@ -1,11 +1,13 @@
 import os
 import random
-from typing import TYPE_CHECKING, Any, Union
+from typing import TYPE_CHECKING, Any, TypedDict, Union
+from typing_extensions import NotRequired
 
 import pymongo
 from disnake.ext import commands
 from motor.motor_asyncio import AsyncIOMotorClient
 from pymongo.server_api import ServerApi
+from bson import ObjectId
 
 if TYPE_CHECKING:
     from motor.motor_asyncio import AsyncIOMotorCollection
@@ -54,3 +56,18 @@ class MotorDbManager(commands.Cog):
 
 def setup(client: commands.Bot):
     client.add_cog(MotorDbManager(client))
+
+class StatContents(TypedDict):
+    _id: NotRequired[ObjectId]
+    user_id: int
+    stats: dict[str, Any]    
+
+class ToggleContents(TypedDict):
+    _id: NotRequired[ObjectId]
+    title: str
+    enabled: bool
+
+class DadJokeVictimContents(TypedDict):
+    _id: NotRequired[ObjectId]
+    user_id: int
+    notified: bool

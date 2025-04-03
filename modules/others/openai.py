@@ -1,15 +1,10 @@
-import os
-import urllib.parse
 from importlib.metadata import version
 from typing import Any
 
-import aiohttp
-import disnake
-import g4f
-import nest_asyncio
-import openai
+import g4f  # type: ignore
+import nest_asyncio  # type: ignore
 from disnake.ext import commands
-from g4f.client import Client
+from g4f.client import Client  # type: ignore
 
 
 class OpenAI(commands.Cog):
@@ -18,7 +13,7 @@ class OpenAI(commands.Cog):
         self.client = client
         nest_asyncio.apply()
 
-    def prompt(self, msg):
+    def prompt(self, msg: str) -> str:
         client = Client()
         response = client.chat.completions.create(
             model="meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo",
