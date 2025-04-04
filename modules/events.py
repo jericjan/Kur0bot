@@ -8,7 +8,7 @@ import re
 import time
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
-from typing import TYPE_CHECKING, Any, Awaitable, Callable, Literal, Optional, Protocol, cast
+from typing import TYPE_CHECKING, Any, Literal, Optional, Protocol, cast
 
 import disnake
 import numpy
@@ -27,11 +27,11 @@ if TYPE_CHECKING:
 
 
 class UnboundedMsgHandlerType(Protocol):
-    async def __call__(_, self: Any, msg: str, *args: Any, **kwargs: Any) -> None:  # pyright: ignore[reportSelfClsParameterName]
+    async def __call__(_, self: Any, msg: str, message: disnake.Message, user_stat: "UserStat", *args: Any, **kwargs: Any) -> None:  # pyright: ignore[reportSelfClsParameterName]
         pass
     
 class BoundedMsgHandlerType(Protocol):
-    def __call__(self, msg: str, *args: Any, **kwargs: Any) -> None:
+    async def __call__(self, msg: str, message: disnake.Message, user_stat: "UserStat", *args: Any, **kwargs: Any) -> None:
         pass
 
 def add_handler_attr(func: Any):
@@ -69,6 +69,17 @@ def regex_search(reg: str):
         async def wrapper(self: Any, msg: str, *args: Any, **kwargs: Any):
             if re.search(reg, msg):            
                 await func(self, msg, *args, **kwargs)
+        return wrapper    
+    return decorator
+
+def regex_findall(reg: str):
+    """Runs the coroutine a regex search matches"""
+    def decorator(func: UnboundedMsgHandlerType):                                
+        @add_handler_attr                 
+        @functools.wraps(func)
+        async def wrapper(self: Any, msg: str, message: disnake.Message, user_stats: "UserStat", *args: Any, **kwargs: Any):
+            if matches := re.findall(reg, msg):            
+                await func(self, msg, message, user_stats, matches, *args, **kwargs)
         return wrapper    
     return decorator
 
@@ -129,7 +140,7 @@ class Events(commands.Cog):
         self.client = client
         self.start_time = self.client.start_time
         self.log = self.client.log
-        self.msg_handlers: list[Callable[..., Awaitable[Any]]] = []
+        self.msg_handlers: list[BoundedMsgHandlerType] = []
         for name, method in inspect.getmembers(self, predicate=inspect.ismethod):
             if hasattr(method, '_msg_handler'):
                 print(f"Appending function `{name}`")
@@ -372,6 +383,24 @@ class Events(commands.Cog):
 
                     await message.channel.send(strepto_ping)  # pings strepto
 
+    @regex_findall(r"(?:https://(?:www\.)?)(?:x|twitter)(?:\.com\S+)")
+    async def twitter_link_corrector(self, msg: str, message: disnake.Message, user_stat: "UserStat", matches: list[str]):
+        resp = [f"Fixed some twitter links for ya:\n"]
+        for idx, link in enumerate(matches):
+            if idx == 0:
+                resp[0] += re.sub(
+                    r"(https://(?:www\.)?)(x|twitter)(?=\.com\S+)", r"\1fixvx", link
+                )
+            else:
+                resp.append(
+                    re.sub(
+                        r"(https://(?:www\.)?)(x|twitter)(?=\.com\S+)", r"\1fixvx", link
+                    )
+                )
+        if matches:
+            for x in resp:
+                await message.channel.send(x)        
+
     @commands.Cog.listener()
     async def on_message(self, message: disnake.Message):
         if message.author == self.client.user:
@@ -394,28 +423,9 @@ class Events(commands.Cog):
         # VV This runs get_cog for MotorDbManager twice now
         user_stat = stats_cog.get_user(message.guild.id if message.guild else message.author.id, message.author.id)
         
-        # Will still continue apparently through some disnake magic??        
+        # Will still continue after any exceptions raised for any function
         await asyncio.wait([x(msg, message, user_stat) for x in self.msg_handlers])
         
-        # region Twitter link giver
-        twt_links = re.findall(r"(?:https://(?:www\.)?)(?:x|twitter)(?:\.com\S+)", msg)
-        resp = [f"Fixed some twitter links for ya:\n"]
-        for idx, link in enumerate(twt_links):
-            if idx == 0:
-                resp[0] += re.sub(
-                    r"(https://(?:www\.)?)(x|twitter)(?=\.com\S+)", r"\1fixvx", link
-                )
-            else:
-                resp.append(
-                    re.sub(
-                        r"(https://(?:www\.)?)(x|twitter)(?=\.com\S+)", r"\1fixvx", link
-                    )
-                )
-        if twt_links:
-            for x in resp:
-                await message.channel.send(x)
-        # endregion
-
         # Text to speech
         if isinstance(message.author, disnake.Member) and message.author.voice:
             if msg.startswith("] "):
