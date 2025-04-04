@@ -1,13 +1,11 @@
 import difflib
 import json
-import os
 import random
 import re
 import time
 from datetime import datetime, timedelta, timezone
-from operator import attrgetter
 from pathlib import Path
-from typing import TYPE_CHECKING, Any, Optional, cast
+from typing import TYPE_CHECKING, Any, Literal, Optional, cast
 
 import disnake
 import numpy
@@ -197,23 +195,23 @@ class Events(commands.Cog):
         stats_cog = cast("Stats", self.client.get_cog("Stats"))
         user_stat = stats_cog.get_user(message.guild.id if message.guild else message.author.id, message.author.id)
 
-        ################SUSSY REPLIES##################
-        if message.channel.id == 850380119646142504:  # sus-town
-            if any(word in msg for word in sus_words):
-                for x in range(3):
-                    await user_stat.increment("Sussy replies", 1)
-                    await message.channel.send(random.choice(sus_replies))
-        else:
-            if any(word in msg for word in sus_words):
+        # region Sussy Replies
+        if any(word in msg for word in sus_words):            
+            kwargs: dict[Literal['delete_after'], float] = {}
+            if not self.client.sus_on:
+                kwargs['delete_after'] = 3.0
+
+            sus_amount = 1
+            if not isinstance(message.channel, disnake.DMChannel) and message.channel.name == "sus-town":
+                sus_amount = 3
+                kwargs = {}
+
+            for _ in range(sus_amount):
                 await user_stat.increment("Sussy replies", 1)
-                if not self.client.sus_on:
-                    await message.channel.send(
-                        random.choice(sus_replies), delete_after=3.0
-                    )
-                    self.log("sussy reply", False)
-                if self.client.sus_on:
-                    await message.channel.send(random.choice(sus_replies))
-                    self.log("sussy reply", False)
+                await message.channel.send(
+                    random.choice(sus_replies), **kwargs
+                )
+            self.log("sussy reply", False)
 
         other_sus_dict = {
             "amgus": random.choice(sugma_replies),
@@ -225,9 +223,12 @@ class Events(commands.Cog):
         for target_word, response in other_sus_dict.items():
             if target_word in msg:
                 await user_stat.increment("Sussy replies", 1)
-                await message.channel.send(response, delete_after=3.0)
+                kwargs: dict[Literal['delete_after'], float] = {}
+                if not self.client.sus_on:
+                    kwargs['delete_after'] = 3.0                
+                await message.channel.send(response, **kwargs)
                 self.log("sussy reply", False)
-
+        # endregion
 
 
         if re.search(r"blue.archive", msg):
@@ -316,7 +317,7 @@ class Events(commands.Cog):
 
                             await message.channel.send(strepto_ping)  # pings strepto
 
-        #############TWITTER LINK GIVER####################
+        # region Twitter link giver
         twt_links = re.findall(r"(?:https://(?:www\.)?)(?:x|twitter)(?:\.com\S+)", msg)
         resp = [f"Fixed some twitter links for ya:\n"]
         for idx, link in enumerate(twt_links):
@@ -333,8 +334,9 @@ class Events(commands.Cog):
         if twt_links:
             for x in resp:
                 await message.channel.send(x)
+        # endregion
 
-        ######################TEXT TO SPEECH#################
+        # Text to speech
         if isinstance(message.author, disnake.Member) and message.author.voice:
             if msg.startswith("] "):
                 voice_channel = message.author.voice.channel
@@ -407,15 +409,12 @@ class Events(commands.Cog):
                 await message.channel.send(file=disnake.File("videos/friday.webm"))
 
         if "wednesday" in msg:
-            get_days, get_boundary, to_timestamp = attrgetter(
-                "get_current_days", "get_date_boundary", "tz_to_discord_timestamp"
-            )(self.client.get_cog("TimeAndDates"))
-
-            tz_day_list = get_days(show_date=False)
+            _ = cast("TimeAndDates",self.client.get_cog("TimeAndDates"))
+            tz_day_list = _.get_current_days(show_date=False)
 
             if "Wednesday" in tz_day_list:
-                day_ends = get_boundary("end", weekday="thursday")
-                epoch = to_timestamp(day_ends)
+                day_ends = _.get_date_boundary("end", weekday="thursday")
+                epoch = _.tz_to_discord_timestamp(day_ends)
 
                 wed_vids = [
                     Path("videos/mococo") / x
@@ -519,27 +518,26 @@ class Events(commands.Cog):
             await message.add_reaction("😭")
             await message.add_reaction("💢")
 
-        im_pattern = re.compile(
-            r"\b(i(?:‘|’|')m|im|i am) (.*?)(?=(?:\b\1\b|$|\n|\.|,|\?|!))"
-        )
-        """ 
-        It should match like this:
-        i‘m dead. [dead]
-        i’m dead! [dead]
-        i'm dead? [dead]
-        i'm dead; or maybe not [dead; or maybe not]
-        i'm killing myself, rn i am sad [killing myself] [sad]
-        i'm dead [dead]
-        im impressed [impressed]
-        im him [him]
-        imposter []
-        jimmy []
-        """
-
-
-        trollplant = "<a:trollplant:934777423881445436>"
-        
+        # Kur0bot dad jokes
         if message.guild:
+            im_pattern = re.compile(
+                r"\b(i(?:‘|’|')m|im|i am) (.*?)(?=(?:\b\1\b|$|\n|\.|,|\?|!))"
+            )
+            """ 
+            It should match like this:
+            i‘m dead. [dead]
+            i’m dead! [dead]
+            i'm dead? [dead]
+            i'm dead; or maybe not [dead; or maybe not]
+            i'm killing myself, rn i am sad [killing myself] [sad]
+            i'm dead [dead]
+            im impressed [impressed]
+            im him [him]
+            imposter []
+            jimmy []
+            """
+
+            trollplant = "<a:trollplant:934777423881445436>"
             dad_jokes = cast(
                 Optional["ToggleContents"],
                 await toggles.find_one({"title": "Dad Jokes"})
@@ -558,6 +556,7 @@ class Events(commands.Cog):
 
                     print(f"New victim is: {victim_id}")
                     if victim_id == message.author.id:
+                        
                         await message.channel.send(
                             f"Hey there {message.author.mention}, you appear to be my latest victim"
                             f" for today! {trollplant*3}"
@@ -572,11 +571,11 @@ class Events(commands.Cog):
                 if await victim_db.count_documents({}) == 0:
                     victim = await new_victim()
                 else:
-                    victim = await motor.get_latest_doc(victim_db)
+                    victim : "DadJokeVictimContents" = await motor.get_latest_doc(victim_db)
                     victim_id = victim["user_id"]
 
                     print(f"Existing victim id is: {victim_id}")
-                    time_since = victim["_id"].generation_time
+                    time_since = victim["_id"].generation_time  # pyright: ignore [reportTypedDictNotRequiredAccess]
                     time_difference = datetime.now(timezone.utc) - time_since
                     if time_difference >= timedelta(hours=24):
                         print("New victim time!")
@@ -707,7 +706,6 @@ class Events(commands.Cog):
             print("HTTPException!")
             if error.status == 429:
                 print("Rate limited lmao")
-                os.system("busybox reboot")
             elif error.status == 413:
                 print("File too big!")
                 await ctx.send(
