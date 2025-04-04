@@ -193,6 +193,7 @@ class Events(commands.Cog):
         )
 
         stats_cog = cast("Stats", self.client.get_cog("Stats"))
+        # VV This runs get_cog for MotorDbManager twice now
         user_stat = stats_cog.get_user(message.guild.id if message.guild else message.author.id, message.author.id)
 
         # region Sussy Replies

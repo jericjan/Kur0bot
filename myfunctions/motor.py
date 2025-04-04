@@ -15,28 +15,19 @@ if TYPE_CHECKING:
 class MotorDbManager(commands.Cog):
     def __init__(self, client: commands.Bot):
         self.client = client
+        mongo_pass = os.getenv("MONGO_DB_PASS")
+        conn_str = f"mongodb+srv://Kur0:{mongo_pass}@kur0bot1.b8p3zby.mongodb.net/?retryWrites=true&w=majority"
+        self.motor_client = AsyncIOMotorClient(conn_str, server_api=ServerApi("1"))
 
-        self.motor_client = False
-        self.client.loop.create_task(self.start())
-
-    async def start(self):  # TODO: use async cog_load() instead
-        if not self.motor_client:
-            mongo_pass = os.getenv("MONGO_DB_PASS")
-            conn_str = f"mongodb+srv://Kur0:{mongo_pass}@kur0bot1.b8p3zby.mongodb.net/?retryWrites=true&w=majority"
-            self.motor_client = AsyncIOMotorClient(conn_str, server_api=ServerApi("1"))
-            try:
-                await self.motor_client.admin.command("ping")
-                print("MongoDB connection success!")
-            except Exception as e:
-                print(f"Tried to ping MongoDB but got this error instead: \n{e}")
-        else:
-            print("MotorDB already started")
-
+    async def cog_load(self):
+        try:
+            await self.motor_client.admin.command("ping")
+            print("MongoDB connection success!")
+        except Exception as e:
+            print(f"Tried to ping MongoDB but got this error instead: \n{e}")
+        
     def get_collection_for_server(self, db_name: str, guild_id: Union[str, int]):
-        if not isinstance(self.motor_client, bool):            
-            return self.motor_client[str(db_name)][str(guild_id)]
-        else:
-            raise RuntimeError("Database has not been initialized")
+        return self.motor_client[str(db_name)][str(guild_id)]
 
     async def get_latest_doc(self, collec: "AsyncIOMotorCollection"):
         res: list[Any]  = await collec.find().sort("_id", pymongo.DESCENDING).to_list(length=1)  # type: ignore
