@@ -10,13 +10,19 @@ class BoundedMsgHandlerType(Protocol):
     def __call__(self, msg: str, *args: Any, **kwargs: Any) -> None:
         pass
 
-def msg_contains(keyword: str):
-    def decorator(func: UnboundedMsgHandlerType):        
-        @functools.wraps(func)      
+def add_handler_attr(func: Any):
+    setattr(func, "_msg_handler", True)
+    return func
+
+def msg_contains(*keywords: str):       
+    def decorator(func: UnboundedMsgHandlerType):                        
+        
+        @add_handler_attr                 
+        @functools.wraps(func)
         def wrapper(self: Any, msg: str, *args: Any, **kwargs: Any):
-            if keyword in msg:
+            if any(x in msg for x in keywords):
                 func(self, msg, *args, **kwargs)
-        setattr(wrapper, "_msg_handler", True)
+        # setattr(wrapper, "_msg_handler", True)
         return wrapper    
     return decorator
 
@@ -32,9 +38,16 @@ class Test:
         for handler in self.handlers:
              handler(msg, 'a')
 
-    @msg_contains("balls")
+    @msg_contains("balls", "cock")
     def thing(self, msg: str, more: str):
-        print(f"BALLS???")        
+        print(f"BALLS??? - {msg}")        
+
+    @msg_contains("sex")
+    def thing2(self, msg: str, more: str):
+        print(f"SEEEEX - {msg}")     
 
 a = Test()
 a.start("i like balls")
+a.start("cock too")
+a.start("sexo")
+a.start("cocky and sexo")
