@@ -1,11 +1,14 @@
+import asyncio
 import difflib
+import functools
+import inspect
 import json
 import random
 import re
 import time
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
-from typing import TYPE_CHECKING, Any, Literal, Optional, cast
+from typing import TYPE_CHECKING, Any, Awaitable, Callable, Literal, Optional, Protocol, cast
 
 import disnake
 import numpy
@@ -18,10 +21,70 @@ from myfunctions.async_wrapper import async_wrap
 if TYPE_CHECKING:
     from modules.others.openai import OpenAI
     from modules.others.time_and_dates import TimeAndDates
-    from modules.stats import Stats
+    from modules.stats import Stats, UserStat
     from myfunctions.motor import MotorDbManager, ToggleContents, DadJokeVictimContents
     from main import MyBot
+
+
+class UnboundedMsgHandlerType(Protocol):
+    async def __call__(_, self: Any, msg: str, *args: Any, **kwargs: Any) -> None:  # pyright: ignore[reportSelfClsParameterName]
+        pass
     
+class BoundedMsgHandlerType(Protocol):
+    def __call__(self, msg: str, *args: Any, **kwargs: Any) -> None:
+        pass
+
+def add_handler_attr(func: Any):
+    """Adds a `_msg_handler` attribute to the function so it can be selected by `on_message`"""
+    setattr(func, "_msg_handler", True)
+    return func
+
+def msg_contains(*keywords: str):
+    """Runs the coroutine only when a word is present in the message"""
+    def decorator(func: UnboundedMsgHandlerType):                                
+        @add_handler_attr                 
+        @functools.wraps(func)
+        async def wrapper(self: Any, msg: str, *args: Any, **kwargs: Any):
+            if any(x in msg for x in keywords):
+                await func(self, msg, *args, **kwargs)
+        return wrapper    
+    return decorator
+
+def match_all(*keywords: str):
+    """Runs the coroutine when all words are present"""
+    def decorator(func: UnboundedMsgHandlerType):                                
+        @add_handler_attr                 
+        @functools.wraps(func)
+        async def wrapper(self: Any, msg: str, *args: Any, **kwargs: Any):
+            if all(x in msg for x in keywords):
+                await func(self, msg, *args, **kwargs)
+        return wrapper    
+    return decorator
+
+def regex_search(reg: str):
+    """Runs the coroutine a regex search matches"""
+    def decorator(func: UnboundedMsgHandlerType):                                
+        @add_handler_attr                 
+        @functools.wraps(func)
+        async def wrapper(self: Any, msg: str, *args: Any, **kwargs: Any):
+            if re.search(reg, msg):            
+                await func(self, msg, *args, **kwargs)
+        return wrapper    
+    return decorator
+
+def server_filter(*servers: int):
+    """Runs the coroutine only it's from the specified server(s)"""
+    def decorator(func: UnboundedMsgHandlerType):                                
+        @add_handler_attr                 
+        @functools.wraps(func)
+        async def wrapper(self: Any, msg: str, message: disnake.Message, *args: Any, **kwargs: Any):
+            if message.guild is None:
+                return
+            if any(message.guild.id == x for x in servers):
+                await func(self, msg, message, *args, **kwargs)
+        return wrapper
+    return decorator
+
 sus_words = [
     "amongus",
     "аmongus",
@@ -66,6 +129,11 @@ class Events(commands.Cog):
         self.client = client
         self.start_time = self.client.start_time
         self.log = self.client.log
+        self.msg_handlers: list[Callable[..., Awaitable[Any]]] = []
+        for name, method in inspect.getmembers(self, predicate=inspect.ismethod):
+            if hasattr(method, '_msg_handler'):
+                print(f"Appending function `{name}`")
+                self.msg_handlers.append(method)  # pyright: ignore [reportArgumentType]
 
     @commands.Cog.listener()
     async def on_ready(self):
@@ -174,29 +242,8 @@ class Events(commands.Cog):
                             # "started playing {activity.name}\n{e}"
                             # )
 
-    @commands.Cog.listener()
-    async def on_message(self, message: disnake.Message):
-        if message.author == self.client.user:
-            return
-        msg = message.content.lower()
-
-        if any(
-            message.channel.id == x for x in [1203784333341491302, 1210328711455440926]
-        ):
-            return  # temp, disabled for #serious-chat
-
-        motor = cast("MotorDbManager", self.client.get_cog("MotorDbManager"))
-
-        # Use User ID if message guild is not available (prolly works?)
-        toggles = (
-            motor.get_collection_for_server("toggles", message.guild.id  if message.guild else message.author.id)           
-        )
-
-        stats_cog = cast("Stats", self.client.get_cog("Stats"))
-        # VV This runs get_cog for MotorDbManager twice now
-        user_stat = stats_cog.get_user(message.guild.id if message.guild else message.author.id, message.author.id)
-
-        # region Sussy Replies
+    @add_handler_attr
+    async def sus_replies_msg(self, msg: str, message: disnake.Message, user_stat: "UserStat"):
         if any(word in msg for word in sus_words):            
             kwargs: dict[Literal['delete_after'], float] = {}
             if not self.client.sus_on:
@@ -229,95 +276,127 @@ class Events(commands.Cog):
                     kwargs['delete_after'] = 3.0                
                 await message.channel.send(response, **kwargs)
                 self.log("sussy reply", False)
-        # endregion
 
+    @regex_search(r"blue.archive")
+    async def blue_archive(self, msg: str, message: disnake.Message, user_stat: "UserStat"):
+        await user_stat.increment("Blue Archive mentioned", 1)
+        user_id = 480466417884463137
+        if message.guild is None:
+            return
+        kyle_in_server = await message.guild.getch_member(user_id)
+        if kyle_in_server:
+            await message.channel.send(f"<@{user_id}>")
 
-        if re.search(r"blue.archive", msg):
-            await user_stat.increment("Blue Archive mentioned", 1)
-            user_id = 480466417884463137
-            if message.guild:
-                kyle_in_server = await message.guild.getch_member(user_id)
-                if kyle_in_server:
-                    await message.channel.send(f"<@{user_id}>")
+    @regex_search(r"(?:fkn|fucking) hell")
+    async def hell_fucking(self, msg: str, message: disnake.Message, user_stat: "UserStat"):
+        await user_stat.increment("Hell fucking", 1)
+        user_id = 327595393237909505
+        if message.guild is None:
+            return
+        in_server = await message.guild.getch_member(user_id)
+        if in_server:
+            await message.channel.send(f"They're fucking <@{user_id}>")
 
-        if re.search(r"(?:fkn|fucking) hell", msg):
-            await user_stat.increment("Hell fucking", 1)
-            user_id = 327595393237909505
-            if message.guild:
-                in_server = await message.guild.getch_member(user_id)
-                if in_server:
-                    await message.channel.send(f"They're fucking <@{user_id}>")
+    @match_all("blue archive", "cunny", "uoh", "sui")
+    async def kakuy_spell(self, msg: str, message: disnake.Message, user_stat: "UserStat"):
+        if message.guild is None:
+            return            
+        user_id = 1009325079336853515
+        in_server = await message.guild.getch_member(user_id)
+        if in_server:
+            await user_stat.increment("The Magic Kakuy Spell", 1)
+            await message.channel.send(
+                f"You've uttered the Magic Kakuy Spell! <@{user_id}> will remember this..."
+            )
 
-        if message.guild:
-            if all(word in msg for word in ["blue archive", "cunny", "uoh", "sui"]):
-                user_id = 1009325079336853515
-                in_server = await message.guild.getch_member(user_id)
-                if in_server:
-                    await user_stat.increment("The Magic Kakuy Spell", 1)
-                    await message.channel.send(
-                        f"You've uttered the Magic Kakuy Spell! <@{user_id}> will remember this..."
-                    )
-        # PACIFAM ONLY
-        pacifam_servers = [603147860225032192, 938255956247183451]
-        if message.guild:
-            if any(message.guild.id == x for x in pacifam_servers):
+    @server_filter(           
+        603147860225032192,  # The OG Pacifam (RIP)
+        938255956247183451,  # Tosifam
+        1350483770259542146  # test server for testing
+    )
+    async def tosifam_msgs(self, msg: str, message: disnake.Message, user_stat: "UserStat"):
+        if "dox" in msg:
+            choice = random.choice(
+                [
+                    "videos/professional_doxxers.mp4",
+                    "images/allen_quote.png",
+                    "images/dex_quote.png",
+                ]
+            )
+            await user_stat.increment("Doxx", 1)
+            await message.channel.send(file=disnake.File(choice))
 
-                if "dox" in msg:
-                    choice = random.choice(
-                        [
-                            "videos/professional_doxxers.mp4",
-                            "images/allen_quote.png",
-                            "images/dex_quote.png",
-                        ]
-                    )
-                    await user_stat.increment("Doxx", 1)
-                    await message.channel.send(file=disnake.File(choice))
+        if any(word in msg for word in ["hurensohn", "hurensöhne"]):
+            await user_stat.increment("Hurensohn", 1)
+            huren_target = numpy.random.choice(
+                [1200519236834041898, 304268898637709312], p=[0.6, 0.4]
+            )
+            await message.channel.send(f"<@{huren_target}>")  # pings nana/allen
 
-                if any(word in msg for word in ["hurensohn", "hurensöhne"]):
-                    await user_stat.increment("Hurensohn", 1)
-                    huren_target = numpy.random.choice(
-                        [1200519236834041898, 304268898637709312], p=[0.6, 0.4]
-                    )
-                    await message.channel.send(f"<@{huren_target}>")  # pings nana/allen
+        # le strepto
+        if all(message.channel.id != x for x in [1260889287931723839]):  # ignore #mudae channel
+            if any(
+                word in msg
+                for word in [
+                    "feet",
+                    "foot",
+                    "toe",
+                    "ankle",
+                    "heel",
+                    "arch",
+                    "sole",
+                    "🦶",
+                ]
+            ):
+                assert message.guild is not None  # Covered by decorator
+                strepto_in_server = await message.guild.getch_member(
+                    268188421871108097
+                )
+                if strepto_in_server:
+                    await user_stat.increment("Feet-related", 1)
 
-                # le strepto
-                if all(message.channel.id != x for x in [1260889287931723839]):
-                    if any(
-                        word in msg
-                        for word in [
-                            "feet",
-                            "foot",
-                            "toe",
-                            "ankle",
-                            "heel",
-                            "arch",
-                            "sole",
-                            "🦶",
-                        ]
-                    ):
-                        strepto_in_server = await message.guild.getch_member(
-                            268188421871108097
+                    time_and_dates = cast(
+                        "TimeAndDates", self.client.get_cog(
+                            "TimeAndDates"
                         )
-                        if strepto_in_server:
-                            await user_stat.increment("Feet-related", 1)
+                    )
+                    days_list = time_and_dates.get_current_days(show_date=False)
 
-                            time_and_dates = cast(
-                                "TimeAndDates", self.client.get_cog(
-                                    "TimeAndDates"
-                                )
-                            )
-                            days_list = time_and_dates.get_current_days(show_date=False)
+                    strepto_ping = "<@268188421871108097>"
 
-                            strepto_ping = "<@268188421871108097>"
+                    if "Friday" in days_list:
+                        strepto_ping += (
+                            "\nhttps://cdn.discordapp.com/attachments/809247468084133898/"
+                            "1231538142129946715/20240420_183246.png"
+                        )
 
-                            if "Friday" in days_list:
-                                strepto_ping += (
-                                    "\nhttps://cdn.discordapp.com/attachments/809247468084133898/"
-                                    "1231538142129946715/20240420_183246.png"
-                                )
+                    await message.channel.send(strepto_ping)  # pings strepto
 
-                            await message.channel.send(strepto_ping)  # pings strepto
+    @commands.Cog.listener()
+    async def on_message(self, message: disnake.Message):
+        if message.author == self.client.user:
+            return
+        msg = message.content.lower()
 
+        if any(
+            message.channel.id == x for x in [1203784333341491302, 1210328711455440926]
+        ):
+            return  # temp, disabled for #serious-chat
+
+        motor = cast("MotorDbManager", self.client.get_cog("MotorDbManager"))
+
+        # Use User ID if message guild is not available (prolly works?)
+        toggles = (
+            motor.get_collection_for_server("toggles", message.guild.id  if message.guild else message.author.id)           
+        )
+
+        stats_cog = cast("Stats", self.client.get_cog("Stats"))
+        # VV This runs get_cog for MotorDbManager twice now
+        user_stat = stats_cog.get_user(message.guild.id if message.guild else message.author.id, message.author.id)
+        
+        # Will still continue apparently through some disnake magic??        
+        await asyncio.wait([x(msg, message, user_stat) for x in self.msg_handlers])
+        
         # region Twitter link giver
         twt_links = re.findall(r"(?:https://(?:www\.)?)(?:x|twitter)(?:\.com\S+)", msg)
         resp = [f"Fixed some twitter links for ya:\n"]
@@ -459,7 +538,7 @@ class Events(commands.Cog):
 
         if "crazy" in msg:
             await user_stat.increment("Crazy", 1)
-            await message.channel.send("Crazy?")
+            await message.channel.send("Crazy??")
 
         if "wah" in msg:
             await user_stat.increment("Wah", 1)
