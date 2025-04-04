@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, Any, Optional, Union, cast, TypedDict
+from typing import TYPE_CHECKING, Any, Optional, Union, cast
 
 import disnake
 from disnake.ext import commands
