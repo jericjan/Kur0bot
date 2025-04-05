@@ -1,6 +1,6 @@
-FROM python:3.9.21-bookworm AS builder
+FROM python:3.13.2-bookworm AS builder
 
-RUN pip install poetry==1.1.14
+RUN pip install poetry==2.1.2
 
 ENV POETRY_NO_INTERACTION=1 \
     POETRY_VIRTUALENVS_IN_PROJECT=1 \
@@ -14,9 +14,9 @@ RUN touch README.md
 
 RUN --mount=type=cache,target=$POETRY_CACHE_DIR poetry install --no-root
 
-FROM python:3.9.21-slim-bookworm AS runtime
+FROM python:3.13.2-slim-bookworm AS runtime
 
-RUN pip install poetry==1.1.14
+RUN pip install poetry==2.1.2
 
 ENV VIRTUAL_ENV=/app/.venv \
     PATH="/app/.venv/bin:$PATH"
