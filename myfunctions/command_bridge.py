@@ -1,4 +1,4 @@
-from typing import Any, Union
+from typing import Any
 
 import disnake
 from disnake.ext import commands
@@ -8,7 +8,7 @@ class Bridger(commands.Cog):
     def __init__(self, client: commands.Bot):
         self.client = client
 
-    async def send_msg(self, thing: Union[commands.Context[Any], disnake.ApplicationCommandInteraction[Any]], msg: str):
+    async def send_msg(self, thing: commands.Context[Any] | disnake.ApplicationCommandInteraction[Any], msg: str):
         if isinstance(thing, commands.Context):
             await thing.send(msg)
         elif isinstance(thing, disnake.ApplicationCommandInteraction): # type: ignore

@@ -1,10 +1,9 @@
 import asyncio
 from shlex import join as shjoin
-from typing import Union
 
 
 class SubprocessError(Exception):
-    def __init__(self, err_code: Union[int, None], message: str):
+    def __init__(self, err_code: int | None, message: str):
         self.err = err_code
         self.message = message
         super().__init__(self.message)
@@ -13,7 +12,7 @@ class SubprocessError(Exception):
         return f"{self.err} -> {self.message}"
 
 
-async def run_subprocess(coms: Union[list[str], str], doPrint: bool = False, shell: bool = False):
+async def run_subprocess(coms: list[str] | str, doPrint: bool = False, shell: bool = False):
     if shell:
         if not isinstance(coms, str):
             raise SubprocessError(None, "`coms` should be a string in shell mode")

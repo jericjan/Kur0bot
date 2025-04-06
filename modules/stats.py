@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, Any, Optional, Union, cast
+from typing import TYPE_CHECKING, Any, Optional, cast
 
 import disnake
 from disnake.ext import commands
@@ -6,7 +6,7 @@ from disnake.ext import commands
 if TYPE_CHECKING:
     from myfunctions.motor import MotorDbManager, StatContents
 class UserStat:
-    def __init__(self, client: commands.Bot, guild_id: Union[str, int], author_id: int):
+    def __init__(self, client: commands.Bot, guild_id: str | int, author_id: int):
         motor = cast(
             "MotorDbManager", 
             client.get_cog("MotorDbManager")
@@ -27,11 +27,11 @@ class Stats(commands.Cog):
     def __init__(self, client: commands.Bot):
         self.client = client
 
-    def get_user(self, guild_id: Union[str, int], author_id: int):
+    def get_user(self, guild_id: str | int, author_id: int):
         return UserStat(self.client, guild_id, author_id)
 
     @commands.command()
-    async def stats(self, ctx: commands.Context[Any], user: Optional[Union[disnake.User, disnake.Member]] = None):
+    async def stats(self, ctx: commands.Context[Any], user: Optional[disnake.User | disnake.Member] = None):
         if user is None:
             user = ctx.author
 
@@ -55,7 +55,7 @@ class Stats(commands.Cog):
 
         final = ""
 
-        def recurse(x: Union[str, dict[Any, Any]], depth: int):
+        def recurse(x: str | dict[Any, Any], depth: int):
             nonlocal final
 
             if not isinstance(x, dict):
