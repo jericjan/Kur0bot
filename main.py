@@ -15,7 +15,6 @@ import disnake
 import disnake.ext
 import disnake.ext.commands
 import pytz
-import requests
 from disnake import Webhook
 from disnake.ext import commands
 from dotenv import load_dotenv
@@ -44,21 +43,6 @@ signal.signal(signal.SIGINT, goodbye)  # type: ignore
 # signal.signal(signal.SIGSTOP, goodbye)
 signal.signal(signal.SIGHUP, goodbye)  # type: ignore
 
-
-def rate_limit_check():
-
-    headers = {"Authorization": f"Bot {os.getenv('TOKEN')}"}
-    r = requests.get(
-        url="https://discord.com/api/v9/channels/809247468084133898", headers=headers
-    )
-    if r.status_code == 429:
-        print(f"{(time.time() - start_time):.2f}s - Rate limited again lmao")
-    else:
-        print(
-            f"{(time.time() - start_time):.2f}s - Not rate limited. ({r.status_code})"
-        )
-rlimit = threading.Thread(target=rate_limit_check)
-rlimit.start()
 
 class MyBot(commands.Bot):
     def __init__(self, start_time: float, log: Callable[..., None], sus_on: bool, *args: Any, **kwargs: Any):
