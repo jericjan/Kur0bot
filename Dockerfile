@@ -12,7 +12,6 @@ WORKDIR /app
 COPY pyproject.toml poetry.lock ./
 RUN touch README.md
 
-RUN poetry lock
 RUN --mount=type=cache,target=$POETRY_CACHE_DIR poetry install --no-root
 
 FROM python:3.12.9-slim-bookworm AS runtime
