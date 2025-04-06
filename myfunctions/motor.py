@@ -1,6 +1,6 @@
 import os
 import random
-from typing import TYPE_CHECKING, Any, TypedDict, Union
+from typing import TYPE_CHECKING, Any, TypedDict
 from typing_extensions import NotRequired
 
 import pymongo
@@ -26,7 +26,7 @@ class MotorDbManager(commands.Cog):
         except Exception as e:
             print(f"Tried to ping MongoDB but got this error instead: \n{e}")
         
-    def get_collection_for_server(self, db_name: str, guild_id: Union[str, int]):
+    def get_collection_for_server(self, db_name: str, guild_id: str | int):
         return self.motor_client[str(db_name)][str(guild_id)]
 
     async def get_latest_doc(self, collec: "AsyncIOMotorCollection"):

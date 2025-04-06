@@ -1,6 +1,6 @@
 import io
 import os
-from typing import Any, Optional, Union
+from typing import Any, Optional
 from urllib.parse import quote
 
 import aiohttp
@@ -22,7 +22,7 @@ async def send_file(ctx: commands.Context[Any], message: disnake.Message, filena
     else:
         clean_name = filename.replace(",", "")
 
-    def bytes_to_mebibytes(data: Union[list[int], int]):
+    def bytes_to_mebibytes(data: list[int] | int):
         if isinstance(data, list):
             return [bytes * 1024 * 1024 for bytes in data]
         else:
