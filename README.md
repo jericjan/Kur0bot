@@ -2,7 +2,7 @@ Kur0 sus bot
 ==============
 <img alt="" src="https://img.shields.io/github/repo-size/jericjan/Kur0bot" />
 
-[![Made with Python](https://img.shields.io/badge/Python-3.9-blue?logo=python&logoColor=white)](https://python.org)
+[![Made with Python](https://img.shields.io/badge/Python-3.12-blue?logo=python&logoColor=white)](https://python.org)
 [![Hosted with GH Pages](https://img.shields.io/badge/Hosted_with-DigitalOcean-blue?logo=digitalocean&logoColor=white)](https://replit.com/@JericJanJan/Kur0bot)
 
 -----
