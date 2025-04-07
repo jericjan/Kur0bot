@@ -8,7 +8,7 @@ import re
 import time
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
-from typing import TYPE_CHECKING, Any, Literal, Optional, Protocol, cast
+from typing import TYPE_CHECKING, Any, Literal, Protocol, cast
 
 import disnake
 import numpy
@@ -24,7 +24,7 @@ if TYPE_CHECKING:
     from modules.stats import Stats, UserStat
     from myfunctions.motor import MotorDbManager, ToggleContents, DadJokeVictimContents
     from main import MyBot
-
+    from motor.motor_asyncio import AsyncIOMotorCollection
 
 class UnboundedMsgHandlerType(Protocol):
     async def __call__(_, self: Any, msg: str, message: disnake.Message, user_stat: "UserStat", *args: Any, **kwargs: Any) -> None:  # pyright: ignore[reportSelfClsParameterName]
@@ -401,6 +401,74 @@ class Events(commands.Cog):
             for x in resp:
                 await message.channel.send(x)        
 
+    @add_handler_attr
+    async def tts(self, msg: str, message: disnake.Message, user_stat: "UserStat"):
+        if isinstance(message.author, disnake.Member) and message.author.voice:
+            tts_mappings = {
+                "] ": "com",
+                "]au ": "com.au",
+                "]uk ": "co.uk",
+                "]in ": "co.in"
+            }
+            for prefix, tld in tts_mappings.items():
+                if msg.startswith(prefix):
+                    voice_channel = message.author.voice.channel
+                    self.log(f"{prefix} command used", True)
+                    tts = gTTS(msg[len(prefix):], tld=tld)
+                    with open("sounds/tts.mp3", "wb") as f:
+                        tts.write_to_fp(f)  # TODO: this is horrible btw # type: ignore
+                    voice = disnake.utils.get(self.client.voice_clients, guild=message.guild)
+                    if voice_channel is not None:
+                        if voice is None:
+                            vc = await voice_channel.connect()
+                            vc.play(disnake.FFmpegPCMAudio(source="sounds/tts.mp3"))
+                        else:
+                            cast("disnake.VoiceClient", voice).play(disnake.FFmpegPCMAudio(source="sounds/tts.mp3"))   
+
+    @msg_contains("friday")
+    async def friday(self, msg: str, message: disnake.Message, user_stat: "UserStat"):
+        tz = pytz.timezone("America/Los_Angeles")
+        curr_time = datetime.now(tz)
+        day = curr_time.strftime("%A")
+        if day == "Friday":
+            print("It is Friday... in California. SHOOT!")
+            await user_stat.increment("Friday in California", 1)
+            await message.channel.send(file=disnake.File("videos/friday.webm"))
+
+    @msg_contains("wednesday")
+    async def wednesday_gacha(self, msg: str, message: disnake.Message, user_stat: "UserStat"):
+        _ = cast("TimeAndDates",self.client.get_cog("TimeAndDates"))
+        tz_day_list = _.get_current_days(show_date=False)
+
+        if "Wednesday" in tz_day_list:
+            day_ends = _.get_date_boundary("end", weekday="thursday")
+            epoch = _.tz_to_discord_timestamp(day_ends)
+
+            wed_vids = [
+                Path("videos/mococo") / x
+                for x in [
+                    "mococo_wednesday.mp4",
+                    "mococo_679.mp4",
+                    "fuwamoco_tsunami.mp4",
+                    "bau_city.mp4",
+                    "fuwamoco_family_ties.mp4",
+                    "fuwamoco_silent_hill.mp4",
+                ]
+            ] + [Path("videos/wednesday.mp4")]
+
+            wed_choice = cast(Path, numpy.random.choice(  # type: ignore
+                wed_vids, p=[0.8, 0.037, 0.037, 0.037, 0.037, 0.037, 0.015]  # type: ignore
+            ))
+
+            if wed_choice.parent.name == "mococo":
+                epoch = f"Mococo Wednesday ends {epoch}"
+                await user_stat.increment("Wednesday.Mococo", 1)
+            else:
+                epoch = f"Moco... SIKE! Walter Wednesday ends {epoch}"
+                await user_stat.increment("Wednesday.Walter", 1)
+
+            await message.channel.send(epoch, file=disnake.File(str(wed_choice)))    
+
     @commands.Cog.listener()
     async def on_message(self, message: disnake.Message):
         if message.author == self.client.user:
@@ -415,7 +483,7 @@ class Events(commands.Cog):
         motor = cast("MotorDbManager", self.client.get_cog("MotorDbManager"))
 
         # Use User ID if message guild is not available (prolly works?)
-        toggles = (
+        toggles: "AsyncIOMotorCollection[ToggleContents]" = (
             motor.get_collection_for_server("toggles", message.guild.id  if message.guild else message.author.id)           
         )
 
@@ -424,113 +492,8 @@ class Events(commands.Cog):
         user_stat = stats_cog.get_user(message.guild.id if message.guild else message.author.id, message.author.id)
         
         # Will still continue after any exceptions raised for any function
-        await asyncio.wait([x(msg, message, user_stat) for x in self.msg_handlers])
-        
-        # Text to speech
-        if isinstance(message.author, disnake.Member) and message.author.voice:
-            if msg.startswith("] "):
-                voice_channel = message.author.voice.channel
-                self.log("] command used", True)
-                tts = gTTS(msg)
-                with open("sounds/tts.mp3", "wb") as f:
-                    tts.write_to_fp(f)  # TODO: this is horrible btw # type: ignore
-                voice = disnake.utils.get(self.client.voice_clients, guild=message.guild)
-                if voice_channel is not None:
-
-                    if voice is None:
-                        vc = await voice_channel.connect()
-                        vc.play(disnake.FFmpegPCMAudio(source="sounds/tts.mp3"))
-                    else:
-                        cast("disnake.VoiceClient", voice).play(disnake.FFmpegPCMAudio(source="sounds/tts.mp3"))
-            if msg.startswith("]au "):
-                self.log("]au command used", True)
-                voice_channel = message.author.voice.channel
-
-                tts = gTTS(msg[3:], lang="en", tld="com.au")
-                with open("sounds/tts.mp3", "wb") as f:
-                    tts.write_to_fp(f)  # type: ignore
-                voice = disnake.utils.get(self.client.voice_clients, guild=message.guild)
-                if voice_channel is not None:
-
-                    if voice is None:
-                        vc = await voice_channel.connect()
-                        vc.play(disnake.FFmpegPCMAudio(source="sounds/tts.mp3"))
-                    else:
-                        cast("disnake.VoiceClient", voice).play(disnake.FFmpegPCMAudio(source="sounds/tts.mp3"))
-            if msg.startswith("]uk "):
-                self.log("]uk command used", True)
-                voice_channel = message.author.voice.channel
-
-                tts = gTTS(msg[3:], lang="en", tld="co.uk")
-                with open("sounds/tts.mp3", "wb") as f:
-                    tts.write_to_fp(f)  # type: ignore
-                voice = disnake.utils.get(self.client.voice_clients, guild=message.guild)
-                if voice_channel is not None:
-
-                    if voice is None:
-                        vc = await voice_channel.connect()
-                        vc.play(disnake.FFmpegPCMAudio(source="sounds/tts.mp3"))
-                    else:
-                        cast("disnake.VoiceClient", voice).play(disnake.FFmpegPCMAudio(source="sounds/tts.mp3"))
-            if msg.startswith("]in "):
-                self.log("]in command used", True)
-                voice_channel = message.author.voice.channel
-
-                tts = gTTS(msg[3:], lang="en", tld="co.in")
-                with open("sounds/tts.mp3", "wb") as f:
-                    tts.write_to_fp(f)  # type: ignore
-                voice = disnake.utils.get(self.client.voice_clients, guild=message.guild)
-                if voice_channel is not None:
-
-                    if voice is None:
-                        vc = await voice_channel.connect()
-                        vc.play(disnake.FFmpegPCMAudio(source="sounds/tts.mp3"))
-                    else:
-                        cast("disnake.VoiceClient", voice).play(disnake.FFmpegPCMAudio(source="sounds/tts.mp3"))
-
-        ########################FRIDAY IN CALIFORNIA#########################
-        if "friday" in msg:
-            tz = pytz.timezone("America/Los_Angeles")
-            curr_time = datetime.now(tz)
-            day = curr_time.strftime("%A")
-            if day == "Friday":
-                print("It is Friday... in California. SHOOT!")
-                await user_stat.increment("Friday in California", 1)
-                await message.channel.send(file=disnake.File("videos/friday.webm"))
-
-        if "wednesday" in msg:
-            _ = cast("TimeAndDates",self.client.get_cog("TimeAndDates"))
-            tz_day_list = _.get_current_days(show_date=False)
-
-            if "Wednesday" in tz_day_list:
-                day_ends = _.get_date_boundary("end", weekday="thursday")
-                epoch = _.tz_to_discord_timestamp(day_ends)
-
-                wed_vids = [
-                    Path("videos/mococo") / x
-                    for x in [
-                        "mococo_wednesday.mp4",
-                        "mococo_679.mp4",
-                        "fuwamoco_tsunami.mp4",
-                        "bau_city.mp4",
-                        "fuwamoco_family_ties.mp4",
-                        "fuwamoco_silent_hill.mp4",
-                    ]
-                ] + [Path("videos/wednesday.mp4")]
-
-                wed_choice = cast(Path, numpy.random.choice(  # type: ignore
-                    wed_vids, p=[0.8, 0.037, 0.037, 0.037, 0.037, 0.037, 0.015]  # type: ignore
-                ))
-
-                if wed_choice.parent.name == "mococo":
-                    epoch = f"Mococo Wednesday ends {epoch}"
-                    await user_stat.increment("Wednesday.Mococo", 1)
-                else:
-                    epoch = f"Moco... SIKE! Walter Wednesday ends {epoch}"
-                    await user_stat.increment("Wednesday.Walter", 1)
-
-                await message.channel.send(epoch, file=disnake.File(str(wed_choice)))
-
+        await asyncio.wait([asyncio.create_task(x(msg, message, user_stat)) for x in self.msg_handlers])
+       
         if any(word in msg for word in ["10:49pm", "10:49 pm", "10 49 pm", "10 49pm"]):
             await user_stat.increment("10:49 pm", 1)
             await message.channel.send(file=disnake.File("videos/10_49_pm.mp4"))
@@ -628,13 +591,10 @@ class Events(commands.Cog):
             """
 
             trollplant = "<a:trollplant:934777423881445436>"
-            dad_jokes = cast(
-                Optional["ToggleContents"],
-                await toggles.find_one({"title": "Dad Jokes"})
-            )
+            dad_jokes = await toggles.find_one({"title": "Dad Jokes"})
 
             if (dad_jokes is None or dad_jokes.get("enabled")) and im_pattern.search(msg):
-                victim_db = motor.get_collection_for_server(
+                victim_db: "AsyncIOMotorCollection[DadJokeVictimContents]" = motor.get_collection_for_server(
                     "dad_joke_victims", message.guild.id
                 )
 
@@ -701,7 +661,7 @@ class Events(commands.Cog):
         ####### FACEBOOK SHARE WARNING ###########
         match = re.search(r"https:\S+facebook.com\/share\/.\/\S+", msg)
         if match:
-            if isinstance(message.channel, (disnake.DMChannel, disnake.guild.GuildMessageable)):
+            if isinstance(message.channel, disnake.DMChannel | disnake.guild.GuildMessageable):
                 channel_link = message.channel.jump_url
                 await message.delete()
 
