@@ -10,14 +10,14 @@ from pymongo.server_api import ServerApi
 from bson import ObjectId
 
 if TYPE_CHECKING:
-    from motor.motor_asyncio import AsyncIOMotorCollection
+    from motor.motor_asyncio import AsyncIOMotorCollection, AsyncIOMotorClient
 
 class MotorDbManager(commands.Cog):
     def __init__(self, client: commands.Bot):
         self.client = client
         mongo_pass = os.getenv("MONGO_DB_PASS")
         conn_str = f"mongodb+srv://Kur0:{mongo_pass}@kur0bot1.b8p3zby.mongodb.net/?retryWrites=true&w=majority"
-        self.motor_client = AsyncIOMotorClient(conn_str, server_api=ServerApi("1"))
+        self.motor_client: "AsyncIOMotorClient[Any]" = AsyncIOMotorClient(conn_str, server_api=ServerApi("1"))
 
     async def cog_load(self):
         try:
@@ -29,11 +29,11 @@ class MotorDbManager(commands.Cog):
     def get_collection_for_server(self, db_name: str, guild_id: str | int):
         return self.motor_client[str(db_name)][str(guild_id)]
 
-    async def get_latest_doc(self, collec: "AsyncIOMotorCollection"):
+    async def get_latest_doc(self, collec: "AsyncIOMotorCollection[Any]"):
         res: list[Any]  = await collec.find().sort("_id", pymongo.DESCENDING).to_list(length=1)  # type: ignore
         return res[0]
 
-    async def get_random(self, coll: "AsyncIOMotorCollection"):
+    async def get_random(self, coll: "AsyncIOMotorCollection[Any]"):
         """Fucky way because sample aggregation is weird for small data"""
         gif_count = await coll.count_documents({})
         chosen_idx = random.randint(1, gif_count)
