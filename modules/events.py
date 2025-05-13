@@ -168,7 +168,7 @@ class Events(commands.Cog):
             return res
 
         @async_wrap
-        def log_activity(game_id: str, guild: disnake.Guild, name: str, activity_name: str):
+        def log_activity(game_id: str | int, guild: disnake.Guild, name: str, activity_name: str):
             with open("activities.txt", "a", encoding="utf-8") as f:
                 f.write(
                     f"({game_id}) [{guild}] {name}: started playing {activity_name}"
@@ -198,8 +198,8 @@ class Events(commands.Cog):
         game_names.append("Destiny 2")
         if new_user_activities:
             for activity in new_user_activities:
-                if str(activity.type) == "ActivityType.playing" and not after.bot:
-                    if isinstance(activity, disnake.Activity):
+                if str(activity.type) == "ActivityType.playing" and not after.bot and activity.name is not None:
+                    if isinstance(activity, disnake.Activity) and activity.application_id is not None:
                         game_id = activity.application_id
                     else:
                         game_id = "UNKNOWN"

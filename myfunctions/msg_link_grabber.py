@@ -3,8 +3,8 @@ from typing import TYPE_CHECKING, Any, Optional
 if TYPE_CHECKING:
     from disnake.ext import commands
 
-async def grab_link(ctx: "commands.Context[Any]", link: Optional[str] = None):
-    if link == None:
+async def grab_link(ctx: "commands.Context[Any]", link: Optional[str] = None) -> str:
+    if link is None:
         print(ctx.message.attachments)  # a list
         print(ctx.message.reference)
         if ctx.message.attachments:  # message has images
@@ -14,12 +14,11 @@ async def grab_link(ctx: "commands.Context[Any]", link: Optional[str] = None):
             print("is reply")
             id = ctx.message.reference.message_id
             if id is None:
-                print("Message reference has no ID")
-                return
+                raise Exception("You replied to something but I couldn't find it. Damn.")
             msg = await ctx.channel.fetch_message(id)
             if msg.attachments:  # if replied has image
                 link = msg.attachments[0].url
-            elif msg.embeds:  # if replied has link
+            elif msg.embeds and msg.embeds[0].url:  # if replied has link
                 link = msg.embeds[0].url
 
             else:

@@ -5,7 +5,7 @@ import aiohttp
 import disnake
 from disnake.ext import commands
 from dotenv import load_dotenv
-from lorem.text import TextLorem
+from lorem.text import TextLorem  # type: ignore
 
 Group: TypeAlias = commands.core.Group[Any, Any, Any]
 

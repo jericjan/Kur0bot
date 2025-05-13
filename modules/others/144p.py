@@ -4,9 +4,10 @@ import re
 import subprocess
 from datetime import datetime, timedelta
 from shlex import join as shjoin
-from typing import Any
+from typing import Any, Optional
 
 from aiolimiter import AsyncLimiter
+import disnake
 from disnake.ext import commands
 from tqdm import tqdm
 
@@ -18,9 +19,9 @@ limiter = AsyncLimiter(1, 1)
 class lowQual(commands.Cog):
     def __init__(self, client: commands.Bot):
         self.client = client
-        self.pbar_list = []
+        self.pbar_list: list[str] = []
 
-    async def updatebar(self, msg):
+    async def updatebar(self, msg: disnake.Message):
         try:
             async with limiter:
                 await asyncio.wait_for(msg.edit(content=self.pbar_list[-1]), timeout=1)
@@ -33,23 +34,30 @@ class lowQual(commands.Cog):
 
     @commands.command(aliases=["shitify", "pixelize"])
     @commands.bot_has_permissions(manage_messages=True)
-    async def lowqual(self, ctx: commands.Context[Any], link=None):
+    async def lowqual(self, ctx: commands.Context[Any], link: Optional[str] = None):
         link = await msg_link_grabber.grab_link(ctx, link)
         print(link)
 
         is_tenor = False
         if "tenor.com" in link:
             is_tenor = True
+            fail_msg = "Hmm... Can't find the gif. An embed fail perhaps? <a:trollplant:934777423881445436>"
             if ctx.message.reference is not None:  # message is replying
-                vid_url = ctx.message.reference.resolved.embeds[0].video.url
-                print(vid_url)
+                if isinstance(ctx.message.reference.resolved, disnake.Message):
+                    vid_url = ctx.message.reference.resolved.embeds[0].video.url
+                    print(vid_url)
+                else:
+                    await ctx.send("You replied to smth but I couldn't find it. Damn.")
+                    return
             elif ctx.message.embeds:
                 vid_url = ctx.message.embeds[0].video.url
             else:
-                await ctx.send(
-                    "Hmm... Can't find the gif. An embed fail perhaps? <a:trollplant:934777423881445436>"
-                )
+                await ctx.send(fail_msg)
                 return
+
+            if vid_url is None:
+                await ctx.send(fail_msg)
+                return    
 
             filename = link.split("/")[-1]
             filename = f"{''.join(filename)}.gif"
@@ -66,7 +74,7 @@ class lowQual(commands.Cog):
             # remuxes so it works with troll long videos, magic.
             muxname = re.sub(r"(.+(?=\..+))", r"\g<1>_mux", filename)
             if is_tenor:
-                coms = [
+                coms: list[str] = [
                     "ffmpeg",
                     "-i",
                     link,
@@ -83,7 +91,7 @@ class lowQual(commands.Cog):
                     "copy",
                     muxname,
                 ]
-            out, stdout, stderr = await subprocess_runner.run_subprocess(coms)
+            _out, _stdout, _stderr = await subprocess_runner.run_subprocess(coms)
             tempname = re.sub(r"(.+(?=\..+))", r"\g<1>01", filename)
             coms = [
                 "ffmpeg",
@@ -106,7 +114,10 @@ class lowQual(commands.Cog):
             )
             full_line = ""
             pbar = tqdm(total=100)
+            duration = None
             while process.returncode is None:
+                if process.stdout is None:
+                    break
 
                 line = await process.stdout.read(500)
                 if not line:
@@ -146,6 +157,8 @@ class lowQual(commands.Cog):
                             microseconds=strpcurr.microsecond,
                         )
                         try:
+                            if duration is None:
+                                continue
                             percentage = (
                                 currtime.total_seconds() / duration.total_seconds()
                             ) * 100
@@ -165,12 +178,12 @@ class lowQual(commands.Cog):
                             )
                             asyncio.ensure_future(self.updatebar(message))
                         except Exception as e:
-                            if not filename.endswith("gif"):
+                            if not filename.endswith("gif"):  # TODO: not sure why i had this check here
                                 await message.edit(
                                     content=f"Uh, I couldn't find the duration of vod. idk man.\nException: {e}"
                                 )
-            all_lines = await process.stdout.read()
-            print(f"output:\n\033[;32m{all_lines.decode('utf-8')}\033[0m")
+            # all_lines = await process.stdout.read()
+            # print(f"output:\n\033[;32m{all_lines.decode('utf-8')}\033[0m")
             file_handler.delete_file(muxname)
             coms = [
                 "ffmpeg",
@@ -191,8 +204,10 @@ class lowQual(commands.Cog):
             )
             full_line = ""
             pbar = tqdm(total=100)
+            duration = None
             while process.returncode is None:
-
+                if process.stdout is None:
+                    break
                 line = await process.stdout.read(500)
                 if not line:
                     break
@@ -231,6 +246,8 @@ class lowQual(commands.Cog):
                             microseconds=strpcurr.microsecond,
                         )
                         try:
+                            if duration is None:
+                                continue
                             percentage = (
                                 currtime.total_seconds() / duration.total_seconds()
                             ) * 100
@@ -254,15 +271,15 @@ class lowQual(commands.Cog):
                                 await message.edit(
                                     content="Uh, I couldn't find the duration of vod. idk man."
                                 )
-            all_lines = await process.stdout.read()
-            print(f"output:\n\033[;32m{all_lines.decode('utf-8')}\033[0m")
+            # all_lines = await process.stdout.read()
+            # print(f"output:\n\033[;32m{all_lines.decode('utf-8')}\033[0m")
             file_handler.delete_file(tempname)
 
         elif re.search(r".+\.jpg|.+\.jpeg|.+\.png|.+\.webp", filename) is not None:
             filename = filename.split("?")[0]
             tempname = re.sub(r"(.+(?=\..+))", r"\g<1>01", filename)
             message = await ctx.send("Downscaling...")
-            out, stdout, stderr = await subprocess_runner.run_subprocess([
+            _out, _stdout, _stderr = await subprocess_runner.run_subprocess([
                 "ffmpeg",
                 "-i",
                 link,
@@ -274,7 +291,7 @@ class lowQual(commands.Cog):
             ])
 
             await message.edit(content="Upscaling...")
-            out, stdout, stderr = await subprocess_runner.run_subprocess([
+            _out, _stdout, _stderr = await subprocess_runner.run_subprocess([
                 "ffmpeg",
                 "-i",
                 tempname,
