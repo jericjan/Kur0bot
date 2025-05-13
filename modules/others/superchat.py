@@ -41,7 +41,7 @@ class Superchat(commands.Cog):
         prefs = {
             "browser.download.folderList": 2,
             "browser.download.manager.showWhenStarting": False,
-            "browser.download.dir": f"/home/runner/Kur0bot/supers/{cur_uuid}/",
+            "browser.download.dir": f"/app/supers/{cur_uuid}/",
             "browser.helperApps.neverAsk.saveToDisk": "'image/png",
             "browser.display.use_document_fonts": 1,
         }
