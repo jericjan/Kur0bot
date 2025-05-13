@@ -1,5 +1,5 @@
 import json
-from typing import Any
+from typing import Any, TypeAlias, cast
 
 import aiohttp
 import disnake
@@ -7,15 +7,16 @@ from disnake.ext import commands
 from dotenv import load_dotenv
 from lorem.text import TextLorem
 
+Group: TypeAlias = commands.core.Group[Any, Any, Any]
 
 class AttachmentBulker:
-    def __init__(self, ctx: commands.Context[Any], threshold):
+    def __init__(self, ctx: commands.Context[Any], threshold: int):
         self.ctx = ctx
         self.threshold = threshold
         self.counter = 0
         self.msgs = ""
 
-    async def send(self, msg):
+    async def send(self, msg: str):
         print("Method to call multiple times")
         self.counter += 1
         self.msgs += msg + "\n"
@@ -36,7 +37,7 @@ class Kur0only(commands.Cog):
 
     @commands.command()
     @commands.is_owner()
-    async def makeembed(self, ctx: commands.Context[Any], title, description):
+    async def makeembed(self, ctx: commands.Context[Any], title: str, description: str):
         if description.startswith("https"):
             print("description is url")
             async with aiohttp.ClientSession() as session:
@@ -55,7 +56,7 @@ class Kur0only(commands.Cog):
 
     @commands.command()
     @commands.is_owner()
-    async def editembed(self, ctx: commands.Context[Any], msg_id: int, title, description):
+    async def editembed(self, ctx: commands.Context[Any], msg_id: int, title: str, description: str):
         if description.startswith("https"):
             print("description is url")
             msg = await ctx.fetch_message(msg_id)
@@ -79,7 +80,7 @@ class Kur0only(commands.Cog):
             data = json.load(f)
 
         hidden_commands = data["hidden"]
-        self.comm_list = []  # list of public commands IN commands.json
+        self.comm_list: list[str] = []  # list of public commands IN commands.json
         for i in data:
             if i == "hidden":
                 pass
@@ -87,7 +88,7 @@ class Kur0only(commands.Cog):
                 self.comm_list += data[i]
 
         return [
-            c.name for c in self.client.commands if c.name not in hidden_commands
+            c.name for c in self.client.commands if c.name not in hidden_commands # pyright: ignore[reportUnknownMemberType, reportUnknownVariableType]
         ]  # list of public commands IN the bot
 
     @commands.command()
@@ -97,12 +98,13 @@ class Kur0only(commands.Cog):
         diffcomms = [c for c in public_commandss if c not in self.comm_list]
         diffcomms_joined = "\n".join(diffcomms)
         await ctx.send(f"Commands missing in help command are:\n{diffcomms_joined}")
+        help_cmd = cast("Group", self.client.get_command("help"))
         commands_with_help_msg = [
-            c.name for c in self.client.get_command("help").commands
+            c.name for c in help_cmd.commands # pyright: ignore[reportUnknownMemberType, reportUnknownVariableType]
         ]
         aliases = [
             a
-            for c in self.client.get_command("help").commands
+            for c in help_cmd.commands
             if c.aliases
             for a in c.aliases
         ]
@@ -117,7 +119,7 @@ class Kur0only(commands.Cog):
 
     @commands.command()
     @commands.is_owner()
-    async def ytbypass(self, ctx: commands.Context[Any], text):
+    async def ytbypass(self, ctx: commands.Context[Any], text: str):
         letters = list(text)
         count = len(letters)
         lorem = TextLorem(wsep=" ", srange=(count, count))
@@ -134,19 +136,19 @@ class Kur0only(commands.Cog):
 
     @commands.command()
     @commands.is_owner()
-    async def editmsg(self, ctx: commands.Context[Any], msg_id: disnake.Message, *, msg):
+    async def editmsg(self, ctx: commands.Context[Any], msg_id: disnake.Message, *, msg: str):
         await msg_id.edit(content=msg)
         await ctx.send("Done!")
 
     @commands.command()
     @commands.is_owner()
-    async def send(self, ctx: commands.Context[Any], ch_id: disnake.TextChannel, *, msg):
+    async def send(self, ctx: commands.Context[Any], ch_id: disnake.TextChannel, *, msg: str):
         await ch_id.send(msg)
         await ctx.send("Done!")
 
     @commands.command()
     @commands.is_owner()
-    async def attachments(self, ctx: commands.Context[Any], start=0):
+    async def attachments(self, ctx: commands.Context[Any], start: int =0):
         count = 0
         att_bulker = AttachmentBulker(ctx, 5)
         with open("paci_media_2.txt", encoding="utf-8") as f:

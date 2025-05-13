@@ -12,3 +12,4 @@ services:
       - ./keep_alive.py:/app/keep_alive.py
       - ./poetry.lock:/app/poetry.lock
       - ./.env:/app/.env
+      - ./typings:/app/typings

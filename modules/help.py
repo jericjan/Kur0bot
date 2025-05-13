@@ -5,13 +5,14 @@ https://discordjs.guide/popular-topics/embeds.html#embed-preview
 
 import json
 import os
-from typing import TYPE_CHECKING, Any, cast
+from typing import TYPE_CHECKING, Any, Optional, TypeAlias, cast
 
 import disnake
 from disnake.ext import commands
 
 if TYPE_CHECKING:
     from modules.kur0_only import Kur0only
+    Command: TypeAlias = commands.core.Command[Any, Any, Any]
 
 class Help(commands.Cog):
     def __init__(self, client: commands.Bot):
@@ -19,7 +20,7 @@ class Help(commands.Cog):
 
     @commands.group(invoke_without_command=True)
     @commands.bot_has_permissions(embed_links=True)
-    async def help(self, ctx: commands.Context[Any], extra=None):
+    async def help(self, ctx: commands.Context[Any], extra: Optional[str] = None):
         """
         General help command. If invalid subcommand is given, it will go in `extra`
         """
@@ -30,15 +31,17 @@ class Help(commands.Cog):
                 self.client.get_cog("Kur0only")
             ).get_public_commands()
             
-            for comm in public_comms:
-                comm = self.client.get_command(comm)
-                for alias in comm.aliases:
-                    if alias == extra:  # found the command with matching alias
-                        command = self.client.get_command(f"help {comm.name}")
-                        ctx.command = command
-                        ctx.invoked_subcommand = command
-                        await self.client.invoke(ctx)
-                        return
+
+            for command_name in public_comms:
+                comm: "Optional[Command]" = self.client.get_command(command_name)
+                if comm is not None:
+                    for alias in comm.aliases:
+                        if alias == extra:  # found the command with matching alias
+                            command: "Optional[Command]" = self.client.get_command(f"help {comm.name}")
+                            ctx.command = command
+                            ctx.invoked_subcommand = command
+                            await self.client.invoke(ctx) # pyright: ignore[reportUnknownMemberType]
+                            return
             await ctx.send(
                 "Brother, I don't think I've ever heard of that command before."
             )
@@ -152,13 +155,13 @@ class Help(commands.Cog):
 
     @help.command(aliases=["e"])
     @commands.bot_has_permissions(embed_links=True)
-    async def emote(self, ctx: commands.Context[Any]):
+    async def emote(self, ctx: commands.Context[commands.Bot]):
         em = disnake.Embed(
             title="Emote",
             description="Sends an animated emote from any server that this bot is in.",
         )
         em.add_field(name="**Syntax**", value="k.emote <emotename>")
-        em.add_field(name="**Aliases**", value=",".join(ctx.command.aliases))
+        em.add_field(name="**Aliases**", value=",".join(cast("Command", ctx.command).aliases)) # pyright: ignore[reportUnknownMemberType]
         await ctx.send(embed=em)
 
     @help.command(aliases=["ge"])
@@ -169,7 +172,7 @@ class Help(commands.Cog):
             description="Sends all emotes that this bot has. "
             "It has emotes for all servers it's in.",
         )
-        em.add_field(name="**Aliases**", value=",".join(ctx.command.aliases))
+        em.add_field(name="**Aliases**", value=",".join(cast("Command", ctx.command).aliases)) # pyright: ignore[reportUnknownMemberType]
         await ctx.send(embed=em)
 
     @help.command()
@@ -325,7 +328,7 @@ class Help(commands.Cog):
             description="Reads text in the tiktok voice in VC or as a file.",
         )
         em.add_field(name="**Syntax**", value="k.tiktok <message>")
-        em.add_field(name="**Aliases**", value=",".join(ctx.command.aliases))
+        em.add_field(name="**Aliases**", value=",".join(cast("Command", ctx.command).aliases)) # pyright: ignore[reportUnknownMemberType]
         await ctx.send(embed=em)
 
     @help.command()
@@ -429,7 +432,7 @@ class Help(commands.Cog):
     @commands.bot_has_permissions(embed_links=True)
     async def ogey(self, ctx: commands.Context[Any]):
         em = disnake.Embed(title="Ogey...", description="Plays Pekora's ogey in VC.")
-        em.add_field(name="**Aliases**", value=",".join(ctx.command.aliases))
+        em.add_field(name="**Aliases**", value=",".join(cast("Command", ctx.command).aliases)) # pyright: ignore[reportUnknownMemberType]
         await ctx.send(embed=em)
 
     @help.command()
@@ -483,7 +486,7 @@ class Help(commands.Cog):
             title="Taco Bell bong sfx",
             description="Plays the funny taco bell sound effect in VC.",
         )
-        em.add_field(name="**Aliases**", value=",".join(ctx.command.aliases))
+        em.add_field(name="**Aliases**", value=",".join(cast("Command", ctx.command).aliases)) # pyright: ignore[reportUnknownMemberType]
         await ctx.send(embed=em)
 
     @help.command(aliases=["amogus"])
@@ -492,7 +495,7 @@ class Help(commands.Cog):
         em = disnake.Embed(
             title="AMONGUS!", description="Plays the guy yelling amongus in VC."
         )
-        em.add_field(name="**Aliases**", value=",".join(ctx.command.aliases))
+        em.add_field(name="**Aliases**", value=",".join(cast("Command", ctx.command).aliases)) # pyright: ignore[reportUnknownMemberType]
         await ctx.send(embed=em)
 
     @help.command(aliases=["classtrial"])
@@ -502,7 +505,7 @@ class Help(commands.Cog):
             title="Class trial time!",
             description="Plays '議論 -HEAT UP-' from Danganronpa in VC.",
         )
-        em.add_field(name="**Aliases**", value=",".join(ctx.command.aliases))
+        em.add_field(name="**Aliases**", value=",".join(cast("Command", ctx.command).aliases)) # pyright: ignore[reportUnknownMemberType]
         await ctx.send(embed=em)
 
     @help.command()
@@ -616,7 +619,7 @@ class Help(commands.Cog):
             title="Hell's Kitchen SFX",
             description="Plays the Hell's Kitchen sound effect.",
         )
-        em.add_field(name="**Aliases**", value=",".join(ctx.command.aliases))
+        em.add_field(name="**Aliases**", value=",".join(cast("Command", ctx.command).aliases)) # pyright: ignore[reportUnknownMemberType]
         await ctx.send(embed=em)
 
     @help.command(aliases=["boo-womp"])
@@ -627,7 +630,7 @@ class Help(commands.Cog):
             description="Plays the boo-womp sound effect that they play on Spongebob when something"
             " sad happens.",
         )
-        em.add_field(name="**Aliases**", value=",".join(ctx.command.aliases))
+        em.add_field(name="**Aliases**", value=",".join(cast("Command", ctx.command).aliases)) # pyright: ignore[reportUnknownMemberType]
         await ctx.send(embed=em)
 
     @help.command()
@@ -652,7 +655,7 @@ class Help(commands.Cog):
             name="**Syntax**",
             value="k.sauce <url>\nUpload image with k.sauce\nReply to a message with k.sauce ",
         )
-        em.add_field(name="**Aliases**", value=",".join(ctx.command.aliases))
+        em.add_field(name="**Aliases**", value=",".join(cast("Command", ctx.command).aliases)) # pyright: ignore[reportUnknownMemberType]
         await ctx.send(embed=em)
 
     @help.command()
@@ -703,7 +706,7 @@ class Help(commands.Cog):
             description="Flips a coin. That's it",
         )
         em.add_field(name="**Syntax**", value="k.coinflip  heads\nk.coinflip tails")
-        em.add_field(name="**Aliases**", value=",".join(ctx.command.aliases))
+        em.add_field(name="**Aliases**", value=",".join(cast("Command", ctx.command).aliases)) # pyright: ignore[reportUnknownMemberType]
         await ctx.send(embed=em)
 
     @help.command(aliases=["shitify", "pixelize"])
@@ -718,7 +721,7 @@ class Help(commands.Cog):
             value="k.lowqual <url>\nUpload video/photo with k.lowqual\nReply to a video/photo "
             "message with k.lowqual ",
         )
-        em.add_field(name="**Aliases**", value=",".join(ctx.command.aliases))
+        em.add_field(name="**Aliases**", value=",".join(cast("Command", ctx.command).aliases)) # pyright: ignore[reportUnknownMemberType]
         await ctx.send(embed=em)
 
     @help.command()
@@ -758,7 +761,7 @@ class Help(commands.Cog):
             name="**Example**",
             value="k.superchat $100 poggers",
         )
-        em.add_field(name="**Aliases**", value=",".join(ctx.command.aliases))
+        em.add_field(name="**Aliases**", value=",".join(cast("Command", ctx.command).aliases)) # pyright: ignore[reportUnknownMemberType]
         await ctx.send(embed=em)
 
     @help.command(aliases=["oldakasupa", "oldsupacha"])
@@ -777,7 +780,7 @@ class Help(commands.Cog):
             name="**Example**",
             value="k.oldsuperchat $100 poggers",
         )
-        em.add_field(name="**Aliases**", value=",".join(ctx.command.aliases))
+        em.add_field(name="**Aliases**", value=",".join(cast("Command", ctx.command).aliases)) # pyright: ignore[reportUnknownMemberType]
         await ctx.send(embed=em)
 
     @help.command(aliases=["vid2gif", "gifify"])
@@ -791,7 +794,7 @@ class Help(commands.Cog):
             name="**Syntax**",
             value="k.gif <video_url>\nUpload video with k.gif\nReply to a video with k.gif ",
         )
-        em.add_field(name="**Aliases**", value=",".join(ctx.command.aliases))
+        em.add_field(name="**Aliases**", value=",".join(cast("Command", ctx.command).aliases)) # pyright: ignore[reportUnknownMemberType]
         await ctx.send(embed=em)
 
     @help.command(aliases=["vid2gif2", "gifify2"])
@@ -806,7 +809,7 @@ class Help(commands.Cog):
             value="k.gif2 <video_url>\nUpload video with k.gif2\nReply to a video with k.gif2 \n\n"
             "Optional: you can add include quality (1-100) at the end of the command. Default: 70",
         )
-        em.add_field(name="**Aliases**", value=",".join(ctx.command.aliases))
+        em.add_field(name="**Aliases**", value=",".join(cast("Command", ctx.command).aliases)) # pyright: ignore[reportUnknownMemberType]
         await ctx.send(embed=em)
 
     @help.command()
@@ -823,9 +826,9 @@ class Help(commands.Cog):
         )
         await ctx.send(embed=em)
 
-    def paginate(self, lines, chars=4096):
+    def paginate(self, lines: str, chars: int =4096):
         size = 0
-        message = []
+        message: list[str] = []
         for line in lines:
             if len(line) + size > chars:
                 yield message
@@ -879,7 +882,7 @@ class Help(commands.Cog):
             "Reply to a message with k.uploadsticker <name> <emoji as text>",
             inline=False,
         )
-        em.add_field(name="**Aliases**", value=",".join(ctx.command.aliases))
+        em.add_field(name="**Aliases**", value=",".join(cast("Command", ctx.command).aliases)) # pyright: ignore[reportUnknownMemberType]
         em.add_field(
             name="**Example**",
             value="k.uploadsticker agony cry https://cdn.discordapp.com/attachments/"
@@ -900,7 +903,7 @@ class Help(commands.Cog):
             "Reply to a message with k.uploademote <name>",
             inline=False,
         )
-        em.add_field(name="**Aliases**", value=",".join(ctx.command.aliases))
+        em.add_field(name="**Aliases**", value=",".join(cast("Command", ctx.command).aliases)) # pyright: ignore[reportUnknownMemberType]
         em.add_field(
             name="**Example**",
             value="k.uploademote stuff https://cdn.discordapp.com/attachments/809247468084133898/"
@@ -917,7 +920,7 @@ class Help(commands.Cog):
             "get access to the DeepL API because I'm filipino :(",
         )
         em.add_field(name="**Syntax**", value="k.nihongo <sentence>", inline=False)
-        em.add_field(name="**Aliases**", value=",".join(ctx.command.aliases))
+        em.add_field(name="**Aliases**", value=",".join(cast("Command", ctx.command).aliases)) # pyright: ignore[reportUnknownMemberType]
         em.add_field(
             name="**Example**",
             value="k.nihongo hello",
@@ -933,7 +936,7 @@ class Help(commands.Cog):
             " access to the DeepL API because I'm filipino :(",
         )
         em.add_field(name="**Syntax**", value="k.eigo <sentence>", inline=False)
-        em.add_field(name="**Aliases**", value=",".join(ctx.command.aliases))
+        em.add_field(name="**Aliases**", value=",".join(cast("Command", ctx.command).aliases)) # pyright: ignore[reportUnknownMemberType]
         em.add_field(
             name="**Example**",
             value="k.eigo 草",
@@ -948,7 +951,7 @@ class Help(commands.Cog):
             description="Translate given text to German. Uses Google Translate.",
         )
         em.add_field(name="**Syntax**", value="k.doitsu <sentence>", inline=False)
-        em.add_field(name="**Aliases**", value=",".join(ctx.command.aliases))
+        em.add_field(name="**Aliases**", value=",".join(cast("Command", ctx.command).aliases)) # pyright: ignore[reportUnknownMemberType]
         em.add_field(
             name="**Example**",
             value="k.doitsu hello",
@@ -1036,7 +1039,7 @@ class Help(commands.Cog):
         em.add_field(
             name="**Syntax**", value=r"k.getosumap <user\ping\id>", inline=False
         )
-        em.add_field(name="**Aliases**", value=",".join(ctx.command.aliases))
+        em.add_field(name="**Aliases**", value=",".join(cast("Command", ctx.command).aliases)) # pyright: ignore[reportUnknownMemberType]
         em.add_field(
             name="**Example**",
             value="k.getosumap Kur0",
@@ -1055,7 +1058,7 @@ class Help(commands.Cog):
             title="Not a music queue",
             description="Does not show the queue of songs you've queued",
         )
-        em.add_field(name="**Aliases**", value=",".join(ctx.command.aliases))
+        em.add_field(name="**Aliases**", value=",".join(cast("Command", ctx.command).aliases)) # pyright: ignore[reportUnknownMemberType]
         await ctx.send(embed=em)
 
     @help.command(aliases=["p"])
@@ -1066,7 +1069,7 @@ class Help(commands.Cog):
             description="Does not play a song in VC given a YT link",
         )
         em.add_field(name="**Syntax**", value=r"k.play <yt_url>", inline=False)
-        em.add_field(name="**Aliases**", value=",".join(ctx.command.aliases))
+        em.add_field(name="**Aliases**", value=",".join(cast("Command", ctx.command).aliases)) # pyright: ignore[reportUnknownMemberType]
         await ctx.send(embed=em)
 
     @help.command(aliases=["np"])
@@ -1076,7 +1079,7 @@ class Help(commands.Cog):
             title="Not a nowplaying shower",
             description="Does not show the currently playing song in VC",
         )
-        em.add_field(name="**Aliases**", value=",".join(ctx.command.aliases))
+        em.add_field(name="**Aliases**", value=",".join(cast("Command", ctx.command).aliases)) # pyright: ignore[reportUnknownMemberType]
         await ctx.send(embed=em)
 
     @help.command(aliases=["s"])
@@ -1086,7 +1089,7 @@ class Help(commands.Cog):
             title="Not a song skipper",
             description="Does not skip the currently playing song in VC",
         )
-        em.add_field(name="**Aliases**", value=",".join(ctx.command.aliases))
+        em.add_field(name="**Aliases**", value=",".join(cast("Command", ctx.command).aliases)) # pyright: ignore[reportUnknownMemberType]
         await ctx.send(embed=em)
 
     @help.command(aliases=["ultrakill"])
@@ -1096,7 +1099,7 @@ class Help(commands.Cog):
             title="Sam TTS",
             description="Plays Sam TTS, commonly known as the Ultrakill TTS, in VC",
         )
-        em.add_field(name="**Aliases**", value=",".join(ctx.command.aliases))
+        em.add_field(name="**Aliases**", value=",".join(cast("Command", ctx.command).aliases)) # pyright: ignore[reportUnknownMemberType]
         await ctx.send(embed=em)
 
     @help.command()
@@ -1250,7 +1253,7 @@ class Help(commands.Cog):
             em.show_aliases(auto=True)
 
 class EmbedMaker:
-    def __init__(self, ctx: commands.Context[Any], title, desc, client=False):
+    def __init__(self, ctx: commands.Context[Any], title: str, desc: str, client: Optional[commands.Bot] = None):
         self.ctx = ctx
         self.client = client
         self.em = disnake.Embed(
@@ -1261,31 +1264,38 @@ class EmbedMaker:
     async def __aenter__(self):
         return self
 
-    async def __aexit__(self, exc_type, exc, tb):
+    async def __aexit__(self, exc_type: Any, exc: Any, tb: Any):
         await self.ctx.send(embed=self.em)
 
-    def add_syntax(self, syntax, inline=False):
+    def add_syntax(self, syntax: str, inline: bool=False):
         self.em.add_field(name="**Syntax**", value=syntax, inline=inline)
 
-    def add_example(self, ex, inline=False):
+    def add_example(self, ex: str, inline: bool =False):
         self.em.add_field(name="**Example**", value=ex, inline=inline)
 
-    def show_aliases(self, auto=False):
+    def show_aliases(self, auto: bool = False):
         """
         need to rewrite this.
         """
+
+        command = cast("Command", self.ctx.command) # pyright: ignore[reportUnknownMemberType]
+        # Uses when you don't specify aliases in the help command itself
         if auto:
             if self.client is None:
                 raise Exception(
                     "self.client not provided when show_aliases() is auto mode!"
                 )
+            command = cast("Command", self.client.get_command(command.name)) # pyright: ignore[reportUnknownMemberType]
             self.em.add_field(
                 name="**Aliases**",
-                value=",".join(self.client.get_command(self.ctx.command.name).aliases),
+                value=",".join(
+                    cast("Command", self.client.get_command(command.name))
+                    .aliases
+                ),
             )
         else:
             self.em.add_field(
-                name="**Aliases**", value=",".join(self.ctx.command.aliases)
+                name="**Aliases**", value=",".join(command.aliases)
             )
 
 
