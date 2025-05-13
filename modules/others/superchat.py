@@ -1,6 +1,6 @@
 import asyncio
-import functools
 import io
+import math
 import os
 import re
 import shlex
@@ -104,8 +104,8 @@ class Superchat(commands.Cog):
             pass
 
     @async_wrap
-    def legacy_blocking_function(
-        self, user: str, amount: str, msg: str, pfp: str, bgnMessage: disnake.Message
+    def superchat_init(
+        self, user: str, amount: str, pfp: str
         ) -> tuple[ImageDraw.ImageDraw, ImageFont.FreeTypeFont, Image.Image]:
         ###TOP BAR
         img = Image.new("RGBA", (1760, 240), color=(208, 0, 0, 255))
@@ -148,30 +148,23 @@ class Superchat(commands.Cog):
         ###BOTTOM BAR
 
     @async_wrap
-    def legacy_blocking_function2(
+    def get_txt_width(
         self,
-        index: int,
-        msg_words: list[str],
         temp_str: str,
-        draw0,
-        fnt0,
-        user: str,
-        amount: str,
-        msg: str,
-        pfp: str,
-        bgnMessage: disnake.Message,
+        draw0: ImageDraw.ImageDraw,
+        fnt0: ImageFont.FreeTypeFont,
     ):
 
         temp_str = temp_str.split("\n")[-1]
 
-        text_size = draw0.textsize(temp_str, font=fnt0, spacing=28)
+        text_size = draw0.textlength(temp_str, font=fnt0)
 
-        txt_width = int(text_size[0])
+        txt_width = math.ceil(text_size)
 
         return txt_width
 
     @async_wrap
-    def legacy_blocking_function3(self, msg_split, out):
+    def create_superchat_img(self, msg_split: str, out: Image.Image):
         spacing = 30
         img = Image.new("RGBA", (1760, 152), color=(230, 33, 23, 255))
         fnt = ImageFont.truetype("fonts/merged.ttf", 60)
@@ -184,7 +177,7 @@ class Superchat(commands.Cog):
             img = img.resize((1760, txt_height + 92))
 
         with Pilmoji(img) as pilmoji:
-            pilmoji.text(
+            pilmoji.text(  # type: ignore
                 (64, 31),
                 msg_split,
                 fill=(255, 255, 255, 255),
@@ -215,21 +208,19 @@ class Superchat(commands.Cog):
                 txt_split[1:] = [" ".join(txt_split[1:])]
                 amount, message = txt_split
 
-        elif amount is None or message is None:
-            command = self.client.get_command("help superchat")
+        if amount is None or message is None:
+            command = self.client.get_command("help superchat") # pyright: ignore[reportUnknownVariableType]
             ctx.command = command
             ctx.invoked_subcommand = command
-            await self.client.invoke(ctx)
+            await self.client.invoke(ctx) # pyright: ignore[reportUnknownMemberType]
             return
 
         await ctx.message.delete()
         bgnMessage = await ctx.send(f"{ctx.author.name} is sending a superchat...")
-        draw0, fnt0, out = await self.legacy_blocking_function(
+        draw0, fnt0, out = await self.superchat_init(
             ctx.author.name,
             amount,
-            message,
             ctx.message.author.display_avatar.url,
-            bgnMessage,
         )
         msg_words = message.split(" ")
         msg_split = ""
@@ -241,17 +232,10 @@ class Superchat(commands.Cog):
                 temp_str = i
             else:
                 temp_str = f"{msg_split} {i}"
-            txt_width = await self.legacy_blocking_function2(
-                index,
-                msg_words,
+            txt_width = await self.get_txt_width(
                 temp_str,
                 draw0,
                 fnt0,
-                ctx.author.name,
-                amount,
-                message,
-                ctx.message.author.display_avatar.url,
-                bgnMessage,
             )
             if int(txt_width) <= 1632:
                 if index == 0:
@@ -275,7 +259,7 @@ class Superchat(commands.Cog):
                 pass
         pbar.close()
         output.close()
-        bruh = await self.legacy_blocking_function3(msg_split, out)
+        bruh = await self.create_superchat_img(msg_split, out)
         bruh.seek(0)
         await file_handler.send_file(ctx, bgnMessage, bruh, "superchat.png")
         bruh.close()
