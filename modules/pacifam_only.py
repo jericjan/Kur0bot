@@ -7,7 +7,7 @@ from typing import Any
 
 import disnake
 from disnake.ext import commands
-from mcrcon import MCRcon
+from mcrcon import MCRcon  # type: ignore
 
 
 class PacifamOnly(commands.Cog):
@@ -15,7 +15,7 @@ class PacifamOnly(commands.Cog):
         self.client = client
 
     @commands.command()
-    async def addoffline(self, ctx: commands.Context[Any], username):
+    async def addoffline(self, ctx: commands.Context[Any], username: str):
         avi_guild = self.client.get_guild(938255956247183451)
         while avi_guild is None:
             pass
@@ -23,6 +23,9 @@ class PacifamOnly(commands.Cog):
         moderator = disnake.utils.get(avi_guild.roles, name="Moderator")
         avilon = disnake.utils.get(avi_guild.roles, name="Aweelom")
         roles = [admin, moderator, avilon]
+        if not isinstance(ctx.author, disnake.Member):
+            await ctx.send(f"You can't use this command in DMs!")
+            return
         if (
             any(role in roles for role in ctx.author.roles)
             or ctx.author.id == 216830153441935360
@@ -30,7 +33,11 @@ class PacifamOnly(commands.Cog):
             await ctx.send(f"Adding {username} to list of offline users...")
 
             ftp = FTP(host="us28.pebblehost.com")
-            ftp.login(user=os.getenv("PEBBLE_EMAIL"), passwd=os.getenv("PEBBLE_PASS"))
+            if (email := os.getenv("PEBBLE_EMAIL")) is None or (passwd := os.getenv("PEBBLE_PASS")) is None:
+                await ctx.send("Pebblehost credentials missing.")
+                return
+            
+            ftp.login(user=email, passwd=passwd)
             r = io.BytesIO()
             ftp.retrbinary("RETR /mods/EasyAuth/config.json", r.write)
             config = json.loads(r.getvalue())
@@ -43,7 +50,7 @@ class PacifamOnly(commands.Cog):
             ftp.storbinary("STOR /mods/EasyAuth/config.json", io.BytesIO(dump))
 
             with MCRcon("51.81.142.14", str(os.getenv("RCON_PASS")), 8082) as mcr:
-                resp = mcr.command("/auth reload")
+                resp = mcr.command("/auth reload")  # type: ignore
                 print(resp)
             await ctx.send("Done!")
 
@@ -59,13 +66,19 @@ class PacifamOnly(commands.Cog):
         moderator = disnake.utils.get(avi_guild.roles, name="Moderator")
         avilon = disnake.utils.get(avi_guild.roles, name="Aweelom")
         roles = [admin, moderator, avilon]
+        if not isinstance(ctx.author, disnake.Member):
+            await ctx.send(f"You can't use this command in DMs!")
+            return        
         if (
             any(role in roles for role in ctx.author.roles)
             or ctx.author.id == 216830153441935360
         ):
 
             ftp = FTP(host="us28.pebblehost.com")
-            ftp.login(user=os.getenv("PEBBLE_EMAIL"), passwd=os.getenv("PEBBLE_PASS"))
+            if (email := os.getenv("PEBBLE_EMAIL")) is None or (passwd := os.getenv("PEBBLE_PASS")) is None:
+                await ctx.send("Pebblehost credentials missing.")
+                return            
+            ftp.login(user=email, passwd=passwd)
             r = io.BytesIO()
             ftp.retrbinary("RETR /mods/EasyAuth/config.json", r.write)
             config = json.loads(r.getvalue())
@@ -78,7 +91,7 @@ class PacifamOnly(commands.Cog):
             await ctx.send("Only Admins/Mods can use this command")
 
     @commands.command()
-    async def removeoffline(self, ctx: commands.Context[Any], username):
+    async def removeoffline(self, ctx: commands.Context[Any], username: str):
         avi_guild = self.client.get_guild(938255956247183451)
         while avi_guild is None:
             pass
@@ -86,6 +99,9 @@ class PacifamOnly(commands.Cog):
         moderator = disnake.utils.get(avi_guild.roles, name="Moderator")
         avilon = disnake.utils.get(avi_guild.roles, name="Aweelom")
         roles = [admin, moderator, avilon]
+        if not isinstance(ctx.author, disnake.Member):
+            await ctx.send(f"You can't use this command in DMs!")
+            return        
         if (
             any(role in roles for role in ctx.author.roles)
             or ctx.author.id == 216830153441935360
@@ -93,7 +109,10 @@ class PacifamOnly(commands.Cog):
             await ctx.send(f"Removing {username} from list of offline users...")
 
             ftp = FTP(host="us28.pebblehost.com")
-            ftp.login(user=os.getenv("PEBBLE_EMAIL"), passwd=os.getenv("PEBBLE_PASS"))
+            if (email := os.getenv("PEBBLE_EMAIL")) is None or (passwd := os.getenv("PEBBLE_PASS")) is None:
+                await ctx.send("Pebblehost credentials missing.")
+                return            
+            ftp.login(user=email, passwd=passwd)
             r = io.BytesIO()
             ftp.retrbinary("RETR /mods/EasyAuth/config.json", r.write)
             config = json.loads(r.getvalue())
@@ -107,7 +126,7 @@ class PacifamOnly(commands.Cog):
             ftp.storbinary("STOR /mods/EasyAuth/config.json", io.BytesIO(dump))
 
             with MCRcon("51.81.142.14", str(os.getenv("RCON_PASS")), 8082) as mcr:
-                resp = mcr.command("/auth reload")
+                resp = mcr.command("/auth reload")  # type: ignore
                 print(resp)
             await ctx.send("Done!")
 
@@ -116,21 +135,24 @@ class PacifamOnly(commands.Cog):
 
     @commands.command()
     async def viewmods(self, ctx: commands.Context[Any]):
-        if ctx.guild.id == 938255956247183451:
-            ftp = FTP(host="us28.pebblehost.com")
-            ftp.login(user=os.getenv("PEBBLE_EMAIL"), passwd=os.getenv("PEBBLE_PASS"))
-            modlist = list(ftp.mlsd("/mods/"))
-            clean_modlist = []
-            for i in modlist:
-                filename = i[0]
-                if filename.endswith(".jar"):
-                    modname = re.findall(r"[\w-]+(?=-)(?=\d)?|[\w-]+(?=\.)", filename)[
-                        0
-                    ]
-                    clean_modlist.append(modname)
-            await ctx.send("\n".join(clean_modlist))
-        else:
-            await ctx.send("Only usable in the pacifam server")
+        if ctx.guild is None or ctx.guild.id != 938255956247183451:
+            await ctx.send("This command can only be used in the pacifam server.")
+            return
+        ftp = FTP(host="us28.pebblehost.com")
+        if (email := os.getenv("PEBBLE_EMAIL")) is None or (passwd := os.getenv("PEBBLE_PASS")) is None:
+            await ctx.send("Pebblehost credentials missing.")
+            return            
+        ftp.login(user=email, passwd=passwd)
+        modlist = list(ftp.mlsd("/mods/"))
+        clean_modlist: list[str] = []
+        for i in modlist:
+            filename = i[0]
+            if filename.endswith(".jar"):
+                modname = re.findall(r"[\w-]+(?=-)(?=\d)?|[\w-]+(?=\.)", filename)[
+                    0
+                ]
+                clean_modlist.append(modname)
+        await ctx.send("\n".join(clean_modlist))
 
 
 def setup(client: commands.Bot):

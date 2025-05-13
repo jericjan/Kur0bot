@@ -776,7 +776,7 @@ class Events(commands.Cog):
                         while traceback.tb_next:
                             filename = traceback.tb_frame.f_code.co_filename
                             line_no = traceback.tb_lineno
-                            if filename.startswith("/home/kur0/Kur0bot"):
+                            if filename.startswith("/app"):
                                 log_thing += f"{filename}:{line_no}\n"
                                 with open(filename, encoding="utf-8") as f:
                                     for pos, line in enumerate(f):

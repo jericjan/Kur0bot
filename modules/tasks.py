@@ -1,12 +1,10 @@
 # pylint: disable=E0102
 
 
-import asyncio
 import os
 import re
 import time
 from datetime import datetime
-from functools import partial, wraps
 from io import BytesIO
 from pathlib import Path
 
@@ -14,7 +12,7 @@ import aiohttp
 from disnake.ext import commands, tasks
 
 from myfunctions import subprocess_runner
-
+from myfunctions.async_wrapper import async_wrap
 
 class MyTasks(commands.Cog):
     def __init__(self, client: commands.Bot):
@@ -29,23 +27,13 @@ class MyTasks(commands.Cog):
         self.update_ytdlp.cancel()
         self.cycle_banner.cancel()
 
-    def wrap(func):
-        @wraps(func)
-        async def run(*args, loop=None, executor=None, **kwargs):
-            if loop is None:
-                loop = asyncio.get_event_loop()
-            pfunc = partial(func, *args, **kwargs)
-            return await loop.run_in_executor(executor, pfunc)
-
-        return run
-
-    @wrap
-    def magic(self):
-        files = os.listdir(r"/home/kur0/Kur0bot/temp")
+    @async_wrap
+    def list_temp_files(self):
+        files = os.listdir(r"/app/temp")
         files = ["temp/" + x for x in files]
         return files
 
-    @wrap
+    @async_wrap
     def magic2(self, files):
         self.saved_time = time.time()
         for f in files:
@@ -59,7 +47,7 @@ class MyTasks(commands.Cog):
 
     @tasks.loop(hours=1)
     async def delete_temp_files(self):
-        files = await self.magic()
+        files = await self.list_temp_files()
         channel = self.client.get_channel(976064150935576596)
         nl = "\n"
         await channel.send(
@@ -103,7 +91,7 @@ class MyTasks(commands.Cog):
             print(f"yt-dlp has been updated! ({latest_ver})")
 
     @update_ytdlp.before_loop
-    async def before_delete(self):
+    async def before_delete_2(self):
         print("waiting 2...")
         await self.client.wait_until_ready()
 
@@ -143,7 +131,7 @@ class MyTasks(commands.Cog):
             self.banner_idx = current_index
 
     @cycle_banner.before_loop
-    async def before_delete(self):
+    async def before_delete_3(self):
         print("waiting 3...")
         await self.client.wait_until_ready()
 

@@ -2,7 +2,9 @@ import importlib
 import sys
 from typing import Any, TYPE_CHECKING
 
+import disnake
 from disnake.ext import commands
+from main import MyBot
 
 if TYPE_CHECKING:
     from main import MyBot
@@ -16,7 +18,7 @@ class Loaders(commands.Cog):
 
     @commands.command(name="reload", aliases=["refresh"])
     @commands.is_owner()
-    async def p_reload(self, ctx: commands.Context[Any], name):
+    async def p_reload(self, ctx: commands.Context[Any], name: str):
         try:
             self.client.reload_extension(name)
         except commands.ExtensionNotLoaded:
@@ -30,7 +32,7 @@ class Loaders(commands.Cog):
 
     @commands.slash_command(name="reload")
     @commands.is_owner()
-    async def s_reload(self, inter, name: str):
+    async def s_reload(self, inter: disnake.ApplicationCommandInteraction[Any], name: str):
         """
         Reloads a module
 
@@ -43,13 +45,13 @@ class Loaders(commands.Cog):
 
     @commands.command(name="load")
     @commands.is_owner()
-    async def p_load(self, ctx: commands.Context[Any], name):
+    async def p_load(self, ctx: commands.Context[Any], name: str):
         self.client.load_extension(name)
         await ctx.send(f"{name} loaded!")
 
     @commands.slash_command(name="load")
     @commands.is_owner()
-    async def s_load(self, inter, name: str):
+    async def s_load(self, inter: disnake.ApplicationCommandInteraction[Any], name: str):
         """
         Loads a module
 
@@ -62,13 +64,13 @@ class Loaders(commands.Cog):
 
     @commands.command(name="unload")
     @commands.is_owner()
-    async def p_unload(self, ctx: commands.Context[Any], name):
+    async def p_unload(self, ctx: commands.Context[Any], name: str):
         self.client.unload_extension(name)
         await ctx.send(f"{name} unloaded!")
 
     @commands.slash_command(name="unload")
     @commands.is_owner()
-    async def s_unload(self, inter, name: str):
+    async def s_unload(self, inter: disnake.ApplicationCommandInteraction[Any], name: str):
         """
         Unloads a module
 
@@ -80,5 +82,5 @@ class Loaders(commands.Cog):
         await inter.response.send_message(f"{name} unloaded!", ephemeral=True)
 
 
-def setup(client: commands.Bot):
+def setup(client: "MyBot"):
     client.add_cog(Loaders(client))

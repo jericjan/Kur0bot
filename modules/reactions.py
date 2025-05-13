@@ -18,7 +18,9 @@ class Reactions(commands.Cog):
                 username=ctx.message.author.name,
                 avatar_url=ctx.message.author.display_avatar.url,
             )
+            await webhook.delete()
         elif isinstance(ctx.channel, disnake.Thread):
+            assert ctx.channel.parent is not None
             webhook = await ctx.channel.parent.create_webhook(
                 name=ctx.message.author.name
             )
@@ -28,8 +30,8 @@ class Reactions(commands.Cog):
                 avatar_url=ctx.message.author.display_avatar.url,
                 thread=ctx.channel,
             )
+            await webhook.delete()
 
-        await webhook.delete()
         await ctx.message.delete()
 
     @commands.command()
@@ -43,7 +45,9 @@ class Reactions(commands.Cog):
                 username=ctx.message.author.name,
                 avatar_url=ctx.message.author.display_avatar.url,
             )
+            await webhook.delete()
         elif isinstance(ctx.channel, disnake.Thread):
+            assert ctx.channel.parent is not None
             webhook = await ctx.channel.parent.create_webhook(
                 name=ctx.message.author.name
             )
@@ -54,8 +58,8 @@ class Reactions(commands.Cog):
                 avatar_url=ctx.message.author.display_avatar.url,
                 thread=ctx.channel,
             )
+            await webhook.delete()
 
-        await webhook.delete()
         await ctx.message.delete()
 
     @commands.command()
@@ -68,7 +72,9 @@ class Reactions(commands.Cog):
                 username=ctx.message.author.name,
                 avatar_url=ctx.message.author.display_avatar.url,
             )
+            await webhook.delete()
         elif isinstance(ctx.channel, disnake.Thread):
+            assert ctx.channel.parent is not None
             webhook = await ctx.channel.parent.create_webhook(
                 name=ctx.message.author.name
             )
@@ -78,8 +84,8 @@ class Reactions(commands.Cog):
                 avatar_url=ctx.message.author.display_avatar.url,
                 thread=ctx.channel,
             )
+            await webhook.delete()
 
-        await webhook.delete()
         await ctx.message.delete()
 
     @commands.command()
@@ -92,7 +98,9 @@ class Reactions(commands.Cog):
                 username=ctx.message.author.name,
                 avatar_url=ctx.message.author.display_avatar.url,
             )
+            await webhook.delete()
         elif isinstance(ctx.channel, disnake.Thread):
+            assert ctx.channel.parent is not None
             webhook = await ctx.channel.parent.create_webhook(
                 name=ctx.message.author.name
             )
@@ -102,8 +110,8 @@ class Reactions(commands.Cog):
                 avatar_url=ctx.message.author.display_avatar.url,
                 thread=ctx.channel,
             )
+            await webhook.delete()
 
-        await webhook.delete()
         await ctx.message.delete()
 
 
