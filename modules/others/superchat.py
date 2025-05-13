@@ -10,13 +10,14 @@ from typing import Any, Optional
 import disnake
 import requests
 from aiolimiter import AsyncLimiter
-from arsenic import browsers, get_session, keys, services
+from arsenic import browsers, get_session, keys, services # type: ignore
 from disnake.ext import commands
 from PIL import Image, ImageDraw, ImageFont, ImageOps
-from pilmoji import Pilmoji
+from pilmoji import Pilmoji # type: ignore
 from tqdm import tqdm
 
 from myfunctions import file_handler
+from myfunctions.async_wrapper import async_wrap
 
 limiter = AsyncLimiter(1, 1)
 
@@ -24,11 +25,11 @@ limiter = AsyncLimiter(1, 1)
 class Superchat(commands.Cog):
     def __init__(self, client: commands.Bot):
         self.client = client
-        self.pbar_list = []
+        self.pbar_list: list[str] = []
 
     @commands.command(aliases=["oldakasupa", "oldsupacha"])
     @commands.bot_has_permissions(manage_webhooks=True, manage_messages=True)
-    async def oldsuperchat(self, ctx: commands.Context[Any], amount, *, message):
+    async def oldsuperchat(self, ctx: commands.Context[Any], amount: str, *, message: str):
 
         await ctx.message.delete()
 
@@ -38,7 +39,7 @@ class Superchat(commands.Cog):
         )
         message = re.sub(r"<a?(:.+:).+>", r"\1", message)
         service = services.Geckodriver()
-        prefs = {
+        prefs: dict[str, Any] = {
             "browser.download.folderList": 2,
             "browser.download.manager.showWhenStarting": False,
             "browser.download.dir": f"/app/supers/{cur_uuid}/",
@@ -55,7 +56,7 @@ class Superchat(commands.Cog):
             }
         )
         async with get_session(service, browser) as session:
-            await session.get("https://ytsc.leko.moe/")
+            await session.get("https://ytsc.leko.moe/")  # type: ignore
             await session.set_window_size(800, 900)
             select_box = await session.get_element("#color")
             await select_box.select_by_value("red")
@@ -73,6 +74,9 @@ class Superchat(commands.Cog):
 
             while not os.path.exists(f"supers/{cur_uuid}/superchat.png"):
                 await asyncio.sleep(1)
+            if not isinstance(ctx.channel, disnake.guild.GuildMessageable) or isinstance(ctx.channel, disnake.Thread):
+                await ctx.send("Can't create a  webhook in this channel.")
+                return
             webhook = await ctx.channel.create_webhook(name=ctx.message.author.name)
             await webhook.send(
                 file=disnake.File(f"supers/{cur_uuid}/superchat.png"),
@@ -84,7 +88,7 @@ class Superchat(commands.Cog):
             file_handler.delete_file(f"supers/{cur_uuid}/superchat.png")
             os.rmdir(f"supers/{cur_uuid}/")
 
-    async def updatebar(self, msg):
+    async def updatebar(self, msg: disnake.Message):
 
         try:
 
@@ -99,7 +103,10 @@ class Superchat(commands.Cog):
                 pass
             pass
 
-    def legacy_blocking_function(self, user, amount, msg, pfp, bgnMessage):
+    @async_wrap
+    def legacy_blocking_function(
+        self, user: str, amount: str, msg: str, pfp: str, bgnMessage: disnake.Message
+        ) -> tuple[ImageDraw.ImageDraw, ImageFont.FreeTypeFont, Image.Image]:
         ###TOP BAR
         img = Image.new("RGBA", (1760, 240), color=(208, 0, 0, 255))
 
@@ -140,18 +147,19 @@ class Superchat(commands.Cog):
 
         ###BOTTOM BAR
 
+    @async_wrap
     def legacy_blocking_function2(
         self,
-        index,
-        msg_words,
-        temp_str,
+        index: int,
+        msg_words: list[str],
+        temp_str: str,
         draw0,
         fnt0,
-        user,
-        amount,
-        msg,
-        pfp,
-        bgnMessage,
+        user: str,
+        amount: str,
+        msg: str,
+        pfp: str,
+        bgnMessage: disnake.Message,
     ):
 
         temp_str = temp_str.split("\n")[-1]
@@ -162,6 +170,7 @@ class Superchat(commands.Cog):
 
         return txt_width
 
+    @async_wrap
     def legacy_blocking_function3(self, msg_split, out):
         spacing = 30
         img = Image.new("RGBA", (1760, 152), color=(230, 33, 23, 255))
@@ -192,44 +201,6 @@ class Superchat(commands.Cog):
         byteio.seek(0)
         return byteio
 
-    def run_in_executor(f):
-        @functools.wraps(f)
-        async def inner(*args, **kwargs):
-            loop = asyncio.get_running_loop()
-            return await loop.run_in_executor(None, lambda: f(*args, **kwargs))
-
-        return inner
-
-    @run_in_executor
-    def foo(self, user, amount, msg, pfp, bgnMessage):  # Your wrapper for async use
-        draw0, fnt0, out = self.legacy_blocking_function(
-            user, amount, msg, pfp, bgnMessage
-        )
-        return draw0, fnt0, out
-
-    @run_in_executor
-    def foo2(
-        self,
-        index,
-        msg_words,
-        temp_str,
-        draw0,
-        fnt0,
-        user,
-        amount,
-        msg,
-        pfp,
-        bgnMessage,
-    ):  # Your wrapper for async use
-        txt_width = self.legacy_blocking_function2(
-            index, msg_words, temp_str, draw0, fnt0, user, amount, msg, pfp, bgnMessage
-        )
-        return txt_width
-
-    @run_in_executor
-    def foo3(self, msg_split, out):
-        byteio = self.legacy_blocking_function3(msg_split, out)
-        return byteio
 
     @commands.command(aliases=["akasupa", "supacha"])
     @commands.bot_has_permissions(manage_messages=True)
@@ -253,7 +224,7 @@ class Superchat(commands.Cog):
 
         await ctx.message.delete()
         bgnMessage = await ctx.send(f"{ctx.author.name} is sending a superchat...")
-        draw0, fnt0, out = await self.foo(
+        draw0, fnt0, out = await self.legacy_blocking_function(
             ctx.author.name,
             amount,
             message,
@@ -270,7 +241,7 @@ class Superchat(commands.Cog):
                 temp_str = i
             else:
                 temp_str = f"{msg_split} {i}"
-            txt_width = await self.foo2(
+            txt_width = await self.legacy_blocking_function2(
                 index,
                 msg_words,
                 temp_str,
@@ -304,7 +275,7 @@ class Superchat(commands.Cog):
                 pass
         pbar.close()
         output.close()
-        bruh = await self.foo3(msg_split, out)
+        bruh = await self.legacy_blocking_function3(msg_split, out)
         bruh.seek(0)
         await file_handler.send_file(ctx, bgnMessage, bruh, "superchat.png")
         bruh.close()
