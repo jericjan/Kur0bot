@@ -7,10 +7,11 @@ import time
 from datetime import datetime
 from io import BytesIO
 from pathlib import Path
+from typing import cast
 
 import aiohttp
 from disnake.ext import commands, tasks
-
+from disnake.abc import Messageable
 from myfunctions import subprocess_runner
 from myfunctions.async_wrapper import async_wrap
 
@@ -34,7 +35,7 @@ class MyTasks(commands.Cog):
         return files
 
     @async_wrap
-    def magic2(self, files):
+    def magic2(self, files: list[str]):
         self.saved_time = time.time()
         for f in files:
             creation_time = os.path.getctime(f)
@@ -48,7 +49,7 @@ class MyTasks(commands.Cog):
     @tasks.loop(hours=1)
     async def delete_temp_files(self):
         files = await self.list_temp_files()
-        channel = self.client.get_channel(976064150935576596)
+        channel = cast(Messageable, self.client.get_channel(976064150935576596))
         nl = "\n"
         await channel.send(
             "-------------------------------------------------\n"
@@ -70,9 +71,9 @@ class MyTasks(commands.Cog):
         )
         # channel = self.client.get_channel(976064150935576596)
         resp = stdout.decode("utf-8")
-        try:
-            curr_ver = re.search(r"(version +: )(\S+)", resp).group(2)
-        except:
+        if search := re.search(r"(version +: )(\S+)", resp):
+            curr_ver = search.group(2)
+        else:
             print("Could not find yt-dlp version.")
             return
 
