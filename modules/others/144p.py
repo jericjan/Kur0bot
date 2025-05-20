@@ -32,11 +32,82 @@ class lowQual(commands.Cog):
                 pass
             pass
 
+    async def track_ffmpeg(self, prog_msg: str, process: asyncio.subprocess.Process, message: disnake.Message, filename: str):
+        duration_reg = re.compile(r"(?<=Duration: )\d{2,}:\d{2}:\d{2}.\d{2}")
+        time_reg = re.compile(r"(?<=time=)\d{2,}:\d{2}:\d{2}.\d{2}")        
+        full_line = ""
+        pbar = tqdm(total=100)
+        duration = None
+        while process.returncode is None:
+            if process.stdout is None:
+                break
+
+            line = await process.stdout.read(500)
+            if not line:
+                break
+            linedec = line.decode("utf-8")
+            full_line += linedec
+            if (
+                duration_reg.search(full_line) is not None
+            ):
+                duration_str = duration_reg.findall(full_line)[-1]
+                strpcurr = datetime.strptime(duration_str, "%H:%M:%S.%f")
+                duration = timedelta(
+                    hours=strpcurr.hour,
+                    minutes=strpcurr.minute,
+                    seconds=strpcurr.second,
+                    microseconds=strpcurr.microsecond,
+                )
+            if (
+                time_reg.search(full_line)
+                is not None
+            ):
+                if (
+                    time_reg.findall(full_line)[-1] != "00:00:00.00"
+                ):
+                    currtime_str = time_reg.findall(full_line)[-1]
+                    strpcurr = datetime.strptime(currtime_str, "%H:%M:%S.%f")
+                    currtime = timedelta(
+                        hours=strpcurr.hour,
+                        minutes=strpcurr.minute,
+                        seconds=strpcurr.second,
+                        microseconds=strpcurr.microsecond,
+                    )
+                    try:
+                        if duration is None:
+                            continue
+                        percentage = (
+                            currtime.total_seconds() / duration.total_seconds()
+                        ) * 100
+
+                        output = io.StringIO()
+                        pbar = tqdm(total=100, file=output, ascii=False)
+                        pbar.update(float(f"{percentage:.3f}"))
+                        pbar.close()
+                        final = output.getvalue()
+                        output.close()
+                        final1 = final.splitlines()[-1]
+                        aaa = re.findall(
+                            r"(?<=\d\%)\|.+\| (?=\d+|\d+.\d+/\d+|\d+.\d+)", final1
+                        )[0]
+                        self.pbar_list.append(
+                            f"{prog_msg}\n{round(percentage, 2)}% complete...\n`{aaa}`<a:ameroll:941314708022128640>"
+                        )
+                        asyncio.ensure_future(self.updatebar(message))
+                    except Exception as e:
+                        if not filename.endswith("gif"):  # TODO: not sure why i had this check here
+                            await message.edit(
+                                content=f"Uh, I couldn't find the duration of vod. idk man.\nException: {e}"
+                            )        
+
     @commands.command(aliases=["shitify", "pixelize"])
     @commands.bot_has_permissions(manage_messages=True)
     async def lowqual(self, ctx: commands.Context[Any], link: Optional[str] = None):
         link = await msg_link_grabber.grab_link(ctx, link)
         print(link)
+
+        video_audio_reg = re.compile(r".+\.mp4|.+\.mkv|.+\.mov|.+\.webm|.+\.gif|.+\.mp3|.+\.wav")
+        image_reg = re.compile(r".+\.jpg|.+\.jpeg|.+\.png|.+\.webp")
 
         is_tenor = False
         if "tenor.com" in link:
@@ -64,12 +135,8 @@ class lowQual(commands.Cog):
             link = vid_url
         else:
             filename = link.split("/")[-1]
-        if (
-            re.search(
-                r".+\.mp4|.+\.mkv|.+\.mov|.+\.webm|.+\.gif|.+\.mp3|.+\.wav", filename
-            )
-            is not None
-        ):
+
+        if video_audio_reg.search(filename) is not None:
             filename = filename.split("?")[0]
             # remuxes so it works with troll long videos, magic.
             muxname = re.sub(r"(.+(?=\..+))", r"\g<1>_mux", filename)
@@ -112,76 +179,7 @@ class lowQual(commands.Cog):
             process = await asyncio.create_subprocess_exec(  # reads stdout live
                 *coms, stdout=subprocess.PIPE, stderr=subprocess.STDOUT
             )
-            full_line = ""
-            pbar = tqdm(total=100)
-            duration = None
-            while process.returncode is None:
-                if process.stdout is None:
-                    break
-
-                line = await process.stdout.read(500)
-                if not line:
-                    break
-                linedec = line.decode("utf-8")
-                full_line += linedec
-                if (
-                    re.search(r"(?<=Duration: )\d{2,}:\d{2}:\d{2}.\d{2}", full_line)
-                    is not None
-                ):
-                    duration_str = re.findall(
-                        r"(?<=Duration: )\d{2,}:\d{2}:\d{2}.\d{2}", full_line
-                    )[-1]
-                    strpcurr = datetime.strptime(duration_str, "%H:%M:%S.%f")
-                    duration = timedelta(
-                        hours=strpcurr.hour,
-                        minutes=strpcurr.minute,
-                        seconds=strpcurr.second,
-                        microseconds=strpcurr.microsecond,
-                    )
-                if (
-                    re.search(r"(?<=time=)\d{2,}:\d{2}:\d{2}.\d{2}", full_line)
-                    is not None
-                ):
-                    if (
-                        re.findall(r"(?<=time=)\d{2,}:\d{2}:\d{2}.\d{2}", full_line)[-1]
-                        != "00:00:00.00"
-                    ):
-                        currtime_str = re.findall(
-                            r"(?<=time=)\d{2,}:\d{2}:\d{2}.\d{2}", full_line
-                        )[-1]
-                        strpcurr = datetime.strptime(currtime_str, "%H:%M:%S.%f")
-                        currtime = timedelta(
-                            hours=strpcurr.hour,
-                            minutes=strpcurr.minute,
-                            seconds=strpcurr.second,
-                            microseconds=strpcurr.microsecond,
-                        )
-                        try:
-                            if duration is None:
-                                continue
-                            percentage = (
-                                currtime.total_seconds() / duration.total_seconds()
-                            ) * 100
-
-                            output = io.StringIO()
-                            pbar = tqdm(total=100, file=output, ascii=False)
-                            pbar.update(float(f"{percentage:.3f}"))
-                            pbar.close()
-                            final = output.getvalue()
-                            output.close()
-                            final1 = final.splitlines()[-1]
-                            aaa = re.findall(
-                                r"(?<=\d\%)\|.+\| (?=\d+|\d+.\d+/\d+|\d+.\d+)", final1
-                            )[0]
-                            self.pbar_list.append(
-                                f"Downscaling...\n{round(percentage, 2)}% complete...\n`{aaa}`<a:ameroll:941314708022128640>"
-                            )
-                            asyncio.ensure_future(self.updatebar(message))
-                        except Exception as e:
-                            if not filename.endswith("gif"):  # TODO: not sure why i had this check here
-                                await message.edit(
-                                    content=f"Uh, I couldn't find the duration of vod. idk man.\nException: {e}"
-                                )
+            await self.track_ffmpeg("Downscaling...", process, message, filename)
             # all_lines = await process.stdout.read()
             # print(f"output:\n\033[;32m{all_lines.decode('utf-8')}\033[0m")
             file_handler.delete_file(muxname)
@@ -202,80 +200,12 @@ class lowQual(commands.Cog):
             process = await asyncio.create_subprocess_exec(  # reads stdout live
                 *coms, stdout=subprocess.PIPE, stderr=subprocess.STDOUT
             )
-            full_line = ""
-            pbar = tqdm(total=100)
-            duration = None
-            while process.returncode is None:
-                if process.stdout is None:
-                    break
-                line = await process.stdout.read(500)
-                if not line:
-                    break
-                linedec = line.decode("utf-8")
-                full_line += linedec
-                if (
-                    re.search(r"(?<=Duration: )\d{2,}:\d{2}:\d{2}.\d{2}", full_line)
-                    is not None
-                ):
-                    duration_str = re.findall(
-                        r"(?<=Duration: )\d{2,}:\d{2}:\d{2}.\d{2}", full_line
-                    )[-1]
-                    strpcurr = datetime.strptime(duration_str, "%H:%M:%S.%f")
-                    duration = timedelta(
-                        hours=strpcurr.hour,
-                        minutes=strpcurr.minute,
-                        seconds=strpcurr.second,
-                        microseconds=strpcurr.microsecond,
-                    )
-                if (
-                    re.search(r"(?<=time=)\d{2,}:\d{2}:\d{2}.\d{2}", full_line)
-                    is not None
-                ):
-                    if (
-                        re.findall(r"(?<=time=)\d{2,}:\d{2}:\d{2}.\d{2}", full_line)[-1]
-                        != "00:00:00.00"
-                    ):
-                        currtime_str = re.findall(
-                            r"(?<=time=)\d{2,}:\d{2}:\d{2}.\d{2}", full_line
-                        )[-1]
-                        strpcurr = datetime.strptime(currtime_str, "%H:%M:%S.%f")
-                        currtime = timedelta(
-                            hours=strpcurr.hour,
-                            minutes=strpcurr.minute,
-                            seconds=strpcurr.second,
-                            microseconds=strpcurr.microsecond,
-                        )
-                        try:
-                            if duration is None:
-                                continue
-                            percentage = (
-                                currtime.total_seconds() / duration.total_seconds()
-                            ) * 100
-
-                            output = io.StringIO()
-                            pbar = tqdm(total=100, file=output, ascii=False)
-                            pbar.update(float(f"{percentage:.3f}"))
-                            pbar.close()
-                            final = output.getvalue()
-                            output.close()
-                            final1 = final.splitlines()[-1]
-                            aaa = re.findall(
-                                r"(?<=\d\%)\|.+\| (?=\d+|\d+.\d+/\d+|\d+.\d+)", final1
-                            )[0]
-                            self.pbar_list.append(
-                                f"Upscaling...\n{round(percentage, 2)}% complete...\n`{aaa}`<a:ameroll:941314708022128640>"
-                            )
-                            asyncio.ensure_future(self.updatebar(message))
-                        except:
-                            if not filename.endswith("gif"):
-                                await message.edit(
-                                    content="Uh, I couldn't find the duration of vod. idk man."
-                                )
+            await self.track_ffmpeg("Upscaling...", process, message, filename)
             # all_lines = await process.stdout.read()
             # print(f"output:\n\033[;32m{all_lines.decode('utf-8')}\033[0m")
             file_handler.delete_file(tempname)
 
-        elif re.search(r".+\.jpg|.+\.jpeg|.+\.png|.+\.webp", filename) is not None:
+        elif image_reg.search(filename) is not None:
             filename = filename.split("?")[0]
             tempname = re.sub(r"(.+(?=\..+))", r"\g<1>01", filename)
             message = await ctx.send("Downscaling...")
