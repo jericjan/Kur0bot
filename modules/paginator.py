@@ -3,33 +3,37 @@
 # slightly modified
 # i should really make this a cog (soon)
 
-from typing import Any, TYPE_CHECKING
+from typing import Any, TYPE_CHECKING, Callable, Optional
 
 import disnake
 
 if TYPE_CHECKING:
     from disnake.ext import commands
 
-async def dummy_response(interaction):
+async def dummy_response(interaction: disnake.ApplicationCommandInteraction[Any]):
     await interaction.response.send_message(
         "You are not the sender of that command!", ephemeral=True
     )
 
 
 class ChannelResponseWrapper:
-    def __init__(self, channel):
+    def __init__(self, channel: disnake.abc.Messageable):
         self.channel = channel
         self.sent_message = None
 
-    async def defer(self, ephemeral=False):
+    async def defer(self, ephemeral: Optional[bool] = False):
         self.sent_message = await self.channel.send("I am thinking...")
 
-    async def send_message(self, content=None, embed=None, view=None, ephemeral=False):
+    async def send_message(self, content: Optional[str] = None, embed: Optional[disnake.embeds.Embed] = None, view: Optional[disnake.ui.view.View] = None, ephemeral: Optional[bool] = False):
+        if embed is None or view is None:
+            raise ValueError("embed or view cannot be None")
         self.sent_message = await self.channel.send(
             content=content, embed=embed, view=view
         )
 
-    async def edit_message(self, content=None, embed=None, view=None):
+    async def edit_message(self, content: Optional[str]=None,  embed: Optional[disnake.embeds.Embed] = None, view: Optional[disnake.ui.view.View] = None):
+        if self.sent_message is None:
+            raise RuntimeError("No message to edit")        
         if content is None:
             content = self.sent_message.content
         if embed is None:
@@ -48,24 +52,24 @@ class MessageInteractionWrapper:
         self.guild = ctx.message.guild
         self.response = ChannelResponseWrapper(ctx.message.channel)
 
-    async def edit_original_message(self, content=None, embed=None, view=None):
+    async def edit_original_message(self, content: Optional[str]=None, embed: Optional[disnake.embeds.Embed] = None, view: Optional[disnake.ui.view.View] = None):
         await self.response.edit_message(content=content, embed=embed, view=view)
 
 
 class ButtonPaginator:
     def __init__(
         self,
-        segments,
-        title="",
-        color=0x000000,
-        prefix="",
-        suffix="",
-        target_page=1,
-        timeout=300,
-        button_style=disnake.ButtonStyle.gray,
-        invalid_user_function=dummy_response,
+        segments: list[disnake.embeds.Embed] | list[str],
+        title: str="",
+        color: int=0x000000,
+        prefix:str="",
+        suffix: str="",
+        target_page: int=1,
+        timeout: int=300,
+        button_style: disnake.ButtonStyle =disnake.ButtonStyle.gray,
+        invalid_user_function: Callable[..., Any] =dummy_response,
     ):
-        self.embeds = []
+        self.embeds: list[disnake.embeds.Embed] = []
         self.current_page = target_page
         self.timeout = timeout
         self.button_style = button_style
@@ -87,32 +91,34 @@ class ButtonPaginator:
             self.current_page = 1
 
         class PaginatorView(disnake.ui.View):
-            def __init__(this, interaction):
+            def __init__(this, interaction: MessageInteractionWrapper):  # pyright: ignore[reportSelfClsParameterName]
                 super().__init__()
 
                 this.timeout = self.timeout
                 this.interaction = interaction
-
-            async def on_timeout(this):
+                # if TYPE_CHECKING:
+                #     this.children: list[disnake.ui.Button[Any]]
+            async def on_timeout(this):  # pyright: ignore[reportSelfClsParameterName]                
                 for button in this.children:
-                    button.disabled = True
+                    if isinstance(button, disnake.ui.Button):
+                        button.disabled = True
                 await this.interaction.edit_original_message(
                     embed=self.embeds[self.current_page - 1], view=this
                 )
                 return await super().on_timeout()
 
-            def update_page(this):
+            def update_page(this):  # pyright: ignore[reportSelfClsParameterName]
                 for button in this.children:
+                    if isinstance(button, disnake.ui.Button):
+                        if button.custom_id == "pagenum":
+                            button.label = f"{self.current_page}/{len(self.embeds)}"
 
-                    if button.custom_id == "pagenum":
-                        button.label = f"{self.current_page}/{len(self.embeds)}"
-
-            @disnake.ui.button(
+            @disnake.ui.button(  # pyright: ignore[reportUnknownMemberType]
                 label="<<",
                 style=disnake.ButtonStyle.blurple,
                 disabled=len(self.embeds) == 1,
             )
-            async def first_button(this, _, button_interaction):
+            async def first_button(this, _, button_interaction: disnake.MessageInteraction[Any]):
                 if button_interaction.author != this.interaction.author:
                     await self.invalid_user_function(button_interaction)
                     return
@@ -130,12 +136,12 @@ class ButtonPaginator:
                     embed=self.embeds[self.current_page - 1], view=this
                 )
 
-            @disnake.ui.button(
+            @disnake.ui.button(  # pyright: ignore[reportUnknownMemberType]
                 label="<",
                 style=disnake.ButtonStyle.red,
                 disabled=len(self.embeds) == 1,
             )
-            async def previous_button(this, _, button_interaction):
+            async def previous_button(this, _, button_interaction: disnake.MessageInteraction[Any]):
                 if button_interaction.author != this.interaction.author:
                     await self.invalid_user_function(button_interaction)
                     return
@@ -148,7 +154,7 @@ class ButtonPaginator:
                     embed=self.embeds[self.current_page - 1], view=this
                 )
 
-            @disnake.ui.button(
+            @disnake.ui.button(  # pyright: ignore[reportArgumentType, reportUnknownMemberType]
                 label=f"{self.current_page}/{len(self.embeds)}",
                 style=disnake.ButtonStyle.gray,
                 disabled=True,
@@ -157,12 +163,12 @@ class ButtonPaginator:
             async def page_button(*_):
                 pass
 
-            @disnake.ui.button(
+            @disnake.ui.button(  # pyright: ignore[reportUnknownMemberType]
                 label=">",
                 style=disnake.ButtonStyle.green,
                 disabled=len(self.embeds) == 1,
             )
-            async def next_button(this, _, button_interaction):
+            async def next_button(this, _, button_interaction: disnake.MessageInteraction[Any]):
                 if button_interaction.author != this.interaction.author:
                     await self.invalid_user_function(button_interaction)
                     return
@@ -175,12 +181,12 @@ class ButtonPaginator:
                     embed=self.embeds[self.current_page - 1], view=this
                 )
 
-            @disnake.ui.button(
+            @disnake.ui.button(  # pyright: ignore[reportUnknownMemberType]
                 label=">>",
                 style=disnake.ButtonStyle.blurple,
                 disabled=len(self.embeds) == 1,
             )
-            async def last_button(this, _, button_interaction):
+            async def last_button(this, _, button_interaction: disnake.MessageInteraction[Any]):
                 if button_interaction.author != this.interaction.author:
                     await self.invalid_user_function(button_interaction)
                     return
@@ -200,7 +206,7 @@ class ButtonPaginator:
 
         self.view = PaginatorView
 
-    async def send(self, ctx: "commands.Context[Any]", ephemeral=False, deferred=False):
+    async def send(self, ctx: "commands.Context[Any]", ephemeral: Optional[bool] = False, deferred: Optional[bool] = False):
         interaction = MessageInteractionWrapper(ctx)
         if not deferred:
             await interaction.response.send_message(
