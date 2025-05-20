@@ -1,5 +1,5 @@
 import asyncio
-from typing import Any
+from typing import Any, Literal
 
 import disnake
 from disnake.ext import commands
@@ -9,102 +9,56 @@ class Badapple(commands.Cog):
     def __init__(self, client: commands.Bot):
         self.client = client
 
-    def getemote(self, ctx: commands.Context[Any], name):
+    def getemote(self, ctx: commands.Context[Any], name: str):
         return disnake.utils.get(self.client.emojis, name=name)
 
     @commands.command()
-    @commands.cooldown(1.0, 60.0, commands.BucketType.guild)
+    @commands.cooldown(1, 60.0, commands.BucketType.guild)
     @commands.bot_has_permissions(manage_webhooks=True, manage_messages=True)
-    async def badapple(self, ctx: commands.Context[Any], *, message=None):
-        list1 = []
-        list2 = []
-        list3 = []
-        list4 = []
+    async def badapple(self, ctx: commands.Context[Any]):
+
+        lists: list[list[disnake.Emoji | str]] = [[], [], [], []]
+
+        webhook = None
         if isinstance(ctx.channel, disnake.TextChannel):
             webhook = await ctx.channel.create_webhook(name=ctx.message.author.name)
         elif isinstance(ctx.channel, disnake.Thread):
+            if ctx.channel.parent is None:
+                await ctx.send("This thread has no parent channel. Please use a normal channel.")
+                return
             webhook = await ctx.channel.parent.create_webhook(
                 name=ctx.message.author.name
             )
 
+        if webhook is None:
+            await ctx.send("Failed to create a webhook. Please try again.")
+            return
+
         for i in range(80):
-            if i <= 19:
-                if i == 9:
-                    list1.append(f"{self.getemote(ctx,f'b{i}')}\n")
-                else:
-                    list1.append(self.getemote(ctx, f"b{i}"))
-            elif i <= 39:
-                if i == 29:
-                    list2.append(f"{self.getemote(ctx,f'b{i}')}\n")
-                else:
-                    list2.append(self.getemote(ctx, f"b{i}"))
-            elif i <= 59:
-                if i == 49:
-                    list3.append(f"{self.getemote(ctx,f'b{i}')}\n")
-                else:
-                    list3.append(self.getemote(ctx, f"b{i}"))
-            elif i <= 79:
-                if i == 69:
-                    list4.append(f"{self.getemote(ctx,f'b{i}')}\n")
-                else:
-                    list4.append(self.getemote(ctx, f"b{i}"))
+            nth_msg, nth_emote = divmod(i, 20)
+            emote = self.getemote(ctx, f"b{i}")
+            if emote is None:
+                await ctx.send(f"Emote b{i} not found. Please check the emote name.")
+                await webhook.delete()
+                return
+            
+            if nth_emote == 9:
+                emote = f"{emote}\n"
+            lists[nth_msg].append(emote)
+        
 
-        if isinstance(ctx.channel, disnake.TextChannel):
+        kwargs: dict[Literal['thread'], disnake.abc.Snowflake] = {}
+        if isinstance(ctx.channel, disnake.Thread):
+            kwargs["thread"] = ctx.channel
+        
+        for li in lists:
             await webhook.send(
-                f"{''.join([str(i) for i in list1])}",
+                f"{''.join([str(i) for i in li])}",
                 username=ctx.message.author.name,
                 avatar_url=ctx.message.author.display_avatar.url,
+                **kwargs
             )
-        elif isinstance(ctx.channel, disnake.Thread):
-            await webhook.send(
-                f"{''.join([str(i) for i in list1])}",
-                username=ctx.message.author.name,
-                avatar_url=ctx.message.author.display_avatar.url,
-                thread=ctx.channel,
-            )
-
-        await asyncio.sleep(0.5)
-        if isinstance(ctx.channel, disnake.TextChannel):
-            await webhook.send(
-                f"{''.join([str(i) for i in list2])}",
-                username=ctx.message.author.name,
-                avatar_url=ctx.message.author.display_avatar.url,
-            )
-        elif isinstance(ctx.channel, disnake.Thread):
-            await webhook.send(
-                f"{''.join([str(i) for i in list2])}",
-                username=ctx.message.author.name,
-                avatar_url=ctx.message.author.display_avatar.url,
-                thread=ctx.channel,
-            )
-        await asyncio.sleep(0.5)
-        if isinstance(ctx.channel, disnake.TextChannel):
-            await webhook.send(
-                f"{''.join([str(i) for i in list3])}",
-                username=ctx.message.author.name,
-                avatar_url=ctx.message.author.display_avatar.url,
-            )
-        elif isinstance(ctx.channel, disnake.Thread):
-            await webhook.send(
-                f"{''.join([str(i) for i in list3])}",
-                username=ctx.message.author.name,
-                avatar_url=ctx.message.author.display_avatar.url,
-                thread=ctx.channel,
-            )
-        await asyncio.sleep(0.5)
-        if isinstance(ctx.channel, disnake.TextChannel):
-            await webhook.send(
-                f"{''.join([str(i) for i in list4])}",
-                username=ctx.message.author.name,
-                avatar_url=ctx.message.author.display_avatar.url,
-            )
-        elif isinstance(ctx.channel, disnake.Thread):
-            await webhook.send(
-                f"{''.join([str(i) for i in list4])}",
-                username=ctx.message.author.name,
-                avatar_url=ctx.message.author.display_avatar.url,
-                thread=ctx.channel,
-            )
+            await asyncio.sleep(0.5)
 
         await webhook.delete()
         await ctx.message.delete()
