@@ -1,5 +1,4 @@
 import asyncio
-import functools
 import io
 import re
 from typing import Any
@@ -18,6 +17,8 @@ class EmoteSticker(commands.Cog):
         self.client = client
 
     def has_guild_exp_perms(self, ctx: commands.Context[Any]):
+        if not isinstance(ctx.author, disnake.Member):
+            return False
         has_expr_perms = ctx.channel.permissions_for(
             ctx.author
         ).manage_guild_expressions
@@ -25,28 +26,37 @@ class EmoteSticker(commands.Cog):
 
     @commands.command(aliases=["e"])
     @commands.bot_has_permissions(manage_webhooks=True, manage_messages=True)
-    async def emote(self, ctx: commands.Context[Any], *message):
+    async def emote(self, ctx: commands.Context[Any], *message: str):
         if len(message) == 0:
             await ctx.send("Give an emoji name.")
             return
-        emoji_list = []
+        emoji_list: list[str] = []
+        webhook = None
         if isinstance(ctx.channel, disnake.TextChannel):
             webhook = await ctx.channel.create_webhook(name=ctx.message.author.name)
         elif isinstance(ctx.channel, disnake.Thread):
-            webhook = await ctx.channel.parent.create_webhook(
-                name=ctx.message.author.name
-            )
-        print(type(message))
+            if parent := ctx.channel.parent:
+                webhook = await parent.create_webhook(
+                    name=ctx.message.author.name
+                )
+        
+        if webhook is None:
+            await ctx.send("Failed to create webhook.")
+            return
+
+        emoji = None
         for i in range(len(message)):
             emoji = disnake.utils.get(self.client.emojis, name=message[i])
             emojistr = str(emoji)
             emoji_list.append(emojistr)
+
         if emoji is None:
             oof = await ctx.send("Invalid emoji name.")
             await asyncio.sleep(3)
             await oof.delete()
             await ctx.message.delete()
             return
+                
         if isinstance(ctx.channel, disnake.TextChannel):
             await webhook.send(
                 "".join(emoji_list),
@@ -63,9 +73,9 @@ class EmoteSticker(commands.Cog):
         await webhook.delete()
         await ctx.message.delete()
 
-    def paginate(self, lines, chars=2000):
+    def paginate(self, lines: list[str], chars: int =2000):
         size = 0
-        message = []
+        message: list[str] = []
         for line in lines:
             if len(line) + size > chars:
                 yield message
@@ -82,6 +92,9 @@ class EmoteSticker(commands.Cog):
     )
     async def getemotes(self, ctx: commands.Context[Any]):
         server = ctx.message.guild
+        if server is None:
+            await ctx.send("This command can only be used in a server.")
+            return
         emojis = [str(x) for x in server.emojis]
         message = ""
         embed = disnake.Embed()
