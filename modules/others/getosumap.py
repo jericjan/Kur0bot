@@ -2,7 +2,7 @@ import json
 import os
 import re
 import urllib.parse
-from html.parser import HTMLParser
+import html
 from typing import Any
 
 import aiohttp
@@ -23,7 +23,7 @@ class GetOsuMap(commands.Cog):
             not_osu_count = 0
             for activity in activities:
                 print(activity)
-                if str(activity.type) == "ActivityType.playing" and user.bot == False:
+                if isinstance(activity, disnake.Activity) and user.bot == False:
                     try:
                         if activity.application_id == 367827983903490050:
                             name = activity.details
@@ -93,7 +93,7 @@ class GetOsuMap(commands.Cog):
                                     return
                             await ctx.send(f"{res_count} results!")
                             beatmaps = json_dict["beatmaps"]
-                            results = []
+                            results: list[str] = []
                             for beatmap in beatmaps:
                                 title = beatmap["title"]
                                 diff = beatmap["difficulty"]
@@ -112,14 +112,28 @@ class GetOsuMap(commands.Cog):
             await ctx.send(f"{user.name} is not doing anything...")
 
     @commands.command(aliases=["getmap2", "getosu2"])
-    async def getosumap2(self, ctx: commands.Context[Any], user):
+    async def getosumap2(self, ctx: commands.Context[Any], user: str):
 
         API_URL = "https://osu.ppy.sh/api/v2"
         TOKEN_URL = "https://osu.ppy.sh/oauth/token"
 
-        data = {
-            "client_id": os.getenv("OSU_ID"),
-            "client_secret": os.getenv("OSU_SECRET"),
+        OSU_ID = os.getenv("OSU_ID")
+        if OSU_ID is None:
+            await ctx.send(
+                "OSU_ID environment variable is not set. Please set it to use this command."
+            )
+            return
+        
+        OSU_SECRET = os.getenv("OSU_SECRET")
+        if OSU_SECRET is None:
+            await ctx.send(
+                "OSU_SECRET environment variable is not set. Please set it to use this command."
+            )
+            return
+
+        data: dict[str, str] = {
+            "client_id": OSU_ID,
+            "client_secret": OSU_SECRET,
             "grant_type": "client_credentials",
             "scope": "public",
         }
@@ -145,7 +159,7 @@ class GetOsuMap(commands.Cog):
                 f"{API_URL}/users/{user_id}/recent_activity"
             ) as resp:
                 recently_played_maps = await resp.json()
-        desc = []
+        desc: list[str] = []
         for osumap in recently_played_maps:
             time = dp.parse(osumap["created_at"]).timestamp()
             timestamp = f"<t:{int(time)}:R>"
@@ -160,26 +174,25 @@ class GetOsuMap(commands.Cog):
         await ctx.send(embed=em)
 
     @commands.command(aliases=["getmap3", "getosu3"])
-    async def getosumap3(self, ctx: commands.Context[Any], user):
+    async def getosumap3(self, ctx: commands.Context[Any], user: str):
         url = f"https://osu.ppy.sh/u/{user}"
         async with aiohttp.ClientSession() as session:
             async with session.get(url) as resp:
                 site_contents = await resp.text()
         # print(site_contents)
-        h = HTMLParser()
-        site_contents = h.unescape(site_contents)
+        site_contents = html.unescape(site_contents)
         maps = re.findall(r"(?<=scoresRecent).+?(?=beatmapPlaycounts)", site_contents)
         maps = re.findall(
             r'(?<="url":").+?(?=",)|(?<=title":").+?(?=",)|(?<=artist":").+?(?=",)|(?<=ended_at":").+?(?=",)|(?<=pp":).+?(?=,)|(?<=accuracy":).+?(?=,)|(?<=rank":").+?(?=",)',
             maps[0],
         )
 
-        def chunks(xs, n):
+        def chunks(xs: list[str], n: int):
             n = max(1, n)
             return [xs[i : i + n] for i in range(0, len(xs), n)]
 
         maps = chunks(maps, 8)
-        desc = []
+        desc: list[str] = []
         for acc, time, rank, pp, _, link, artist, song in maps:
             acc = float(acc) * 100
             acc = f"{acc:.2f}"
