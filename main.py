@@ -244,9 +244,9 @@ async def open_url(url: str):
         await asyncio.sleep(1)
 
     print("got guild!")
-    sched_ch: disnake.TextChannel = avi_guild.get_channel(879702977898741770)  # type: ignore
+    sched_ch = avi_guild.get_channel(879702977898741770)
     print("got channel!")
-    if sched_ch is None:
+    if sched_ch is None or not isinstance(sched_ch, disnake.TextChannel):
         print("channel not found")
         return
     messages = await sched_ch.history(limit=200).flatten()

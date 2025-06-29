@@ -11,32 +11,44 @@ from disnake.ext import commands
 
 class CheckComment(commands.Cog):
     @commands.command()
-    async def checkcomment(self, ctx: commands.Context[Any], link):
+    async def checkcomment(self, ctx: commands.Context[Any], link: str):
         comment_start_time = time.time()
         comment_end_time = comment_start_time + (60 * 5)
         community_comment = False
-
+        id = ""
         if re.search(r"https:\/\/www.youtube.com\/watch\?v=.+&lc=.+(\..+)?", link):
-            id = re.search(
+            if match := re.search(
                 r"(?<=https:\/\/www.youtube.com\/watch\?v=.{11}&lc=).+(\..+)?", link
-            ).group(0)
+            ):
+                id = match.group(0)
         elif re.search(
             r"https://www.youtube.com/channel/.+?/community\?lc=.+?&lb=.+", link
         ):
-            id = re.search(r"(?<=lc=).+?(?=&lb)", link).group(0)
-            community_comment = True
+            if match := re.search(r"(?<=lc=).+?(?=&lb)", link):
+                id = match.group(0)
+                community_comment = True
         else:
             await ctx.send("Not a YT comment link!", delete_after=3.0)
             return
-        print(id)
+        
+        if id == "":
+            await ctx.send("Could not find the comment ID in the link.", delete_after=3.0)
+            return
+
         if not community_comment:
-            params = {
+            if (api_key := os.getenv("YT_API_KEY")) is None:
+                await ctx.send(
+                    "YT API key not set! Please set the YT_API_KEY environment variable."
+                )
+                return
+            params: dict[str, str] = {
                 "part": "snippet",
-                "key": os.getenv("YT_API_KEY"),
+                "key": api_key,
                 "id": id,
             }
             url = "https://youtube.googleapis.com/youtube/v3/comments"
             msg = await ctx.send("Searching...")
+            time_passed = 0.0
             while time.time() < comment_end_time:
                 async with aiohttp.ClientSession() as session:
                     async with session.get(url, params=params) as resp:
@@ -83,9 +95,11 @@ class CheckComment(commands.Cog):
             else:
                 await ctx.send("Could not find continuation token. Sorry :(")
                 return
+            
+            time_passed = 0.0
             while time.time() < comment_end_time:
                 headers = {"content-type": "application/json"}
-                data = {
+                data: dict[str, Any] = {
                     "context": {
                         "client": {"clientName": "WEB", "clientVersion": "2.2022011"}
                     },

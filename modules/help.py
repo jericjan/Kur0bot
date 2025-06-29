@@ -33,11 +33,11 @@ class Help(commands.Cog):
             
 
             for command_name in public_comms:
-                comm: "Optional[Command]" = self.client.get_command(command_name)
+                comm = cast("Optional[Command]", self.client.get_command(command_name))
                 if comm is not None:
                     for alias in comm.aliases:
                         if alias == extra:  # found the command with matching alias
-                            command: "Optional[Command]" = self.client.get_command(f"help {comm.name}")
+                            command = cast("Optional[Command]", self.client.get_command(f"help {comm.name}"))
                             ctx.command = command
                             ctx.invoked_subcommand = command
                             await self.client.invoke(ctx) # pyright: ignore[reportUnknownMemberType]

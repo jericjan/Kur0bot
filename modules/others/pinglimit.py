@@ -1,7 +1,6 @@
 import asyncio
 from typing import Any
 
-import disnake
 from disnake.ext import commands
 
 

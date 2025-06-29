@@ -4,13 +4,13 @@ from typing import Any
 import aiohttp
 import disnake
 from disnake.ext import commands
-from petpetgif import petpet
+from petpetgif import petpet  # type: ignore
 
 
 class Pet(commands.Cog):
     @commands.command()
     @commands.bot_has_permissions(manage_webhooks=True)
-    async def pet(self, ctx: commands.Context[Any], url):
+    async def pet(self, ctx: commands.Context[Any], url: str):
         if ctx.message.mentions.__len__() > 0:
             for user in ctx.message.mentions:
                 async with aiohttp.ClientSession() as session:
@@ -19,8 +19,9 @@ class Pet(commands.Cog):
                 source = BytesIO(pfp)  # file-like container to hold the emoji in memory
                 source.seek(0)
                 dest = BytesIO()  # container to store the petpet gif in memory
-                petpet.make(source, dest)
+                petpet.make(source, dest)  # type: ignore
                 dest.seek(0)
+                webhook = None
                 if isinstance(ctx.channel, disnake.TextChannel):
                     webhook = await ctx.channel.create_webhook(
                         name=ctx.message.author.name
@@ -31,6 +32,9 @@ class Pet(commands.Cog):
                         avatar_url=ctx.message.author.display_avatar.url,
                     )
                 elif isinstance(ctx.channel, disnake.Thread):
+                    if ctx.channel.parent is None:
+                        await ctx.send("This thread has no parent channel.")
+                        return
                     webhook = await ctx.channel.parent.create_webhook(
                         name=ctx.message.author.name
                     )
@@ -40,8 +44,9 @@ class Pet(commands.Cog):
                         avatar_url=ctx.message.author.display_avatar.url,
                         thread=ctx.channel,
                     )
-
-                await webhook.delete()
+                if webhook:
+                    await webhook.delete()
+                    
         elif url.startswith("http"):
             async with aiohttp.ClientSession() as session:
                 async with session.get(url) as resp:
@@ -49,8 +54,9 @@ class Pet(commands.Cog):
             source = BytesIO(pfp)  # file-like container to hold the emoji in memory
             source.seek(0)
             dest = BytesIO()  # container to store the petpet gif in memory
-            petpet.make(source, dest)
+            petpet.make(source, dest)  # type: ignore
             dest.seek(0)
+            webhook = None
             if isinstance(ctx.channel, disnake.TextChannel):
                 webhook = await ctx.channel.create_webhook(name=ctx.message.author.name)
                 await webhook.send(
@@ -59,6 +65,9 @@ class Pet(commands.Cog):
                     avatar_url=ctx.message.author.display_avatar.url,
                 )
             elif isinstance(ctx.channel, disnake.Thread):
+                if ctx.channel.parent is None:
+                    await ctx.send("This thread has no parent channel.")
+                    return                
                 webhook = await ctx.channel.parent.create_webhook(
                     name=ctx.message.author.name
                 )
@@ -69,7 +78,8 @@ class Pet(commands.Cog):
                     thread=ctx.channel,
                 )
 
-            await webhook.delete()
+            if webhook:
+                await webhook.delete()
 
 
 def setup(client: commands.Bot):

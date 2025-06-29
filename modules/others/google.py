@@ -14,7 +14,7 @@ class GoogleSearch(commands.Cog):
 
     @commands.command()
     @commands.bot_has_permissions(embed_links=True)
-    async def google(self, ctx: commands.Context[Any], *, search_query):
+    async def google(self, ctx: commands.Context[Any], *, search_query: str):
         api_key = os.getenv("CUSTOM_SEARCH_KEY")
 
         async with aiohttp.ClientSession() as session:
@@ -48,7 +48,7 @@ class GoogleSearch(commands.Cog):
 
     @commands.command()
     @commands.bot_has_permissions(embed_links=True)
-    async def image(self, ctx: commands.Context[Any], *, search_query):
+    async def image(self, ctx: commands.Context[Any], *, search_query: str):
         api_key = os.getenv("SERPAPI_KEY")
 
         async with aiohttp.ClientSession() as session:
@@ -64,7 +64,7 @@ class GoogleSearch(commands.Cog):
         thumbnails = [x.get("thumbnail") for x in img_results]
         titles = [x.get("title") for x in img_results]
 
-        def embed_with_img(embed, img_url):
+        def embed_with_img(embed: disnake.Embed, img_url: str):
             embed.set_image(url=img_url)
             return embed
 

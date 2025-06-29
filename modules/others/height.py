@@ -3,7 +3,6 @@ import re
 from decimal import Decimal, getcontext
 from typing import Any
 
-import disnake
 from disnake.ext import commands
 
 
@@ -13,18 +12,18 @@ class Height(commands.Cog):
         getcontext().prec = 30
 
     @commands.command()
-    async def height(self, ctx: commands.Context[Any], *, arg):
-        def is_foot_inch(x):
+    async def height(self, ctx: commands.Context[Any], *, arg: str):
+        def is_foot_inch(x: str):
             return re.match(r"\d+'\d+\.?\d*\"", x)
 
-        def get_foot_inch(x):
-            return re.search(r"(\d+)'(\d+\.?\d*)\"", x).groups()
+        def get_foot_inch(x: str) -> tuple[str, str]:
+            return re.search(r"(\d+)'(\d+\.?\d*)\"", x).groups()  # type: ignore
 
-        def is_cm(x):
+        def is_cm(x: str):
             return re.match(r"(\d+\.?\d+|\d)cm", x)
 
-        def get_cm(x):
-            return re.search(r"(\d+\.?\d+|\d)cm", x).group(1)
+        def get_cm(x: str) -> str:
+            return re.search(r"(\d+\.?\d+|\d)cm", x).group(1)  # type: ignore
 
         if is_foot_inch(arg):
             feet, inches = get_foot_inch(arg)

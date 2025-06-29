@@ -15,7 +15,7 @@ from myfunctions import file_handler, subprocess_runner
 class Clip(commands.Cog):
     @commands.command()
     @commands.bot_has_permissions(manage_messages=True)
-    async def fastclip(self, ctx: commands.Context[Any], link, start, end, *, filename):
+    async def fastclip(self, ctx: commands.Context[Any], link: str, start: str, end: str, *, filename: str):
         start = start.strip(" ")
         end = end.strip(" ")
         filename = filename.replace(" ", "_")
@@ -25,8 +25,8 @@ class Clip(commands.Cog):
         if len(end) < 8:
             end = zeroes[: -len(end)] + end
         if (
-            re.match("\d{2}(:|;)\d{2}(:|;)\d{2}", start) != None
-            and re.match("\d{2}(:|;)\d{2}(:|;)\d{2}", end) != None
+            re.match(r"\d{2}(:|;)\d{2}(:|;)\d{2}", start) != None
+            and re.match(r"\d{2}(:|;)\d{2}(:|;)\d{2}", end) != None
         ):
             print("good timestamps!")
         else:
@@ -73,7 +73,7 @@ class Clip(commands.Cog):
                 )
                 + timedelta(seconds=30)
             )
-        out, stdout, stderr = await subprocess_runner.run_subprocess([
+        _out, stdout, _stderr = await subprocess_runner.run_subprocess([
             "yt-dlp",
             "-g",
             "-f",
@@ -124,7 +124,7 @@ class Clip(commands.Cog):
             ]
         await message.edit(content="Downloading... This will take a while...")
         print(shjoin(coms))
-        process, stdout, stderr = await subprocess_runner.run_subprocess(coms)
+        _process, stdout, _stderr = await subprocess_runner.run_subprocess(coms)
 
         def max_le(seq, val):
             """

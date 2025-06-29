@@ -1,6 +1,5 @@
 from typing import TYPE_CHECKING, Any, cast
 
-import disnake
 from disnake.ext import commands
 
 if TYPE_CHECKING:
@@ -17,6 +16,10 @@ class DadJokes(commands.Cog):
             "MotorDbManager",
             self.client.get_cog("MotorDbManager")
         )
+        if ctx.guild is None:
+            await ctx.send("This command can only be used in a server.")
+            return
+        
         toggles = motor.get_collection_for_server("toggles", ctx.guild.id)
 
         dad_jokes = await toggles.find_one({"title": "Dad Jokes"})

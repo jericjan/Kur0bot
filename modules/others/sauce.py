@@ -1,12 +1,12 @@
 import os
 import re
-from typing import Any
+from typing import Any, Optional
 
 import aiohttp
 import disnake
 from disnake.ext import commands
-from saucenao_api import SauceNao
-
+from saucenao_api import SauceNao  # type: ignore
+from saucenao_api.containers import BasicSauce  # type: ignore
 from myfunctions import msg_link_grabber
 
 from ..paginator import ButtonPaginator
@@ -14,7 +14,7 @@ from ..paginator import ButtonPaginator
 
 class Sauce(commands.Cog):
     @commands.command()
-    async def altsauce(self, ctx: commands.Context[Any], link=None):
+    async def altsauce(self, ctx: commands.Context[Any], link: Optional[str]=None):
         link = await msg_link_grabber.grab_link(ctx, link)
         print(link)
         api_key = os.getenv("SAUCENAO_KEY")
@@ -27,6 +27,7 @@ class Sauce(commands.Cog):
             short_remaining = sauce_json["header"]["short_remaining"]
             long_remaining = sauce_json["header"]["long_remaining"]
             status = sauce_json["header"]["status"]
+            status_meaning = ""
             if status == 0:
                 status_meaning = "Success!"
             elif status > 0:
@@ -46,7 +47,7 @@ class Sauce(commands.Cog):
             return
         results = sauce_json["results"]
         print(f"{len(results)} results!")
-        embed_dict = {}
+        embed_dict: dict[int, disnake.Embed] = {}
         for idx, val in enumerate(results):
             print(f"this thing is:\n{val}")
             title = val["data"]["title"]
@@ -66,14 +67,7 @@ class Sauce(commands.Cog):
                 )
                 embed_dict[idx].set_author(name=author)
                 embed_dict[idx].set_image(url=image)
-                embed_dict[idx].set_footer(text=site_name[0])
-            except IndexError:
-                embed_dict[idx] = disnake.Embed(
-                    title=results_dict[idx].title,
-                    description=f"{results_dict[idx].similarity}% accurate",
-                )
-                embed_dict[idx].set_author(name=author)
-                embed_dict[idx].set_image(url=image)
+                embed_dict[idx].set_footer(text="" if site_name is None else site_name[0])
             except Exception as e:
                 print(e)
 
@@ -83,7 +77,7 @@ class Sauce(commands.Cog):
         await paginator.send(ctx)
 
     @commands.command(aliases=["findsauce", "getsauce"])
-    async def sauce(self, ctx: commands.Context[Any], link=None):
+    async def sauce(self, ctx: commands.Context[Any], link: Optional[str]=None):
 
         link = await msg_link_grabber.grab_link(ctx, link)
         print(link)
@@ -104,8 +98,8 @@ class Sauce(commands.Cog):
             return
         print(f"{len(results)} results!")
         result_count = len(results)
-        results_dict = {}
-        embed_dict = {}
+        results_dict: dict[int, BasicSauce] = {}
+        embed_dict: dict[int, disnake.Embed] = {}
         i = 0
         while i < result_count:
             results_dict[i] = results[i]
@@ -121,7 +115,7 @@ class Sauce(commands.Cog):
                 )
                 embed_dict[i].set_author(name=results_dict[i].author)
                 embed_dict[i].set_image(url=results_dict[i].thumbnail)
-                embed_dict[i].set_footer(text=site_name[0])
+                embed_dict[i].set_footer(text="" if site_name is None else site_name[0])
             except IndexError:
                 embed_dict[i] = disnake.Embed(
                     title=results_dict[i].title,

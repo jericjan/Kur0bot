@@ -1,8 +1,7 @@
 import asyncio
-import functools
 import io
 import re
-from typing import Any
+from typing import Any, Optional
 
 import aiohttp
 import disnake
@@ -11,13 +10,15 @@ from disnake.ext import commands
 from PIL import Image
 
 from myfunctions import msg_link_grabber
-
+from myfunctions.async_wrapper import async_wrap
 
 class EmoteSticker(commands.Cog):
     def __init__(self, client: commands.Bot):
         self.client = client
 
     def has_guild_exp_perms(self, ctx: commands.Context[Any]):
+        if not isinstance(ctx.author, disnake.Member):
+            return False
         has_expr_perms = ctx.channel.permissions_for(
             ctx.author
         ).manage_guild_expressions
@@ -25,28 +26,37 @@ class EmoteSticker(commands.Cog):
 
     @commands.command(aliases=["e"])
     @commands.bot_has_permissions(manage_webhooks=True, manage_messages=True)
-    async def emote(self, ctx: commands.Context[Any], *message):
+    async def emote(self, ctx: commands.Context[Any], *message: str):
         if len(message) == 0:
             await ctx.send("Give an emoji name.")
             return
-        emoji_list = []
+        emoji_list: list[str] = []
+        webhook = None
         if isinstance(ctx.channel, disnake.TextChannel):
             webhook = await ctx.channel.create_webhook(name=ctx.message.author.name)
         elif isinstance(ctx.channel, disnake.Thread):
-            webhook = await ctx.channel.parent.create_webhook(
-                name=ctx.message.author.name
-            )
-        print(type(message))
+            if parent := ctx.channel.parent:
+                webhook = await parent.create_webhook(
+                    name=ctx.message.author.name
+                )
+        
+        if webhook is None:
+            await ctx.send("Failed to create webhook.")
+            return
+
+        emoji = None
         for i in range(len(message)):
             emoji = disnake.utils.get(self.client.emojis, name=message[i])
             emojistr = str(emoji)
             emoji_list.append(emojistr)
+
         if emoji is None:
             oof = await ctx.send("Invalid emoji name.")
             await asyncio.sleep(3)
             await oof.delete()
             await ctx.message.delete()
             return
+                
         if isinstance(ctx.channel, disnake.TextChannel):
             await webhook.send(
                 "".join(emoji_list),
@@ -63,9 +73,9 @@ class EmoteSticker(commands.Cog):
         await webhook.delete()
         await ctx.message.delete()
 
-    def paginate(self, lines, chars=2000):
+    def paginate(self, lines: list[str], chars: int =2000):
         size = 0
-        message = []
+        message: list[str] = []
         for line in lines:
             if len(line) + size > chars:
                 yield message
@@ -82,6 +92,9 @@ class EmoteSticker(commands.Cog):
     )
     async def getemotes(self, ctx: commands.Context[Any]):
         server = ctx.message.guild
+        if server is None:
+            await ctx.send("This command can only be used in a server.")
+            return
         emojis = [str(x) for x in server.emojis]
         message = ""
         embed = disnake.Embed()
@@ -100,16 +113,8 @@ class EmoteSticker(commands.Cog):
             else:
                 print("bad apple server")
 
-    def run_in_executor(f):
-        @functools.wraps(f)
-        async def inner(*args, **kwargs):
-            loop = asyncio.get_running_loop()
-            return await loop.run_in_executor(None, lambda: f(*args, **kwargs))
-
-        return inner
-
-    @run_in_executor
-    def emote_resize(self, link, format_type="PNG"):  # Your wrapper for async use
+    @async_wrap
+    def emote_resize(self, link: bytes, format_type: str ="PNG"):  # Your wrapper for async use
         byteio = io.BytesIO(link)
         im = Image.open(byteio)
         width, height = im.size
@@ -127,8 +132,12 @@ class EmoteSticker(commands.Cog):
     @commands.command(aliases=["uploademoji", "ue"])
     @commands.bot_has_permissions(manage_emojis=True, manage_messages=True)
     async def uploademote(
-        self, ctx, title, *, link=None
+        self, ctx: commands.Context[Any], title: str, *, link: Optional[str]=None
     ):  # upload emoji from emoji url
+        if ctx.guild is None:
+            await ctx.send("This command can only be used in a server.")
+            return
+        
         limit = ctx.guild.emoji_limit
         emoji_list = ctx.guild.emojis
         normal_count = 0
@@ -183,10 +192,8 @@ class EmoteSticker(commands.Cog):
                 print("not a gif")
                 file, width, height = await self.emote_resize(img)
                 await ctx.send(f"New image size is: {width}x{height}", delete_after=3.0)
-            try:
-                file = file.read()
-            except:
-                pass
+
+            file = file.read()
             try:
                 print(f"file is a {type(file)}")
                 await ctx.guild.create_custom_emoji(name=title, image=file)
@@ -206,7 +213,9 @@ class EmoteSticker(commands.Cog):
     @commands.command(aliases=["re"])
     @commands.bot_has_permissions(manage_emojis=True, manage_messages=True)
     async def removeemote(self, ctx: commands.Context[Any], emote: disnake.Emoji):
-
+        if ctx.guild is None:
+            await ctx.send("This command can only be used in a server.")
+            return
         if emote.guild.id != ctx.guild.id:
             raise commands.EmojiNotFound(emote.name)
 
@@ -219,6 +228,13 @@ class EmoteSticker(commands.Cog):
     @commands.command(aliases=["rs"])
     @commands.bot_has_permissions(manage_emojis=True, manage_messages=True)
     async def removesticker(self, ctx: commands.Context[Any], sticker: disnake.GuildSticker):
+        if ctx.guild is None:
+            await ctx.send("This command can only be used in a server.")
+            return
+        
+        if sticker.guild is None:
+            await ctx.send("Couldn't find guild from sticker name.")
+            return
 
         if sticker.guild.id != ctx.guild.id:
             raise commands.GuildStickerNotFound(sticker.name)
@@ -232,22 +248,23 @@ class EmoteSticker(commands.Cog):
         else:
             await ctx.send("No can do. You ain't got the perms fo' that!")
 
-    @removeemote.error
-    @removesticker.error
-    async def removeemote_error(self, ctx: commands.Context[Any], error):
-        name = error.argument
-        ctx._ignore_me_ = True
+    @removeemote.error  # type: ignore
+    @removesticker.error  # type: ignore
+    async def removeemote_error(self, ctx: commands.Context[Any], error: disnake.DiscordException):        
+        ctx._ignore_me_ = True  # type: ignore
         if isinstance(error, commands.EmojiNotFound):
+            name = error.argument
             await ctx.send(
                 f"dang, i can't find the {name} emoji, pardner. can't delete that which ain't exist. truth."
             )
         elif isinstance(error, commands.GuildStickerNotFound):
+            name = error.argument
             await ctx.send(
                 f"dang, i can't find the {name} sticker, pardner. can't delete that which ain't exist. truth."
             )
 
-    @run_in_executor
-    def sticker_resize(self, link):  # Your wrapper for async use
+    @async_wrap
+    def sticker_resize(self, link: str | bytes):  # Your wrapper for async use
         response = requests.get(link)  # threaded
         byteio = io.BytesIO(response.content)
         im = Image.open(byteio)
@@ -266,8 +283,12 @@ class EmoteSticker(commands.Cog):
     @commands.command(aliases=["us"])
     @commands.bot_has_permissions(manage_emojis=True, manage_messages=True)
     async def uploadsticker(
-        self, ctx, name, emoji, link=None
+        self, ctx: commands.Context[Any], name: str, emoji: str, link: Optional[str]=None
     ):  # upload emoji from emoji url
+        if ctx.guild is None:
+            await ctx.send("This command can only be used in a server.")
+            return
+                
         limit = ctx.guild.sticker_limit
         if limit == 0:
             await ctx.send(

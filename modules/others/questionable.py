@@ -1,4 +1,3 @@
-import random
 from typing import TYPE_CHECKING, Any, cast
 
 import disnake
@@ -6,6 +5,8 @@ from disnake.ext import commands
 
 if TYPE_CHECKING:
     from myfunctions.motor import MotorDbManager
+
+GuildMessageable = disnake.TextChannel | disnake.Thread | disnake.VoiceChannel | disnake.StageChannel
 
 class Questionable(commands.Cog):
     def __init__(self, client: commands.Bot):
@@ -16,11 +17,11 @@ class Questionable(commands.Cog):
             "MotorDbManager", 
             self.client.get_cog("MotorDbManager")
         )
-        if not isinstance(db_man.motor_client, bool):
-            return db_man.motor_client["dashboard"][name]
         
-    @commands.user_command(name="Segg")
-    async def user_sex(self, inter, user: disnake.User):
+        return db_man.motor_client["dashboard"][name]
+        
+    @commands.user_command(name="Segg")  # type: ignore
+    async def user_sex(self, inter: disnake.ApplicationCommandInteraction[Any], user: disnake.User):
         if user == self.client.user:
             channel = (
                 inter.channel.mention
@@ -69,16 +70,17 @@ class Questionable(commands.Cog):
         await ctx.send(f"|| {url} ||")
 
         if user == self.client.user:
-            await ctx.send(
-                f"Like rn? in {ctx.channel.mention}? Here? Actually? I mean ok???"
-            )
+            if isinstance(ctx.channel, GuildMessageable):
+                await ctx.send(
+                    f"Like rn? in {ctx.channel.mention}? Here? Actually? I mean ok???"
+                )
         elif user == ctx.author:
             await ctx.send(f"Bro is fucking himself <:brois:1315502264038854657>")
         else:
             await ctx.send(f"{ctx.author.mention} just sexerized {user.mention} 😳")
 
-    @commands.user_command(name="Footjob")
-    async def user_footjob(self, inter, user: disnake.User):
+    @commands.user_command(name="Footjob")  # type: ignore
+    async def user_footjob(self, inter: disnake.ApplicationCommandInteraction[Any], user: disnake.User):
         if user == self.client.user:
             desc = f"{inter.author.mention} IS GIVING ME A FOOTJOB??? HELLO HUMAN RESOURCES?? WTFFF??????"
         elif user == inter.author:

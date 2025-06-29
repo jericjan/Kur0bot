@@ -10,6 +10,9 @@ class Karaoke(commands.Cog):
 
     @commands.command()
     async def queue(self, ctx: commands.Context[Any]):
+        if ctx.guild is None:
+            await ctx.send("This command can only be used in a server.")
+            return
         guild_id = ctx.guild.id
         if os.path.exists(f"modules/others/karaoke_queue/{guild_id}.json"):
             with open(f"modules/others/karaoke_queue/{guild_id}.json") as f:
@@ -19,17 +22,23 @@ class Karaoke(commands.Cog):
             await ctx.send("Empty. Add someone to the queue with 'k.addqueue <name>'")
 
     @commands.command()
-    async def addqueue(self, ctx: commands.Context[Any], *names):
+    async def addqueue(self, ctx: commands.Context[Any], *names: str):
+        if ctx.guild is None:
+            await ctx.send("This command can only be used in a server.")
+            return        
         guild_id = ctx.guild.id
-        names = [x + "\n" for x in list(names)]
+        names_newlined: list[str] = [x + "\n" for x in list(names)]
         with open(f"modules/others/karaoke_queue/{guild_id}.json", "a") as f:
-            f.writelines(names)
+            f.writelines(names_newlined)
         with open(f"modules/others/karaoke_queue/{guild_id}.json") as f:
             singers_list = f.read()
         await ctx.send(f"Peeps in queue are:\n {singers_list}")
 
     @commands.command()
-    async def insertqueue(self, ctx: commands.Context[Any], singer, new_singer):
+    async def insertqueue(self, ctx: commands.Context[Any], singer: str, new_singer: str):
+        if ctx.guild is None:
+            await ctx.send("This command can only be used in a server.")
+            return        
         guild_id = ctx.guild.id
         with open(f"modules/others/karaoke_queue/{guild_id}.json") as f:
             singers_list = f.readlines()
@@ -44,7 +53,10 @@ class Karaoke(commands.Cog):
         await ctx.send(f"Peeps in queue are:\n {singers_list}")
 
     @commands.command()
-    async def removequeue(self, ctx: commands.Context[Any], singer):
+    async def removequeue(self, ctx: commands.Context[Any], singer: str):
+        if ctx.guild is None:
+            await ctx.send("This command can only be used in a server.")
+            return        
         guild_id = ctx.guild.id
         with open(f"modules/others/karaoke_queue/{guild_id}.json") as f:
             singers_list = f.readlines()
@@ -60,6 +72,9 @@ class Karaoke(commands.Cog):
 
     @commands.command()
     async def clearqueue(self, ctx: commands.Context[Any]):
+        if ctx.guild is None:
+            await ctx.send("This command can only be used in a server.")
+            return
         guild_id = ctx.guild.id
         open(f"modules/others/karaoke_queue/{guild_id}.json", "w").close()
         await ctx.send("Queue cleared!")

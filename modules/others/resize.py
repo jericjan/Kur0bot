@@ -1,9 +1,6 @@
-import asyncio
-import functools
 import io
-import os
 import re
-from typing import Any
+from typing import Any, Optional
 
 import aiohttp
 import requests
@@ -12,6 +9,7 @@ from disnake.ext import commands
 from PIL import Image
 
 from myfunctions import file_handler, msg_link_grabber, subprocess_runner
+from myfunctions.async_wrapper import async_wrap
 
 limiter = AsyncLimiter(1, 1)
 
@@ -20,15 +18,8 @@ class Resize(commands.Cog):
     def __init__(self, client: commands.Bot):
         self.client = client
 
-    def run_in_executor(f):
-        @functools.wraps(f)
-        async def inner(*args, **kwargs):
-            loop = asyncio.get_running_loop()
-            return await loop.run_in_executor(None, lambda: f(*args, **kwargs))
-
-        return inner
-
-    def bar(self, link, width, height):
+    @async_wrap
+    def resize_core(self, link: str, width: int, height: int):
         response = requests.get(link)  # threaded
         byteio = io.BytesIO(response.content)
         im = Image.open(byteio)
@@ -41,14 +32,9 @@ class Resize(commands.Cog):
         byteio2.seek(0)
         return byteio2
 
-    @run_in_executor
-    def foo(self, link, width, height):  # Your wrapper for async use
-        out = self.bar(link, width, height)
-        return out
-
     @commands.command()
     @commands.bot_has_permissions(manage_messages=True)
-    async def resize(self, ctx: commands.Context[Any], width, height, link=None, algorithm=None):
+    async def resize(self, ctx: commands.Context[Any], width: int, height: int, link: Optional[str]=None, algorithm: Optional[str]=None):
         link = await msg_link_grabber.grab_link(ctx, link)
         async with aiohttp.ClientSession() as session:
             async with session.get(link) as r:
@@ -95,12 +81,12 @@ class Resize(commands.Cog):
                     )
                     return
             coms.append(filepath)
-            out, stdout, stderr = await subprocess_runner.run_subprocess(coms)
+            await subprocess_runner.run_subprocess(coms)
             await file_handler.send_file(ctx, message, filepath, filename)
             file_handler.delete_file(filepath)
         elif file_type == "image":
             message = await ctx.send("Resizing...")
-            bruh = await self.foo(link, width, height)
+            bruh = await self.resize_core(link, width, height)
             bruh.seek(0)
             filename = link.split("/")[-1].split("?")[0]
             await file_handler.send_file(ctx, message, bruh, filename)

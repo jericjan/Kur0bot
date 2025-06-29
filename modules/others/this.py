@@ -1,10 +1,9 @@
-from typing import Any
+from typing import Any, Optional
 
-import disnake
 from disnake.ext import commands
 
 from myfunctions import msg_link_grabber
-from myfunctions.greenscreen import GreenScreener, GreenScreenerHandler
+from myfunctions.greenscreen import GreenScreenerHandler
 
 
 class ThisRightHere(commands.Cog):
@@ -12,7 +11,7 @@ class ThisRightHere(commands.Cog):
         self.client = client
 
     @commands.command(aliases=["this"])
-    async def thisrighthere(self, ctx: commands.Context[Any], link=None):
+    async def thisrighthere(self, ctx: commands.Context[Any], link: Optional[str]=None):
         link = await msg_link_grabber.grab_link(ctx, link)
         print(link)
         g_screen_han = GreenScreenerHandler(

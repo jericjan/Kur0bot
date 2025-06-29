@@ -1,7 +1,7 @@
 import re
 import urllib.parse
 from io import BytesIO
-from typing import Any
+from typing import Any, Optional
 
 import aiohttp
 import disnake
@@ -15,14 +15,14 @@ class Meme(commands.Cog):
         self.client = client
 
     @commands.command()
-    async def meme(self, ctx: commands.Context[Any], top_text, bottom_text, img_url=None):
+    async def meme(self, ctx: commands.Context[Any], top_text: str, bottom_text: str, img_url: Optional[str]=None):
         img_url = await msg_link_grabber.grab_link(ctx, img_url)
         img_url = urllib.parse.quote(img_url)
         replacements = {
             "-": "--",
             "_": "__",
             " ": "_",
-            "\?": "~q",
+            "\\?": "~q",
             "&": "~a",
             "%": "~p",
             "#": "~h",
