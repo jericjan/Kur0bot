@@ -383,7 +383,7 @@ class Events(commands.Cog):
 
                     await message.channel.send(strepto_ping)  # pings strepto
 
-    @regex_findall(r"(?:https://(?:www\.)?)(?:x|twitter)(?:\.com\S+)")
+    @regex_findall(r"(?<!\<)(?:https://(?:www\.)?)(?:x|twitter)(?:\.com(?:[^ \t\n\>])+)(?=$| |\t|\n)")
     async def twitter_link_corrector(self, msg: str, message: disnake.Message, user_stat: "UserStat", matches: list[str]):
         resp = [f"Fixed some twitter links for ya:\n"]
         for idx, link in enumerate(matches):

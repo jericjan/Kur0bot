@@ -11,7 +11,7 @@ gtts = "^2.2.2"
 pet-pet-gif = "^1.0.1"
 Flask = "^2.0.1"
 python-dateutil = "*"
-yt-dlp = "2025.4.30"
+yt-dlp = "2025.6.25"
 mcrcon = "^0.7.0"
 saucenao-api = {git = "https://github.com/jericjan/saucenao_api.git"}
 aiohttp="^3.11.16"
