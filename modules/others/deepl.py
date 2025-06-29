@@ -1,9 +1,9 @@
-from typing import Any
+from typing import Any, Optional, cast
 
 import disnake
-import translators as ts
+import translators as ts  # type: ignore
 from disnake.ext import commands
-from jisho_api.word import Word
+from jisho_api.word import Word  # type: ignore
 
 from modules.paginator import ButtonPaginator
 from myfunctions.async_wrapper import async_wrap
@@ -14,11 +14,14 @@ class DeepL_commands(commands.Cog):
         self.client = client
 
     @commands.command(aliases=["japanese"])
-    async def nihongo(self, ctx: commands.Context[Any], *, text=None):
+    async def nihongo(self, ctx: commands.Context[Any], *, text: Optional[str]=None):
         if text == None:
             if ctx.message.reference is not None:  # message is replying
                 print("is reply")
                 id = ctx.message.reference.message_id
+                if id is None:
+                    await ctx.send("I can't find the message to translate. Try again.")
+                    return
                 msg = await ctx.channel.fetch_message(id)
                 text = msg.content
             else:
@@ -27,17 +30,20 @@ class DeepL_commands(commands.Cog):
         result = await self.google_translate(text, "ja")
         await ctx.send(result)
 
-    @commands.message_command(name="Nihongo")
-    async def msg_nihongo(self, inter, msg: disnake.Message):
+    @commands.message_command(name="Nihongo")  # pyright: ignore[reportUnknownMemberType]
+    async def msg_nihongo(self, inter: disnake.ApplicationCommandInteraction[Any], msg: disnake.Message):
         result = await self.google_translate(msg.content, "ja")
         await inter.response.send_message(result)
 
     @commands.command(aliases=["english", "tr"])
-    async def eigo(self, ctx: commands.Context[Any], *, text=None):
+    async def eigo(self, ctx: commands.Context[Any], *, text: Optional[str]=None):
         if text == None:
             if ctx.message.reference is not None:  # message is replying
                 print("is reply")
                 id = ctx.message.reference.message_id
+                if id is None:
+                    await ctx.send("I can't find the message to translate. Try again.")
+                    return                
                 msg = await ctx.channel.fetch_message(id)
                 text = msg.content
             else:
@@ -46,24 +52,28 @@ class DeepL_commands(commands.Cog):
         result = await self.google_translate(text, "en")
         await ctx.send(result)
 
-    @commands.message_command(name="Eigo")
-    async def msg_eigo(self, inter, msg: disnake.Message):
+    @commands.message_command(name="Eigo")  # pyright: ignore[reportUnknownMemberType]
+    async def msg_eigo(self, inter: disnake.ApplicationCommandInteraction[Any], msg: disnake.Message):
         result = await self.google_translate(msg.content, "en")
         await inter.response.send_message(result)
 
     @async_wrap
-    def google_translate(self, text, to_language):
+    def google_translate(self, text: str, to_language: str) -> str:
         try:
-            return ts.google(text, to_language=to_language)
+            res = cast(str, ts.google(text, to_language=to_language))  # pyright: ignore[reportUnknownMemberType]
+            return res
         except TypeError:
             return "I failed lmao"
 
     @commands.command(aliases=["german"])
-    async def doitsu(self, ctx: commands.Context[Any], *, text=None):
+    async def doitsu(self, ctx: commands.Context[Any], *, text: Optional[str]=None):
         if text == None:
             if ctx.message.reference is not None:  # message is replying
                 print("is reply")
                 id = ctx.message.reference.message_id
+                if id is None:
+                    await ctx.send("I can't find the message to translate. Try again.")
+                    return                
                 msg = await ctx.channel.fetch_message(id)
                 text = msg.content
             else:
@@ -73,30 +83,36 @@ class DeepL_commands(commands.Cog):
         result = await self.google_translate(text, "de")
         await ctx.send(result)
 
-    @commands.message_command(name="Doitsu")
-    async def msg_doitsu(self, inter, msg: disnake.Message):
+    @commands.message_command(name="Doitsu")  # pyright: ignore[reportUnknownMemberType]
+    async def msg_doitsu(self, inter: disnake.ApplicationCommandInteraction[Any], msg: disnake.Message):
         result = await self.google_translate(msg.content, "de")
         await inter.response.send_message(result)
 
     @async_wrap
-    def jisho_word(self, word):
-        return Word.request(word)
+    def jisho_word(self, word: str):
+        return Word.request(word)  # pyright: ignore[reportUnknownMemberType]
 
     @commands.command()
-    async def jisho(self, ctx: commands.Context[Any], query=None):
+    async def jisho(self, ctx: commands.Context[Any], query: Optional[str]=None):
         if query is None:
             replied_msg = ctx.message.reference
             if replied_msg is not None:  # message is replying
-                query = replied_msg.resolved.content
+                if resolved := replied_msg.resolved:
+                    if isinstance(resolved, disnake.Message):
+                        query = resolved.content
             else:
                 await ctx.send("I got nothin to jisho. L.")
                 return
+        if query is None:
+            await ctx.send("I got nothin to jisho. L.")
+            return
+        
         r = await self.jisho_word(query)
         if r is None:
             await ctx.send(f"Could not find anything for `{query}`. Sorry")
             return
         datas = r.dict()["data"]
-        embed_list = []
+        embed_list: list[disnake.Embed] = []
         for data in datas:
             japanese = data["japanese"]
             desc = ""
@@ -128,7 +144,7 @@ class DeepL_commands(commands.Cog):
         await paginator.send(ctx)
 
     @commands.command()
-    async def say(self, ctx: commands.Context[Any], *, text=None):
+    async def say(self, ctx: commands.Context[Any], *, text: Optional[str]=None):
         await ctx.message.delete()
         if text:
             await ctx.send(text)
