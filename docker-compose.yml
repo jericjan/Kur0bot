@@ -3,7 +3,7 @@ services:
     image: kur0bot  # Replace with your Docker image name
     entrypoint: ["/bin/sh", "-c", "sleep infinity"]
   map-files:
-    image: kur0shite/kur0bot:vscode  # Replace with your Docker image name and tag
+    image: kur0shite/kur0bot:latest  # Replace with your Docker image name and tag
     volumes:
       - ./modules:/app/modules
       - ./myfunctions:/app/myfunctions
