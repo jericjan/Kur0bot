@@ -78,7 +78,7 @@ def regex_findall(reg: str):
         @add_handler_attr                 
         @functools.wraps(func)
         async def wrapper(self: Any, msg: str, message: disnake.Message, user_stats: "UserStat", *args: Any, **kwargs: Any):
-            if matches := re.findall(reg, msg):            
+            if matches := re.findall(reg, message.content):            
                 await func(self, msg, message, user_stats, matches, *args, **kwargs)
         return wrapper    
     return decorator
@@ -385,21 +385,45 @@ class Events(commands.Cog):
 
     @regex_findall(r"(?<!\<)(?:https://(?:www\.)?)(?:x|twitter)(?:\.com(?:[^ \t\n\>])+)(?=$| |\t|\n)")
     async def twitter_link_corrector(self, msg: str, message: disnake.Message, user_stat: "UserStat", matches: list[str]):
-        resp = [f"Fixed some twitter links for ya:\n"]
-        for idx, link in enumerate(matches):
-            if idx == 0:
-                resp[0] += re.sub(
-                    r"(https://(?:www\.)?)(x|twitter)(?=\.com\S+)", r"\1fixvx", link
+        resp: list[str] = []
+        for link in matches:
+            resp.append(
+                re.sub(
+                    r"(https:\/\/(?:www\.)?)(x|twitter)(?=\.com\S+)", r"\1fixvx", link
                 )
-            else:
-                resp.append(
-                    re.sub(
-                        r"(https://(?:www\.)?)(x|twitter)(?=\.com\S+)", r"\1fixvx", link
-                    )
-                )
+            )
+        resp[0] = f"Fixed some twitter links for ya:\n" + resp[0]
         if matches:
             for x in resp:
                 await message.channel.send(x)        
+
+    @regex_findall(r"(?<!\<)(?:https://(?:www\.)?)(?:pixiv\.net(?:[^ \t\n\>])+)(?=$| |\t|\n)")
+    async def pixiv_corrector(self, msg: str, message: disnake.Message, user_stat: "UserStat", matches: list[str]):
+        resp: list[str] = []
+        for link in matches:
+            resp.append(
+                re.sub(
+                    r"(https:\/\/(?:www\.)?)(pixiv)(?=\.net\S+)", r"\1phixiv", link
+                )
+            )
+        resp[0] = f"Fixed some pixiv links for ya:\n" + resp[0]
+        if matches:
+            for x in resp:
+                await message.channel.send(x)     
+
+    @regex_findall(r"(?<!\<)(?:https://(?:www\.)?)(?:instagram\.com(?:[^ \t\n\>])+)(?=$| |\t|\n)")
+    async def insta_corrector(self, msg: str, message: disnake.Message, user_stat: "UserStat", matches: list[str]):
+        resp: list[str] = []
+        for link in matches:
+            resp.append(
+                re.sub(
+                    r"(https:\/\/(?:www\.)?)(instagram)(?=\.com\S+)", r"\1ddinstagram", link
+                )
+            )
+        resp[0] = f"Fixed some instagram links for ya:\n" + resp[0]
+        if matches:
+            for x in resp:
+                await message.channel.send(x)     
 
     @add_handler_attr
     async def tts(self, msg: str, message: disnake.Message, user_stat: "UserStat"):
