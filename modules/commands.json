@@ -31,6 +31,8 @@
 	"altsauce",
     "ping",
     "coinflip",
+    "gamble",
+    "rockpaperscissors",
     "lowqual",
     "when",
     "checkcomment",
@@ -54,7 +56,9 @@
 	"stats",
 	"kill",
 	"day",
-	"say"
+	"say",
+  "footjob",
+  "sex"
   ],
   "reactions": [
     "fmega",
@@ -161,6 +165,7 @@
 	"send",
 	"editmsg",
 	"attachments",
-	"pinglimit"
+	"pinglimit",
+  "dad"
   ]
 }
