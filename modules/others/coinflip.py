@@ -1,8 +1,13 @@
 import random
-from typing import Any
+from typing import Any, cast, TYPE_CHECKING
 
+import disnake
 from disnake.ext import commands
+import numpy
+from pathlib import Path
 
+if TYPE_CHECKING:
+    from modules.stats import Stats
 
 class Coinflip(commands.Cog):
     def __init__(self, client: commands.Bot):
@@ -23,5 +28,47 @@ class Coinflip(commands.Cog):
             await ctx.send(f"It's {result}! You lose!")
 
 
+    @commands.command()
+    async def gamble(self, ctx: commands.Context[Any]):
+
+        imgs = [
+            Path("images/hampter") / x
+            for x in [
+                "hampter.png",
+                "silver.png",
+                "gold.png",
+                "phantom.png",
+                "cosmic.png",
+            ]
+        ]
+
+        names = [
+            "Basic",
+            "Silver",
+            "Gold",
+            "Phantom",
+            "Cosmic",
+        ]
+
+        chances = [
+            0.549450549,
+            0.274725275,
+            0.10989011,
+            0.054945055,
+            0.010989011
+        ]
+
+        selected_idx: int = numpy.random.choice(
+                range(len(names)), p=chances # type: ignore
+        )
+        stats_cog = cast("Stats", self.client.get_cog("Stats"))
+        # VV This runs get_cog for MotorDbManager twice now
+        user_stat = stats_cog.get_user(ctx.guild.id if ctx.guild else ctx.author.id, ctx.author.id)        
+        await user_stat.increment(f"Hampter Gamble.{names[selected_idx]}", 1)
+        await ctx.send(
+            f"You won {names[selected_idx]} Hampter",
+            file=disnake.File(str(imgs[selected_idx]))
+        )
+        
 def setup(client: commands.Bot):
     client.add_cog(Coinflip(client))
