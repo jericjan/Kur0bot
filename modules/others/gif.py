@@ -9,9 +9,10 @@ import subprocess
 import time
 import uuid
 from datetime import datetime, timedelta
-from typing import Any
+from typing import Any, Optional
 
 from aiolimiter import AsyncLimiter
+import disnake
 from disnake.ext import commands
 from tqdm import tqdm
 
@@ -23,9 +24,9 @@ limiter = AsyncLimiter(1, 1)
 class Gif(commands.Cog):
     def __init__(self, client: commands.Bot):
         self.client = client
-        self.pbar_list = []
+        self.pbar_list: list[str] = []
 
-    async def updatebar(self, msg):
+    async def updatebar(self, msg: disnake.Message):
         try:
 
             async with limiter:
@@ -39,12 +40,13 @@ class Gif(commands.Cog):
 
     @commands.command(aliases=["vid2gif", "gifify"])
     @commands.bot_has_permissions(manage_messages=True)
-    async def gif(self, ctx: commands.Context[Any], link=None):
+    async def gif(self, ctx: commands.Context[Any], link: Optional[str]=None):
         link = await msg_link_grabber.grab_link(ctx, link)
         print(link)
 
         filename = link.split("/")[-1]
         new_filename = "".join(filename.split(".")[:-1]) + ".gif"
+        message: Optional[disnake.Message] = None
         if re.search(r".+\.mp4|.+\.mkv|.+\.mov|.+\.webm", filename) is not None:
             coms = [
                 "ffmpeg",
@@ -59,8 +61,10 @@ class Gif(commands.Cog):
             )
             full_line = ""
             pbar = tqdm(total=100)
+            duration: Optional[timedelta] = None
             while process.returncode is None:
-
+                if process.stdout is None:
+                    continue
                 line = await process.stdout.read(500)
                 if not line:
                     break
@@ -100,6 +104,8 @@ class Gif(commands.Cog):
                             microseconds=strpcurr.microsecond,
                         )
                         try:
+                            if duration is None:
+                                continue
                             percentage = (
                                 currtime.total_seconds() / duration.total_seconds()
                             ) * 100
@@ -127,25 +133,33 @@ class Gif(commands.Cog):
             await ctx.send(
                 "I don't support this filetype yet ig. Ping kur0 or smth. <:towashrug:853606191711649812> "
             )
+        if message is None:
+            await ctx.send("Video conversion failed")
+            return
+        
         await file_handler.send_file(ctx, message, new_filename)
         file_handler.delete_file(new_filename)
 
     @commands.command(aliases=["vid2gif2", "gifify2"])
     @commands.bot_has_permissions(manage_messages=True)
-    async def gif2(self, ctx: commands.Context[Any], link=None, quality=None):
+    async def gif2(self, ctx: commands.Context[Any], link: Optional[str]=None, quality: Optional[int]=None):
         uuid_id = uuid.uuid4()
         if link:
             if (
                 link.isdigit()
             ):  # if link is digits 1-100. usually for when replying to message or sending vid directly.
                 if int(link) in range(1, 101):
-                    quality = link
+                    quality = int(link)
                     if ctx.message.attachments:  # message has images
                         print("is attachment")
                         link = ctx.message.attachments[0].url
                     elif ctx.message.reference is not None:  # message is replying
                         print("is reply")
-                        id = ctx.message.reference.message_id
+                        if (id := ctx.message.reference.message_id) is None:
+                            await ctx.send(
+                                "I can't find the message to convert. Try again."
+                            )
+                            return
                         msg = await ctx.channel.fetch_message(id)
                         if msg.attachments:  # if replied has image
                             link = msg.attachments[0].url
@@ -176,7 +190,7 @@ class Gif(commands.Cog):
             coms = ["ffmpeg", "-i", link, frames_path]
             message = await ctx.send("Extracting frames... This might take a bit.")
             print("FFMPEGGGG")
-            out, stdout, stderr = await subprocess_runner.run_subprocess(coms)
+            _out, stdout, _stderr = await subprocess_runner.run_subprocess(coms)
 
             gif_ski_frames_path = f"{frames_folder}/frame*.png"
             gif_ski_frames_path = glob.glob(gif_ski_frames_path)
@@ -193,7 +207,7 @@ class Gif(commands.Cog):
                 link,
             ]
             await message.edit(content="Getting framerate...")
-            out, stdout, stderr = await subprocess_runner.run_subprocess(coms)
+            _out, stdout, _stderr = await subprocess_runner.run_subprocess(coms)
             result_string = stdout.decode("utf-8").split()[0].split("/")
             fps = float(result_string[0]) / float(result_string[1])
             await message.edit(content="Making gif...")
@@ -217,6 +231,8 @@ class Gif(commands.Cog):
             )
             full_line = ""
             while process.returncode is None:
+                if process.stdout is None:
+                    continue
                 line = await process.stdout.read(500)
 
                 if not line:
@@ -247,8 +263,8 @@ class Gif(commands.Cog):
 
             coms = ["ffmpeg", "-i", link, frames_path1]
             coms2 = ["ffmpeg", "-i", link, frames_path2]
-            out, stdout, stderr = await subprocess_runner.run_subprocess(coms)
-            out, stdout, stderr = await subprocess_runner.run_subprocess(coms2)
+            _out, stdout, _stderr = await subprocess_runner.run_subprocess(coms)
+            _out, stdout, _stderr = await subprocess_runner.run_subprocess(coms2)
             print("FFMPEGGGG")
 
             gif_ski_frames_path = f"{frames_folder}/frame*.png"
@@ -274,7 +290,7 @@ class Gif(commands.Cog):
 
             coms = coms + gif_ski_frames_path
             print("GIFSKI")
-            out, stdout, stderr = await subprocess_runner.run_subprocess(coms)
+            _out, stdout, _stderr = await subprocess_runner.run_subprocess(coms)
             await file_handler.send_file(ctx, message, new_filename)
             file_handler.delete_file(new_filename)
             shutil.rmtree(f"{frames_folder}/")
