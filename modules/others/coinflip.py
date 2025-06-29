@@ -27,6 +27,29 @@ class Coinflip(commands.Cog):
         else:
             await ctx.send(f"It's {result}! You lose!")
 
+    @commands.command(aliases=["rps"])
+    async def rockpaperscissors(self, ctx: commands.Context[Any], *, player_choice: str):
+        player_choice = player_choice.lower()
+        choices = ["rock", "paper", "scissors"]
+        if player_choice not in choices:
+            await ctx.send(f"bruhg. there's no {player_choice} in rock paper scissors dummy 😠")
+            return
+        bot_choice = random.choice(choices)
+     
+        if player_choice == bot_choice:
+            await ctx.send(f"I chose {bot_choice}. It's a tie!")
+            return
+
+        win_conditions = {
+            "rock": "scissors",
+            "paper": "rock",
+            "scissors": "paper"
+        }
+
+        if win_conditions[player_choice] == bot_choice:
+            await ctx.send(f"I chose {bot_choice}. You win!")
+        else:
+            await ctx.send(f"I chose {bot_choice}. You lose!")
 
     @commands.command()
     async def gamble(self, ctx: commands.Context[Any]):
