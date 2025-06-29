@@ -1,5 +1,4 @@
 import json
-import re
 from decimal import Decimal
 from typing import TYPE_CHECKING, Any, cast
 
@@ -14,7 +13,7 @@ class Currency(commands.Cog):
     def __init__(self, client: commands.Bot):
         self.client = client
 
-    async def currency(self, thing, conv_from, conv_to, value):
+    async def currency(self, thing: commands.Context[Any] | disnake.ApplicationCommandInteraction[Any], conv_from: str, conv_to: str, value: str):
         bridger = cast(
             "Bridger",
             self.client.get_cog("Bridger")
@@ -23,7 +22,7 @@ class Currency(commands.Cog):
 
         conv_from = conv_from.lower()
         conv_to = conv_to.lower()
-        async def currency_exists(currency):
+        async def currency_exists(currency: str):
             async with aiohttp.ClientSession() as session:
                 async with session.get(
                     "https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies.json"
@@ -57,7 +56,7 @@ class Currency(commands.Cog):
         )
 
     @commands.slash_command(name="currency")
-    async def s_currency(self, inter, conv_from: str, conv_to: str, value: str):
+    async def s_currency(self, inter: disnake.ApplicationCommandInteraction[Any], conv_from: str, conv_to: str, value: str):
         """
         Converts currency!!!
 
@@ -70,7 +69,7 @@ class Currency(commands.Cog):
         await self.currency(inter, conv_from, conv_to, value)
 
     @commands.command(name="currency", aliases=["convert"])
-    async def p_currency(self, ctx: commands.Context[Any], conv_from, conv_to, value):
+    async def p_currency(self, ctx: commands.Context[Any], conv_from: str, conv_to: str, value: str):
         await self.currency(ctx, conv_from, conv_to, value)
 
 def setup(client: commands.Bot):
