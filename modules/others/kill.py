@@ -30,7 +30,7 @@ class Kill(commands.Cog):
                 return
             target_user = ctx.author            
 
-        kur0_server = await self.client.fetch_guild(1034100571667447860)
+        kur0_server = await self.client.fetch_guild(1034100571667447860)  # TODO: make this a variable so users can actually change it lmao
         temp_emoji_name = uuid.uuid4()
         target_pfp = target_user.avatar
         if target_pfp is None:

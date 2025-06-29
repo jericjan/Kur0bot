@@ -1,7 +1,7 @@
 import asyncio
 import io
 import re
-from typing import Any
+from typing import Any, Optional
 
 import aiohttp
 import disnake
@@ -132,8 +132,12 @@ class EmoteSticker(commands.Cog):
     @commands.command(aliases=["uploademoji", "ue"])
     @commands.bot_has_permissions(manage_emojis=True, manage_messages=True)
     async def uploademote(
-        self, ctx, title, *, link=None
+        self, ctx: commands.Context[Any], title: str, *, link: Optional[str]=None
     ):  # upload emoji from emoji url
+        if ctx.guild is None:
+            await ctx.send("This command can only be used in a server.")
+            return
+        
         limit = ctx.guild.emoji_limit
         emoji_list = ctx.guild.emojis
         normal_count = 0
