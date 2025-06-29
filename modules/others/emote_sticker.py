@@ -11,7 +11,7 @@ from disnake.ext import commands
 from PIL import Image
 
 from myfunctions import msg_link_grabber
-
+from myfunctions.async_wrapper import async_wrap
 
 class EmoteSticker(commands.Cog):
     def __init__(self, client: commands.Bot):
@@ -100,16 +100,8 @@ class EmoteSticker(commands.Cog):
             else:
                 print("bad apple server")
 
-    def run_in_executor(f):
-        @functools.wraps(f)
-        async def inner(*args, **kwargs):
-            loop = asyncio.get_running_loop()
-            return await loop.run_in_executor(None, lambda: f(*args, **kwargs))
-
-        return inner
-
-    @run_in_executor
-    def emote_resize(self, link, format_type="PNG"):  # Your wrapper for async use
+    @async_wrap
+    def emote_resize(self, link: bytes, format_type: str ="PNG"):  # Your wrapper for async use
         byteio = io.BytesIO(link)
         im = Image.open(byteio)
         width, height = im.size
@@ -246,8 +238,8 @@ class EmoteSticker(commands.Cog):
                 f"dang, i can't find the {name} sticker, pardner. can't delete that which ain't exist. truth."
             )
 
-    @run_in_executor
-    def sticker_resize(self, link):  # Your wrapper for async use
+    @async_wrap
+    def sticker_resize(self, link: str | bytes):  # Your wrapper for async use
         response = requests.get(link)  # threaded
         byteio = io.BytesIO(response.content)
         im = Image.open(byteio)

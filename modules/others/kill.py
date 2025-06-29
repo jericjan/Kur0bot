@@ -25,12 +25,18 @@ class Kill(commands.Cog):
 
         if target_user == self.client.user:
             await ctx.send("You DARE kill me??? FUCK YOU!")
-            target_user = ctx.author
+            if not isinstance(ctx.author, disnake.Member):
+                await ctx.send("You aren't a member! I can't kill you GRRRRR!")
+                return
+            target_user = ctx.author            
 
         kur0_server = await self.client.fetch_guild(1034100571667447860)
         temp_emoji_name = uuid.uuid4()
         target_pfp = target_user.avatar
-
+        if target_pfp is None:
+            await ctx.send("Can't find bro's PFP grrrr")
+            return
+        
         async with aiohttp.ClientSession() as session:
             async with session.get(target_pfp.url) as response:
                 img = await response.read()
@@ -39,12 +45,10 @@ class Kill(commands.Cog):
             "EmoteSticker",
             self.client.get_cog("EmoteSticker")
         )
-        file, width, height = await emote_sticker.emote_resize(img)
+        file, _width, _height = await emote_sticker.emote_resize(img)
 
-        try:
-            file = file.read()
-        except:
-            pass
+        
+        file = file.read()
 
         temp_emoji = await kur0_server.create_custom_emoji(
             name=str(temp_emoji_name).replace("-", "_")[0:32], image=file
@@ -58,8 +62,8 @@ class Kill(commands.Cog):
         finally:
             await temp_emoji.delete()
 
-    @kill.error
-    async def mem_error(self, ctx: commands.Context[Any], error):
+    @kill.error  # type: ignore
+    async def mem_error(self, ctx: commands.Context[Any], error: disnake.DiscordException):
         if isinstance(error, commands.MemberNotFound):
             name = error.argument
 
@@ -71,7 +75,7 @@ class Kill(commands.Cog):
                 await ctx.send(
                     f'Who is this "{name}" person!? I can\'t kill em <:Grr:1199865079672352838>'
                 )
-            ctx._ignore_me_ = True
+            ctx._ignore_me_ = True  # type: ignore (gets ignored in event.py's error handler)
 
 
 def setup(client: commands.Bot):
