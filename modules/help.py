@@ -1252,6 +1252,44 @@ class Help(commands.Cog):
             em.add_syntax("k.re <emote_name>")
             em.show_aliases(auto=True)
 
+    @help.command()
+    @commands.bot_has_permissions(embed_links=True)
+    async def gamble(self, ctx: commands.Context[Any]):      
+        async with EmbedMaker(
+            ctx, "Hampter Gamble", "Gamble for hampters.\n\nRates:\n"
+            "**Basic**: 54.95%\n"
+            "**Silver**: 27.47%\n"
+            "**Gold**: 10.99%\n"
+            "**Phantom**: 5.49%\n"
+            "**Cosmic**: 1.1%", self.client
+        ) as _:
+            pass
+
+    @help.command()
+    @commands.bot_has_permissions(embed_links=True)
+    async def rockpaperscissors(self, ctx: commands.Context[Any]):
+        async with EmbedMaker(
+            ctx, "Rock Paper Scissors!", "The classic game.", self.client
+        ) as em:
+            em.add_syntax("k.rockpaperscissors <rock/paper/scissors>")
+            em.show_aliases(auto=True)
+
+    @help.command()
+    @commands.bot_has_permissions(embed_links=True)
+    async def footjob(self, ctx: commands.Context[Any]):
+        async with EmbedMaker(
+            ctx, "Footjob", "Yeah.", self.client
+        ) as em:
+            em.add_syntax("k.footjob <mention the user>")
+
+    @help.command()
+    @commands.bot_has_permissions(embed_links=True)
+    async def sex(self, ctx: commands.Context[Any]):
+        async with EmbedMaker(
+            ctx, "Sex", "Yeah.", self.client
+        ) as em:
+            em.add_syntax("k.sex <mention the user>")
+
 class EmbedMaker:
     def __init__(self, ctx: commands.Context[Any], title: str, desc: str, client: Optional[commands.Bot] = None):
         self.ctx = ctx
