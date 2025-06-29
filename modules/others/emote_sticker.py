@@ -192,10 +192,8 @@ class EmoteSticker(commands.Cog):
                 print("not a gif")
                 file, width, height = await self.emote_resize(img)
                 await ctx.send(f"New image size is: {width}x{height}", delete_after=3.0)
-            try:
-                file = file.read()
-            except:
-                pass
+
+            file = file.read()
             try:
                 print(f"file is a {type(file)}")
                 await ctx.guild.create_custom_emoji(name=title, image=file)
@@ -215,7 +213,9 @@ class EmoteSticker(commands.Cog):
     @commands.command(aliases=["re"])
     @commands.bot_has_permissions(manage_emojis=True, manage_messages=True)
     async def removeemote(self, ctx: commands.Context[Any], emote: disnake.Emoji):
-
+        if ctx.guild is None:
+            await ctx.send("This command can only be used in a server.")
+            return
         if emote.guild.id != ctx.guild.id:
             raise commands.EmojiNotFound(emote.name)
 
@@ -228,6 +228,13 @@ class EmoteSticker(commands.Cog):
     @commands.command(aliases=["rs"])
     @commands.bot_has_permissions(manage_emojis=True, manage_messages=True)
     async def removesticker(self, ctx: commands.Context[Any], sticker: disnake.GuildSticker):
+        if ctx.guild is None:
+            await ctx.send("This command can only be used in a server.")
+            return
+        
+        if sticker.guild is None:
+            await ctx.send("Couldn't find guild from sticker name.")
+            return
 
         if sticker.guild.id != ctx.guild.id:
             raise commands.GuildStickerNotFound(sticker.name)
@@ -241,16 +248,17 @@ class EmoteSticker(commands.Cog):
         else:
             await ctx.send("No can do. You ain't got the perms fo' that!")
 
-    @removeemote.error
-    @removesticker.error
-    async def removeemote_error(self, ctx: commands.Context[Any], error):
-        name = error.argument
-        ctx._ignore_me_ = True
+    @removeemote.error  # type: ignore
+    @removesticker.error  # type: ignore
+    async def removeemote_error(self, ctx: commands.Context[Any], error: disnake.DiscordException):        
+        ctx._ignore_me_ = True  # type: ignore
         if isinstance(error, commands.EmojiNotFound):
+            name = error.argument
             await ctx.send(
                 f"dang, i can't find the {name} emoji, pardner. can't delete that which ain't exist. truth."
             )
         elif isinstance(error, commands.GuildStickerNotFound):
+            name = error.argument
             await ctx.send(
                 f"dang, i can't find the {name} sticker, pardner. can't delete that which ain't exist. truth."
             )
@@ -275,8 +283,12 @@ class EmoteSticker(commands.Cog):
     @commands.command(aliases=["us"])
     @commands.bot_has_permissions(manage_emojis=True, manage_messages=True)
     async def uploadsticker(
-        self, ctx, name, emoji, link=None
+        self, ctx: commands.Context[Any], name: str, emoji: str, link: Optional[str]=None
     ):  # upload emoji from emoji url
+        if ctx.guild is None:
+            await ctx.send("This command can only be used in a server.")
+            return
+                
         limit = ctx.guild.sticker_limit
         if limit == 0:
             await ctx.send(
