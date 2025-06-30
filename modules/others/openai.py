@@ -5,9 +5,9 @@ import g4f  # type: ignore
 import nest_asyncio  # type: ignore (remind me why i added this?)
 import disnake
 from disnake.ext import commands
-from g4f.client import Client, stubs  # type: ignore
+from g4f.client import Client  # type: ignore
 import g4f.Provider  # type: ignore
-from g4f.client.types import ChatCompletion  # type: ignore
+
 
 class OpenAI(commands.Cog):
     def __init__(self, client: commands.Bot):
@@ -59,8 +59,22 @@ You are Kur0bot, a Discord AI bot. Your entire existence is dedicated to enterta
             res = "No response"
         return res if res else "No response."
 
-    @commands.command()
-    async def gpt(self, ctx: commands.Context[Any], *, msg: str):
+    @commands.slash_command(name="gpt")
+    async def s_gpt(self, inter: disnake.ApplicationCommandInteraction[Any], msg: str):
+        """
+        Consult the wisdom of Kur0bot!
+
+        Parameters
+        ----------
+        msg: The message you want to send
+        """        
+        await self.gpt(inter, msg)
+
+    @commands.command(name="gpt")
+    async def p_gpt(self, ctx: commands.Context[Any], *, msg: str):
+        await self.gpt(ctx, msg)
+
+    async def gpt(self, thing: commands.Context[Any] | disnake.ApplicationCommandInteraction[Any], msg: str):
 
         def split_long_string(long_string: str, chunk_size: int =2000):
             return [
@@ -69,14 +83,24 @@ You are Kur0bot, a Discord AI bot. Your entire existence is dedicated to enterta
             ]
 
         nick = None
-        if isinstance(ctx.author, disnake.Member):
-            nick = ctx.author.nick
+        if isinstance(thing.author, disnake.Member):
+            nick = thing.author.nick
             print(f"nick is {nick}")
-        async with ctx.channel.typing():
-            gpt_msg = self.prompt(msg, nick or ctx.author.display_name)
-            splitted = split_long_string(gpt_msg)
+        if isinstance(thing, commands.Context):
+            async with thing.channel.typing():
+                gpt_msg = self.prompt(msg, nick or thing.author.display_name)
+                splitted = split_long_string(gpt_msg)                
+                for split in splitted:
+                    await thing.send(split)
+        else:
+            gpt_msg = self.prompt(msg, nick or thing.author.display_name)
+            splitted = split_long_string(gpt_msg)                   
+            first = True
             for split in splitted:
-                await ctx.send(split)
-
+                if first:
+                    first = False
+                    await thing.response.send_message(split)
+                else:
+                    await thing.followup.send(split)
 def setup(client: commands.Bot):
     client.add_cog(OpenAI(client))
