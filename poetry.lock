@@ -803,32 +803,33 @@ files = [
 
 [[package]]
 name = "g4f"
-version = "0.3.5.1"
+version = "0.5.6.0"
 description = "The official gpt4free repository | various collection of powerful language models"
 optional = false
 python-versions = "*"
 groups = ["main"]
 files = [
-    {file = "g4f-0.3.5.1-py3-none-any.whl", hash = "sha256:f381cdfe2af18335f8377a2cc052d4f2e2404631d4f22a9a54f7d3df51f9456a"},
-    {file = "g4f-0.3.5.1.tar.gz", hash = "sha256:75b37d09d0df90beaa036535a8524286b88808efc7e8cd92f86d200792430607"},
+    {file = "g4f-0.5.6.0-py3-none-any.whl", hash = "sha256:c7e8df6bc8d5fc5d68b2d3fbb2d1efa8e51f2406d40274728285797d5f7f1b9e"},
+    {file = "g4f-0.5.6.0.tar.gz", hash = "sha256:c484aac5522b6e08c96b408faf33a0fe3a67c84be5683fa2e571c32d7d859ee2"},
 ]
 
 [package.dependencies]
 aiohttp = "*"
 brotli = "*"
-nest-asyncio = "*"
+nest_asyncio = "*"
 pycryptodome = "*"
 requests = "*"
 
 [package.extras]
-all = ["aiohttp-socks", "beautifulsoup4", "brotli", "browser-cookie3", "cairosvg", "certifi", "cryptography", "curl-cffi (>=0.6.2)", "duckduckgo-search (>=5.0)", "fastapi", "flask", "nest-asyncio", "nodriver", "pillow", "platformdirs", "pycryptodome", "uvicorn", "werkzeug"]
-api = ["fastapi", "loguru", "uvicorn"]
-gui = ["beautifulsoup4", "browser-cookie3", "duckduckgo-search (>=5.0)", "flask", "pillow", "werkzeug"]
+all = ["a2wsgi", "aiohttp_socks", "beautifulsoup4", "browser_cookie3", "cairosvg", "certifi", "curl_cffi (>=0.6.2)", "duckduckgo-search (>=5.0)", "fastapi", "flask", "markitdown[all]", "nodriver", "pillow", "platformdirs", "plyer", "python-multipart", "pywebview", "setuptools", "uvicorn", "werkzeug"]
+api = ["fastapi", "loguru", "python-multipart", "uvicorn"]
+files = ["beautifulsoup4", "markitdown[all]"]
+gui = ["beautifulsoup4", "duckduckgo-search (>=5.0)", "flask", "pillow", "werkzeug"]
 image = ["beautifulsoup4", "cairosvg", "pillow"]
 local = ["gpt4all"]
 search = ["beautifulsoup4", "duckduckgo-search (>=5.0)", "pillow"]
-webdriver = ["platformdirs", "selenium-wire", "setuptools", "undetected-chromedriver (>=3.5.5)"]
-webview = ["cryptography", "platformdirs", "plyer", "webview"]
+slim = ["a2wsgi", "aiohttp_socks", "beautifulsoup4", "browser_cookie3", "certifi", "curl_cffi (>=0.6.2)", "duckduckgo-search (>=5.0)", "fastapi", "flask", "markitdown[all]", "pillow", "python-multipart", "uvicorn", "werkzeug"]
+webview = ["cryptography", "platformdirs", "plyer", "pywebview"]
 
 [[package]]
 name = "gtts"
@@ -2605,4 +2606,4 @@ testing = ["flake8 (<5)", "func-timeout", "jaraco.functools", "jaraco.itertools"
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.9,<4.0"
-content-hash = "411c5f7805630dee2367706ff8cc1c34fb529648efb1e84f39e5bbcd60dc2428"
+content-hash = "0f418de504d9d805b59fa83011789643fe5bc1110f9745aa0e93fc6acf5dd7ee"
