@@ -572,7 +572,7 @@ class Events(commands.Cog):
                     gpt_resp = ""
                     while gpt_resp != "True" and gpt_resp != "False":
                         gpt_msg = f"Is the following phrase offensive? respond ONLY with True or False:\n{message.content}"
-                        gpt_resp = cast("OpenAI", self.client.get_cog("OpenAI")).prompt(gpt_msg)
+                        gpt_resp = cast("OpenAI", self.client.get_cog("OpenAI")).prompt(gpt_msg, "user")
                     if gpt_resp == "True":
                         await user_stat.increment("Tatsu bot murders", 1)
                         await message.reference.resolved.delete()

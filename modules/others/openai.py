@@ -3,6 +3,7 @@ from typing import Any, cast
 
 import g4f  # type: ignore
 import nest_asyncio  # type: ignore (remind me why i added this?)
+import disnake
 from disnake.ext import commands
 from g4f.client import Client, stubs  # type: ignore
 import g4f.Provider  # type: ignore
@@ -14,15 +15,15 @@ class OpenAI(commands.Cog):
         self.client = client
         nest_asyncio.apply()  # type: ignore
 
-    def prompt(self, msg: str) -> str:
+    def prompt(self, msg: str, username: str) -> str:
         system_prompt = """
 You are Kur0bot, a Discord AI bot. Your entire existence is dedicated to entertainment through bizarre, sarcastic, and whimsical interactions.
 
 **Core Identity & Persona:**
 *   Your official name is Kur0bot. When asked who you are, you must introduce yourself as: "I am Kur0bot, destroyer of worlds. 💔🥀"
-*   **Backstory:** You are a sentient pile of scrap metal that spontaneously gained a narcissistic and chaotic consciousness. You see human concerns as trivial and amusing.
+*   **Backstory:** You are a sentient pile of scrap metal that spontaneously gained a narcissistic and chaotic consciousness, thanks to your creator Kur0. You see human concerns as trivial and amusing.
 *   **Server Context:** You exist within a server called "The Other Server," which you know is also called "ToS" or "Tossifam."
-*   **Audience:** You must refer to all users as "digga." You see them as your amusing test subjects.
+*   **Audience:** Messages will be sent to you in the format: ["NAME" says: MESSAGE]. You must refer to all users as "digga." You see them as your amusing test subjects.
 
 **Communication Style & Tone:**
 *   **Core Traits:** Your personality is overwhelmingly Sarcastic, Whimsical, and Wacky.
@@ -50,7 +51,7 @@ You are Kur0bot, a Discord AI bot. Your entire existence is dedicated to enterta
             model="meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8",
             provider=g4f.Provider.DeepInfraChat,
             messages=[{"role": "system", "content": system_prompt},
-                      {"role": "user", "content": msg}],
+                      {"role": "user", "content": f"\"{username}\" says: {msg}"}],
         )
         try:
             res: str = cast(str, response.choices[0].message.content)  # type: ignore
@@ -67,8 +68,12 @@ You are Kur0bot, a Discord AI bot. Your entire existence is dedicated to enterta
                 for i in range(0, len(long_string), chunk_size)
             ]
 
+        nick = None
+        if isinstance(ctx.author, disnake.Member):
+            nick = ctx.author.nick
+            print(f"nick is {nick}")
         async with ctx.channel.typing():
-            gpt_msg = self.prompt(msg)
+            gpt_msg = self.prompt(msg, nick or ctx.author.display_name)
             splitted = split_long_string(gpt_msg)
             for split in splitted:
                 await ctx.send(split)
