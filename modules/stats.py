@@ -31,7 +31,7 @@ class Stats(commands.Cog):
         return UserStat(self.client, guild_id, author_id)
 
     @commands.command()
-    async def stats(self, ctx: commands.Context[Any], user: Optional[disnake.User | disnake.Member] = None):
+    async def stats(self, ctx: commands.Context[Any], user: Optional[disnake.User | disnake.Member] = None, filter: Optional[str] = ""):
         if user is None:
             user = ctx.author
 
@@ -55,31 +55,36 @@ class Stats(commands.Cog):
 
         final = ""
 
-        def recurse(x: str | dict[Any, Any], depth: int):
+        def recurse(x: str | dict[Any, Any], depth: int = 0, history: str = ""):
             nonlocal final
 
             if not isinstance(x, dict):
                 if x in user_stats:
+                    if filter and (filter not in history.lower() and filter not in x.lower()):
+                        return
                     final += f"{'  '*depth}- {x}\n"
-                    recurse(user_stats[x], depth + 1)
+                    recurse(user_stats[x], depth + 1, history + f"{x}.")
                 else:
                     final = final.rstrip()
                     final += f": **{x}**\n"
             else:
                 for key in x.keys():
+                    print(history, key)
+                    if filter and (filter not in history.lower() and filter not in key.lower()):
+                        return                    
                     final += f"{'  '*depth}- {key}\n"
-                    recurse(x[key], depth + 1)
+                    recurse(x[key], depth + 1, history + f"{x}.")
 
             #    final += f"{' '*(depth+1)}- {user_stats[x]}\n"
 
         for key in user_stats.keys():
-            recurse(key, 0)
+            recurse(key)
         # await ctx.send(json.dumps(user_doc['stats'], indent=4))
         # await ctx.send(final)
 
         em = disnake.Embed(
             title=f"Stats for {user.display_name}:",
-            description=final,
+            description=final if final else "No stats found for search query.",
         )
         await ctx.send(embed=em)
 
