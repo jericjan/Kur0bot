@@ -1222,8 +1222,10 @@ class Help(commands.Cog):
             "Gives you stats for certain things a user has done that are related to the bot",
             self.client,
         ) as em:
-            em.add_syntax("k.stats <user> (leave blank to get your own stats)")
-            em.add_example("k.stats Kur0")
+            em.add_syntax("k.stats [user] [search query] (leave blank to get your own stats)")
+            em.add_example("k.stats @Kur0\n"
+                           "k.stats gamble\n"
+                           "k.stats @Kur0 gamble")
 
     @help.command()
     @commands.bot_has_permissions(embed_links=True)
