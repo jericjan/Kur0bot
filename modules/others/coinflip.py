@@ -65,12 +65,33 @@ class Coinflip(commands.Cog):
             ]
         ]
 
+        basic_hampters = [
+            Path("images/hampter") / x
+            for x in [
+                "hampter.png",
+                "BOMBACLAT_HNEK.png",
+                "BOMPTER.png",
+                "DONER_MACHT_SCHONER.png",
+                "hamber_LEAN.png",
+                "sesompter.png"
+            ]            
+        ]
+
         names = [
             "Basic",
             "Silver",
             "Gold",
             "Phantom",
             "Cosmic",
+        ]
+
+        basic_names = [
+            "Original",
+            "BOMBACLAT Hampter with a HNEK",
+            "Bompter",
+            "Hampter with Döner",
+            "Hampter with LEAN",
+            "Boblox Hampter"
         ]
 
         chances = [
@@ -82,15 +103,24 @@ class Coinflip(commands.Cog):
         ]
 
         selected_idx: int = numpy.random.choice(
-                range(len(names)), p=chances # type: ignore
+                len(names), p=chances # type: ignore
         )
         stats_cog = cast("Stats", self.client.get_cog("Stats"))
         # VV This runs get_cog for MotorDbManager twice now
         user_stat = stats_cog.get_user(ctx.guild.id if ctx.guild else ctx.author.id, ctx.author.id)        
         await user_stat.increment(f"Hampter Gamble.{names[selected_idx]}", 1)
+
+        if names[selected_idx] == "Basic":
+            basic_idx = numpy.random.choice(len(basic_hampters))
+            filename = basic_hampters[basic_idx]
+            basic_variant = f" (Variant: {basic_names[basic_idx]})"
+        else:
+            filename = imgs[selected_idx]
+            basic_variant = ""
+
         await ctx.send(
-            f"You won {names[selected_idx]} Hampter",
-            file=disnake.File(str(imgs[selected_idx]))
+            f"You won {names[selected_idx]} Hampter{basic_variant}",
+            file=disnake.File(str(filename))
         )
         
 def setup(client: commands.Bot):
