@@ -345,7 +345,9 @@ class Events(commands.Cog):
             await message.channel.send(f"<@{huren_target}>")  # pings nana/allen
 
         # le strepto
-        if all(message.channel.id != x for x in [1260889287931723839]):  # ignore #mudae channel
+        if all(
+            message.channel.id != x for x in [1260889287931723839, 1210327718550573149]
+        ):  # ignore #mudae channel
             if any(
                 word in msg
                 for word in [
