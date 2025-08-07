@@ -111,8 +111,8 @@ class VergilGreenScreenerHandler(GreenScreenerHandler):
     async def start(self, slash=False):
         if not slash:
             vergil_status = await self.ctx.send("Getting motivated...")
-        await self.generate_user_img()
-        g_screener = VergilGreenScreener(self.image, self.cap, self.out, self.base_dir)
+        image = await self.generate_user_img()
+        g_screener = VergilGreenScreener(image, self.cap, self.out, self.base_dir)
         self.log("Pre stuff")
         await g_screener.start()
         self.log("Green screening done", mid=True)
