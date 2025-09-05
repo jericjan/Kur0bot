@@ -356,7 +356,6 @@ class Events(commands.Cog):
                     "toe",
                     "ankle",
                     "heel",
-                    "arch",
                     "sole",
                     "🦶",
                 ]
