@@ -14,12 +14,19 @@ class Hall_Of_Shame(commands.Cog):
         if ctx.guild is None:
             await ctx.send("This command can only be used in a server.")
             return
-        
-        hall_of_shame_json = json.load(open("modules/others/hall_of_shame_ids.json"))
+        hall_of_shame_json: dict[str, dict[str, Any]] = {}
+        try:
+            with open("modules/others/hall_of_shame_ids.json") as f:
+                hall_of_shame_json = json.load(f)
+        except FileNotFoundError:
+            pass
         if channel_str == None:
             await ctx.send("Give the channel ID for the hall of shame.")
             return
         elif channel_str == "remove" or channel_str == "delete":
+            if str(ctx.guild.id) not in hall_of_shame_json:
+                await ctx.send("This server does not have a hall of shame set.")
+                return
             await ctx.send(f"<#{hall_of_shame_json[str(ctx.guild.id)]}> removed.")
             hall_of_shame_json.pop(str(ctx.guild.id))
         else:

@@ -163,10 +163,13 @@ class Events(commands.Cog):
     async def on_presence_update(self, before: disnake.Member, after: disnake.Member):
         @async_wrap
         def load_json():
-            with open("modules/others/hall_of_shame_ids.json", encoding="utf-8") as f:
-                res = json.load(f)
+            res: dict[str, dict[str, Any]] = {}
+            try:
+                with open("modules/others/hall_of_shame_ids.json", encoding="utf-8") as f:
+                    res = json.load(f)
+            except FileNotFoundError:
+                pass
             return res
-
         @async_wrap
         def log_activity(game_id: str | int, guild: disnake.Guild, name: str, activity_name: str):
             with open("activities.txt", "a", encoding="utf-8") as f:

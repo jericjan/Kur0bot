@@ -6,6 +6,7 @@ log.txt
 /.ssh/
 /ytsubconverter/
 .env
+.testenv
 nohup.out
 /gifski_/
 /temp/
