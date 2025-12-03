@@ -12,7 +12,8 @@ from g4f.client import Client  # type: ignore
 import g4f.Provider  # type: ignore
 
 from myfunctions.file_handler import send_file
-from myfunctions.filetype import FileTypeChecker  # type: ignore
+from myfunctions.filetype import FileTypeChecker
+from myfunctions.msg_link_grabber import grab_link  # type: ignore
 
 
 class OpenAI(commands.Cog):
@@ -131,10 +132,9 @@ You are Kur0bot, a Discord AI bot. Your entire existence is dedicated to enterta
             print(f"nick is {nick}")
         if isinstance(thing, commands.Context):
             async with thing.channel.typing():
-                attachments = thing.message.attachments
                 img_url = None
-                if attachments:
-                    url = attachments[0].url
+                if thing.message.attachments or thing.message.reference:
+                    url = await grab_link(thing)
                     checker = cast(
                         "FileTypeChecker",
                         self.client.get_cog("FileTypeChecker")
