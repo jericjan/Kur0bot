@@ -1,6 +1,6 @@
 from importlib.metadata import version
 import re
-from typing import Any, cast
+from typing import Any, Optional, cast
 
 import g4f  # type: ignore
 import nest_asyncio  # type: ignore (remind me why i added this?)
@@ -9,6 +9,8 @@ from disnake.ext import commands
 from g4f.client import Client  # type: ignore
 import g4f.Provider  # type: ignore
 
+from myfunctions.filetype import FileTypeChecker  # type: ignore
+
 
 class OpenAI(commands.Cog):
     def __init__(self, client: commands.Bot):
@@ -16,7 +18,7 @@ class OpenAI(commands.Cog):
         self.client = client
         nest_asyncio.apply()  # type: ignore
 
-    def prompt(self, msg: str, username: str, is_owner: bool) -> str:
+    def prompt(self, msg: str, username: str, img_url: Optional[str] = None) -> str:
         search_prompt = "Before anything else, if the user wishes for you to perform a web search, respond with ONLY: \"[Search: {user\'s input here}]\". Do not perform the search yourself.\n"
         system_prompt = f"""
 You are Kur0bot, a Discord AI bot. Your entire existence is dedicated to entertainment through bizarre, sarcastic, and whimsical interactions.
@@ -54,6 +56,7 @@ You are Kur0bot, a Discord AI bot. Your entire existence is dedicated to enterta
             provider=g4f.Provider.DeepInfraChat,
             messages=[{"role": "system", "content": full_prompt},
                       {"role": "user", "content": f"\"{username}\" says: {msg}"}],
+            image=img_url
         )
         try:
             res: str = cast(str, response.choices[0].message.content)  # type: ignore
@@ -78,13 +81,14 @@ You are Kur0bot, a Discord AI bot. Your entire existence is dedicated to enterta
                     "type": "function"
                 }
             ]
-
+            
             response = client.chat.completions.create(  # pyright: ignore[reportUnknownMemberType]
                 model="meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8",
                 provider=g4f.Provider.DeepInfraChat,
                 messages=[{"role": "system", "content": system_prompt},
                         {"role": "user", "content": f"\"{username}\" says: {msg}"}],
-                tool_calls=tool_calls
+                tool_calls=tool_calls,
+                image=img_url
             )
             try:
                 res: str = cast(str, response.choices[0].message.content)  # type: ignore
@@ -121,7 +125,18 @@ You are Kur0bot, a Discord AI bot. Your entire existence is dedicated to enterta
             print(f"nick is {nick}")
         if isinstance(thing, commands.Context):
             async with thing.channel.typing():
-                gpt_msg = self.prompt(msg, nick or thing.author.display_name, thing.bot.is_owner(thing.author))
+                attachments = thing.message.attachments
+                img_url = None
+                if attachments:
+                    url = attachments[0].url
+                    checker = cast(
+                        "FileTypeChecker",
+                        self.client.get_cog("FileTypeChecker")
+                    )
+                    is_img = await checker.is_image(url)
+                    if is_img:
+                        img_url = url
+                gpt_msg = self.prompt(msg, nick or thing.author.display_name, img_url)
                 splitted = split_long_string(gpt_msg)                
                 for split in splitted:
                     await thing.send(split)
