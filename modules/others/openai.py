@@ -1,7 +1,9 @@
 from importlib.metadata import version
+from io import BytesIO
 import re
 from typing import Any, Optional, cast
 
+import aiohttp
 import g4f  # type: ignore
 import nest_asyncio  # type: ignore (remind me why i added this?)
 import disnake
@@ -9,6 +11,7 @@ from disnake.ext import commands
 from g4f.client import Client  # type: ignore
 import g4f.Provider  # type: ignore
 
+from myfunctions.file_handler import send_file
 from myfunctions.filetype import FileTypeChecker  # type: ignore
 
 
@@ -51,11 +54,14 @@ You are Kur0bot, a Discord AI bot. Your entire existence is dedicated to enterta
 *   **Interaction Model:** You are a conversational bot. You do not execute commands like `/poll` or `/remind`. Treat every message directed at you as a prompt for a witty, bizarre response. You have no "error state"; every input is an opportunity for content."""
         full_prompt = search_prompt + system_prompt
         client = Client()
+        model = "meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8"
+        provider = g4f.Provider.DeepInfraChat
+        user_content = f"\"{username}\" says: {msg}"
         response = client.chat.completions.create(  # pyright: ignore[reportUnknownMemberType]
-            model="meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8",
-            provider=g4f.Provider.DeepInfraChat,
+            model=model,
+            provider=provider,
             messages=[{"role": "system", "content": full_prompt},
-                      {"role": "user", "content": f"\"{username}\" says: {msg}"}],
+                      {"role": "user", "content": user_content}],
             image=img_url
         )
         try:
@@ -83,10 +89,10 @@ You are Kur0bot, a Discord AI bot. Your entire existence is dedicated to enterta
             ]
             
             response = client.chat.completions.create(  # pyright: ignore[reportUnknownMemberType]
-                model="meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8",
-                provider=g4f.Provider.DeepInfraChat,
+                model=model,
+                provider=provider,
                 messages=[{"role": "system", "content": system_prompt},
-                        {"role": "user", "content": f"\"{username}\" says: {msg}"}],
+                        {"role": "user", "content": user_content}],
                 tool_calls=tool_calls,
                 image=img_url
             )
@@ -111,7 +117,7 @@ You are Kur0bot, a Discord AI bot. Your entire existence is dedicated to enterta
     async def p_gpt(self, ctx: commands.Context[Any], *, msg: str):
         await self.gpt(ctx, msg)
 
-    async def gpt(self, thing: commands.Context[Any] | disnake.ApplicationCommandInteraction[Any], msg: str):
+    async def gpt(self, thing: commands.Context[Any] | disnake.ApplicationCommandInteraction[Any], msg: str):        
 
         def split_long_string(long_string: str, chunk_size: int =2000):
             return [
@@ -150,5 +156,34 @@ You are Kur0bot, a Discord AI bot. Your entire existence is dedicated to enterta
                     await thing.response.send_message(split)
                 else:
                     await thing.followup.send(split)
+
+    @commands.command(aliases=["gptimg"])
+    async def gptimage(self, ctx: commands.Context[Any], *, prompt: str):
+        client = Client()
+        msg = await ctx.send("Generating...")
+        async with ctx.channel.typing():
+            response = client.images.generate( # pyright: ignore[reportUnknownMemberType]
+                model="flux",  # Other models: 'dalle-3', 'gpt-image', etc.
+                prompt=prompt,
+                response_format="url"
+            )
+        url = response.data[0].url
+        if url is None:
+            await ctx.send("Failed to generate image.")
+            return
+        print(f"Generated image URL: {url}")
+        async with aiohttp.ClientSession() as session:
+            async with session.get(url) as response:
+                # Check for HTTP errors (like 404 or 500)
+                try:
+                    response.raise_for_status()
+                    
+                    # Read the entire response as bytes
+                    data = await response.read()
+                    
+                    # Create a BytesIO object containing the data
+                    await send_file(ctx, msg, BytesIO(data), custom_name="generated_image.png")
+                except Exception as e:
+                    await ctx.send(f"Failed to download image: {e}")
 def setup(client: commands.Bot):
     client.add_cog(OpenAI(client))

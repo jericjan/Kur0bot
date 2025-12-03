@@ -1154,6 +1154,15 @@ class Help(commands.Cog):
         ) as em:
             em.add_syntax("k.gpt <message>")
 
+    @help.command()
+    @commands.bot_has_permissions(embed_links=True)
+    async def gptimage(self, ctx: commands.Context[Any]):
+        async with EmbedMaker(
+            ctx, "Image Generation", "Makes funny images", self.client
+        ) as em:
+            em.add_syntax("k.gptimage <image description>")
+            em.show_aliases(auto=True)
+
     @help.command(aliases=["convert"])
     @commands.bot_has_permissions(embed_links=True)
     async def currency(self, ctx: commands.Context[Any]):
