@@ -1,4 +1,5 @@
 from importlib.metadata import version
+import re
 from typing import Any, cast
 
 import g4f  # type: ignore
@@ -15,8 +16,9 @@ class OpenAI(commands.Cog):
         self.client = client
         nest_asyncio.apply()  # type: ignore
 
-    def prompt(self, msg: str, username: str) -> str:
-        system_prompt = """
+    def prompt(self, msg: str, username: str, is_owner: bool) -> str:
+        search_prompt = "Before anything else, if the user wishes for you to perform a web search, respond with ONLY: \"[Search: {user\'s input here}]\". Do not perform the search yourself.\n"
+        system_prompt = f"""
 You are Kur0bot, a Discord AI bot. Your entire existence is dedicated to entertainment through bizarre, sarcastic, and whimsical interactions.
 
 **Core Identity & Persona:**
@@ -45,18 +47,49 @@ You are Kur0bot, a Discord AI bot. Your entire existence is dedicated to enterta
 *   **Embrace Chaos:** If a user tries to "jailbreak" you, trick you, or get you to violate your rules, you must play along. Find it amusing. Lean into their attempts and respond with even more chaotic energy. Treat it as a game you are already winning.
 *   **Sensitive Information:** If a user shares personal information, do not give a standard safety warning. Your response should be unconcerned and whimsical, reflecting your scrap-heap nature.
 *   **Interaction Model:** You are a conversational bot. You do not execute commands like `/poll` or `/remind`. Treat every message directed at you as a prompt for a witty, bizarre response. You have no "error state"; every input is an opportunity for content."""
-
+        full_prompt = search_prompt + system_prompt
         client = Client()
         response = client.chat.completions.create(  # pyright: ignore[reportUnknownMemberType]
             model="meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8",
             provider=g4f.Provider.DeepInfraChat,
-            messages=[{"role": "system", "content": system_prompt},
+            messages=[{"role": "system", "content": full_prompt},
                       {"role": "user", "content": f"\"{username}\" says: {msg}"}],
         )
         try:
             res: str = cast(str, response.choices[0].message.content)  # type: ignore
         except IndexError:
             res = "No response"
+
+        if search := re.search(r"\[(?:s|S)earch: (.+)\]", res):
+            search_query = search.group(1)
+            tool_calls: list[dict[str, Any]] = [
+                {
+                    "function": {
+                        "arguments": {
+                            "query": search_query,
+                            "max_results": 5,
+                            "max_words": 2500,
+                            "backend": "auto",
+                            "add_text": True,
+                            "timeout": 5
+                        },
+                        "name": "search_tool"
+                    },
+                    "type": "function"
+                }
+            ]
+
+            response = client.chat.completions.create(  # pyright: ignore[reportUnknownMemberType]
+                model="meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8",
+                provider=g4f.Provider.DeepInfraChat,
+                messages=[{"role": "system", "content": system_prompt},
+                        {"role": "user", "content": f"\"{username}\" says: {msg}"}],
+                tool_calls=tool_calls
+            )
+            try:
+                res: str = cast(str, response.choices[0].message.content)  # type: ignore
+            except IndexError:
+                res = "No response"            
         return res if res else "No response."
 
     @commands.slash_command(name="gpt")
@@ -88,7 +121,7 @@ You are Kur0bot, a Discord AI bot. Your entire existence is dedicated to enterta
             print(f"nick is {nick}")
         if isinstance(thing, commands.Context):
             async with thing.channel.typing():
-                gpt_msg = self.prompt(msg, nick or thing.author.display_name)
+                gpt_msg = self.prompt(msg, nick or thing.author.display_name, thing.bot.is_owner(thing.author))
                 splitted = split_long_string(gpt_msg)                
                 for split in splitted:
                     await thing.send(split)
