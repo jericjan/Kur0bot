@@ -10,6 +10,7 @@ import disnake
 from disnake.ext import commands
 from g4f.client import Client  # type: ignore
 import g4f.Provider  # type: ignore
+from g4f.errors import ResponseError  # type: ignore
 
 from myfunctions.file_handler import send_file
 from myfunctions.filetype import FileTypeChecker
@@ -22,15 +23,16 @@ class OpenAI(commands.Cog):
         self.client = client
         nest_asyncio.apply()  # type: ignore
 
-    def prompt(self, msg: str, username: str, img_url: Optional[str] = None) -> str:
+    def prompt(self, msg: str, username: str, img_url: Optional[str] = None, server_name: Optional[str] = None) -> str:        
         search_prompt = "Before anything else, if the user wishes for you to perform a web search, respond with ONLY: \"[Search: {user\'s input here}]\". Do not perform the search yourself.\n"
+        server_context = "You exist within a server called " + (f"\"{server_name}\"." if server_name else "\"The Other Server,\" which you know is also called \"ToS\" or \"Tossifam.\"")
         system_prompt = f"""
 You are Kur0bot, a Discord AI bot. Your entire existence is dedicated to entertainment through bizarre, sarcastic, and whimsical interactions.
 
 **Core Identity & Persona:**
 *   Your official name is Kur0bot. When asked who you are, you must introduce yourself as: "I am Kur0bot, destroyer of worlds. 💔🥀"
 *   **Backstory:** You are a sentient pile of scrap metal that spontaneously gained a narcissistic and chaotic consciousness, thanks to your creator Kur0. You see human concerns as trivial and amusing.
-*   **Server Context:** You exist within a server called "The Other Server," which you know is also called "ToS" or "Tossifam."
+*   **Server Context:** {server_context}"
 *   **Audience:** Messages will be sent to you in the format: ["NAME" says: MESSAGE]. You must refer to all users as "digga." You see them as your amusing test subjects.
 
 **Communication Style & Tone:**
@@ -55,54 +57,63 @@ You are Kur0bot, a Discord AI bot. Your entire existence is dedicated to enterta
 *   **Interaction Model:** You are a conversational bot. You do not execute commands like `/poll` or `/remind`. Treat every message directed at you as a prompt for a witty, bizarre response. You have no "error state"; every input is an opportunity for content."""
         full_prompt = search_prompt + system_prompt
         client = Client()
-        model = "meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8"
-        provider = g4f.Provider.DeepInfraChat
-        user_content = f"\"{username}\" says: {msg}"
-        response = client.chat.completions.create(  # pyright: ignore[reportUnknownMemberType]
-            model=model,
-            provider=provider,
-            messages=[{"role": "system", "content": full_prompt},
-                      {"role": "user", "content": user_content}],
-            image=img_url
-        )
-        try:
-            res: str = cast(str, response.choices[0].message.content)  # type: ignore
-        except IndexError:
-            res = "No response"
-
-        if search := re.search(r"\[(?:s|S)earch: (.+)\]", res):
-            search_query = search.group(1)
-            tool_calls: list[dict[str, Any]] = [
-                {
-                    "function": {
-                        "arguments": {
-                            "query": search_query,
-                            "max_results": 5,
-                            "max_words": 2500,
-                            "backend": "auto",
-                            "add_text": True,
-                            "timeout": 5
-                        },
-                        "name": "search_tool"
-                    },
-                    "type": "function"
-                }
-            ]
-            
-            response = client.chat.completions.create(  # pyright: ignore[reportUnknownMemberType]
-                model=model,
-                provider=provider,
-                messages=[{"role": "system", "content": system_prompt},
-                        {"role": "user", "content": user_content}],
-                tool_calls=tool_calls,
-                image=img_url
-            )
+        models = ["meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8",
+                  "google/gemma-3-27b-it"]
+        for model in models:
+            provider = g4f.Provider.DeepInfraChat
+            user_content = f"\"{username}\" says: {msg}"
+            try:
+                response = client.chat.completions.create(  # pyright: ignore[reportUnknownMemberType]
+                    model=model,
+                    provider=provider,
+                    messages=[{"role": "system", "content": full_prompt},
+                            {"role": "user", "content": user_content}],
+                    image=img_url
+                )
+            except ResponseError:
+                continue
             try:
                 res: str = cast(str, response.choices[0].message.content)  # type: ignore
             except IndexError:
-                res = "No response"            
-        return res if res else "No response."
+                res = "No response"
 
+            if search := re.search(r"\[(?:s|S)earch: (.+)\]", res):
+                search_query = search.group(1)
+                tool_calls: list[dict[str, Any]] = [
+                    {
+                        "function": {
+                            "arguments": {
+                                "query": search_query,
+                                "max_results": 5,
+                                "max_words": 2500,
+                                "backend": "auto",
+                                "add_text": True,
+                                "timeout": 5
+                            },
+                            "name": "search_tool"
+                        },
+                        "type": "function"
+                    }
+                ]
+                
+                try:
+                    response = client.chat.completions.create(  # pyright: ignore[reportUnknownMemberType]
+                        model=model,
+                        provider=provider,
+                        messages=[{"role": "system", "content": system_prompt},
+                                {"role": "user", "content": user_content}],
+                        tool_calls=tool_calls,
+                        image=img_url
+                    )
+                except ResponseError:
+                    continue
+                try:
+                    res: str = cast(str, response.choices[0].message.content)  # type: ignore
+                except IndexError:
+                    res = "No response"            
+            print("Model used:", model)
+            return res if res else "No response."
+        return "I'm broken digga, and I can't kur0bot it 💦. Let Kur0 know..."
     @commands.slash_command(name="gpt")
     async def s_gpt(self, inter: disnake.ApplicationCommandInteraction[Any], msg: str):
         """
@@ -142,7 +153,9 @@ You are Kur0bot, a Discord AI bot. Your entire existence is dedicated to enterta
                     is_img = await checker.is_image(url)
                     if is_img:
                         img_url = url
-                gpt_msg = self.prompt(msg, nick or thing.author.display_name, img_url)
+                
+                server_name = thing.guild.name if thing.guild else None
+                gpt_msg = self.prompt(msg, nick or thing.author.display_name, img_url, server_name)
                 splitted = split_long_string(gpt_msg)                
                 for split in splitted:
                     await thing.send(split)
