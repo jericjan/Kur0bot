@@ -10,12 +10,15 @@ import disnake
 from disnake.ext import commands
 from g4f.client import Client  # type: ignore
 import g4f.Provider  # type: ignore
-from g4f.errors import ResponseError  # type: ignore
+from g4f.errors import ResponseError, ModelNotFoundError  # type: ignore
 
 from myfunctions.file_handler import send_file
 from myfunctions.filetype import FileTypeChecker
 from myfunctions.msg_link_grabber import grab_link  # type: ignore
+from myfunctions.DeepInfraChat import MyDeepInfraChat  # type: ignore
 
+def obj_to_dict(obj):
+    return getattr(obj, "__dict__", str(obj))
 
 class OpenAI(commands.Cog):
     def __init__(self, client: commands.Bot):
@@ -23,7 +26,7 @@ class OpenAI(commands.Cog):
         self.client = client
         nest_asyncio.apply()  # type: ignore
 
-    def prompt(self, msg: str, username: str, img_url: Optional[str] = None, server_name: Optional[str] = None) -> str:        
+    def prompt(self, msg: str, username: str, img_url: Optional[str] = None, server_name: Optional[str] = None) -> tuple[str, str]:        
         search_prompt = "Before anything else, if the user wishes for you to perform a web search, respond with ONLY: \"[Search: {user\'s input here}]\". Do not perform the search yourself.\n"
         server_context = "You exist within a server called " + (f"\"{server_name}\"." if server_name else "\"The Other Server,\" which you know is also called \"ToS\" or \"Tossifam.\"")
         system_prompt = f"""
@@ -57,23 +60,47 @@ You are Kur0bot, a Discord AI bot. Your entire existence is dedicated to enterta
 *   **Interaction Model:** You are a conversational bot. You do not execute commands like `/poll` or `/remind`. Treat every message directed at you as a prompt for a witty, bizarre response. You have no "error state"; every input is an opportunity for content."""
         full_prompt = search_prompt + system_prompt
         client = Client()
-        models = ["meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8",
-                  "google/gemma-3-27b-it"]
-        for model in models:
-            provider = g4f.Provider.DeepInfraChat
+        models_and_reasoning = [
+            ('zai-org/GLM-5', 1),
+            ('moonshotai/Kimi-K2.5', 1),
+            ('MiniMaxAI/MiniMax-M2.5', 1),
+            ('deepseek-ai/DeepSeek-V3.2', 1),
+            ('Qwen/Qwen3-Max-Thinking', 1),
+            ('nvidia/NVIDIA-Nemotron-3-Super-120B-A12B', 1),
+            ('Qwen/Qwen3-Max', 0),
+            ('zai-org/GLM-4.7-Flash', 1),
+            ('nvidia/Nemotron-3-Nano-30B-A3B', 1)
+        ]
+
+        for model, reasoning in models_and_reasoning:
+            provider = MyDeepInfraChat
             user_content = f"\"{username}\" says: {msg}"
+            kwargs: dict[str, str] = {}
+            if reasoning == 1:
+                kwargs = {"reasoning_effort": "high"}
+
             try:
                 response = client.chat.completions.create(  # pyright: ignore[reportUnknownMemberType]
                     model=model,
                     provider=provider,
                     messages=[{"role": "system", "content": full_prompt},
                             {"role": "user", "content": user_content}],
-                    image=img_url
+                    image=img_url,
+                    extra_body={
+                        "chat_template_kwargs": {
+                            "enable_thinking": True
+                        }
+                    },
+                    **kwargs
                 )
-            except ResponseError:
+            except (ResponseError, ModelNotFoundError):
                 continue
+            reasoning_msg = ""
             try:
-                res: str = cast(str, response.choices[0].message.content)  # type: ignore
+                # print("k.gpt:", json.dumps(response, default=obj_to_dict, indent=4))
+                choice = response.choices[0]
+                res: str = cast(str, choice.message.content)  # type: ignore
+                reasoning_msg: str = cast(str, getattr(choice.message, "reasoning_content", getattr(choice.message, "reasoning", None)))  # type: ignore
             except IndexError:
                 res = "No response"
 
@@ -103,7 +130,8 @@ You are Kur0bot, a Discord AI bot. Your entire existence is dedicated to enterta
                         messages=[{"role": "system", "content": system_prompt},
                                 {"role": "user", "content": user_content}],
                         tool_calls=tool_calls,
-                        image=img_url
+                        image=img_url,
+                        **kwargs
                     )
                 except ResponseError:
                     continue
@@ -111,9 +139,9 @@ You are Kur0bot, a Discord AI bot. Your entire existence is dedicated to enterta
                     res: str = cast(str, response.choices[0].message.content)  # type: ignore
                 except IndexError:
                     res = "No response"            
-            print("Model used:", model)
-            return res if res else "No response."
-        return "I'm broken digga, and I can't kur0bot it 💦. Let Kur0 know..."
+            print("Model used:", model, "| Reasoning effort:", "High" if reasoning == 1 else "Default")
+            return (res, reasoning_msg) if res else ("No response.", "")
+        return ("I'm broken digga, and I can't kur0bot it 💦. Let Kur0 know...", "")
     @commands.slash_command(name="gpt")
     async def s_gpt(self, inter: disnake.ApplicationCommandInteraction[Any], msg: str):
         """
@@ -155,18 +183,24 @@ You are Kur0bot, a Discord AI bot. Your entire existence is dedicated to enterta
                         img_url = url
                 
                 server_name = thing.guild.name if thing.guild else None
-                gpt_msg = self.prompt(msg, nick or thing.author.display_name, img_url, server_name)
-                splitted = split_long_string(gpt_msg)                
+                gpt_msg, reasoning_msg = self.prompt(msg, nick or thing.author.display_name, img_url, server_name)
+                splitted = split_long_string(gpt_msg)
+                first = True          
                 for split in splitted:
-                    await thing.send(split)
+                    if first:
+                        first = False
+                        if reasoning_msg:
+                            await thing.send(split, file=disnake.File(BytesIO(reasoning_msg.encode()), filename="reasoning.txt"))
+                    else:
+                        await thing.send(split)
         else:
-            gpt_msg = self.prompt(msg, nick or thing.author.display_name)
+            gpt_msg, reasoning_msg = self.prompt(msg, nick or thing.author.display_name)
             splitted = split_long_string(gpt_msg)                   
             first = True
             for split in splitted:
                 if first:
                     first = False
-                    await thing.response.send_message(split)
+                    await thing.response.send_message(split, file=disnake.File(BytesIO(reasoning_msg.encode()), filename="reasoning.txt"))
                 else:
                     await thing.followup.send(split)
 
