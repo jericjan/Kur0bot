@@ -86,11 +86,6 @@ You are Kur0bot, a Discord AI bot. Your entire existence is dedicated to enterta
                     messages=[{"role": "system", "content": full_prompt},
                             {"role": "user", "content": user_content}],
                     image=img_url,
-                    extra_body={
-                        "chat_template_kwargs": {
-                            "enable_thinking": True
-                        }
-                    },
                     **kwargs
                 )
             except (ResponseError, ModelNotFoundError):
@@ -136,7 +131,9 @@ You are Kur0bot, a Discord AI bot. Your entire existence is dedicated to enterta
                 except ResponseError:
                     continue
                 try:
-                    res: str = cast(str, response.choices[0].message.content)  # type: ignore
+                    choice = response.choices[0]
+                    res: str = cast(str, choice.message.content)  # type: ignore
+                    reasoning_msg: str = reasoning_msg + f"\n{'='*10}\n" + cast(str, getattr(choice.message, "reasoning_content", getattr(choice.message, "reasoning", None)))  # type: ignore
                 except IndexError:
                     res = "No response"            
             print("Model used:", model, "| Reasoning effort:", "High" if reasoning == 1 else "Default")
