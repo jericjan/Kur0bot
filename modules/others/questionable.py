@@ -3,10 +3,19 @@ from typing import TYPE_CHECKING, Any, cast
 import disnake
 from disnake.ext import commands
 
+from myfunctions.checkfailure import SendErrorAsDiscordMessage
+
 if TYPE_CHECKING:
     from myfunctions.motor import MotorDbManager
 
 GuildMessageable = disnake.TextChannel | disnake.Thread | disnake.VoiceChannel | disnake.StageChannel
+
+def nsfw_only():
+    async def predicate(ctx: commands.Context[Any]):
+        if isinstance(ctx.channel, GuildMessageable) and ctx.channel.is_nsfw():
+            return True
+        raise SendErrorAsDiscordMessage("This command can only be used in NSFW channels. 🤪")
+    return commands.check(predicate)
 
 class Questionable(commands.Cog):
     def __init__(self, client: commands.Bot):
@@ -19,7 +28,7 @@ class Questionable(commands.Cog):
         )
         
         return db_man.motor_client["dashboard"][name]
-        
+
     @commands.user_command(name="Segg")  # type: ignore
     async def user_sex(self, inter: disnake.ApplicationCommandInteraction[Any], user: disnake.User):
         if user == self.client.user:
@@ -52,6 +61,7 @@ class Questionable(commands.Cog):
         await inter.response.send_message(embed=em)
 
     @commands.command()
+    @nsfw_only()
     async def sex(self, ctx: commands.Context[Any], user: disnake.User):
         # gifs = [
         # "|| https://cdn.discordapp.com/attachments/1210367093338415164/1315511944563920947/seg.gif ||",
@@ -103,6 +113,7 @@ class Questionable(commands.Cog):
         await inter.response.send_message(embed=em)
 
     @commands.command()
+    @nsfw_only()
     async def footjob(self, ctx: commands.Context[Any], user: disnake.User):
         # gifs = [
         # "https://cdn.discordapp.com/attachments/1201051292198518846/1315505967470870568/SPOILER_toga-giving-a-footjob.gif",
@@ -134,7 +145,6 @@ class Questionable(commands.Cog):
             )
         else:
             await ctx.send(f"{ctx.author.mention} gave {user.mention} a footjob!")
-
 
 def setup(client: commands.Bot):
     client.add_cog(Questionable(client))
