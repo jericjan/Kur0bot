@@ -17,6 +17,7 @@ from disnake.ext import commands
 from gtts import gTTS  # type: ignore
 
 from myfunctions.async_wrapper import async_wrap
+from myfunctions.checkfailure import SendErrorAsDiscordMessage
 
 if TYPE_CHECKING:
     from modules.others.openai import OpenAI
@@ -715,6 +716,10 @@ class Events(commands.Cog):
 
         def full_error(err: Any):
             return f"{self.get_full_class_name(err)}: {err}"
+
+        if isinstance(error, SendErrorAsDiscordMessage):
+            await ctx.send(str(error))
+            return
 
         if isinstance(error, commands.CommandInvokeError):
             error = error.original

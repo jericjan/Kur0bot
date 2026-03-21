@@ -90,6 +90,8 @@ exclude_files = [
     "myfunctions/subprocess_runner.py",
     "myfunctions/my_db.py",
     "myfunctions/async_wrapper.py",
+    "myfunctions/DeepInfraChat.py",
+    "myfunctions/checkfailure.py",
 ]
 
 os.chdir("/app")
