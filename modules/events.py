@@ -378,7 +378,7 @@ class Events(commands.Cog):
                     )
                     days_list = time_and_dates.get_current_days(show_date=False)
 
-                    strepto_ping = "<@268188421871108097>"
+                    strepto_ping = "<@268188421871108097>\nhttps://cdn.discordapp.com/attachments/819217555414581257/1536715838063771718/image.png" 
 
                     if "Friday" in days_list:
                         strepto_ping += (
