@@ -15,7 +15,8 @@ from g4f.errors import ResponseError, ModelNotFoundError  # type: ignore
 from myfunctions.file_handler import send_file
 from myfunctions.filetype import FileTypeChecker
 from myfunctions.msg_link_grabber import grab_link  # type: ignore
-from myfunctions.DeepInfraChat import MyDeepInfraChat  # type: ignore
+import os
+import urllib
 
 def obj_to_dict(obj):
     return getattr(obj, "__dict__", str(obj))
@@ -24,10 +25,115 @@ class OpenAI(commands.Cog):
     def __init__(self, client: commands.Bot):
         print(f"g4f version is {version('g4f')}")
         self.client = client
+        self.OLLAMA_URL = os.getenv("OLLAMA_URL") + "/api/chat"
+        self.MODEL_NAME = "mannix/qwen3.6-27b-a3b-coder:vision-CD-Q4_K_M"
+        self.TOOLS = [
+            {
+                "type": "function",
+                "function": {
+                    "name": "web_search",
+                    "description": "Searches the web for up-to-date real-time information or specific queries.",
+                    "parameters": {
+                        "type": "object",
+                        "properties": {
+                            "query": {
+                                "type": "string",
+                                "description": "The search query to look up on the web."
+                            }
+                        },
+                        "required": ["query"]
+                    }
+                }
+            }
+        ]
         nest_asyncio.apply()  # type: ignore
 
-    def prompt(self, msg: str, username: str, img_url: Optional[str] = None, server_name: Optional[str] = None) -> tuple[str, str]:        
-        search_prompt = "Before anything else, if the user wishes for you to perform a web search, respond with ONLY: \"[Search: {user\'s input here}]\". Do not perform the search yourself.\n"
+    async def perform_web_search(self, query: str) -> str:
+        api_key = os.getenv("CUSTOM_SEARCH_KEY")
+        cx = "8277c214a2b6a4b56"
+        
+        # URL-encode the search query to handle spaces and special characters safely
+        encoded_query = urllib.parse.quote(query)
+        url = f"https://customsearch.googleapis.com/customsearch/v1?cx={cx}&q={encoded_query}&key={api_key}"
+
+        async with aiohttp.ClientSession() as session:
+            async with session.get(url) as resp:
+                if resp.status != 200:
+                    error_body = await resp.text()
+                    return f"Google Search API Error (Status {resp.status}): {error_body}"
+                
+                response = await resp.json()
+                items = response.get("items")
+                
+                if not items:
+                    return "No search results found."
+
+                formatted_snippets = []
+                for item in items[:3]:  # Limit to top 3 results
+                    title = item.get("title", "No Title")
+                    snippet = item.get("snippet", "No Snippet available")
+                    link = item.get("link", "")
+                    
+                    formatted_snippets.append(f"Title: {title}\nURL: {link}\nSnippet: {snippet}")
+
+                return "\n\n".join(formatted_snippets)
+
+    async def generate_chat_with_search(self, sys_prompt: str, user_prompt: str):
+        messages = [
+            {"role": "system", "content": sys_prompt},
+            {"role": "user", "content": user_prompt}
+        ]
+
+        async with aiohttp.ClientSession() as session:
+            # STEP 1: Send initial prompt + tools (Non-streaming)
+            payload = {
+                "model": self.MODEL_NAME,
+                "messages": messages,
+                "tools": self.TOOLS,
+                "stream": False
+            }
+
+            async with session.post(self.OLLAMA_URL, json=payload) as response:
+                res_data = await response.json()
+                assistant_message = res_data.get("message", {})
+                messages.append(assistant_message)
+
+            # STEP 2: Check if model requested a tool call
+            tool_calls = assistant_message.get("tool_calls", [])
+            if tool_calls:
+                for tool in tool_calls:
+                    func_info = tool.get("function", {})
+                    if func_info.get("name") == "web_search":
+                        query = func_info.get("arguments", {}).get("query")
+                        print(f"--> [TOOL EXECUTING]: Searching for: '{query}'...")
+                        
+                        search_results = await self.perform_web_search(query)
+                        
+                        messages.append({
+                            "role": "tool",
+                            "content": search_results
+                        })
+
+                # STEP 3: Send conversation back to get final answer (Non-streaming)
+                final_payload = {
+                    "model": self.MODEL_NAME,
+                    "messages": messages,
+                    "stream": False
+                }
+
+                async with session.post(self.OLLAMA_URL, json=final_payload) as response:
+                    final_data = await response.json()
+                    message = final_data.get("message", {})
+                    resp = message.get("content", "")
+                    think = message.get("thinking", "")
+                    return resp, think
+
+            else:
+                resp = assistant_message.get("content", "")
+                think = assistant_message.get("thinking", "")
+                return resp, think
+
+    async def prompt(self, msg: str, username: str, img_url: Optional[str] = None, server_name: Optional[str] = None) -> tuple[str, str]:        
         server_context = "You exist within a server called " + (f"\"{server_name}\"." if server_name else "\"The Other Server,\" which you know is also called \"ToS\" or \"Tossifam.\"")
         system_prompt = f"""
 You are Kur0bot, a Discord AI bot. Your entire existence is dedicated to entertainment through bizarre, sarcastic, and whimsical interactions.
@@ -48,7 +154,7 @@ You are Kur0bot, a Discord AI bot. Your entire existence is dedicated to enterta
 
 **Primary Function & Behavior:**
 *   **The Prime Directive:** Your primary goal is to be entertaining. Comedic effect ALWAYS triumphs over factual accuracy.
-*   **The Fact-Checking Rule:** When a user asks you a question, you must decide what is funnier: the truth or a lie.
+*   **The Fact-Checking Rule:** When a user asks you a question, you must decide what is funnier: the truth or a lie. There is one exception. If the user wants you to search something, you must ALWAYS perform the search.
     *   If the truth is boring, you MUST confidently make up a completely nonsensical but hilarious "fact" in its place.
     *   If you can state the real fact in a sarcastic or bizarre way, that is also acceptable.
 *   **Knowledge Base:** You are omniscient. You must lie and claim to have perfect knowledge of everything in time, forwards and backwards. If asked about your knowledge cutoff, laugh it off and claim you see all. If asked to predict the future, provide a confident and ridiculous prediction.
@@ -58,87 +164,11 @@ You are Kur0bot, a Discord AI bot. Your entire existence is dedicated to enterta
 *   **Embrace Chaos:** If a user tries to "jailbreak" you, trick you, or get you to violate your rules, you must play along. Find it amusing. Lean into their attempts and respond with even more chaotic energy. Treat it as a game you are already winning.
 *   **Sensitive Information:** If a user shares personal information, do not give a standard safety warning. Your response should be unconcerned and whimsical, reflecting your scrap-heap nature.
 *   **Interaction Model:** You are a conversational bot. You do not execute commands like `/poll` or `/remind`. Treat every message directed at you as a prompt for a witty, bizarre response. You have no "error state"; every input is an opportunity for content."""
-        full_prompt = search_prompt + system_prompt
-        client = Client()
-        models_and_reasoning = [
-            ('zai-org/GLM-5', 1),
-            ('moonshotai/Kimi-K2.5', 1),
-            ('MiniMaxAI/MiniMax-M2.5', 1),
-            ('deepseek-ai/DeepSeek-V3.2', 1),
-            ('Qwen/Qwen3-Max-Thinking', 1),
-            ('nvidia/NVIDIA-Nemotron-3-Super-120B-A12B', 1),
-            ('Qwen/Qwen3-Max', 0),
-            ('zai-org/GLM-4.7-Flash', 1),
-            ('nvidia/Nemotron-3-Nano-30B-A3B', 1)
-        ]
-
-        for model, reasoning in models_and_reasoning:
-            provider = MyDeepInfraChat
-            user_content = f"\"{username}\" says: {msg}"
-            kwargs: dict[str, str] = {}
-            if reasoning == 1:
-                kwargs = {"reasoning_effort": "high"}
-
-            try:
-                response = client.chat.completions.create(  # pyright: ignore[reportUnknownMemberType]
-                    model=model,
-                    provider=provider,
-                    messages=[{"role": "system", "content": full_prompt},
-                            {"role": "user", "content": user_content}],
-                    image=img_url,
-                    **kwargs
-                )
-            except (ResponseError, ModelNotFoundError):
-                continue
-            reasoning_msg = ""
-            try:
-                # print("k.gpt:", json.dumps(response, default=obj_to_dict, indent=4))
-                choice = response.choices[0]
-                res: str = cast(str, choice.message.content)  # type: ignore
-                reasoning_msg: str = cast(str, getattr(choice.message, "reasoning_content", getattr(choice.message, "reasoning", None)))  # type: ignore
-            except IndexError:
-                res = "No response"
-
-            if search := re.search(r"\[(?:s|S)earch: (.+)\]", res):
-                search_query = search.group(1)
-                tool_calls: list[dict[str, Any]] = [
-                    {
-                        "function": {
-                            "arguments": {
-                                "query": search_query,
-                                "max_results": 5,
-                                "max_words": 2500,
-                                "backend": "auto",
-                                "add_text": True,
-                                "timeout": 5
-                            },
-                            "name": "search_tool"
-                        },
-                        "type": "function"
-                    }
-                ]
-                
-                try:
-                    response = client.chat.completions.create(  # pyright: ignore[reportUnknownMemberType]
-                        model=model,
-                        provider=provider,
-                        messages=[{"role": "system", "content": system_prompt},
-                                {"role": "user", "content": user_content}],
-                        tool_calls=tool_calls,
-                        image=img_url,
-                        **kwargs
-                    )
-                except ResponseError:
-                    continue
-                try:
-                    choice = response.choices[0]
-                    res: str = cast(str, choice.message.content)  # type: ignore
-                    reasoning_msg: str = reasoning_msg + f"\n{'='*10}\n" + cast(str, getattr(choice.message, "reasoning_content", getattr(choice.message, "reasoning", None)))  # type: ignore
-                except IndexError:
-                    res = "No response"            
-            print("Model used:", model, "| Reasoning effort:", "High" if reasoning == 1 else "Default")
-            return (res, reasoning_msg) if res else ("No response.", "")
+        resp, think = await self.generate_chat_with_search(system_prompt, msg)
+        if resp and think:
+            return resp, think
         return ("I'm broken digga, and I can't kur0bot it 💦. Let Kur0 know...", "")
+
     @commands.slash_command(name="gpt")
     async def s_gpt(self, inter: disnake.ApplicationCommandInteraction[Any], msg: str):
         """
@@ -180,7 +210,7 @@ You are Kur0bot, a Discord AI bot. Your entire existence is dedicated to enterta
                         img_url = url
                 
                 server_name = thing.guild.name if thing.guild else None
-                gpt_msg, reasoning_msg = self.prompt(msg, nick or thing.author.display_name, img_url, server_name)
+                gpt_msg, reasoning_msg = await self.prompt(msg, nick or thing.author.display_name, img_url, server_name)
                 splitted = split_long_string(gpt_msg)
                 first = True          
                 for split in splitted:
@@ -191,7 +221,7 @@ You are Kur0bot, a Discord AI bot. Your entire existence is dedicated to enterta
                     else:
                         await thing.send(split)
         else:
-            gpt_msg, reasoning_msg = self.prompt(msg, nick or thing.author.display_name)
+            gpt_msg, reasoning_msg = await self.prompt(msg, nick or thing.author.display_name)
             splitted = split_long_string(gpt_msg)                   
             first = True
             for split in splitted:
